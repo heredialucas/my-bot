@@ -113,10 +113,5 @@ pnpm dev
 - El código debe pasar el linting y los tests antes de ser mergeado
 - Todos los componentes deben estar documentados
 
-## 📄 Licencia
-
-Este proyecto es propiedad de App Wise Innovations.
-
----
 
 Desarrollado con 💙 por App Wise Innovations
