@@ -7,10 +7,10 @@ import { notFound } from 'next/navigation';
 import Balancer from 'react-wrap-balancer';
 
 type LegalPageProperties = {
-  readonly params: {
+  readonly params: Promise<{
     slug: string;
     locale: string;
-  };
+  }>;
 };
 
 const DummyBody = () => (
@@ -26,7 +26,7 @@ const DummyTableOfContents = () => (
 );
 
 const LegalPage = async ({ params }: LegalPageProperties) => {
-  const { slug } = params;
+  const { slug } = await params;
 
   // Datos dummy para demostración
   const dummyPage = {
@@ -69,6 +69,16 @@ const LegalPage = async ({ params }: LegalPageProperties) => {
       </div>
     </div>
   );
+};
+
+export const generateMetadata = async ({
+  params,
+}: LegalPageProperties): Promise<Metadata> => {
+  const { slug } = await params;
+  return createMetadata({
+    title: "Página Legal",
+    description: "Contenido legal pendiente de implementación"
+  });
 };
 
 export default LegalPage;

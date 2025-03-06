@@ -7,9 +7,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 type BlogProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 const DummyBlogPosts = () => {
@@ -53,7 +53,8 @@ const DummyBlogPosts = () => {
 };
 
 const Blog = async ({ params }: BlogProps) => {
-  const dictionary = await getDictionary(params.locale);
+  const { locale } = await params;
+  const dictionary = await getDictionary(locale);
 
   return (
     <>
@@ -80,6 +81,15 @@ const Blog = async ({ params }: BlogProps) => {
       </div>
     </>
   );
+};
+
+export const generateMetadata = async ({
+  params,
+}: BlogProps): Promise<Metadata> => {
+  const { locale } = await params;
+  const dictionary = await getDictionary(locale);
+
+  return createMetadata(dictionary.web.blog.meta);
 };
 
 export default Blog;

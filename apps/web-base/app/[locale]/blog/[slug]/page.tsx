@@ -16,10 +16,7 @@ const protocol = env.VERCEL_PROJECT_PRODUCTION_URL?.startsWith('https')
 const url = new URL(`${protocol}://${env.VERCEL_PROJECT_PRODUCTION_URL}`);
 
 type BlogPostProperties = {
-  readonly params: {
-    slug: string;
-    locale: string;
-  };
+  params: Promise<{ slug: string; locale: string }>;
 };
 
 // Dummy components temporales
@@ -42,7 +39,7 @@ const DummyCodeBlock = () => (
 );
 
 const BlogPost = async ({ params }: BlogPostProperties) => {
-  const { slug } = params;
+  const { slug } = await params;
 
   // Datos dummy para demostración
   const dummyPage = {
