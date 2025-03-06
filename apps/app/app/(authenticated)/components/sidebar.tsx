@@ -204,10 +204,10 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
                   sidebar.open ? '' : '-mx-1'
                 )}
               >
-                <OrganizationSwitcher
+                {/* <OrganizationSwitcher
                   hidePersonal
                   afterSelectOrganizationUrl="/"
-                />
+                /> */}
               </div>
             </SidebarMenuItem>
           </SidebarMenu>
