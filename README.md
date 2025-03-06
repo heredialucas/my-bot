@@ -1,25 +1,122 @@
-# next-forge
+# App Wise Starter Kit
 
-**Production-grade Turborepo template for Next.js apps.**
+**Plantilla empresarial para proyectos de App Wise Innovations basada en Next.js y Turborepo.**
 
-<div>
-  <img src="https://img.shields.io/npm/dy/next-forge" alt="" />
-  <img src="https://img.shields.io/npm/v/next-forge" alt="" />
-  <img src="https://img.shields.io/github/license/haydenbleasel/next-forge" alt="" />
+<div align="center">
+  <img src="https://img.shields.io/badge/Next.js-13%2B-black" alt="Next.js" />
+  <img src="https://img.shields.io/badge/TypeScript-5.0%2B-blue" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License" />
 </div>
 
-[next-forge](https://github.com/haydenbleasel/next-forge) is a [Next.js](https://nextjs.org/) project boilerplate for modern web application. It is designed to be a comprehensive starting point for new apps, providing a solid, opinionated foundation with a minimal amount of configuration.
+## 🚀 Descripción
 
-Clone the repo using:
+App Wise Starter Kit es un boilerplate empresarial diseñado específicamente para los proyectos de App Wise Innovations. Esta plantilla proporciona una base sólida y opinada para comenzar nuevas aplicaciones web modernas con las mejores prácticas y herramientas del mercado.
 
-```sh
-npx next-forge@latest init
+### 📦 Proyectos Incluidos
+
+#### Apps
+- **`apps/web`**: Aplicación principal de Next.js
+- **`apps/web-base`**: Template base para aplicaciones web
+- **`apps/api`**: API principal del proyecto
+- **`apps/app`**: Aplicación móvil
+- **`apps/docs`**: Documentación del proyecto
+- **`apps/email`**: Servicio de gestión de emails
+- **`apps/storybook`**: Documentación de componentes
+- **`apps/studio`**: CMS Studio
+
+#### Packages
+- **`packages/design-system`**: Sistema de diseño unificado
+- **`packages/auth`**: Autenticación y autorización
+- **`packages/database`**: Configuración y modelos de base de datos
+- **`packages/cms`**: Integración con CMS
+- **`packages/analytics`**: Análisis y métricas
+- **`packages/ai`**: Integraciones con IA
+- **`packages/internationalization`**: Soporte multiidioma
+- **`packages/notifications`**: Sistema de notificaciones
+- **`packages/payments`**: Integración de pagos
+- **`packages/security`**: Configuraciones de seguridad
+- **`packages/seo`**: Optimización para motores de búsqueda
+- **`packages/storage`**: Gestión de almacenamiento
+- **`packages/webhooks`**: Gestión de webhooks
+- **`packages/feature-flags`**: Control de características
+- **`packages/observability`**: Monitoreo y logging
+- **`packages/rate-limit`**: Control de límites de peticiones
+- **`packages/collaboration`**: Herramientas de colaboración
+
+## 🛠 Tecnologías Principales
+
+- Next.js 13+ con App Router
+- TypeScript 5.8+
+- Turborepo
+- Prisma (ORM)
+- Tailwind CSS
+- Biome (Linting y Formatting)
+- pnpm (Package Manager)
+- Vitest (Testing)
+- Storybook
+- Shadcn/ui
+- Node.js 18+
+
+## 🏁 Comenzando
+
+### Prerrequisitos
+
+- Node.js 18+
+- pnpm 8+
+
+### Pasos de Instalación
+
+1. Clona el repositorio:
+```bash
+git clone [URL_DEL_REPOSITORIO]
 ```
 
-Then read the [docs](https://docs.next-forge.com) for more information.
+2. Instala las dependencias:
+```bash
+pnpm install
+```
 
-<a href="https://github.com/haydenbleasel/next-forge/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=haydenbleasel/next-forge" />
-</a>
+3. Configura las variables de entorno:
+```bash
+cp .env.example .env
+```
 
-Made with [contrib.rocks](https://contrib.rocks).
+4. Inicia el servidor de desarrollo:
+```bash
+pnpm dev
+```
+
+## 📚 Estructura del Proyecto
+
+```
+.
+├── apps/
+│   ├── web/          # Aplicación principal
+│   └── docs/         # Documentación
+├── packages/
+│   ├── ui/           # Componentes compartidos
+│   ├── eslint-config/
+│   └── typescript-config/
+└── package.json
+```
+
+## 🤝 Contribución
+
+1. Crea una nueva rama: `feature/nombre-feature`
+2. Realiza tus cambios
+3. Ejecuta los tests: `pnpm test`
+4. Crea un pull request
+
+## 📝 Convenciones de Código
+
+- Utilizamos [Conventional Commits](https://www.conventionalcommits.org/)
+- El código debe pasar el linting y los tests antes de ser mergeado
+- Todos los componentes deben estar documentados
+
+## 📄 Licencia
+
+Este proyecto es propiedad de App Wise Innovations.
+
+---
+
+Desarrollado con 💙 por App Wise Innovations
