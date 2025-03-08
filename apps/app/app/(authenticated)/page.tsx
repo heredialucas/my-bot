@@ -1,12 +1,13 @@
 import { env } from '@/env';
-import { auth } from '@repo/auth/server';
+import { auth, currentUser } from '@repo/auth/server';
 import { database } from '@repo/database';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { AvatarStack } from './components/avatar-stack';
 import { Cursors } from './components/cursors';
 import { Header } from './components/header';
+import RoleSelector from './role-selector';
 
 const title = 'Acme Inc';
 const description = 'My application.';
@@ -22,36 +23,34 @@ export const metadata: Metadata = {
   description,
 };
 
-const App = async () => {
-  const pages = await database.page.findMany();
-  const { orgId } = await auth();
+export default async function AuthenticatedHome() {
+  // Obtenemos el usuario actual
+  const user = await currentUser();
+  const { userId } = await auth();
 
-  if (!orgId) {
-    notFound();
+  if (!user || !userId) {
+    // Si no hay usuario, redirigimos a inicio de sesión (manejado por Clerk)
+    return redirect('/sign-in');
   }
 
-  return (
-    <>
-      <Header pages={['Building Your Application']} page="Data Fetching">
-        {env.LIVEBLOCKS_SECRET && (
-          <CollaborationProvider orgId={orgId}>
-            <AvatarStack />
-            <Cursors />
-          </CollaborationProvider>
-        )}
-      </Header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-          {pages.map((page) => (
-            <div key={page.id} className="aspect-video rounded-xl bg-muted/50">
-              {page.name}
-            </div>
-          ))}
-        </div>
-        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-      </div>
-    </>
-  );
-};
+  // Para facilitar las pruebas, mostramos un selector de roles
+  // En producción, esto debería basarse en metadata o roles de usuarios
+  return <RoleSelector />;
 
-export default App;
+  /* 
+  // Este código sería para una implementación completa de roles
+  // Determinar el rol del usuario - leer de metadata
+  const userRole = user.publicMetadata?.role as string || 'client';
+
+  // Redirigir según el rol
+  switch (userRole) {
+    case 'admin':
+      return redirect('/admin/dashboard');
+    case 'accountant':
+      return redirect('/accountant/dashboard');
+    case 'client':
+    default:
+      return redirect('/client/dashboard');
+  }
+  */
+}

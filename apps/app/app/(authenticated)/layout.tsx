@@ -7,12 +7,12 @@ import { AuthProvider } from '@repo/auth/provider';
 import { secure } from '@repo/security';
 import type { ReactNode } from 'react';
 import { PostHogIdentifier } from './components/posthog-identifier';
-import { GlobalSidebar } from './components/sidebar';
 
 type AppLayoutProperties = {
   readonly children: ReactNode;
 };
 
+// Este es un enfoque más simple: Crear layouts separados
 const AppLayout = async ({ children }: AppLayoutProperties) => {
   if (env.ARCJET_KEY) {
     await secure(['CATEGORY:PREVIEW']);
@@ -26,18 +26,16 @@ const AppLayout = async ({ children }: AppLayoutProperties) => {
     return redirectToSignIn();
   }
 
+  // Como no podemos acceder fácilmente a la ruta actual en Server Components,
+  // vamos a aplicar otra estrategia: Remover completamente la barra lateral
+  // del layout principal y dejar que cada sección (admin, accountant, client)
+  // implemente su propia barra lateral.
+
   return (
     <NotificationsProvider userId={user.id}>
       <AuthProvider>
         <SidebarProvider>
-          <GlobalSidebar>
-            {betaFeature && (
-              <div className="m-4 rounded-full bg-success p-1.5 text-center text-sm text-success-foreground">
-                Beta feature now available
-              </div>
-            )}
-            {children}
-          </GlobalSidebar>
+          {children}
           <PostHogIdentifier />
         </SidebarProvider>
       </AuthProvider>
