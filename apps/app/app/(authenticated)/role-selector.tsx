@@ -23,7 +23,7 @@ export default function RoleSelector() {
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <Link href="/admin/dashboard" className="block">
+                        {/* <Link href="/admin/dashboard" className="block">
                             <div className="bg-zinc-800 hover:bg-zinc-700 transition-colors rounded-xl p-6 h-full flex flex-col items-center justify-center text-center gap-4 border border-zinc-700 hover:border-zinc-600">
                                 <UserCog className="h-12 w-12 text-blue-400" />
                                 <div>
@@ -31,7 +31,7 @@ export default function RoleSelector() {
                                     <p className="text-zinc-400 text-sm">Gestión global del sistema</p>
                                 </div>
                             </div>
-                        </Link>
+                        </Link> */}
 
                         <Link href="/accountant/dashboard" className="block">
                             <div className="bg-zinc-800 hover:bg-zinc-700 transition-colors rounded-xl p-6 h-full flex flex-col items-center justify-center text-center gap-4 border border-zinc-700 hover:border-zinc-600">
