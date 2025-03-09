@@ -179,7 +179,7 @@ export default function QueriesPage() {
                                         {query.response && (
                                             <div className="flex gap-3 mt-4">
                                                 <Avatar className="h-8 w-8">
-                                                    <AvatarImage src={query.accountantAvatar} alt="Accountant" />
+                                                    <AvatarImage src={query.accountantAvatar ?? undefined} alt="Accountant" />
                                                     <AvatarFallback>{query.accountant?.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                                                 </Avatar>
                                                 <div className="flex-1 bg-blue-50 dark:bg-blue-950/20 p-3 rounded-md text-sm">
@@ -251,7 +251,7 @@ export default function QueriesPage() {
 
                                         <div className="flex gap-3 mt-4">
                                             <Avatar className="h-8 w-8">
-                                                <AvatarImage src={query.accountantAvatar} alt="Accountant" />
+                                                <AvatarImage src={query.accountantAvatar ?? undefined} alt="Accountant" />
                                                 <AvatarFallback>{query.accountant?.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex-1 bg-blue-50 dark:bg-blue-950/20 p-3 rounded-md text-sm">
