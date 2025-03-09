@@ -2,9 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo
 import { Button } from "@repo/design-system/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@repo/design-system/components/ui/table";
 import { Badge } from "@repo/design-system/components/ui/badge";
-import { UserCheck, ChevronRight, Filter, Plus, Search, MoreHorizontal, TrashIcon, EditIcon, Eye } from "lucide-react";
+import { Users, ChevronRight, Filter, Plus, Search, MoreHorizontal, TrashIcon, EditIcon, Eye, Building } from "lucide-react";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@repo/design-system/components/ui/avatar";
 import { Input } from "@repo/design-system/components/ui/input";
 import {
     DropdownMenu,
@@ -16,79 +15,84 @@ import {
 } from "@repo/design-system/components/ui/dropdown-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 
-export default function AccountantsPage() {
+export default function ClientsPage() {
     // Datos simulados
-    const accountants = [
+    const clients = [
         {
             id: 1,
-            name: "Juan Pérez",
-            email: "juan.perez@sopy.cl",
-            phone: "+56 9 1234 5678",
-            specialty: "Tributación Empresarial",
-            clients: 15,
+            name: "Empresa ABC SpA",
+            rut: "76.543.210-K",
+            taxRegime: "Régimen Semi Integrado",
+            accountant: "Juan Pérez",
             status: "active",
-            lastActive: "Hoy, 15:30"
+            pendingDocs: 2,
+            lastActivity: "Hoy, 10:15"
         },
         {
             id: 2,
-            name: "María González",
-            email: "maria.gonzalez@sopy.cl",
-            phone: "+56 9 8765 4321",
-            specialty: "Impuestos Personales",
-            clients: 8,
+            name: "Comercial XYZ Ltda.",
+            rut: "77.665.544-3",
+            taxRegime: "Régimen Pro PYME",
+            accountant: "María González",
             status: "active",
-            lastActive: "Hoy, 12:45"
+            pendingDocs: 0,
+            lastActivity: "Ayer, 15:30"
         },
         {
             id: 3,
-            name: "Pedro Soto",
-            email: "pedro.soto@sopy.cl",
-            phone: "+56 9 5555 6666",
-            specialty: "Auditoría Contable",
-            clients: 12,
-            status: "inactive",
-            lastActive: "Hace 3 días"
+            name: "Constructora El Bloque",
+            rut: "78.901.234-5",
+            taxRegime: "Régimen Semi Integrado",
+            accountant: "Juan Pérez",
+            status: "pending",
+            pendingDocs: 5,
+            lastActivity: "Hace 3 días"
         },
         {
             id: 4,
-            name: "Ana Muñoz",
-            email: "ana.munoz@sopy.cl",
-            phone: "+56 9 7777 8888",
-            specialty: "Asesoría Laboral",
-            clients: 10,
+            name: "Servicios Tecnológicos S.A.",
+            rut: "79.123.456-7",
+            taxRegime: "Régimen Semi Integrado",
+            accountant: "Ana Muñoz",
             status: "active",
-            lastActive: "Ayer, 18:20"
+            pendingDocs: 1,
+            lastActivity: "Hoy, 09:20"
         },
         {
             id: 5,
-            name: "Roberto Díaz",
-            email: "roberto.diaz@sopy.cl",
-            phone: "+56 9 9999 0000",
-            specialty: "Tributación Internacional",
-            clients: 6,
-            status: "active",
-            lastActive: "Hoy, 09:10"
+            name: "Importadora Global Ltda.",
+            rut: "77.888.999-0",
+            taxRegime: "Régimen Pro PYME",
+            accountant: "Pedro Soto",
+            status: "inactive",
+            pendingDocs: 8,
+            lastActivity: "Hace 1 semana"
         },
     ];
 
-    const specialties = [
-        "Tributación Empresarial",
-        "Impuestos Personales",
-        "Auditoría Contable",
-        "Asesoría Laboral",
-        "Tributación Internacional",
-        "PYMES",
-        "Grandes Empresas"
+    const accountants = [
+        "Juan Pérez",
+        "María González",
+        "Pedro Soto",
+        "Ana Muñoz",
+        "Roberto Díaz"
+    ];
+
+    const taxRegimes = [
+        "Régimen Semi Integrado",
+        "Régimen Pro PYME",
+        "Régimen Transparente",
+        "Régimen 14 TER"
     ];
 
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <h1 className="text-2xl font-bold tracking-tight">Gestión de Contadores</h1>
+                <h1 className="text-2xl font-bold tracking-tight">Gestión de Clientes</h1>
                 <div className="flex items-center gap-3">
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                         <Plus className="h-4 w-4 mr-2" />
-                        Nuevo Contador
+                        Nuevo Cliente
                     </Button>
                 </div>
             </div>
@@ -96,11 +100,11 @@ export default function AccountantsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Contadores</CardTitle>
-                        <UserCheck className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium">Total Clientes</CardTitle>
+                        <Building className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">28</div>
+                        <div className="text-2xl font-bold">354</div>
                         <p className="text-xs text-muted-foreground">
                             Registrados en la plataforma
                         </p>
@@ -109,39 +113,39 @@ export default function AccountantsPage() {
 
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Contadores Activos</CardTitle>
-                        <UserCheck className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium">Clientes Activos</CardTitle>
+                        <Building className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">24</div>
+                        <div className="text-2xl font-bold">320</div>
                         <p className="text-xs text-muted-foreground">
-                            86% del total
+                            90% del total
                         </p>
                     </CardContent>
                 </Card>
 
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Clientes Asignados</CardTitle>
-                        <UserCheck className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium">Documentos Pendientes</CardTitle>
+                        <Building className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">354</div>
+                        <div className="text-2xl font-bold">156</div>
                         <p className="text-xs text-muted-foreground">
-                            12.6 por contador en promedio
+                            En espera de procesamiento
                         </p>
                     </CardContent>
                 </Card>
 
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Especialidades</CardTitle>
-                        <UserCheck className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium">Clientes por Contador</CardTitle>
+                        <Building className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">7</div>
+                        <div className="text-2xl font-bold">12.6</div>
                         <p className="text-xs text-muted-foreground">
-                            Áreas de especialización
+                            Promedio por contador
                         </p>
                     </CardContent>
                 </Card>
@@ -149,9 +153,9 @@ export default function AccountantsPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Lista de Contadores</CardTitle>
+                    <CardTitle>Lista de Clientes</CardTitle>
                     <CardDescription>
-                        Administra los contadores registrados en la plataforma
+                        Administra los clientes registrados en la plataforma
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -161,7 +165,7 @@ export default function AccountantsPage() {
                                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                                 <Input
                                     type="search"
-                                    placeholder="Buscar contador..."
+                                    placeholder="Buscar cliente por nombre o RUT..."
                                     className="pl-9 w-full"
                                 />
                             </div>
@@ -174,18 +178,19 @@ export default function AccountantsPage() {
                                 <SelectContent>
                                     <SelectItem value="all">Todos</SelectItem>
                                     <SelectItem value="active">Activos</SelectItem>
+                                    <SelectItem value="pending">Pendientes</SelectItem>
                                     <SelectItem value="inactive">Inactivos</SelectItem>
                                 </SelectContent>
                             </Select>
                             <Select>
                                 <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Especialidad" />
+                                    <SelectValue placeholder="Contador" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">Todas</SelectItem>
-                                    {specialties.map((specialty, index) => (
-                                        <SelectItem key={index} value={specialty.toLowerCase().replace(/\s+/g, '-')}>
-                                            {specialty}
+                                    <SelectItem value="all">Todos</SelectItem>
+                                    {accountants.map((accountant, index) => (
+                                        <SelectItem key={index} value={accountant.toLowerCase().replace(/\s+/g, '-')}>
+                                            {accountant}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -200,44 +205,63 @@ export default function AccountantsPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Contador</TableHead>
-                                    <TableHead>Especialidad</TableHead>
-                                    <TableHead>Contacto</TableHead>
-                                    <TableHead>Clientes</TableHead>
+                                    <TableHead>Cliente</TableHead>
+                                    <TableHead>Régimen Tributario</TableHead>
+                                    <TableHead>Contador Asignado</TableHead>
+                                    <TableHead>Documentos Pendientes</TableHead>
                                     <TableHead>Estado</TableHead>
                                     <TableHead>Última Actividad</TableHead>
                                     <TableHead className="text-right">Acciones</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {accountants.map((accountant) => (
-                                    <TableRow key={accountant.id}>
+                                {clients.map((client) => (
+                                    <TableRow key={client.id}>
                                         <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                <Avatar>
-                                                    <AvatarFallback>{accountant.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                                                </Avatar>
-                                                <div>
-                                                    <div className="font-medium">{accountant.name}</div>
-                                                    <div className="text-sm text-muted-foreground">{accountant.email}</div>
-                                                </div>
+                                            <div>
+                                                <div className="font-medium">{client.name}</div>
+                                                <div className="text-sm text-muted-foreground">{client.rut}</div>
                                             </div>
                                         </TableCell>
-                                        <TableCell>{accountant.specialty}</TableCell>
-                                        <TableCell>{accountant.phone}</TableCell>
-                                        <TableCell>{accountant.clients}</TableCell>
+                                        <TableCell>{client.taxRegime}</TableCell>
+                                        <TableCell>{client.accountant}</TableCell>
+                                        <TableCell>
+                                            {client.pendingDocs > 0 ? (
+                                                <Badge
+                                                    variant="outline"
+                                                    className="bg-amber-100 text-amber-800 border-amber-200"
+                                                >
+                                                    {client.pendingDocs}
+                                                </Badge>
+                                            ) : (
+                                                <Badge
+                                                    variant="outline"
+                                                    className="bg-green-100 text-green-800 border-green-200"
+                                                >
+                                                    0
+                                                </Badge>
+                                            )}
+                                        </TableCell>
                                         <TableCell>
                                             <Badge
                                                 variant="outline"
-                                                className={accountant.status === 'active'
-                                                    ? "bg-green-100 text-green-800 border-green-200"
-                                                    : "bg-red-100 text-red-800 border-red-200"
+                                                className={
+                                                    client.status === 'active'
+                                                        ? "bg-green-100 text-green-800 border-green-200"
+                                                        : client.status === 'pending'
+                                                            ? "bg-amber-100 text-amber-800 border-amber-200"
+                                                            : "bg-red-100 text-red-800 border-red-200"
                                                 }
                                             >
-                                                {accountant.status === 'active' ? 'Activo' : 'Inactivo'}
+                                                {client.status === 'active'
+                                                    ? 'Activo'
+                                                    : client.status === 'pending'
+                                                        ? 'Pendiente'
+                                                        : 'Inactivo'
+                                                }
                                             </Badge>
                                         </TableCell>
-                                        <TableCell>{accountant.lastActive}</TableCell>
+                                        <TableCell>{client.lastActivity}</TableCell>
                                         <TableCell className="text-right">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
@@ -250,22 +274,31 @@ export default function AccountantsPage() {
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem>
                                                         <Eye className="h-4 w-4 mr-2" />
-                                                        Ver perfil
+                                                        Ver detalles
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem>
                                                         <EditIcon className="h-4 w-4 mr-2" />
                                                         Editar
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem>
-                                                        {accountant.status === 'active' ? (
+                                                        <Users className="h-4 w-4 mr-2" />
+                                                        Cambiar contador
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem>
+                                                        {client.status === 'active' ? (
                                                             <>
                                                                 <TrashIcon className="h-4 w-4 mr-2 text-red-600" />
                                                                 <span className="text-red-600">Desactivar</span>
                                                             </>
+                                                        ) : client.status === 'inactive' ? (
+                                                            <>
+                                                                <Building className="h-4 w-4 mr-2 text-green-600" />
+                                                                <span className="text-green-600">Activar</span>
+                                                            </>
                                                         ) : (
                                                             <>
-                                                                <UserCheck className="h-4 w-4 mr-2 text-green-600" />
-                                                                <span className="text-green-600">Activar</span>
+                                                                <Building className="h-4 w-4 mr-2 text-green-600" />
+                                                                <span className="text-green-600">Aprobar</span>
                                                             </>
                                                         )}
                                                     </DropdownMenuItem>
@@ -280,7 +313,7 @@ export default function AccountantsPage() {
 
                     <div className="flex items-center justify-end space-x-2 py-4">
                         <div className="flex-1 text-sm text-muted-foreground">
-                            Mostrando <strong>5</strong> de <strong>28</strong> contadores
+                            Mostrando <strong>5</strong> de <strong>354</strong> clientes
                         </div>
                         <div className="space-x-2">
                             <Button
