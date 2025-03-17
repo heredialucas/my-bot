@@ -3,11 +3,11 @@
 import { UserButton } from '@repo/auth/client';
 import { Button } from '@repo/design-system/components/ui/button';
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
-import { AccountantSidebar } from '@/app/(authenticated)/components/accountant-sidebar';
 import { CalculatorIcon, HomeIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { AccountantSidebar } from '../components/sidebar-components/accountant-sidebar';
 
 type AccountantLayoutProps = {
     readonly children: ReactNode;

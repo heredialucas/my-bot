@@ -3,11 +3,11 @@
 import { UserButton } from '@repo/auth/client';
 import { Button } from '@repo/design-system/components/ui/button';
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
-import { ClientSidebar } from '@/app/(authenticated)/components/client-sidebar';
 import { HomeIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { ClientSidebar } from '../components/sidebar-components/client-sidebar';
 
 type ClientLayoutProps = {
     readonly children: ReactNode;

@@ -47,6 +47,7 @@ export function AccountantSidebar({ pathname }: AccountantSidebarProps) {
             icon: Users,
             href: '/accountant/clients',
         },
+        /* Comentado temporalmente para enfocarnos en la gestión de clientes
         {
             title: 'Perfil Tributario',
             icon: User,
@@ -82,6 +83,7 @@ export function AccountantSidebar({ pathname }: AccountantSidebarProps) {
             icon: MessageSquare,
             href: '/accountant/contact',
         },
+        */
     ];
 
     const isActivePath = (path: string) => pathname.endsWith(path);

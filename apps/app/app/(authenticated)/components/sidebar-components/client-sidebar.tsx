@@ -43,6 +43,7 @@ export function ClientSidebar({ pathname }: ClientSidebarProps) {
             icon: LayoutDashboard,
             href: '/client/dashboard',
         },
+        /* Comentado temporalmente para enfocarnos en la gestión de clientes
         {
             title: 'Perfil Tributario',
             icon: User,
@@ -100,6 +101,7 @@ export function ClientSidebar({ pathname }: ClientSidebarProps) {
             icon: MessageSquare,
             href: '/client/contact',
         },
+        */
     ];
 
     const toggleSubmenu = (title: string) => {

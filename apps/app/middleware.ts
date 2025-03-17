@@ -4,20 +4,33 @@ import {
   noseconeOptions,
   noseconeOptionsWithToolbar,
 } from '@repo/security/middleware';
-import type { NextMiddleware } from 'next/server';
+import type { NextMiddleware, NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { env } from './env';
+
+// Definición de tipos para los session claims
+type SessionMetadata = {
+  role?: string;
+  [key: string]: any;
+};
+
+// Definir los patrones de rutas para cada rol
+const isAdminRoute = (req: NextRequest) => req.nextUrl.pathname.startsWith('/admin');
+const isAccountantRoute = (req: NextRequest) => req.nextUrl.pathname.startsWith('/accountant');
+const isClientRoute = (req: NextRequest) => req.nextUrl.pathname.startsWith('/client');
 
 // Middleware para seguridad
 const securityHeaders = env.FLAGS_SECRET
   ? noseconeMiddleware(noseconeOptionsWithToolbar)
   : noseconeMiddleware(noseconeOptions);
 
-// Volvemos a la configuración original pero dejamos comentada nuestra lógica para referencia
-// En lugar de modificar el middleware, confiamos en la redirección que implementamos en
-// el archivo (authenticated)/page.tsx
-
-export default authMiddleware(() => {
-  // La redirección según roles se maneja en (authenticated)/page.tsx
+export default authMiddleware((req) => {
+  // Volvemos a la configuración original pero dejamos comentada nuestra lógica RBAC para implementar
+  // una solución basada en verificaciones a nivel de página o componente usando Clerk <Protect>
+  
+  // La protección por roles se implementará a nivel de páginas/componentes
+  
+  // Aplicar configuraciones de seguridad
   return securityHeaders();
 }) as unknown as NextMiddleware;
 
