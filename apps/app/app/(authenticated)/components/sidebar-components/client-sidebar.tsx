@@ -15,6 +15,7 @@ import {
     LayoutDashboard
 } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 type SubMenuItem = {
@@ -30,11 +31,9 @@ type MenuItem = {
     subMenus?: SubMenuItem[];
 };
 
-type ClientSidebarProps = {
-    pathname: string;
-};
 
-export function ClientSidebar({ pathname }: ClientSidebarProps) {
+export function ClientSidebar() {
+    const pathname = usePathname();
     const [expandedMenu, setExpandedMenu] = useState<string | null>("Perfil Tributario");
 
     const menuItems: MenuItem[] = [

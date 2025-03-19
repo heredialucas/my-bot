@@ -24,6 +24,7 @@ import {
     SidebarMenu,
     SidebarMenuItem
 } from '@repo/design-system/components/ui/sidebar';
+import { usePathname } from 'next/navigation';
 
 type MenuItemProps = {
     title: string;
@@ -31,22 +32,20 @@ type MenuItemProps = {
     href: string;
 };
 
-type AccountantSidebarProps = {
-    pathname: string;
-};
 
-export function AccountantSidebar({ pathname }: AccountantSidebarProps) {
+export function AccountantSidebar() {
+    const pathname = usePathname();
     const menuItems: MenuItemProps[] = [
         {
             title: 'Panel Principal',
             icon: LayoutDashboard,
             href: '/accountant/dashboard',
         },
-        {
-            title: 'Clientes',
-            icon: Users,
-            href: '/accountant/clients',
-        },
+        // {
+        //     title: 'Clientes',
+        //     icon: Users,
+        //     href: '/accountant/clients',
+        // },
         /* Comentado temporalmente para enfocarnos en la gestión de clientes
         {
             title: 'Perfil Tributario',

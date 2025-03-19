@@ -24,6 +24,7 @@ import {
     SidebarMenu,
     SidebarMenuItem
 } from '@repo/design-system/components/ui/sidebar';
+import { usePathname } from 'next/navigation';
 
 type MenuItemProps = {
     title: string;
@@ -31,11 +32,10 @@ type MenuItemProps = {
     href: string;
 };
 
-type AdminSidebarProps = {
-    pathname: string;
-};
 
-export function AdminSidebar({ pathname }: AdminSidebarProps) {
+
+export function AdminSidebar() {
+    const pathname = usePathname();
     const menuItems: MenuItemProps[] = [
         {
             title: 'Gestión de Usuarios',
