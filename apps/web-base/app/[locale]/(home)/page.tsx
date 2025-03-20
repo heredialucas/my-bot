@@ -27,11 +27,6 @@ const Home = async ({ params }: HomeProps) => {
 
   return (
     <>
-      {betaFeature && (
-        <div className="w-full bg-black py-2 text-center text-white">
-          Beta feature now available
-        </div>
-      )}
       <Hero dictionary={dictionary} />
       <Cases dictionary={dictionary} />
     </>
