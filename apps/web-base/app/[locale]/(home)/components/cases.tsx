@@ -1,56 +1,112 @@
 'use client';
 
-import {
-  Carousel,
-  type CarouselApi,
-  CarouselContent,
-  CarouselItem,
-} from '@repo/design-system/components/ui/carousel';
+import { Button } from '@repo/design-system/components/ui/button';
 import type { Dictionary } from '@repo/internationalization';
-import { useEffect, useState } from 'react';
+import { PricingCard } from './pricing-card';
+import { ChevronRight, Home, MonitorPlay } from 'lucide-react';
+import { useState } from 'react';
+import { useServiceStore, type ServiceOption } from '@/store';
 
 type CasesProps = {
   dictionary: Dictionary;
 };
 
 export const Cases = ({ dictionary }: CasesProps) => {
-  const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
+  const [includeWifiExtender, setIncludeWifiExtender] = useState(false);
+  const { selectedOption } = useServiceStore();
 
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
+  // Check if TV is included in the selected option
+  const includeInternetTV = selectedOption === 'internet-tv';
 
-    setTimeout(() => {
-      if (api.selectedScrollSnap() + 1 === api.scrollSnapList().length) {
-        setCurrent(0);
-        api.scrollTo(0);
-      } else {
-        api.scrollNext();
-        setCurrent(current + 1);
-      }
-    }, 1000);
-  }, [api, current]);
+  const pricingData = [
+    {
+      discount: 12,
+      months: 3,
+      planType: 'Hogar',
+      speed: 120,
+      price: 14990,
+      originalPrice: 16990,
+    },
+    {
+      discount: 16,
+      months: 4,
+      planType: 'Profesional',
+      speed: 300,
+      price: 16780,
+      originalPrice: 19990,
+    },
+    {
+      discount: 19,
+      months: 5,
+      planType: 'Empresas',
+      speed: 500,
+      price: 19410,
+      originalPrice: 23990,
+    },
+  ];
 
   return (
-    <div className="w-full py-20 lg:py-40">
-      <div className="container mx-auto">
-        <div className="flex flex-col gap-10">
-          <h2 className="text-left font-regular text-xl tracking-tighter md:text-5xl lg:max-w-xl">
-            {dictionary.web.home.cases.title}
-          </h2>
-          <Carousel setApi={setApi} className="w-full">
-            <CarouselContent>
-              {Array.from({ length: 15 }).map((_, index) => (
-                <CarouselItem className="basis-1/4 lg:basis-1/6" key={index}>
-                  <div className="flex aspect-square items-center justify-center rounded-md bg-muted p-6">
-                    <span className="text-sm">Logo {index + 1}</span>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+    <div className="w-full py-12 bg-gray-50">
+      <div className="container mx-auto px-4 max-w-6xl">
+
+        {/* Wifi Extender Option */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between px-5 py-5 border border-dashed border-gray-300 rounded-xl mb-10 relative">
+          <div className="text-lg font-medium">¿Quiere llevar un extensor Wifi?</div>
+          <div className="flex items-center mt-2 md:mt-0">
+            <div className="mr-4">Agregar por <span className="text-indigo-600 font-bold">$2.400</span>/mes</div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={includeWifiExtender}
+                onChange={(e) => setIncludeWifiExtender(e.target.checked)}
+                className="sr-only peer"
+              />
+              <div className="w-5 h-5 border-2 border-gray-400 rounded-sm peer-checked:bg-indigo-600 peer-checked:border-0 relative z-10 flex items-center justify-center after:content-['✓'] after:hidden peer-checked:after:block after:text-white after:text-xs"></div>
+            </label>
+          </div>
+        </div>
+
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {pricingData.map((plan, index) => (
+            <PricingCard
+              key={index}
+              discount={plan.discount}
+              months={plan.months}
+              planType={plan.planType}
+              speed={plan.speed}
+              price={plan.price}
+              originalPrice={plan.originalPrice}
+              includeWifiExtender={includeWifiExtender}
+              includeInternetTV={includeInternetTV}
+              showZappingButton={includeInternetTV}
+            />
+          ))}
+        </div>
+
+        {/* Info Boxes */}
+        <div className="mt-8 space-y-5">
+          <Button
+            variant="outline"
+            className="w-full flex items-center justify-between p-6 rounded-xl text-left border-2 hover:bg-gray-50"
+            asChild
+          >
+            <a href="#">
+              <span className="text-lg font-medium">Todo lo que debes saber de tu facturación te lo explicamos aquí</span>
+              <ChevronRight className="h-7 w-7 text-indigo-600" />
+            </a>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full flex items-center justify-between p-6 rounded-xl text-left border-2 hover:bg-gray-50"
+            asChild
+          >
+            <a href="#">
+              <span className="text-lg font-medium">Importante planes de fibra óptica</span>
+              <ChevronRight className="h-7 w-7 text-indigo-600" />
+            </a>
+          </Button>
         </div>
       </div>
     </div>

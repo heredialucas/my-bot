@@ -6,16 +6,15 @@
     },
     "header": {
       "home": "Inicio",
-      "product": {
-        "title": "Producto",
-        "description": "Gestionar un pequeño negocio hoy en día ya es difícil.",
-        "pricing": "Precios"
-      },
+      "product": "Internet hogar",
       "blog": "Blog",
       "docs": "Documentos",
       "contact": "Contacto",
       "signIn": "Iniciar sesión",
-      "signUp": "Comienza"
+      "signUp": "Comienza",
+      "nosotros": "Nosotros",
+      "sucursalVirtual": "Sucursal virtual",
+      "pagaTuBoleta": "Pagá tu boleta"
     },
     "home": {
       "meta": {
@@ -87,6 +86,10 @@
       "meta": {
         "title": "Hablemos sobre tu negocio",
         "description": "Programa una consulta con nuestro equipo para discutir cómo podemos ayudar a simplificar tus operaciones y fomentar el crecimiento de tu negocio."
+      },
+      "floating": {
+        "callMe": "¿Te llamamos?",
+        "chat": "Quiero chatear"
       },
       "hero": {
         "benefits": {

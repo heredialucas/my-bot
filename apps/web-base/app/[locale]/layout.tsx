@@ -1,20 +1,15 @@
 import '@repo/design-system/styles/globals.css';
 import './styles/web-base.css';
+import 'swiper/css';
+import 'swiper/css/pagination';
 import { DesignSystemProvider } from '@repo/design-system';
 import { fonts } from '@repo/design-system/lib/fonts';
 import { cn } from '@repo/design-system/lib/utils';
-import { Toolbar } from '@repo/feature-flags/components/toolbar';
 import { getDictionary } from '@repo/internationalization';
 import type { ReactNode } from 'react';
 import { Footer } from './components/footer';
 import { Header } from './components/header';
-
-// Temporary component to replace CMS toolbar
-const TemporaryCMSToolbar = () => (
-  <div className="fixed bottom-4 right-4 bg-gray-100 p-4 rounded-lg shadow-lg">
-    <p className="text-sm text-gray-600">CMS Toolbar - Pendiente de implementación</p>
-  </div>
-);
+import { FloatingContactButtons } from './components/floating-contact-buttons';
 
 type RootLayoutProperties = {
   readonly children: ReactNode;
@@ -29,18 +24,19 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
 
   return (
     <html
-      lang="en"
+      lang="es"
       className={cn(fonts, 'scroll-smooth')}
       suppressHydrationWarning
     >
-      <body>
+      <body className="overflow-x-hidden relative w-full">
         <DesignSystemProvider>
-          <Header dictionary={dictionary} />
-          {children}
-          <Footer />
+          <div className="overflow-x-hidden relative w-full">
+            <Header dictionary={dictionary} />
+            {children}
+            <Footer />
+            <FloatingContactButtons />
+          </div>
         </DesignSystemProvider>
-        <Toolbar />
-        <TemporaryCMSToolbar />
       </body>
     </html>
   );

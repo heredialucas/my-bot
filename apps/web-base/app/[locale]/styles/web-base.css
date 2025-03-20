@@ -34,3 +34,29 @@
   content: attr(title);
   @apply inline-block text-muted-foreground text-right mb-6 text-sm;
 }
+
+/* Prevenir scroll horizontal en toda la aplicación */
+html, body {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+/* Animación para deslizamiento de derecha a izquierda */
+@keyframes slide-in {
+  0% {
+    transform: translate(100%, -50%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, -50%);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 1.5s ease-out forwards;
+}
