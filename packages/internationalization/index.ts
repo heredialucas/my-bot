@@ -7,17 +7,19 @@ export const locales = [
   ...languine.locale.targets,
 ] as const;
 
-export type Dictionary = typeof en;
-type Dictionaries = Record<keyof typeof locales, () => Promise<Dictionary>>;
+export type Locale = typeof locales[number];
+export type Dictionary = any;
 
-const dictionaries = locales.reduce<Dictionaries>((acc, locale) => {
-  acc[locale as keyof typeof locales] = () =>
-    import(`./dictionaries/${locale}.json`).then((mod) => mod.default);
-  return acc;
-}, {} as Dictionaries);
+const dictionaries: Record<Locale, () => Promise<Dictionary>> = {
+  en: () => import('./dictionaries/en.json').then((module) => module.default),
+  es: () => import('./dictionaries/es.json').then((module) => module.default),
+  de: () => import('./dictionaries/de.json').then((module) => module.default),
+};
 
 export const getDictionary = async (locale: string) => {
-  const dictionary = await dictionaries[locale as keyof typeof locales]();
+  // Make sure the locale is valid, fallback to 'en' if not
+  const validLocale = locales.includes(locale as Locale) ? locale as Locale : 'es';
+  const dictionary = await dictionaries[validLocale]();
 
   return dictionary;
 };
