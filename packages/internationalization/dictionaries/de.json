@@ -31,27 +31,27 @@
       "features": {
         "title": "Leistungsstarke Werkzeuge für moderne Unternehmen",
         "description": "Entdecken Sie, wie unsere hochmodernen Funktionen Ihre täglichen Abläufe revolutionieren können.",
-        "items": {
-          "0": {
+        "items": [
+          {
             "title": "Optimierte Abläufe",
             "description": "Unsere Plattform optimiert die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
           }
-        }
+        ]
       },
       "stats": {
         "title": "Echte Ergebnisse, echte Auswirkungen",
         "description": "Schließen Sie sich Tausenden von Unternehmen an, die ihre Abläufe mit unserer Plattform transformiert haben. Unsere Lösungen haben Unternehmen geholfen, die Verwaltungskosten um 60 % zu senken und die Handelseffizienz im Durchschnitt um 45 % zu steigern.",
-        "items": {
-          "0": "Monatlich aktive Nutzer",
-          "1": "Täglich aktive Nutzer",
-          "2": "Monatlich wiederkehrende Einnahmen",
-          "3": "Kosten pro Akquisition"
-        }
+        "items": [
+          "Monatlich aktive Nutzer",
+          "Täglich aktive Nutzer",
+          "Monatlich wiederkehrende Einnahmen",
+          "Kosten pro Akquisition"
+        ]
       },
       "testimonials": {
         "title": "Hören Sie von unserer florierenden Gemeinschaft",
-        "items": {
-          "0": {
+        "items": [
+          {
             "title": "Beste Entscheidung",
             "description": "Unser Ziel war es, den Handel für kleine und mittlere Unternehmen zu optimieren, um ihn einfacher und schneller als je zuvor zu gestalten, und das haben wir gemeinsam erreicht.",
             "author": {
@@ -59,18 +59,18 @@
               "image": "https://github.com/haydenbleasel.png"
             }
           }
-        }
+        ]
       },
       "faq": {
         "title": "Häufige Fragen, Expertenantworten",
         "description": "Erhalten Sie schnelle Antworten auf Ihre dringendsten Fragen zu unserer Plattform. Wir haben alles zusammengestellt, was Sie über die Transformation Ihrer Geschäftsabläufe und den Einstieg in moderne Handelslösungen wissen müssen.",
         "cta": "Haben Sie Fragen? Kontaktieren Sie uns",
-        "items": {
-          "0": {
+        "items": [
+          {
             "question": "Was ist die Plattform?",
             "answer": "Die Plattform ist eine Handelsplattform, die es Ihnen ermöglicht, mit Vertrauen zu handeln."
           }
-        }
+        ]
       },
       "cta": {
         "title": "Starten Sie Ihre Geschäftstransformation",
@@ -89,12 +89,12 @@
         "description": "Vereinbaren Sie eine Beratung mit unserem Team, um zu besprechen, wie wir Ihre Abläufe optimieren und das Wachstum Ihres Unternehmens vorantreiben können."
       },
       "hero": {
-        "benefits": {
-          "0": {
+        "benefits": [
+          {
             "title": "Personalisierte Beratung",
             "description": "Erhalten Sie maßgeschneiderte Lösungen und Expertenrat, die auf die Bedürfnisse Ihres Unternehmens zugeschnitten sind."
           }
-        },
+        ],
         "form": {
           "title": "Buchen Sie ein Treffen",
           "date": "Datum",
