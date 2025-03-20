@@ -1,13 +1,14 @@
 import type { Dictionary } from '@repo/internationalization';
 import { User } from 'lucide-react';
-import { getDictionaryValue, getArrayFromDictionaryItems } from '@/utils/dictionary';
 
 type FeaturesProps = {
   dictionary: Dictionary;
 };
 
 export const Features = ({ dictionary }: FeaturesProps) => {
-  const featureItems = getArrayFromDictionaryItems(dictionary.web.home.features.items);
+  const featureItems = Array.isArray(dictionary.web.home.features.items)
+    ? dictionary.web.home.features.items
+    : Object.values(dictionary.web.home.features.items || {});
 
   return (
     <div className="w-full py-20 lg:py-40">
@@ -16,59 +17,32 @@ export const Features = ({ dictionary }: FeaturesProps) => {
           <div className="flex flex-col items-start gap-4">
             <div className="flex flex-col gap-2">
               <h2 className="max-w-xl text-left font-regular text-3xl tracking-tighter md:text-5xl">
-                {getDictionaryValue(dictionary.web.home.features.title)}
+                {dictionary.web.home.features.title}
               </h2>
               <p className="max-w-xl text-left text-lg text-muted-foreground leading-relaxed tracking-tight lg:max-w-lg">
-                {getDictionaryValue(dictionary.web.home.features.description)}
+                {dictionary.web.home.features.description}
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="flex aspect-square h-full flex-col justify-between rounded-md bg-muted p-6 lg:col-span-2 lg:aspect-auto">
-              <User className="h-8 w-8 stroke-1" />
-              <div className="flex flex-col">
-                <h3 className="text-xl tracking-tight">
-                  {getDictionaryValue(featureItems[0]?.title)}
-                </h3>
-                <p className="max-w-xs text-base text-muted-foreground">
-                  {getDictionaryValue(featureItems[0]?.description)}
-                </p>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {featureItems.map((feature: any, index: number) => (
+              <div
+                className="flex flex-col justify-between gap-4 rounded-md border p-6 md:col-span-1"
+                key={index}
+              >
+                <div className="flex w-fit items-center justify-center rounded-full bg-primary p-4">
+                  <User className="h-4 w-4 stroke-primary-foreground" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-xl font-medium tracking-tight">
+                    {feature.title}
+                  </h3>
+                  <p className="max-w-xl text-base text-muted-foreground leading-relaxed tracking-tight">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex aspect-square flex-col justify-between rounded-md bg-muted p-6">
-              <User className="h-8 w-8 stroke-1" />
-              <div className="flex flex-col">
-                <h3 className="text-xl tracking-tight">
-                  {getDictionaryValue(featureItems[0]?.title)}
-                </h3>
-                <p className="max-w-xs text-base text-muted-foreground">
-                  {getDictionaryValue(featureItems[0]?.description)}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex aspect-square flex-col justify-between rounded-md bg-muted p-6">
-              <User className="h-8 w-8 stroke-1" />
-              <div className="flex flex-col">
-                <h3 className="text-xl tracking-tight">
-                  {getDictionaryValue(featureItems[0]?.title)}
-                </h3>
-                <p className="max-w-xs text-base text-muted-foreground">
-                  {getDictionaryValue(featureItems[0]?.description)}
-                </p>
-              </div>
-            </div>
-            <div className="flex aspect-square h-full flex-col justify-between rounded-md bg-muted p-6 lg:col-span-2 lg:aspect-auto">
-              <User className="h-8 w-8 stroke-1" />
-              <div className="flex flex-col">
-                <h3 className="text-xl tracking-tight">
-                  {getDictionaryValue(featureItems[0]?.title)}
-                </h3>
-                <p className="max-w-xs text-base text-muted-foreground">
-                  {getDictionaryValue(featureItems[0]?.description)}
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

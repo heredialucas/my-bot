@@ -15,7 +15,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import type { Dictionary } from '@repo/internationalization';
-import { getDictionaryValue } from '@/utils/dictionary';
 import Image from 'next/image';
 import Logo from './logo.svg';
 
@@ -77,22 +76,22 @@ export const Header = ({ dictionary }: HeaderProps) => {
                     <>
                       <NavigationMenuLink asChild>
                         <Button variant="ghost" className="text-white hover:text-white hover:bg-[#2E5A86]" asChild>
-                          <Link href={item.href}>{getDictionaryValue(item.title)}</Link>
+                          <Link href={item.href}>{item.title}</Link>
                         </Button>
                       </NavigationMenuLink>
                     </>
                   ) : (
                     <>
                       <NavigationMenuTrigger className="font-medium text-sm text-white hover:text-white hover:bg-[#2E5A86]">
-                        {getDictionaryValue(item.title)}
+                        {item.title}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent className="!w-[450px] p-4 bg-[#1D4971]">
                         <div className="flex grid-cols-2 flex-col gap-4 lg:grid">
                           <div className="flex h-full flex-col justify-between">
                             <div className="flex flex-col">
-                              <p className="text-base text-white">{getDictionaryValue(item.title)}</p>
+                              <p className="text-base text-white">{item.title}</p>
                               <p className="text-gray-300 text-sm">
-                                {getDictionaryValue(item.description)}
+                                {item.description}
                               </p>
                             </div>
                           </div>
@@ -131,11 +130,11 @@ export const Header = ({ dictionary }: HeaderProps) => {
                               : undefined
                           }
                         >
-                          <span className="text-lg">{getDictionaryValue(item.title)}</span>
+                          <span className="text-lg">{item.title}</span>
                           <MoveRight className="h-4 w-4 stroke-1 text-gray-300" />
                         </Link>
                       ) : (
-                        <p className="text-lg text-white">{getDictionaryValue(item.title)}</p>
+                        <p className="text-lg text-white">{item.title}</p>
                       )}
                     </div>
                   </div>

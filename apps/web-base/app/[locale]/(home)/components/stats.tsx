@@ -1,6 +1,5 @@
 import type { Dictionary } from '@repo/internationalization';
 import { MoveDownLeft, MoveUpRight } from 'lucide-react';
-import { getDictionaryValue, getArrayFromDictionaryItems } from '@/utils/dictionary';
 
 type StatsProps = {
   dictionary: Dictionary;
@@ -8,7 +7,9 @@ type StatsProps = {
 
 export const Stats = ({ dictionary }: StatsProps) => {
   // Convertir items a array si es un objeto
-  const statsItems = getArrayFromDictionaryItems(dictionary.web.home.stats.items);
+  const statsItems = Array.isArray(dictionary.web.home.stats.items)
+    ? dictionary.web.home.stats.items
+    : Object.values(dictionary.web.home.stats.items || {});
 
   return (
     <div className="w-full py-20 lg:py-40">
@@ -17,16 +18,16 @@ export const Stats = ({ dictionary }: StatsProps) => {
           <div className="flex flex-col items-start gap-4">
             <div className="flex flex-col gap-2">
               <h2 className="text-left font-regular text-xl tracking-tighter md:text-5xl lg:max-w-xl">
-                {getDictionaryValue(dictionary.web.home.stats.title)}
+                {dictionary.web.home.stats.title}
               </h2>
               <p className="text-left text-lg text-muted-foreground leading-relaxed tracking-tight lg:max-w-sm">
-                {getDictionaryValue(dictionary.web.home.stats.description)}
+                {dictionary.web.home.stats.description}
               </p>
             </div>
           </div>
           <div className="flex items-center justify-center">
             <div className="grid w-full grid-cols-1 gap-2 text-left sm:grid-cols-2 lg:grid-cols-2">
-              {statsItems.map((item, index) => {
+              {statsItems.map((item: any, index: number) => {
                 const delta = Math.random() * 100;
                 const metric = Math.random() * 1000000;
 
@@ -48,7 +49,7 @@ export const Stats = ({ dictionary }: StatsProps) => {
                       </span>
                     </h2>
                     <p className="max-w-xl text-left text-base text-muted-foreground leading-relaxed tracking-tight">
-                      {getDictionaryValue(item)}
+                      {typeof item === 'string' ? item : (item.title || '')}
                     </p>
                   </div>
                 );

@@ -6,7 +6,6 @@ import {
 } from '@repo/design-system/components/ui/accordion';
 import { Button } from '@repo/design-system/components/ui/button';
 import type { Dictionary } from '@repo/internationalization';
-import { getDictionaryValue, getArrayFromDictionaryItems } from '@/utils/dictionary';
 import { PhoneCall } from 'lucide-react';
 import Link from 'next/link';
 
@@ -16,7 +15,9 @@ type FAQProps = {
 
 export const FAQ = ({ dictionary }: FAQProps) => {
   // Obtener los items del FAQ como array, independientemente de si es un objeto o un array
-  const faqItems = getArrayFromDictionaryItems(dictionary.web.home.faq.items);
+  const faqItems = Array.isArray(dictionary.web.home.faq.items)
+    ? dictionary.web.home.faq.items
+    : Object.values(dictionary.web.home.faq.items || {});
 
   return (
     <div className="w-full py-20 lg:py-40">
@@ -26,16 +27,16 @@ export const FAQ = ({ dictionary }: FAQProps) => {
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <h4 className="max-w-xl text-left font-regular text-3xl tracking-tighter md:text-5xl">
-                  {getDictionaryValue(dictionary.web.home.faq.title)}
+                  {dictionary.web.home.faq.title}
                 </h4>
                 <p className="max-w-xl text-left text-lg text-muted-foreground leading-relaxed tracking-tight lg:max-w-lg">
-                  {getDictionaryValue(dictionary.web.home.faq.description)}
+                  {dictionary.web.home.faq.description}
                 </p>
               </div>
               <div className="">
                 <Button className="gap-4" variant="outline" asChild>
                   <Link href="/contact">
-                    {getDictionaryValue(dictionary.web.home.faq.cta)}{' '}
+                    {dictionary.web.home.faq.cta}{' '}
                     <PhoneCall className="h-4 w-4" />
                   </Link>
                 </Button>
@@ -45,10 +46,10 @@ export const FAQ = ({ dictionary }: FAQProps) => {
           <Accordion type="single" collapsible className="w-full">
             {/* Repetir los items para tener varias preguntas */}
             {[...Array(7)].flatMap((_, i) =>
-              faqItems.map((item, index) => (
+              faqItems.map((item: any, index: number) => (
                 <AccordionItem key={`${i}-${index}`} value={`index-${i}-${index}`}>
-                  <AccordionTrigger>{getDictionaryValue(item.question)}</AccordionTrigger>
-                  <AccordionContent>{getDictionaryValue(item.answer)}</AccordionContent>
+                  <AccordionTrigger>{item.question}</AccordionTrigger>
+                  <AccordionContent>{item.answer}</AccordionContent>
                 </AccordionItem>
               ))
             )}
