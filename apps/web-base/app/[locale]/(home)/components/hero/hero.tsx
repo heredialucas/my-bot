@@ -6,10 +6,10 @@ import Image from 'next/image';
 import { useServiceStore } from '@/store';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
-import fiberImage from './fiber.png';
-import companyImage from './company.png';
-import hogarImage from './hogar.png';
-import profesionalImage from './profesional.png';
+import fiberImage from '@/public/fiber.png';
+import companyImage from '@/public/company.png';
+import hogarImage from '@/public/hogar.png';
+import profesionalImage from '@/public/profesional.png';
 
 
 type HeroProps = {

@@ -4,6 +4,10 @@ import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
 import { Features } from './components/features';
 import { Hero } from './components/hero/hero';
+import { InternetAvailability } from './components/internet-availability/internet-availability';
+import { FiberOpticInfo } from './components/fiber-optic-info';
+import { CallToAction } from './components/call-to-action';
+import { Faq } from './components/faq';
 
 type HomeProps = {
   params: Promise<{
@@ -29,6 +33,10 @@ const Home = async ({ params }: HomeProps) => {
     <>
       <Hero dictionary={dictionary} />
       <Features dictionary={dictionary} />
+      <InternetAvailability dictionary={dictionary} />
+      <FiberOpticInfo dictionary={dictionary} />
+      <CallToAction dictionary={dictionary} />
+      <Faq dictionary={dictionary} />
     </>
   );
 };

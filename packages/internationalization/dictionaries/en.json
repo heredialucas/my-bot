@@ -14,6 +14,9 @@
       "blog": "Blog",
       "docs": "Docs",
       "contact": "Contact",
+      "about": "About Us",
+      "sucursalVirtual": "Virtual Branch",
+      "pagaTuBoleta": "Pay Your Bill",
       "signIn": "Sign in",
       "signUp": "Get started"
     },
@@ -110,6 +113,53 @@
         "title": "Blog",
         "description": "Thoughts, ideas, and opinions."
       }
+    },
+    "about": {
+      "metaTitle": "About Us | Our Story and Mission",
+      "metaDescription": "Learn about our journey, our mission, and the team that's working to transform business operations worldwide.",
+      "title": "About Our Company",
+      "subtitle": "We're on a mission to revolutionize how businesses operate in the digital age.",
+      "imageAlt": "Our team working together",
+      "missionTitle": "Our Mission & Values",
+      "missionText": "Founded with a clear purpose, we set out to build tools that make business operations simpler, more efficient, and more effective. We believe that every business, regardless of size, deserves access to powerful technology that can help them compete and thrive.",
+      "values": [
+        {
+          "title": "Innovation",
+          "description": "We constantly push boundaries to deliver cutting-edge solutions."
+        },
+        {
+          "title": "Integrity",
+          "description": "We believe in transparency and honesty in everything we do."
+        },
+        {
+          "title": "Impact",
+          "description": "We measure our success by the positive change we create for our customers."
+        }
+      ],
+      "teamTitle": "Meet Our Team",
+      "teamSubtitle": "A dedicated group of professionals working to make your business more successful.",
+      "team": [
+        {
+          "name": "Jane Doe",
+          "position": "CEO & Founder",
+          "image": "/images/about/team-member-1.jpg"
+        },
+        {
+          "name": "John Smith",
+          "position": "CTO",
+          "image": "/images/about/team-member-2.jpg"
+        },
+        {
+          "name": "Sarah Johnson",
+          "position": "Head of Product",
+          "image": "/images/about/team-member-3.jpg"
+        },
+        {
+          "name": "Michael Brown",
+          "position": "Lead Developer",
+          "image": "/images/about/team-member-4.jpg"
+        }
+      ]
     },
     "contact": {
       "meta": {

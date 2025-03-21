@@ -16,7 +16,7 @@ import { useState } from 'react';
 
 import type { Dictionary } from '@repo/internationalization';
 import Image from 'next/image';
-import Logo from './logo.svg';
+import Logo from '@/public/logo.svg';
 
 type HeaderProps = {
   dictionary: Dictionary;
@@ -28,13 +28,13 @@ export const Header = ({ dictionary }: HeaderProps) => {
 
   const navigationItems = [
     {
-      title: headerDict['nosotros'] || 'Nosotros',
-      href: '/nosotros',
+      title: headerDict['about'] || 'Nosotros',
+      href: '/about',
       description: '',
     },
     {
       title: headerDict['contact'] || 'Contacto',
-      href: '/contacto',
+      href: '/contact',
       description: '',
     },
     {
