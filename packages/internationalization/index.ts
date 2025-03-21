@@ -8,18 +8,26 @@ export const locales = [
 ] as const;
 
 export type Locale = typeof locales[number];
-export type Dictionary = any;
+export type Dictionary = typeof en;
+type Dictionaries = Record<Locale, () => Promise<Dictionary>>;
 
-const dictionaries: Record<Locale, () => Promise<Dictionary>> = {
-  en: () => import('./dictionaries/en.json').then((module) => module.default),
-  es: () => import('./dictionaries/es.json').then((module) => module.default),
-  de: () => import('./dictionaries/de.json').then((module) => module.default),
-};
+const dictionaries = locales.reduce<Dictionaries>((acc, locale) => {
+  acc[locale] = () =>
+    import(`./dictionaries/${locale}.json`).then((mod) => mod.default);
+  return acc;
+}, {} as Dictionaries);
 
 export const getDictionary = async (locale: string) => {
-  // Make sure the locale is valid, fallback to 'en' if not
-  const validLocale = locales.includes(locale as Locale) ? locale as Locale : 'es';
-  const dictionary = await dictionaries[validLocale]();
+  // Check if the requested locale is valid
+  const isValidLocale = locales.includes(locale as Locale);
+  const safeLocale = isValidLocale ? (locale as Locale) : 'es';
 
-  return dictionary;
+  try {
+    const dictionary = await dictionaries[safeLocale]();
+    return dictionary;
+  } catch (error) {
+    console.error(`Failed to load dictionary for locale ${safeLocale}:`, error);
+    // Fallback to English if loading fails
+    return await dictionaries['es']();
+  }
 };

@@ -22,10 +22,38 @@
         "description": "En el mundo acelerado de hoy, tu negocio merece más que sistemas de comercio obsoletos. Nuestra plataforma innovadora simplifica las operaciones, reduce la complejidad y ayuda a las pequeñas empresas a prosperar en la economía moderna."
       },
       "hero": {
-        "announcement": "Lee nuestro último artículo"
+        "announcement": "Lee nuestro último artículo",
+        "serviceOptions": {
+          "internetHogar": "Internet hogar",
+          "internetTV": "Internet + TV online"
+        }
       },
       "cases": {
-        "title": "Historias de éxito que empoderan en todo el mundo"
+        "title": "Historias de éxito que empoderan en todo el mundo",
+        "wifiExtender": {
+          "question": "¿Quiere llevar un extensor Wifi?",
+          "add": "Agregar por",
+          "price": "$2.400",
+          "perMonth": "/mes"
+        },
+        "pricing": {
+          "discount": "DESCUENTO",
+          "months": "X",
+          "newCustomerPromo": "Promoción clientes nuevos",
+          "plan": "Plan",
+          "fiber": "Fibra",
+          "monthly": "Mensual",
+          "laterMonthPrice": "Mes {months} pagás",
+          "serviceDetails": "Detalles del servicio",
+          "wifiExtender": "Extensor Wifi",
+          "checkAvailability": "Revisar factibilidad",
+          "viewInclusions": "Ver lo que incluye",
+          "chooseTVPlan": "Elegí tu plan de Zapping"
+        },
+        "infoBoxes": {
+          "billing": "Todo lo que debes saber de tu facturación te lo explicamos aquí",
+          "fiberPlans": "Importante planes de fibra óptica"
+        }
       },
       "features": {
         "title": "Herramientas poderosas para el negocio moderno",

@@ -23,10 +23,38 @@
         "description": "In today's fast-paced world, your business deserves better than outdated trading systems. Our innovative platform streamlines operations, reduces complexity, and helps small businesses thrive in the modern economy."
       },
       "hero": {
-        "announcement": "Read our latest article"
+        "announcement": "Read our latest article",
+        "serviceOptions": {
+          "internetHogar": "Home Internet",
+          "internetTV": "Internet + Online TV"
+        }
       },
       "cases": {
-        "title": "Empowering Success Stories Across the Globe"
+        "title": "Empowering Success Stories Across the Globe",
+        "wifiExtender": {
+          "question": "Would you like to take a Wifi extender?",
+          "add": "Add for",
+          "price": "$2,400",
+          "perMonth": "/month"
+        },
+        "pricing": {
+          "discount": "DISCOUNT",
+          "months": "FOR",
+          "newCustomerPromo": "New customer promotion",
+          "plan": "Plan",
+          "fiber": "Fiber",
+          "monthly": "Monthly",
+          "laterMonthPrice": "Month {months} you pay",
+          "serviceDetails": "Service details",
+          "wifiExtender": "Wifi Extender",
+          "checkAvailability": "Check availability",
+          "viewInclusions": "See what's included",
+          "chooseTVPlan": "Choose your Zapping plan"
+        },
+        "infoBoxes": {
+          "billing": "Everything you need to know about your billing is explained here",
+          "fiberPlans": "Important fiber optic plans"
+        }
       },
       "features": {
         "title": "Powerful Tools for Modern Business",

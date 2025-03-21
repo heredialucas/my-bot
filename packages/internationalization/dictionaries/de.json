@@ -1,59 +1,86 @@
 {
   "web": {
     "global": {
-      "primaryCta": "Rufen Sie an",
+      "primaryCta": "Termin vereinbaren",
       "secondaryCta": "Registrieren"
     },
     "header": {
       "home": "Startseite",
-      "product": {
-        "title": "Produkt",
-        "description": "Die Verwaltung eines kleinen Unternehmens ist heute bereits schwierig.",
-        "pricing": "Preise"
-      },
+      "product": "Produkt",
       "blog": "Blog",
       "docs": "Dokumente",
       "contact": "Kontakt",
       "signIn": "Anmelden",
-      "signUp": "Loslegen"
+      "signUp": "Loslegen",
+      "nosotros": "Über uns",
+      "sucursalVirtual": "Virtuelle Filiale",
+      "pagaTuBoleta": "Rechnung bezahlen"
     },
     "home": {
       "meta": {
         "title": "Transformieren Sie Ihre Geschäftsabläufe noch heute",
-        "description": "In der heutigen schnelllebigen Welt verdient Ihr Unternehmen bessere Lösungen als veraltete Handelssysteme. Unsere innovative Plattform optimiert die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
+        "description": "In der heutigen schnelllebigen Welt verdient Ihr Unternehmen mehr als veraltete Handelssysteme. Unsere innovative Plattform strafft die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
       },
       "hero": {
-        "announcement": "Lesen Sie unseren neuesten Artikel"
+        "announcement": "Lesen Sie unseren neuesten Artikel",
+        "serviceOptions": {
+          "internetHogar": "Internet zu Hause",
+          "internetTV": "Internet + Online-TV"
+        }
       },
       "cases": {
-        "title": "Erfolgreiche Geschichten aus aller Welt"
+        "title": "Erfolgsgeschichten, die weltweit Menschen stärken",
+        "wifiExtender": {
+          "question": "Möchten Sie einen WLAN-Verstärker mitnehmen?",
+          "add": "Hinzufügen für",
+          "price": "2.400 €",
+          "perMonth": "/Monat"
+        },
+        "pricing": {
+          "discount": "RABATT",
+          "months": "FÜR",
+          "newCustomerPromo": "Neukunden-Angebot",
+          "plan": "Plan",
+          "fiber": "Glasfaser",
+          "monthly": "Monatlich",
+          "laterMonthPrice": "Monat {months} zahlen Sie",
+          "serviceDetails": "Service-Details",
+          "wifiExtender": "WLAN-Verstärker",
+          "checkAvailability": "Verfügbarkeit prüfen",
+          "viewInclusions": "Sehen Sie, was enthalten ist",
+          "chooseTVPlan": "Wählen Sie Ihren Zapping-Plan"
+        },
+        "infoBoxes": {
+          "billing": "Alles, was Sie über Ihre Abrechnung wissen müssen, erklären wir hier",
+          "fiberPlans": "Wichtige Glasfaserpläne"
+        }
       },
       "features": {
-        "title": "Leistungsstarke Werkzeuge für moderne Unternehmen",
-        "description": "Entdecken Sie, wie unsere hochmodernen Funktionen Ihre täglichen Abläufe revolutionieren können.",
+        "title": "Leistungsstarke Tools für moderne Unternehmen",
+        "description": "Entdecken Sie, wie unsere modernsten Funktionen Ihre täglichen Abläufe revolutionieren können.",
         "items": [
           {
             "title": "Optimierte Abläufe",
-            "description": "Unsere Plattform optimiert die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
+            "description": "Unsere Plattform strafft die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
           }
         ]
       },
       "stats": {
-        "title": "Echte Ergebnisse, echte Auswirkungen",
-        "description": "Schließen Sie sich Tausenden von Unternehmen an, die ihre Abläufe mit unserer Plattform transformiert haben. Unsere Lösungen haben Unternehmen geholfen, die Verwaltungskosten um 60 % zu senken und die Handelseffizienz im Durchschnitt um 45 % zu steigern.",
+        "title": "Echte Ergebnisse, echte Wirkung",
+        "description": "Schließen Sie sich Tausenden von Unternehmen an, die ihre Abläufe mit unserer Plattform transformiert haben. Unsere Lösungen haben Unternehmen geholfen, die Verwaltungskosten um 60 % zu senken und die Handelseffizienz um durchschnittlich 45 % zu steigern.",
         "items": [
           "Monatlich aktive Nutzer",
           "Täglich aktive Nutzer",
           "Monatlich wiederkehrende Einnahmen",
-          "Kosten pro Akquisition"
+          "Akquisitionskosten"
         ]
       },
       "testimonials": {
-        "title": "Hören Sie von unserer florierenden Gemeinschaft",
+        "title": "Hören Sie von unserer erfolgreichen Community",
         "items": [
           {
             "title": "Beste Entscheidung",
-            "description": "Unser Ziel war es, den Handel für kleine und mittlere Unternehmen zu optimieren, um ihn einfacher und schneller als je zuvor zu gestalten, und das haben wir gemeinsam erreicht.",
+            "description": "Unser Ziel war es, den Handel von kleinen und mittleren Unternehmen zu optimieren, ihn einfacher und schneller als je zuvor zu gestalten, und das haben wir gemeinsam geschafft.",
             "author": {
               "name": "Hayden Bleasel",
               "image": "https://github.com/haydenbleasel.png"
@@ -64,7 +91,7 @@
       "faq": {
         "title": "Häufige Fragen, Expertenantworten",
         "description": "Erhalten Sie schnelle Antworten auf Ihre dringendsten Fragen zu unserer Plattform. Wir haben alles zusammengestellt, was Sie über die Transformation Ihrer Geschäftsabläufe und den Einstieg in moderne Handelslösungen wissen müssen.",
-        "cta": "Haben Sie Fragen? Kontaktieren Sie uns",
+        "cta": "Fragen? Kontaktieren Sie uns",
         "items": [
           {
             "question": "Was ist die Plattform?",
@@ -74,7 +101,7 @@
       },
       "cta": {
         "title": "Starten Sie Ihre Geschäftstransformation",
-        "description": "Schließen Sie sich Tausenden von zukunftsorientierten Unternehmen an, die ihre Abläufe bereits modernisiert haben. Unsere Plattform bietet die Werkzeuge, Unterstützung und Effizienz, die Sie benötigen, um in der heutigen wettbewerbsintensiven Markt erfolgreich zu sein. Beginnen Sie in wenigen Minuten."
+        "description": "Schließen Sie sich Tausenden von zukunftsorientierten Unternehmen an, die ihre Abläufe bereits modernisiert haben. Unsere Plattform bietet die Tools, die Unterstützung und die Effizienz, die Sie benötigen, um auf dem heutigen Wettbewerbsmarkt erfolgreich zu sein. Starten Sie in Minuten."
       }
     },
     "blog": {
@@ -86,22 +113,26 @@
     "contact": {
       "meta": {
         "title": "Lassen Sie uns über Ihr Unternehmen sprechen",
-        "description": "Vereinbaren Sie eine Beratung mit unserem Team, um zu besprechen, wie wir Ihre Abläufe optimieren und das Wachstum Ihres Unternehmens vorantreiben können."
+        "description": "Vereinbaren Sie ein Beratungsgespräch mit unserem Team, um zu besprechen, wie wir Ihnen helfen können, Ihre Abläufe zu optimieren und das Wachstum Ihres Unternehmens zu fördern."
+      },
+      "floating": {
+        "callMe": "Sollen wir Sie anrufen?",
+        "chat": "Ich möchte chatten"
       },
       "hero": {
         "benefits": [
           {
             "title": "Personalisierte Beratung",
-            "description": "Erhalten Sie maßgeschneiderte Lösungen und Expertenrat, die auf die Bedürfnisse Ihres Unternehmens zugeschnitten sind."
+            "description": "Erhalten Sie maßgeschneiderte Lösungen und Expertenratschläge, die auf die Bedürfnisse Ihres Unternehmens zugeschnitten sind."
           }
         ],
         "form": {
-          "title": "Buchen Sie ein Treffen",
+          "title": "Meeting buchen",
           "date": "Datum",
           "firstName": "Vorname",
           "lastName": "Nachname",
           "resume": "Lebenslauf hochladen",
-          "cta": "Buchen Sie das Treffen"
+          "cta": "Meeting buchen"
         }
       }
     }

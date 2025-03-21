@@ -51,9 +51,9 @@ export const Cases = ({ dictionary }: CasesProps) => {
 
         {/* Wifi Extender Option */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between px-5 py-5 border border-dashed border-gray-300 rounded-xl mb-10 relative">
-          <div className="text-lg font-medium">¿Quiere llevar un extensor Wifi?</div>
+          <div className="text-lg font-medium">{dictionary.web.home.cases.wifiExtender.question}</div>
           <div className="flex items-center mt-2 md:mt-0">
-            <div className="mr-4">Agregar por <span className="text-indigo-600 font-bold">$2.400</span>/mes</div>
+            <div className="mr-4">{dictionary.web.home.cases.wifiExtender.add} <span className="text-indigo-600 font-bold">{dictionary.web.home.cases.wifiExtender.price}</span>{dictionary.web.home.cases.wifiExtender.perMonth}</div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -80,6 +80,7 @@ export const Cases = ({ dictionary }: CasesProps) => {
               includeWifiExtender={includeWifiExtender}
               includeInternetTV={includeInternetTV}
               showZappingButton={includeInternetTV}
+              dictionary={dictionary}
             />
           ))}
         </div>
@@ -92,7 +93,7 @@ export const Cases = ({ dictionary }: CasesProps) => {
             asChild
           >
             <a href="#">
-              <span className="text-lg font-medium">Todo lo que debes saber de tu facturación te lo explicamos aquí</span>
+              <span className="text-lg font-medium">{dictionary.web.home.cases.infoBoxes.billing}</span>
               <ChevronRight className="h-7 w-7 text-indigo-600" />
             </a>
           </Button>
@@ -103,7 +104,7 @@ export const Cases = ({ dictionary }: CasesProps) => {
             asChild
           >
             <a href="#">
-              <span className="text-lg font-medium">Importante planes de fibra óptica</span>
+              <span className="text-lg font-medium">{dictionary.web.home.cases.infoBoxes.fiberPlans}</span>
               <ChevronRight className="h-7 w-7 text-indigo-600" />
             </a>
           </Button>

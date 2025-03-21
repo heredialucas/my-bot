@@ -8,7 +8,6 @@ export const ThemeProvider = ({
   <NextThemeProvider
     attribute="class"
     defaultTheme="light"
-    enableSystem
     disableTransitionOnChange
     {...properties}
   >
