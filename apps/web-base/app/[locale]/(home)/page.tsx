@@ -2,7 +2,7 @@ import { showBetaFeature } from '@repo/feature-flags';
 import { getDictionary } from '@repo/internationalization';
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
-import { Cases } from './components/cases';
+import { Features } from './components/features';
 import { Hero } from './components/hero/hero';
 
 type HomeProps = {
@@ -28,7 +28,7 @@ const Home = async ({ params }: HomeProps) => {
   return (
     <>
       <Hero dictionary={dictionary} />
-      <Cases dictionary={dictionary} />
+      <Features dictionary={dictionary} />
     </>
   );
 };

@@ -3,15 +3,15 @@
 import { Button } from '@repo/design-system/components/ui/button';
 import type { Dictionary } from '@repo/internationalization';
 import { PricingCard } from './pricing-card';
-import { ChevronRight, Home, MonitorPlay } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import { useServiceStore, type ServiceOption } from '@/store';
+import { useServiceStore } from '@/store';
 
-type CasesProps = {
+type FeaturesProps = {
   dictionary: Dictionary;
 };
 
-export const Cases = ({ dictionary }: CasesProps) => {
+export const Features = ({ dictionary }: FeaturesProps) => {
   const [includeWifiExtender, setIncludeWifiExtender] = useState(false);
   const { selectedOption } = useServiceStore();
 
@@ -50,7 +50,7 @@ export const Cases = ({ dictionary }: CasesProps) => {
       <div className="container mx-auto px-4 max-w-6xl">
 
         {/* Wifi Extender Option */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between px-5 py-5 border border-dashed border-gray-300 rounded-xl mb-10 relative">
+        <div className="flex flex-col max-w-2xl mx-auto md:flex-row md:items-center md:justify-between px-5 py-5 border-4 border-dashed border-gray-300 rounded-3xl mb-10 relative">
           <div className="text-lg font-medium">{dictionary.web.home.cases.wifiExtender.question}</div>
           <div className="flex items-center mt-2 md:mt-0">
             <div className="mr-4">{dictionary.web.home.cases.wifiExtender.add} <span className="text-indigo-600 font-bold">{dictionary.web.home.cases.wifiExtender.price}</span>{dictionary.web.home.cases.wifiExtender.perMonth}</div>
@@ -86,14 +86,14 @@ export const Cases = ({ dictionary }: CasesProps) => {
         </div>
 
         {/* Info Boxes */}
-        <div className="mt-8 space-y-5">
+        <div className="mt-8 space-y-5 max-w-2xl mx-auto">
           <Button
             variant="outline"
             className="w-full flex items-center justify-between p-6 rounded-xl text-left border-2 hover:bg-gray-50"
             asChild
           >
             <a href="#">
-              <span className="text-lg font-medium">{dictionary.web.home.cases.infoBoxes.billing}</span>
+              <span className="text-md ">{dictionary.web.home.cases.infoBoxes.billing}</span>
               <ChevronRight className="h-7 w-7 text-indigo-600" />
             </a>
           </Button>
@@ -104,7 +104,7 @@ export const Cases = ({ dictionary }: CasesProps) => {
             asChild
           >
             <a href="#">
-              <span className="text-lg font-medium">{dictionary.web.home.cases.infoBoxes.fiberPlans}</span>
+              <span className="text-md ">{dictionary.web.home.cases.infoBoxes.fiberPlans}</span>
               <ChevronRight className="h-7 w-7 text-indigo-600" />
             </a>
           </Button>
