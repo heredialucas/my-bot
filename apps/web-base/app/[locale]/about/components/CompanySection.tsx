@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import type { Dictionary } from '@repo/internationalization';
-import Logo from '@/public/logo.svg';
+import Logo from '@/public/logo.png';
 
 type CompanySectionProps = {
     dictionary: Dictionary;

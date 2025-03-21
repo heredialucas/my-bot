@@ -18,7 +18,7 @@ import { useState } from 'react';
 import type { Dictionary } from '@repo/internationalization';
 import Image from 'next/image';
 import { LanguageSwitcher } from './language-switcher';
-import Logo from './logo.svg';
+import Logo from './logo.png';
 
 type HeaderProps = {
   dictionary: Dictionary;
