@@ -113,17 +113,15 @@
     "contact": {
       "meta": {
         "title": "Hablemos sobre tu negocio",
-        "description": "Programa una consulta con nuestro equipo para discutir cómo podemos ayudar a simplificar tus operaciones y fomentar el crecimiento de tu negocio."
-      },
-      "floating": {
-        "callMe": "¿Te llamamos?",
-        "chat": "Quiero chatear"
+        "description": "Programa una consulta con nuestro equipo para discutir cómo podemos ayudar a agilizar tus operaciones e impulsar el crecimiento de tu negocio."
       },
       "hero": {
+        "title": "Estamos para ayudarte",
+        "description": "Para nosotros es un placer atenderte. Resuelve todas tus dudas relativas a nuestro servicio de forma ágil y sencilla a través de nuestro formulario de contacto. Es importante entregarte el mejor servicio posible, es por eso que responderemos tu mensaje lo antes posible.",
         "benefits": [
           {
-            "title": "Consulta personalizada",
-            "description": "Obtén soluciones personalizadas y asesoramiento experto específico para las necesidades de tu negocio."
+            "title": "Consultoría personalizada",
+            "description": "Obtén soluciones a medida y asesoramiento experto específico para las necesidades de tu negocio."
           }
         ],
         "form": {
@@ -131,9 +129,41 @@
           "date": "Fecha",
           "firstName": "Nombre",
           "lastName": "Apellido",
-          "resume": "Sube tu currículum",
-          "cta": "Reserva la reunión"
+          "name": "Ingresa tu nombre*",
+          "email": "Ingresa tu correo*",
+          "phone": "Ingresa tu teléfono*",
+          "message": "Ingresa tu mensaje*",
+          "resume": "Subir currículum",
+          "cta": "Enviar mensaje",
+          "success": "Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.",
+          "error": "Ha ocurrido un error. Por favor, inténtalo de nuevo."
+        },
+        "social": {
+          "title": "Síguenos"
+        },
+        "contact": {
+          "title": "Info de contacto",
+          "email": "ventas@netfull.net",
+          "phone": "+569 9483 3938"
         }
+      }
+    },
+    "about": {
+      "metaTitle": "Sobre Nosotros | Nuestra Historia y Misión",
+      "metaDescription": "Conozca nuestra trayectoria, nuestra misión y el equipo que trabaja para transformar las operaciones empresariales en todo el mundo.",
+      "title": "Sobre Nuestra Empresa",
+      "subtitle": "Estamos en una misión para revolucionar cómo las empresas operan en la era digital.",
+      "imageAlt": "Nuestro equipo trabajando juntos",
+      "company": {
+        "description": "Es una empresa chilena, responsable y comprometida con nuestros clientes"
+      },
+      "vision": {
+        "title": "Visión",
+        "description": "Ser uno de los principales proveedores de acceso a internet y puntos de intercambio de internet del País"
+      },
+      "mission": {
+        "title": "Misión",
+        "description": "Transformarnos en la empresa líder en conectividad, telecomunicaciones y de intercambio de internet, facilitando el acceso a la red sin distinción, satisfaciendo las necesidades de nuestros clientes con un servicio oportuno, de alta calidad y confiabilidad, mediante procesos óptimos, rápidos, eficientes y transparentes."
       }
     }
   }

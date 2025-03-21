@@ -120,6 +120,17 @@
       "title": "About Our Company",
       "subtitle": "We're on a mission to revolutionize how businesses operate in the digital age.",
       "imageAlt": "Our team working together",
+      "company": {
+        "description": "NetFull Fibra is a Chilean company, responsible and committed to our clients"
+      },
+      "vision": {
+        "title": "Vision",
+        "description": "To be one of the main providers of internet access and internet exchange points in the country"
+      },
+      "mission": {
+        "title": "Mission",
+        "description": "To transform ourselves into the leading company in connectivity, telecommunications and internet exchange, facilitating access to the network without distinction, satisfying the needs of our clients with timely, high-quality and reliable service, through optimal, fast, efficient and transparent processes."
+      },
       "missionTitle": "Our Mission & Values",
       "missionText": "Founded with a clear purpose, we set out to build tools that make business operations simpler, more efficient, and more effective. We believe that every business, regardless of size, deserves access to powerful technology that can help them compete and thrive.",
       "values": [
@@ -167,6 +178,8 @@
         "description": "Schedule a consultation with our team to discuss how we can help streamline your operations and drive growth for your business."
       },
       "hero": {
+        "title": "We're here to help you",
+        "description": "It's our pleasure to assist you. Solve all your doubts about our service quickly and easily through our contact form. It's important for us to provide you with the best possible service, which is why we'll respond to your message as soon as possible.",
         "benefits": [
           {
             "title": "Personalized Consultation",
@@ -178,8 +191,22 @@
           "date": "Date",
           "firstName": "First name",
           "lastName": "Last name",
+          "name": "Enter your name*",
+          "email": "Enter your email*",
+          "phone": "Enter your phone*",
+          "message": "Enter your message*",
           "resume": "Upload resume",
-          "cta": "Book the meeting"
+          "cta": "Send message",
+          "success": "Message sent successfully. We'll contact you soon.",
+          "error": "An error occurred. Please try again."
+        },
+        "social": {
+          "title": "Follow us"
+        },
+        "contact": {
+          "title": "Contact info",
+          "email": "sales@netfull.net",
+          "phone": "+569 9483 3938"
         }
       }
     }

@@ -27,7 +27,7 @@ export const Footer = () => (
             <Link href="/contacto" className="text-gray-700 hover:text-blue-600">
               Contacto
             </Link>
-            <Link href="/sucursal-virtual" className="text-gray-700 hover:text-blue-600">
+            <Link href="https://clientes.netfull.net/cliente/login" target="_blank" className="text-gray-700 hover:text-blue-600">
               Sucursal Virtual
             </Link>
             <Link href="/paga-tu-boleta" className="text-gray-700 hover:text-blue-600">

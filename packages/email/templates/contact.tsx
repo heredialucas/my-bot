@@ -14,12 +14,14 @@ type ContactTemplateProps = {
   readonly name: string;
   readonly email: string;
   readonly message: string;
+  readonly phone?: string;
 };
 
 export const ContactTemplate = ({
   name,
   email,
   message,
+  phone,
 }: ContactTemplateProps) => (
   <Tailwind>
     <Html>
@@ -35,6 +37,9 @@ export const ContactTemplate = ({
               <Text className="m-0 text-zinc-500">
                 {name} ({email}) has sent you a message:
               </Text>
+              {phone && (
+                <Text className="m-0 text-zinc-500">Phone: {phone}</Text>
+              )}
               <Hr className="my-4" />
               <Text className="m-0 text-zinc-500">{message}</Text>
             </Section>

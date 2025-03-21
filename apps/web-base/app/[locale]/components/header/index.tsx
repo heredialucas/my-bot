@@ -39,12 +39,14 @@ export const Header = ({ dictionary }: HeaderProps) => {
     },
     {
       title: headerDict['sucursalVirtual'] || 'Sucursal virtual',
-      href: '/sucursal-virtual',
+      href: 'https://clientes.netfull.net/cliente/login',
+      target: '_blank',
       description: '',
     },
     {
       title: headerDict['pagaTuBoleta'] || 'Pagá tu boleta',
-      href: '/paga-tu-boleta',
+      href: 'https://clientes.netfull.net/cliente/webpay',
+      target: '_blank',
       description: '',
     },
   ];
@@ -76,7 +78,11 @@ export const Header = ({ dictionary }: HeaderProps) => {
                     <>
                       <NavigationMenuLink asChild>
                         <Button variant="ghost" className="text-white hover:text-white hover:bg-[#2E5A86]" asChild>
-                          <Link href={item.href}>{item.title}</Link>
+                          <Link href={item.href}
+                            target={
+                              item.href.startsWith('http') ? '_blank' : undefined
+                            }
+                          >{item.title}</Link>
                         </Button>
                       </NavigationMenuLink>
                     </>

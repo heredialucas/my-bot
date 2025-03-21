@@ -1,119 +1,172 @@
 'use client';
 
 import { Button } from '@repo/design-system/components/ui/button';
-import { Calendar } from '@repo/design-system/components/ui/calendar';
 import { Input } from '@repo/design-system/components/ui/input';
-import { Label } from '@repo/design-system/components/ui/label';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@repo/design-system/components/ui/popover';
-import { cn } from '@repo/design-system/lib/utils';
+import { Textarea } from '@repo/design-system/components/ui/textarea';
 import type { Dictionary } from '@repo/internationalization';
-import { format } from 'date-fns';
-import { CalendarIcon, Check, MoveRight } from 'lucide-react';
+import { Facebook, Instagram, Mail, MessageSquare, Phone, User } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
+import { contact } from '../actions/contact';
+import keyboard from '@/public/keyboards.png'
 
 type ContactFormProps = {
   dictionary: Dictionary;
 };
 
 export const ContactForm = ({ dictionary }: ContactFormProps) => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const result = await contact(name, email, message, phone);
+
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setSuccess(true);
+        setName('');
+        setEmail('');
+        setPhone('');
+        setMessage('');
+      }
+    } catch (err) {
+      setError(dictionary.web.contact.hero.form.error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="w-full py-20 lg:py-40">
-      <div className="container mx-auto max-w-6xl">
-        <div className="grid gap-10 lg:grid-cols-2">
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <h4 className="max-w-xl text-left font-regular text-3xl tracking-tighter md:text-5xl">
-                  {dictionary.web.contact.meta.title}
-                </h4>
-                <p className="max-w-sm text-left text-lg text-muted-foreground leading-relaxed tracking-tight">
-                  {dictionary.web.contact.meta.description}
-                </p>
-              </div>
-            </div>
-            {[
-              ...dictionary.web.contact.hero.benefits,
-              ...dictionary.web.contact.hero.benefits,
-              ...dictionary.web.contact.hero.benefits,
-            ].map((benefit, index) => (
-              <div
-                className="flex flex-row items-start gap-6 text-left"
-                key={index}
-              >
-                <Check className="mt-2 h-4 w-4 text-primary" />
-                <div className="flex flex-col gap-1">
-                  <p>{benefit.title}</p>
-                  <p className="text-muted-foreground text-sm">
-                    {benefit.description}
-                  </p>
+    <div className="w-full max-w-6xl mx-auto p-6 md:p-8 lg:p-0 m-8">
+      <div className="rounded-3xl border-2 border-gray-100 overflow-hidden bg-white shadow-sm">
+        <div className="grid lg:grid-cols-12">
+          <div className="col-span-7 p-8 md:p-12 lg:p-16">
+            <h1 className="text-3xl md:text-4xl font-semibold mb-4">
+              {dictionary.web.contact.hero.title}
+            </h1>
+            <p className="text-gray-600 mb-10">
+              {dictionary.web.contact.hero.description}
+            </p>
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <User className="w-5 h-5 text-gray-500" />
                 </div>
+                <Input
+                  type="text"
+                  placeholder={dictionary.web.contact.hero.form.name}
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="pl-10 py-6 bg-gray-50"
+                />
               </div>
-            ))}
+
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Mail className="w-5 h-5 text-gray-500" />
+                </div>
+                <Input
+                  type="email"
+                  placeholder={dictionary.web.contact.hero.form.email}
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pl-10 py-6 bg-gray-50"
+                />
+              </div>
+
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Phone className="w-5 h-5 text-gray-500" />
+                </div>
+                <Input
+                  type="tel"
+                  placeholder={dictionary.web.contact.hero.form.phone}
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="pl-10 py-6 bg-gray-50"
+                />
+              </div>
+
+              <div className="relative">
+                <div className="absolute top-3 left-0 flex items-start pl-3 pointer-events-none">
+                  <MessageSquare className="w-5 h-5 text-gray-500" />
+                </div>
+                <Textarea
+                  placeholder={dictionary.web.contact.hero.form.message}
+                  required
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="pl-10 min-h-[150px] bg-gray-50"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 rounded-md flex items-center justify-center gap-2"
+              >
+                <MessageSquare className="w-6 h-6" />
+                {dictionary.web.contact.hero.form.cta}
+              </Button>
+
+              {error && <p className="text-red-500 mt-2">{error}</p>}
+              {success && <p className="text-green-500 mt-2">{dictionary.web.contact.hero.form.success}</p>}
+            </form>
           </div>
 
-          <div className="flex items-center justify-center">
-            <div className="flex max-w-sm flex-col gap-4 rounded-md border p-8">
-              <p>{dictionary.web.contact.hero.form.title}</p>
-              <div className="grid w-full max-w-sm items-center gap-1">
-                <Label htmlFor="picture">
-                  {dictionary.web.contact.hero.form.date}
-                </Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        'w-full max-w-sm justify-start text-left font-normal',
-                        !date && 'text-muted-foreground'
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date ? (
-                        format(date, 'PPP')
-                      ) : (
-                        <span>{dictionary.web.contact.hero.form.date}</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="grid w-full max-w-sm items-center gap-1">
-                <Label htmlFor="firstname">
-                  {dictionary.web.contact.hero.form.firstName}
-                </Label>
-                <Input id="firstname" type="text" />
-              </div>
-              <div className="grid w-full max-w-sm items-center gap-1">
-                <Label htmlFor="lastname">
-                  {dictionary.web.contact.hero.form.lastName}
-                </Label>
-                <Input id="lastname" type="text" />
-              </div>
-              <div className="grid w-full max-w-sm items-center gap-1">
-                <Label htmlFor="picture">
-                  {dictionary.web.contact.hero.form.resume}
-                </Label>
-                <Input id="picture" type="file" />
+          <div className="col-span-5 bg-gray-100 p-8 md:p-12 lg:p-16 flex flex-col justify-between">
+            <div>
+              <Image
+                src={keyboard}
+                alt="Contact support"
+                width={500}
+                height={300}
+                className="rounded-lg mb-12"
+              />
+            </div>
+
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-xl font-semibold text-indigo-600 mb-4">{dictionary.web.contact.hero.social.title}</h3>
+                <div className="flex gap-3">
+                  <Link href="https://www.instagram.com" target="_blank" className="p-2 bg-white rounded-full">
+                    <Instagram className="w-6 h-6" />
+                  </Link>
+                  <Link href="https://www.facebook.com" target="_blank" className="p-2 bg-white rounded-full">
+                    <Facebook className="w-6 h-6" />
+                  </Link>
+                </div>
               </div>
 
-              <Button className="w-full gap-4">
-                {dictionary.web.contact.hero.form.cta}{' '}
-                <MoveRight className="h-4 w-4" />
-              </Button>
+              <div>
+                <h3 className="text-xl font-semibold text-indigo-600 mb-4">{dictionary.web.contact.hero.contact.title}</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Mail className="w-5 h-5" />
+                    <span>{dictionary.web.contact.hero.contact.email}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5" />
+                    <span>{dictionary.web.contact.hero.contact.phone}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

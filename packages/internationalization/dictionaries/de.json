@@ -110,6 +110,24 @@
         "description": "Gedanken, Ideen und Meinungen."
       }
     },
+    "about": {
+      "metaTitle": "Über uns | Unsere Geschichte und Mission",
+      "metaDescription": "Erfahren Sie mehr über unsere Reise, unsere Mission und das Team, das daran arbeitet, Geschäftsabläufe weltweit zu transformieren.",
+      "title": "Über unser Unternehmen",
+      "subtitle": "Wir haben es uns zur Aufgabe gemacht, die Arbeitsweise von Unternehmen im digitalen Zeitalter zu revolutionieren.",
+      "imageAlt": "Unser Team arbeitet zusammen",
+      "company": {
+        "description": "NetFull Fibra ist ein chilenisches Unternehmen, verantwortungsbewusst und engagiert für unsere Kunden"
+      },
+      "vision": {
+        "title": "Vision",
+        "description": "Einer der wichtigsten Anbieter für Internetzugang und Internet-Austauschpunkte im Land zu sein"
+      },
+      "mission": {
+        "title": "Mission",
+        "description": "Uns zum führenden Unternehmen in den Bereichen Konnektivität, Telekommunikation und Internet-Austausch zu entwickeln, den Zugang zum Netzwerk ohne Unterschied zu erleichtern und die Bedürfnisse unserer Kunden mit einem zeitnahen, hochwertigen und zuverlässigen Service durch optimale, schnelle, effiziente und transparente Prozesse zu erfüllen."
+      }
+    },
     "contact": {
       "meta": {
         "title": "Lassen Sie uns über Ihr Unternehmen sprechen",
