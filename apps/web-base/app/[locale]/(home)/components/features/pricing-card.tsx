@@ -1,7 +1,10 @@
+"use client";
+
 import { Button } from '@repo/design-system/components/ui/button';
 import type { Dictionary } from '@repo/internationalization';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Tv } from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 type PricingCardProps = {
     discount: number;
@@ -30,6 +33,9 @@ export const PricingCard = ({
     showZappingButton = false,
     dictionary
 }: PricingCardProps) => {
+    const params = useParams();
+    const locale = params.locale as string;
+
     // Fixed base prices from the image
     const basePrices = {
         120: 14990,
@@ -95,11 +101,12 @@ export const PricingCard = ({
                     </Link>
 
                     {showZappingButton && (
-                        <Button
-                            className="w-full rounded-full bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 h-auto"
+                        <Link
+                            href={`/${locale}/detail`}
+                            className="w-full flex items-center justify-center rounded-full bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 h-auto"
                         >
-                            {dictionary.web.home.cases.pricing.chooseTVPlan}
-                        </Button>
+                            <Tv className="h-4 w-4 mr-2" /> {dictionary.web.home.cases.pricing.chooseTVPlan}
+                        </Link>
                     )}
                 </div>
             </div>

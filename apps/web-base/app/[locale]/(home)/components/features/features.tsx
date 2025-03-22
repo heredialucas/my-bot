@@ -1,12 +1,10 @@
 'use client';
 
-import { Button } from '@repo/design-system/components/ui/button';
 import type { Dictionary } from '@repo/internationalization';
 import { PricingCard } from './pricing-card';
-import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { useServiceStore } from '@/store';
-
+import { InfoBoxes } from './infoBoxes';
 type FeaturesProps = {
   dictionary: Dictionary;
 };
@@ -15,7 +13,6 @@ export const Features = ({ dictionary }: FeaturesProps) => {
   const [includeWifiExtender, setIncludeWifiExtender] = useState(false);
   const { selectedOption } = useServiceStore();
 
-  // Check if TV is included in the selected option
   const includeInternetTV = selectedOption === 'internet-tv';
 
   const pricingData = [
@@ -85,30 +82,7 @@ export const Features = ({ dictionary }: FeaturesProps) => {
           ))}
         </div>
 
-        {/* Info Boxes */}
-        <div className="mt-8 space-y-5 max-w-2xl mx-auto">
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-between p-6 rounded-xl text-left border-2 hover:bg-gray-50"
-            asChild
-          >
-            <a href="#">
-              <span className="text-md ">{dictionary.web.home.cases.infoBoxes.billing}</span>
-              <ChevronRight className="h-7 w-7 text-indigo-600" />
-            </a>
-          </Button>
-
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-between p-6 rounded-xl text-left border-2 hover:bg-gray-50"
-            asChild
-          >
-            <a href="#">
-              <span className="text-md ">{dictionary.web.home.cases.infoBoxes.fiberPlans}</span>
-              <ChevronRight className="h-7 w-7 text-indigo-600" />
-            </a>
-          </Button>
-        </div>
+        <InfoBoxes dictionary={dictionary} />
       </div>
     </div>
   );

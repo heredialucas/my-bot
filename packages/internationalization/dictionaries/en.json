@@ -56,7 +56,19 @@
         },
         "infoBoxes": {
           "billing": "Everything you need to know about your billing is explained here",
-          "fiberPlans": "Important fiber optic plans"
+          "fiberPlans": "Important fiber optic plans",
+          "payNow": "Pay here",
+          "billingContent": [
+            "Your service considers payment due, meaning the billing period of your invoice starts the day of installation of the current month until 30 days later. Remember that at the time of installation, the agreed amount is paid for the activation process. This amount is equivalent to the plan to be contracted. For homeowners only cancel the plan; for tenants or foreigners cancel the plan + $10,000 at the time of installation. To modify the date, you must contact us directly by phone. These requests will NOT be considered if you use another means of communication (WhatsApp, text messages, among others).",
+            "The invoice is distributed by email 15 days before the payment due date.",
+            "In case of non-payment, your service will be suspended 5 days after the maximum payment date, that is, if your payment date is the 1st, your service will be suspended on the 6th at 9:00 AM, applying the cost of disconnection and reconnection.",
+            "If your service was suspended due to non-payment and you pay your debt, reactivation will be carried out within 24 hours of payment."
+          ],
+          "fiberPlansContent": [
+            "The speed is shared among the devices you have connected simultaneously. Furthermore, network coverage can be affected while more devices are connected at the same time.",
+            "The WiFi signal may be obstructed by walls, glass, among other things. In addition, proximity to other electronic devices can cause interference in the signal.",
+            "The signal weakens as you move away from the router, which is why browsing speed is affected."
+          ]
         }
       },
       "features": {

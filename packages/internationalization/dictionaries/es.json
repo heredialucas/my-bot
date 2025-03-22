@@ -52,7 +52,19 @@
         },
         "infoBoxes": {
           "billing": "Todo lo que debes saber de tu facturación te lo explicamos aquí",
-          "fiberPlans": "Importante planes de fibra óptica"
+          "fiberPlans": "Importante planes de fibra óptica",
+          "payNow": "Paga aquí",
+          "billingContent": [
+            "Tu servicio considera cobro vencido, es decir, el periodo de facturación de tu boleta inicia el día que se instala del mes en curso hasta 30 días después. Recuerda que al momento de instalar se cancela ($) el monto convenido por proceso de habilitación. Este monto es equivalente al plan a contratar. Para dueños de casa solo cancela el plan, para arrendatarios o extranjeros cancela el plan + $10.000 al momento de instalar. Para modificar la fecha debes contactarnos directamente vía teléfonica. Estas solicitudes NO serán consideradas si utilizas otro medio de comunicación (WhatsApp, mensajes de texto, entre otros).",
+            "La boleta se distribuye por email 15 días antes del día de pago.",
+            "En caso de no pago, tu servicio se suspenderá 5 días después de la fecha máxima de pago, es decir, si tu fecha de pago son 01 tu servicio será suspendido el día 06 a las 09:00 aplicando el costo de corte y reposición.",
+            "Si tu servicio fue suspendido por no pago y pagas tu deuda, la reactivación de este se realizará como máximo dentro de las 24hrs siguientes al pago."
+          ],
+          "fiberPlansContent": [
+            "La velocidad se comparte entre los dispositivos que tienes conectados simultáneamente. Además la cobertura de red se puede ver afectada mientras más dispositivos tengas conectados al mismo tiempo.",
+            "La señal de WIFI podrá verse obstaculizada por muros, vidrios, entre otras cosas. Además la cercanía con otros dispositivos electrónicos pueden causar interferencia en la señal.",
+            "La señal se debilita a medida que te alejas del router, es por eso que la velocidad de navegación se ve afectada."
+          ]
         }
       },
       "features": {

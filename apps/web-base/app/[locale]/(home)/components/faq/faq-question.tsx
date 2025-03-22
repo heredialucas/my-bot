@@ -1,11 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import {
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger
-} from '@repo/design-system/components/ui/accordion';
 
 type QuestionProps = {
     question: string;

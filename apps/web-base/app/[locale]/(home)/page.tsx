@@ -2,7 +2,7 @@ import { showBetaFeature } from '@repo/feature-flags';
 import { getDictionary } from '@repo/internationalization';
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
-import { Features } from './components/features';
+import { Features } from './components/features/features';
 import { Hero } from './components/hero/hero';
 import { InternetAvailability } from './components/internet-availability/internet-availability';
 import { FiberOpticInfo } from './components/fiber-optic-info';
