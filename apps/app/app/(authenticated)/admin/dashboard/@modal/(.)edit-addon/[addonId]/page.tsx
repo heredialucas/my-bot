@@ -2,8 +2,8 @@ import DialogWrapper from "../../../components/DialogWrapper";
 import AddonForm from "./AddonForm";
 import { getAddonById } from "../../../../server/addonActions";
 
-export default async function EditAddonModal({ params }: { params: { addonId: string } }) {
-    const { addonId } = params;
+export default async function EditAddonModal({ params }: { params: Promise<{ addonId: string }> }) {
+    const { addonId } = await params;
 
     // Obtener datos del complemento usando la Server Action
     const addonData = await getAddonById(addonId);

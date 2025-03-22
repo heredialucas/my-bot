@@ -13,8 +13,8 @@ async function getImage(imageId: string) {
     };
 }
 
-export default async function EditImageModal({ params }: { params: { imageId: string } }) {
-    const { imageId } = params;
+export default async function EditImageModal({ params }: { params: Promise<{ imageId: string }> }) {
+    const { imageId } = await params;
 
     // Obtener datos de la imagen desde la base de datos
     const image = await getImage(imageId);

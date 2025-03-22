@@ -2,8 +2,8 @@ import DialogWrapper from "../../../components/DialogWrapper";
 import PromotionForm from "./PromotionForm";
 import { getPromotionById } from "../../../../server/promotionActions";
 
-export default async function EditPromotionModal({ params }: { params: { promotionId: string } }) {
-    const { promotionId } = params;
+export default async function EditPromotionModal({ params }: { params: Promise<{ promotionId: string }> }) {
+    const { promotionId } = await params;
 
     // Obtener datos de la promoción usando la Server Action
     const promotionData = await getPromotionById(promotionId);

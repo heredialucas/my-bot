@@ -2,8 +2,8 @@ import DialogWrapper from "../../../components/DialogWrapper";
 import PlanForm from "./PlanForm";
 import { getPlanById } from "../../../../server/planActions";
 
-export default async function EditPlanModal({ params }: { params: { planId: string } }) {
-    const { planId } = params;
+export default async function EditPlanModal({ params }: { params: Promise<{ planId: string }> }) {
+    const { planId } = await params;
 
     // Obtener datos del plan usando la Server Action
     const planData = await getPlanById(planId);

@@ -2,8 +2,8 @@ import DialogWrapper from "../../../components/DialogWrapper";
 import ServiceForm from "./ServiceForm";
 import { getServiceById } from "../../../../server/serviceActions";
 
-export default async function EditServiceModal({ params }: { params: { serviceId: string } }) {
-    const { serviceId } = params;
+export default async function EditServiceModal({ params }: { params: Promise<{ serviceId: string }> }) {
+    const { serviceId } = await params;
 
     // Obtener datos del servicio usando la Server Action
     const serviceData = await getServiceById(serviceId);

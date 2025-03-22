@@ -1,8 +1,8 @@
 import DialogWrapper from "../../../components/DialogWrapper";
 import { getMediaById } from "../../../../server/mediaActions";
 import MediaForm from "./MediaForm";
-export default async function EditMediaModal({ params }: { params: { mediaId: string } }) {
-    const { mediaId } = params;
+export default async function EditMediaModal({ params }: { params: Promise<{ mediaId: string }> }) {
+    const { mediaId } = await params;
 
     // Obtener datos del medio usando la Server Action
     const mediaData = await getMediaById(mediaId);
