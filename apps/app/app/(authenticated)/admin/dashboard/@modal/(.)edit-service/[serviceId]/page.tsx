@@ -1,0 +1,27 @@
+import DialogWrapper from "../../../components/DialogWrapper";
+import ServiceForm from "./ServiceForm";
+import { getServiceById } from "../../../../server/serviceActions";
+
+export default async function EditServiceModal({ params }: { params: { serviceId: string } }) {
+    const { serviceId } = params;
+
+    // Obtener datos del servicio usando la Server Action
+    const serviceData = await getServiceById(serviceId);
+
+    // Si no se encuentra el servicio, mostrar un mensaje
+    if (!serviceData) {
+        return (
+            <DialogWrapper title="Editar Servicio">
+                <div className="p-6">
+                    <p className="text-red-500">No se encontró el servicio solicitado.</p>
+                </div>
+            </DialogWrapper>
+        );
+    }
+
+    return (
+        <DialogWrapper title="Editar Servicio">
+            <ServiceForm initialData={serviceData} />
+        </DialogWrapper>
+    );
+} 

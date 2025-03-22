@@ -3,17 +3,6 @@
 import { cn } from '@repo/design-system/lib/utils';
 import {
     BarChart3,
-    Calendar,
-    ClipboardCheck,
-    CreditCard,
-    FileText,
-    Home as HomeIcon,
-    LayoutDashboard,
-    Search as SearchIcon,
-    Settings,
-    Shield as ShieldIcon,
-    User,
-    Users as UsersIcon
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -38,47 +27,10 @@ export function AdminSidebar() {
     const pathname = usePathname();
     const menuItems: MenuItemProps[] = [
         {
-            title: 'Gestión de Usuarios',
-            icon: UsersIcon,
-            href: '/admin/users',
+            title: 'Panel Principal',
+            icon: BarChart3,
+            href: '/admin/dashboard',
         },
-        // {
-        //     title: 'Dashboard',
-        //     icon: BarChart3,
-        //     href: '/admin/dashboard',
-        // },
-        // {
-        //     title: 'Contadores',
-        //     icon: ClipboardCheck,
-        //     href: '/admin/accountants',
-        // },
-        /* Comentado temporalmente para enfocarnos en la gestión de contadores
-        {
-            title: 'Clientes',
-            icon: UsersIcon,
-            href: '/admin/clients',
-        },
-        {
-            title: 'Finanzas',
-            icon: CreditCard,
-            href: '/admin/finances',
-        },
-        {
-            title: 'Documentos',
-            icon: FileText,
-            href: '/admin/documents',
-        },
-        {
-            title: 'Calendario',
-            icon: Calendar,
-            href: '/admin/calendar',
-        },
-        {
-            title: 'Ajustes',
-            icon: Settings,
-            href: '/admin/settings',
-        },
-        */
     ];
 
     const isActivePath = (path: string) => pathname.startsWith(path);
@@ -87,17 +39,6 @@ export function AdminSidebar() {
         <>
             {/* Sidebar para escritorio */}
             <Sidebar variant="inset" className="border-r border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 fixed left-0 top-16 bottom-0 w-64 overflow-y-auto">
-                <div className="p-3">
-                    <div className="relative">
-                        <div className="rounded-md border px-3 py-1 flex items-center gap-2">
-                            <SearchIcon className="h-4 w-4 text-gray-500 dark:text-zinc-400" />
-                            <input
-                                className="w-full rounded-md border-0 bg-transparent pl-0 pr-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-white"
-                                placeholder="Buscar..."
-                            />
-                        </div>
-                    </div>
-                </div>
                 <SidebarContent>
                     <SidebarGroup>
                         <SidebarGroupLabel>Menú</SidebarGroupLabel>

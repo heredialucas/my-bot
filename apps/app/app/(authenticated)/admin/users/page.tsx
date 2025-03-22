@@ -23,7 +23,7 @@ import {
     TableRow
 } from '@repo/design-system/components/ui/table';
 import { UserCog } from 'lucide-react';
-import { removeRole, setRole } from '../_actions';
+import { removeRole, setRole } from '../server/_actionUser';
 
 interface User {
     id: string;

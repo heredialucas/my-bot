@@ -1,79 +1,54 @@
 import { Alert, AlertDescription, AlertTitle } from "@repo/design-system/components/ui/alert"
-import { Info, CheckCircle2 } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@repo/design-system/components/ui/card"
+import { Info } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/design-system/components/ui/tabs"
+import ServicesTab from "./ServicesTab"
+import PlansTab from "./PlansTab"
+import PromotionsTab from "./PromotionsTab"
+import AddonsTab from "./AddonsTab"
+import MediaTab from "./MediaTab"
 
 export default async function DashboardContent() {
     return (
         <div className="space-y-6">
             <Alert className="bg-blue-50 border-blue-200">
                 <Info className="h-5 w-5 text-blue-600" />
-                <AlertTitle className="text-blue-800 font-medium">Panel de Administración</AlertTitle>
+                <AlertTitle className="text-blue-800 font-medium">Panel de Administración de Servicios</AlertTitle>
                 <AlertDescription className="text-blue-700">
-                    Bienvenido al panel de administración. Aquí podrás gestionar usuarios y acceder a todas las funcionalidades administrativas.
+                    Gestiona servicios de internet, planes, promociones y complementos desde este panel centralizado.
                 </AlertDescription>
             </Alert>
 
-            <div className="grid md:grid-cols-2 gap-4">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Gestión de Usuarios</CardTitle>
-                        <CardDescription>Funcionalidades principales de usuarios</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        <div className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5" />
-                            <div>
-                                <p className="font-medium">Administradores</p>
-                                <p className="text-sm text-muted-foreground">Gestión de permisos y roles administrativos</p>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5" />
-                            <div>
-                                <p className="font-medium">Usuarios del Sistema</p>
-                                <p className="text-sm text-muted-foreground">Control de accesos y permisos de usuarios</p>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5" />
-                            <div>
-                                <p className="font-medium">Auditoría</p>
-                                <p className="text-sm text-muted-foreground">Registro de actividades y cambios en el sistema</p>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+            <Tabs defaultValue="services" className="w-full">
+                <div className="overflow-x-auto pb-2">
+                    <TabsList className="inline-flex w-auto min-w-full md:grid md:grid-cols-5 mb-4">
+                        <TabsTrigger value="services">Servicios</TabsTrigger>
+                        <TabsTrigger value="plans">Planes</TabsTrigger>
+                        <TabsTrigger value="promotions">Promociones</TabsTrigger>
+                        <TabsTrigger value="addons">Complementos</TabsTrigger>
+                        <TabsTrigger value="media">Imágenes</TabsTrigger>
+                    </TabsList>
+                </div>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Configuración del Sistema</CardTitle>
-                        <CardDescription>Opciones generales de configuración</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        <div className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5" />
-                            <div>
-                                <p className="font-medium">Parámetros Globales</p>
-                                <p className="text-sm text-muted-foreground">Configuración de variables del sistema</p>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5" />
-                            <div>
-                                <p className="font-medium">Seguridad</p>
-                                <p className="text-sm text-muted-foreground">Políticas de seguridad y acceso</p>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5" />
-                            <div>
-                                <p className="font-medium">Respaldos</p>
-                                <p className="text-sm text-muted-foreground">Gestión de copias de seguridad</p>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
+                <TabsContent value="services" className="space-y-4">
+                    <ServicesTab />
+                </TabsContent>
+
+                <TabsContent value="plans" className="space-y-4">
+                    <PlansTab />
+                </TabsContent>
+
+                <TabsContent value="promotions" className="space-y-4">
+                    <PromotionsTab />
+                </TabsContent>
+
+                <TabsContent value="addons" className="space-y-4">
+                    <AddonsTab />
+                </TabsContent>
+
+                <TabsContent value="media" className="space-y-4">
+                    <MediaTab />
+                </TabsContent>
+            </Tabs>
         </div>
     )
 } 

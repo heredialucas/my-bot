@@ -28,6 +28,11 @@ export const Header = ({ dictionary }: HeaderProps) => {
 
   const navigationItems = [
     {
+      title: headerDict['home'] || 'Inicio',
+      href: '/',
+      description: '',
+    },
+    {
       title: headerDict['about'] || 'Nosotros',
       href: '/about',
       description: '',

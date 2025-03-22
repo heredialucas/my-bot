@@ -1,0 +1,20 @@
+"use client";
+
+import { Dialog, DialogContent, DialogTitle } from '@repo/design-system/components/ui/dialog';
+import { useRouter } from 'next/navigation';
+
+export default function DialogWrapper({ children, title }: { children: React.ReactNode, title: string }) {
+    const router = useRouter();
+
+    return (
+        <Dialog
+            open={true}
+            onOpenChange={(open) => !open && router.back()}
+        >
+            <DialogContent className="max-w-6xl h-[80vh] w-11/12 p-0 overflow-hidden">
+                <DialogTitle className="sr-only">{title}</DialogTitle>
+                {children}
+            </DialogContent>
+        </Dialog>
+    );
+}
