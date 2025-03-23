@@ -4,158 +4,149 @@ import {
   noseconeOptions,
   noseconeOptionsWithToolbar,
 } from '@repo/security/middleware';
-import type { NextMiddleware, NextRequest } from 'next/server';
+import type { NextMiddleware } from 'next/server';
 import { NextResponse } from 'next/server';
 import { env } from './env';
 
-// Definición de tipos para los session claims
-type SessionMetadata = {
-  role?: string;
-  [key: string]: any;
-};
-
-// Sistema de roles dinámico - fácilmente extensible
+// Dynamic role system - easily extendable
 const ROLES = {
   ADMIN: 'admin',
-  ACCOUNTANT: 'accountant',
-  CLIENT: 'client',
-  // Aquí se pueden añadir más roles según sea necesario
+  USER: 'user',
+  // Add more roles as needed
 } as const;
 
 type Role = typeof ROLES[keyof typeof ROLES];
 
-// Configuración dinámica de rutas por rol
+// Role configuration with route permissions
 interface RoleConfig {
   defaultRedirect: string;
   allowedRoutes: string[];
 }
 
-// Mapeo de roles a sus configuraciones
-// Para añadir un nuevo rol, simplemente agregar una nueva entrada aquí
+// Map roles to their configurations
+// To add a new role, simply add a new entry here
 const ROLE_CONFIGURATION: Record<Role, RoleConfig> = {
   [ROLES.ADMIN]: {
     defaultRedirect: '/admin/dashboard',
     allowedRoutes: ['/admin']
   },
-  [ROLES.ACCOUNTANT]: {
-    defaultRedirect: '/accountant/dashboard',
-    allowedRoutes: ['/accountant']
-  },
-  [ROLES.CLIENT]: {
-    defaultRedirect: '/client/dashboard',
-    allowedRoutes: ['/client']
+  [ROLES.USER]: {
+    defaultRedirect: '/',
+    allowedRoutes: ['/']
   }
-  // Ejemplo para añadir un nuevo rol:
-  // NUEVO_ROL: {
-  //   defaultRedirect: '/nuevo-rol/dashboard',
-  //   allowedRoutes: ['/nuevo-rol']
+  // Example for adding a new role:
+  // [ROLES.PROFESSIONAL]: {
+  //   defaultRedirect: '/professional/dashboard',
+  //   allowedRoutes: ['/professional']
   // }
 };
 
-// Rutas públicas que no requieren autenticación
-const PUBLIC_ROUTES = ['/sign-in', '/sign-up', '/api/webhooks'];
+// Public routes that don't require authentication
+const PUBLIC_ROUTES = [
+  '/sign-in',
+  '/sign-up',
+  '/api/webhooks',
+  '/access-denied'
+];
 
-// Middleware para seguridad
+// Security middleware
 const securityHeaders = env.FLAGS_SECRET
   ? noseconeMiddleware(noseconeOptionsWithToolbar)
   : noseconeMiddleware(noseconeOptions);
 
-// Función para verificar si el usuario tiene acceso a la ruta actual
+// Check if a route is a public route
+const isPublicRoute = (pathname: string): boolean => {
+  return PUBLIC_ROUTES.some(route => pathname.startsWith(route));
+};
+
+// Check if the URL path is within the authenticated route group
+const isAuthenticatedRoute = (pathname: string): boolean => {
+  // All routes except those in PUBLIC_ROUTES are considered authenticated
+  return !isPublicRoute(pathname);
+};
+
+// Check if user has access to the current route based on their role
 const hasAccessToRoute = (pathname: string, userRole: Role): boolean => {
-  // Si el usuario no tiene un rol configurado, no tiene acceso
+  // If user doesn't have a configured role, they don't have access
   if (!ROLE_CONFIGURATION[userRole]) return false;
 
-  // Verificamos si la ruta actual está permitida para el rol del usuario
+  // Check if current route is allowed for user's role
   return ROLE_CONFIGURATION[userRole].allowedRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
 };
 
-// Verificar si una ruta es parte de las rutas públicas
-const isPublicRoute = (pathname: string): boolean => {
-  return PUBLIC_ROUTES.some(route => pathname.startsWith(route));
-};
-
-// Función para determinar el rol del usuario basado en sus claims
+// Determine user role from session claims
 const getUserRole = (claims: any): Role => {
-  if (!claims) return ROLES.CLIENT;
+  if (!claims) return ROLES.USER;
 
-  const metadata = claims.metadata as SessionMetadata | undefined;
-  const publicMeta = claims.publicMetadata as SessionMetadata | undefined;
+  // Extract org_role from claims
+  const orgRole = claims?.org_role;
 
-  // Verificamos en varias ubicaciones posibles donde podría estar el rol
-  // Primero verificamos ADMIN
+  // Check for admin role in various formats
   if (
-    metadata?.role === ROLES.ADMIN ||
-    metadata?.role === `org:${ROLES.ADMIN}` ||
-    claims?.["org_role"] === ROLES.ADMIN ||
-    publicMeta?.role === ROLES.ADMIN
+    orgRole === ROLES.ADMIN ||
+    orgRole === `org:${ROLES.ADMIN}`
   ) {
     return ROLES.ADMIN;
   }
 
-  // Luego verificamos ACCOUNTANT
-  if (
-    metadata?.role === ROLES.ACCOUNTANT ||
-    metadata?.role === `org:${ROLES.ACCOUNTANT}` ||
-    claims?.["org_role"] === ROLES.ACCOUNTANT ||
-    publicMeta?.role === ROLES.ACCOUNTANT
-  ) {
-    return ROLES.ACCOUNTANT;
-  }
+  // Add more role checks as needed
+  // if (orgRole === ROLES.PROFESSIONAL || orgRole === `org:${ROLES.PROFESSIONAL}`) {
+  //   return ROLES.PROFESSIONAL;
+  // }
 
-  // Si no es ninguno de los anteriores, asumimos CLIENT como predeterminado
-  return ROLES.CLIENT;
+  // Default to USER role
+  return ROLES.USER;
 };
 
-// Middleware de autenticación con soporte para roles
-export default authMiddleware((auth, req) => {
-  // Si no tenemos la solicitud, simplemente aplicamos la seguridad
+export default authMiddleware(async (auth, req) => {
+  const { userId, sessionClaims } = await auth();
+
+  // If no request, just apply security
   if (!req) return securityHeaders();
 
-  // Extraemos el pathname de la URL
   const { pathname } = req.nextUrl;
 
-  // Si la ruta es pública, permitimos el acceso
+  // Always allow public routes
   if (isPublicRoute(pathname)) {
     return securityHeaders();
   }
 
-  // Si el usuario está autenticado, verificamos los permisos según el rol
-  // Usamos type assertion para tratar el objeto auth correctamente
-  const userId = (auth as any).userId;
+  // User is not authenticated but trying to access an authenticated route
+  if (!userId && isAuthenticatedRoute(pathname)) {
+    return NextResponse.redirect(new URL('/sign-in', req.url));
+  }
+
+  // User is authenticated
   if (userId) {
-    try {
-      // Obtenemos los claims del usuario
-      const claims = (auth as any).sessionClaims || {};
+    // Determine user role
+    const userRole = getUserRole(sessionClaims);
 
-      // Determinamos el rol del usuario usando nuestra función centralizada
-      const userRole = getUserRole(claims);
+    // Root path redirect to role-specific dashboard
+    if (pathname === '/' || pathname === '') {
+      return NextResponse.redirect(new URL(
+        ROLE_CONFIGURATION[userRole]?.defaultRedirect || ROLE_CONFIGURATION[ROLES.USER].defaultRedirect,
+        req.url
+      ));
+    }
 
-      // Si estamos en la ruta principal, redirigimos al dashboard según el rol
-      if (pathname === '/' || pathname === '') {
-        return NextResponse.redirect(new URL(
-          ROLE_CONFIGURATION[userRole]?.defaultRedirect || ROLE_CONFIGURATION[ROLES.CLIENT].defaultRedirect,
-          req.url
-        ));
+    // Check if user has access to the requested route
+    if (!hasAccessToRoute(pathname, userRole)) {
+      // If attempting to access admin route without admin role, redirect to access-denied
+      if (pathname.startsWith('/admin') && userRole !== ROLES.ADMIN) {
+        return NextResponse.redirect(new URL('/access-denied', req.url));
       }
 
-      // Verificamos si el usuario tiene acceso a la ruta actual
-      if (!hasAccessToRoute(pathname, userRole)) {
-        // Si no tiene acceso, redirigimos a su dashboard predeterminado
-        return NextResponse.redirect(new URL(
-          ROLE_CONFIGURATION[userRole]?.defaultRedirect || ROLE_CONFIGURATION[ROLES.CLIENT].defaultRedirect,
-          req.url
-        ));
-      }
-    } catch (error) {
-      console.error('Error verificando permisos de rol:', error);
-      // En caso de error, redirigimos al usuario a la ruta de cliente por defecto
-      return NextResponse.redirect(new URL(ROLE_CONFIGURATION[ROLES.CLIENT].defaultRedirect, req.url));
+      // Otherwise redirect to their default route
+      return NextResponse.redirect(new URL(
+        ROLE_CONFIGURATION[userRole]?.defaultRedirect || ROLE_CONFIGURATION[ROLES.USER].defaultRedirect,
+        req.url
+      ));
     }
   }
 
-  // Aplicamos las configuraciones de seguridad
+  // Apply security headers
   return securityHeaders();
 }) as unknown as NextMiddleware;
 
