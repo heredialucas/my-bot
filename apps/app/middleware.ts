@@ -31,8 +31,8 @@ const ROLE_CONFIGURATION: Record<Role, RoleConfig> = {
     allowedRoutes: ['/admin']
   },
   [ROLES.USER]: {
-    defaultRedirect: '/',
-    allowedRoutes: ['/']
+    defaultRedirect: '/access-denied',
+    allowedRoutes: []
   }
   // Example for adding a new role:
   // [ROLES.PROFESSIONAL]: {
