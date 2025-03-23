@@ -1,6 +1,5 @@
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
 import { ShieldIcon } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
@@ -9,7 +8,7 @@ type AuthLayoutProps = {
 };
 
 const AuthLayout = ({ children }: AuthLayoutProps) => (
-  <div className="grid w-full min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
+  <div className="grid w-full min-h-screen lg:grid-cols-2 bg-white dark:bg-black text-gray-900 dark:text-white">
     {/* Panel izquierdo (solo visible en desktop) */}
     <div className="hidden lg:flex flex-col justify-between bg-gray-100 dark:bg-zinc-900 p-10 relative overflow-hidden">
       <div className="absolute w-full h-full left-0 top-0 bg-gradient-to-br from-gray-100 via-gray-100 to-gray-200 dark:from-zinc-900 dark:via-zinc-900 dark:to-black z-0" />
@@ -44,8 +43,11 @@ const AuthLayout = ({ children }: AuthLayoutProps) => (
           <ShieldIcon className="h-6 w-6 text-blue-400" />
           <span className="font-bold text-xl text-gray-900 dark:text-white">NetFull</span>
         </Link>
+        <ModeToggle />
       </div>
-      <div className="mt-6">
+
+      {/* Description visible only on mobile */}
+      <div className="lg:hidden mb-10">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           La plataforma para organizar y gestionar tu sitio web.
         </h1>
