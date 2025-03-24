@@ -1,23 +1,23 @@
 import DialogWrapper from "../../../components/DialogWrapper";
 import ImageForm from "./ImageForm";
-
-// Esta función será reemplazada con una consulta real a la base de datos
-async function getImage(imageId: string) {
-    // Simulación de consulta a la base de datos
-    return {
-        id: imageId,
-        name: "Banner promoción 16%",
-        description: "Imagen para la promoción de 16% de descuento",
-        url: "",
-        alt: "Banner promoción 16%"
-    };
-}
+import { getImageById } from "../../../../server/imageActions";
 
 export default async function EditImageModal({ params }: { params: Promise<{ imageId: string }> }) {
     const { imageId } = await params;
 
-    // Obtener datos de la imagen desde la base de datos
-    const image = await getImage(imageId);
+    // Obtener datos de la imagen desde la base de datos usando el server action
+    const image = await getImageById(imageId);
+
+    if (!image) {
+        // Si no se encuentra la imagen, mostrar un mensaje de error
+        return (
+            <DialogWrapper title="Error">
+                <div className="p-6">
+                    <p className="text-red-500">No se encontró la imagen solicitada.</p>
+                </div>
+            </DialogWrapper>
+        );
+    }
 
     return (
         <DialogWrapper title="Editar Imagen">

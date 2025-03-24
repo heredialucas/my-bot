@@ -4,16 +4,21 @@ import { Button } from "@repo/design-system/components/ui/button";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
 import { Textarea } from "@repo/design-system/components/ui/textarea";
-import { Image as ImageIcon } from "lucide-react";
+import { Image as ImageIcon, Loader2 } from "lucide-react";
 import ModalActions from "../../../components/ModalActions";
-import { useState, useRef, useEffect } from "react";
-
+import { useState, useRef } from "react";
+import { uploadImage, updateImage } from "../../../../server/imageActions";
+import Image from "next/image";
+// Updated Image type to match the database schema
 type Image = {
     id: string;
     name: string;
-    description: string;
+    description: string | null;
     url: string;
-    alt: string;
+    alt: string | null;
+    createdAt?: Date;
+    updatedAt?: Date;
+    type?: any; // MediaType enum 
 };
 
 interface ImageFormProps {
@@ -29,38 +34,8 @@ export default function ImageForm({ image, imageId }: ImageFormProps) {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(image?.url || null);
     const [isFormDirty, setIsFormDirty] = useState(false);
-    const [isLoading, setIsLoading] = useState(!image);
+    const [isLoading, setIsLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        if (!image && imageId) {
-            async function fetchImage() {
-                try {
-                    // Simulación de llamada a API
-                    // Aquí iría la llamada real
-                    const imageData = {
-                        id: imageId,
-                        name: "Banner promoción 16%",
-                        description: "Imagen para la promoción de 16% de descuento",
-                        url: "",
-                        alt: "Banner promoción 16%"
-                    };
-
-                    setName(imageData.name);
-                    setDescription(imageData.description);
-                    setAlt(imageData.alt);
-                    setUrl(imageData.url);
-                    setPreviewUrl(imageData.url);
-                    setIsLoading(false);
-                } catch (error) {
-                    console.error("Error fetching image:", error);
-                    setIsLoading(false);
-                }
-            }
-
-            fetchImage();
-        }
-    }, [image, imageId]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -77,35 +52,54 @@ export default function ImageForm({ image, imageId }: ImageFormProps) {
 
     const handleSave = async () => {
         try {
-            const formData = new FormData();
+            if (!name || !alt) return;
 
+            setIsLoading(true);
+            let imageUrl = url;
+
+            // Si se seleccionó un nuevo archivo, primero lo subimos
             if (selectedFile) {
-                formData.append('file', selectedFile);
+                // Subir la imagen usando el archivo directamente
+                const uploadResult = await uploadImage({
+                    name,
+                    description: description || '',
+                    alt: alt || '',
+                    url: '',
+                    file: selectedFile,
+                    folder: "net-full"
+                });
+
+                if (!uploadResult || !uploadResult.url) {
+                    throw new Error("Error al subir la imagen");
+                }
+
+                imageUrl = uploadResult.url;
             }
 
-            formData.append('name', name);
-            formData.append('description', description);
-            formData.append('alt', alt);
-
-            // Aquí iría la lógica para guardar en Prisma
-            const response = await fetch(`/api/media/${imageId}`, {
-                method: 'PUT',
-                body: formData,
+            // Actualizar la imagen en la base de datos
+            await updateImage(imageId, {
+                name,
+                description: description || '',
+                alt: alt || '',
+                url: imageUrl
             });
 
-            if (!response.ok) {
-                throw new Error("Error al guardar la imagen");
-            }
+            // No necesitamos hacer router.back() aquí porque updateImage ya incluye redirección
         } catch (error) {
             console.error("Error saving image:", error);
             throw error;
+        } finally {
+            setIsLoading(false);
         }
     };
 
     if (isLoading) {
         return (
-            <div className="p-6 flex items-center justify-center">
-                Cargando...
+            <div className="p-6 flex items-center justify-center h-full">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <p>Procesando imagen...</p>
+                </div>
             </div>
         );
     }
@@ -131,10 +125,12 @@ export default function ImageForm({ image, imageId }: ImageFormProps) {
 
                             {previewUrl ? (
                                 <div className="w-full flex flex-col items-center">
-                                    <img
+                                    <Image
                                         src={previewUrl}
                                         alt="Vista previa"
                                         className="max-h-40 max-w-full mb-4 rounded-md"
+                                        width={100}
+                                        height={100}
                                     />
                                     <Button variant="outline" type="button" size="sm">
                                         Cambiar imagen
@@ -165,7 +161,7 @@ export default function ImageForm({ image, imageId }: ImageFormProps) {
                             <Label htmlFor="description">Descripción</Label>
                             <Textarea
                                 id="description"
-                                value={description}
+                                value={description || ''}
                                 onChange={(e) => {
                                     setDescription(e.target.value);
                                     setIsFormDirty(true);
@@ -177,7 +173,7 @@ export default function ImageForm({ image, imageId }: ImageFormProps) {
                             <Label htmlFor="alt">Texto alternativo (alt)</Label>
                             <Input
                                 id="alt"
-                                value={alt}
+                                value={alt || ''}
                                 onChange={(e) => {
                                     setAlt(e.target.value);
                                     setIsFormDirty(true);
@@ -190,7 +186,8 @@ export default function ImageForm({ image, imageId }: ImageFormProps) {
 
             <ModalActions
                 onSave={handleSave}
-                isDisabled={!isFormDirty || (!selectedFile && !url) || !name || !alt}
+                isDisabled={!isFormDirty || (!selectedFile && !url) || !name || !alt || isLoading}
+                saveLabel={isLoading ? "Guardando..." : "Guardar"}
             />
         </div>
     );

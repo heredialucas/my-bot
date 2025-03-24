@@ -7,6 +7,7 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Image as ImageIcon } from "lucide-react";
 import ModalActions from "../../components/ModalActions";
 import { useState, useRef } from "react";
+import { uploadImage, createImage } from '../../../server/imageActions';
 
 export default function ImageForm() {
     const [name, setName] = useState("");
@@ -32,23 +33,34 @@ export default function ImageForm() {
 
     const handleSave = async () => {
         try {
-            if (!selectedFile) return;
+            if (!selectedFile || !name || !alt) return;
 
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-            formData.append('name', name);
-            formData.append('description', description);
-            formData.append('alt', alt);
+            // Preparamos los datos para la acción de uploadImage
+            const imageData = {
+                name,
+                description,
+                alt,
+                url: "", // Esta URL se obtendrá desde el servidor después de subir el archivo
+                file: selectedFile,
+                folder: "net-full"
+            };
 
-            // Aquí iría la lógica para guardar en Prisma
-            const response = await fetch('/api/media', {
-                method: 'POST',
-                body: formData,
+            // Subimos la imagen y obtenemos la URL
+            const uploadResult = await uploadImage(imageData);
+
+            if (!uploadResult || !uploadResult.url) {
+                throw new Error("Error al subir la imagen");
+            }
+
+            // Creamos el registro en la base de datos con la URL obtenida
+            await createImage({
+                name,
+                description,
+                alt,
+                url: uploadResult.url
             });
 
-            if (!response.ok) {
-                throw new Error("Error al guardar la imagen");
-            }
+            // No necesitamos hacer router.back() aquí porque createImage ya incluye redirección
         } catch (error) {
             console.error("Error saving image:", error);
             throw error;

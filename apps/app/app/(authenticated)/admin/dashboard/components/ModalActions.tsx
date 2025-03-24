@@ -53,7 +53,7 @@ export default function ModalActions({
                 {isLoading ? (
                     <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Guardando...
+                        {saveLabel}
                     </>
                 ) : (
                     saveLabel

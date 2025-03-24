@@ -5,7 +5,7 @@ import ServicesTab from "./ServicesTab"
 import PlansTab from "./PlansTab"
 import PromotionsTab from "./PromotionsTab"
 import AddonsTab from "./AddonsTab"
-import MediaTab from "./MediaTab"
+import ImageTab from "./ImageTab"
 
 export default async function DashboardContent() {
     return (
@@ -25,7 +25,7 @@ export default async function DashboardContent() {
                         <TabsTrigger value="plans">Planes</TabsTrigger>
                         <TabsTrigger value="promotions">Promociones</TabsTrigger>
                         <TabsTrigger value="addons">Complementos</TabsTrigger>
-                        <TabsTrigger value="media">Imágenes</TabsTrigger>
+                        <TabsTrigger value="images">Imágenes</TabsTrigger>
                     </TabsList>
                 </div>
 
@@ -45,8 +45,8 @@ export default async function DashboardContent() {
                     <AddonsTab />
                 </TabsContent>
 
-                <TabsContent value="media" className="space-y-4">
-                    <MediaTab />
+                <TabsContent value="images" className="space-y-4">
+                    <ImageTab />
                 </TabsContent>
             </Tabs>
         </div>
