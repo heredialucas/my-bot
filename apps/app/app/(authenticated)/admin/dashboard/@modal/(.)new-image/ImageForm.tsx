@@ -63,7 +63,9 @@ export default function ImageForm() {
                 name,
                 description,
                 alt,
-                url: uploadResult.url
+                url: uploadResult.url,
+                file: selectedFile || new Blob(),
+                folder: "net-full"
             });
 
             // La redirección la maneja automáticamente el sistema

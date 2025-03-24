@@ -8,8 +8,8 @@ import { Image as ImageIcon, Loader2 } from "lucide-react";
 import ModalActions from "../../../components/ModalActions";
 import { useState, useRef } from "react";
 import { uploadImage, updateImage } from "@repo/data-services";
-import { revalidatePath } from "next/cache";
 import Image from "next/image";
+
 // Updated Image type to match the database schema
 type Image = {
     id: string;
@@ -87,7 +87,9 @@ export default function ImageForm({ image, imageId }: ImageFormProps) {
                 name,
                 description: description || '',
                 alt: alt || '',
-                url: imageUrl
+                url: imageUrl,
+                file: selectedFile || new Blob(),
+                folder: "net-full"
             });
 
             // La redirección la maneja automáticamente el sistema
