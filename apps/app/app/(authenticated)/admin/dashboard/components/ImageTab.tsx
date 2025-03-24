@@ -1,8 +1,10 @@
 import { Button } from "@repo/design-system/components/ui/button"
-import { PlusIcon, PencilIcon, TrashIcon, ImageIcon } from "lucide-react"
+import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react"
 import Link from "next/link"
-import { getAllImages, deleteImage } from "../../server/imageActions"
+import { getAllImages, deleteImage } from "@repo/data-services"
+import { revalidatePath } from "next/cache"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/design-system/components/ui/card"
+import Image from "next/image"
 
 export default async function ImageTab() {
     const imageItems = await getAllImages()
@@ -31,12 +33,9 @@ export default async function ImageTab() {
                         <Card key={image.id}>
                             <CardHeader className="pb-2">
                                 <div className="flex justify-between items-start">
-                                    <div className="flex items-center gap-2">
-                                        <ImageIcon className="h-4 w-4 text-blue-500" />
-                                        <CardTitle className="text-lg">
-                                            {image.name}
-                                        </CardTitle>
-                                    </div>
+                                    <CardTitle className="text-lg">
+                                        {image.name}
+                                    </CardTitle>
                                     <div className="flex gap-1">
                                         <Link href={`/admin/dashboard/edit-image/${image.id}`}>
                                             <Button variant="ghost" size="icon">
@@ -46,6 +45,7 @@ export default async function ImageTab() {
                                         <form action={async () => {
                                             "use server"
                                             await deleteImage(image.id)
+                                            revalidatePath('/admin/dashboard')
                                         }}>
                                             <Button variant="ghost" size="icon" type="submit" className="text-red-500 hover:text-red-600">
                                                 <TrashIcon className="h-4 w-4" />
@@ -58,15 +58,14 @@ export default async function ImageTab() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="pb-4">
-                                <div className="flex flex-col">
-                                    <div className="text-sm text-muted-foreground truncate">
-                                        URL: {image.url}
-                                    </div>
-                                    {image.alt && (
-                                        <div className="text-sm text-muted-foreground">
-                                            Alt: {image.alt}
-                                        </div>
-                                    )}
+                                <div className="relative w-full h-32 overflow-hidden rounded-md">
+                                    <Image
+                                        src={image.url}
+                                        alt={image.alt || image.name}
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        className="object-cover"
+                                    />
                                 </div>
                             </CardContent>
                         </Card>

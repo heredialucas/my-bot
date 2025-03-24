@@ -6,10 +6,11 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../components/ModalActions";
 import { useState } from "react";
-import { createService } from "../../../server/serviceActions";
+import { createService } from "@repo/data-services";
 import { useRouter } from "next/navigation";
 import { Button } from "@repo/design-system/components/ui/button";
 import { PlusCircle, X } from "lucide-react";
+import { FormEvent } from "react";
 
 export default function ServiceForm() {
     const router = useRouter();
@@ -53,32 +54,22 @@ export default function ServiceForm() {
     const handleSave = async () => {
         if (isSubmitting) return;
 
+        setIsSubmitting(true);
+
         try {
-            setIsSubmitting(true);
-            setError(null);
-
-            // Convertir los valores numéricos
-            const speedValue = speed ? parseInt(speed) : null;
-            const priceValue = price ? parseFloat(price) : null;
-            const regularPriceValue = regularPrice ? parseFloat(regularPrice) : null;
-            const promoMonthsValue = promoMonths ? parseInt(promoMonths) : null;
-
-            // Usar la Server Action para crear el servicio
             await createService({
                 name,
                 description,
                 icon,
-                serviceItems,
-                speed: speedValue,
-                price: priceValue,
-                regularPrice: regularPriceValue,
-                promoMonths: promoMonthsValue
+                speed: speed ? parseInt(speed) : 0,
+                price: price ? parseFloat(price) : 0,
+                regularPrice: regularPrice ? parseFloat(regularPrice) : 0,
+                promoMonths: promoMonths ? parseInt(promoMonths) : 0,
+                serviceItems
             });
-
-            // La redirección la maneja la Server Action
         } catch (error) {
-            console.error("Error creating service:", error);
-            setError("Hubo un error al crear el servicio. Por favor intenta de nuevo.");
+            console.error('Error creating service:', error);
+        } finally {
             setIsSubmitting(false);
         }
     };

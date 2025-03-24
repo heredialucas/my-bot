@@ -6,7 +6,7 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../../components/ModalActions";
 import { useState } from "react";
-import { updateAddon } from "../../../../server/addonActions";
+import { updateAddon } from "@repo/data-services";
 
 interface AddonData {
     id: string;
@@ -31,26 +31,20 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
     const handleSave = async () => {
         if (isSubmitting) return;
 
+        setIsSubmitting(true);
+
         try {
-            setIsSubmitting(true);
-            setError(null);
-
-            // Convertir los valores numéricos
-            const priceValue = parseFloat(price);
-
-            // Usar la Server Action para actualizar el complemento
             await updateAddon(initialData.id, {
                 name,
                 description,
-                price: priceValue,
+                price: parseFloat(price),
                 icon,
                 color: initialData.color || null,
             });
-
-            // La redirección la maneja la Server Action
         } catch (error) {
             console.error("Error updating addon:", error);
             setError("Hubo un error al actualizar el complemento. Por favor intenta de nuevo.");
+        } finally {
             setIsSubmitting(false);
         }
     };

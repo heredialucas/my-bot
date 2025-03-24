@@ -1,6 +1,6 @@
 import DialogWrapper from "../../../components/DialogWrapper";
 import ServiceForm from "./ServiceForm";
-import { getServiceById } from "../../../../server/serviceActions";
+import { getServiceById } from "@repo/data-services";
 
 export default async function EditServiceModal({ params }: { params: Promise<{ serviceId: string }> }) {
     const { serviceId } = await params;

@@ -1,8 +1,6 @@
 import DialogWrapper from "../../components/DialogWrapper";
 import PromotionForm from "./PromotionForm";
-import { getAllServices } from "../../../server/serviceActions";
-import { getAllPlans } from "../../../server/planActions";
-import { getAllAddons } from "../../../server/addonActions";
+import { getAllServices, getAllPlans, getAllAddons } from "@repo/data-services";
 
 export default async function NewPromotionModal() {
     // Cargar los datos necesarios para el formulario

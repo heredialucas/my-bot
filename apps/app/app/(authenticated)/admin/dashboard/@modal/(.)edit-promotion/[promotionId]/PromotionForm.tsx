@@ -7,7 +7,7 @@ import { Switch } from "@repo/design-system/components/ui/switch";
 import { Checkbox } from "@repo/design-system/components/ui/checkbox";
 import ModalActions from "../../../components/ModalActions";
 import { useState } from "react";
-import { updatePromotion } from "../../../../server/promotionActions";
+import { updatePromotion } from "@repo/data-services";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/design-system/components/ui/tabs";
 
 type Service = {
@@ -123,7 +123,7 @@ export default function PromotionForm({ initialData, services, plans, addons }: 
             const discountValue = parseFloat(discount);
             const durationValue = parseInt(duration);
 
-            // Usar la Server Action para actualizar la promoción
+            // Usar la función directamente
             await updatePromotion(initialData.id, {
                 name,
                 description,
@@ -136,10 +136,11 @@ export default function PromotionForm({ initialData, services, plans, addons }: 
                 addonIds: selectedAddons
             });
 
-            // La redirección la maneja la Server Action
+            // La redirección la maneja automáticamente el sistema
         } catch (error) {
             console.error("Error updating promotion:", error);
             setError("Hubo un error al actualizar la promoción. Por favor intenta de nuevo.");
+        } finally {
             setIsSubmitting(false);
         }
     };

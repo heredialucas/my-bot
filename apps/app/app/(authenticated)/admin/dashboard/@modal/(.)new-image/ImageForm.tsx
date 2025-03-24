@@ -7,7 +7,7 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Image as ImageIcon } from "lucide-react";
 import ModalActions from "../../components/ModalActions";
 import { useState, useRef } from "react";
-import { uploadImage, createImage } from '../../../server/imageActions';
+import { uploadImage, createImage } from "@repo/data-services";
 
 export default function ImageForm() {
     const [name, setName] = useState("");
@@ -17,6 +17,8 @@ export default function ImageForm() {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isFormDirty, setIsFormDirty] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -32,6 +34,10 @@ export default function ImageForm() {
     };
 
     const handleSave = async () => {
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+
         try {
             if (!selectedFile || !name || !alt) return;
 
@@ -60,10 +66,12 @@ export default function ImageForm() {
                 url: uploadResult.url
             });
 
-            // No necesitamos hacer router.back() aquí porque createImage ya incluye redirección
+            // La redirección la maneja automáticamente el sistema
         } catch (error) {
             console.error("Error saving image:", error);
-            throw error;
+        } finally {
+            setIsLoading(false);
+            setIsSubmitting(false);
         }
     };
 

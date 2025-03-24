@@ -5,8 +5,8 @@ import { Label } from "@repo/design-system/components/ui/label";
 import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../components/ModalActions";
-import { useState } from "react";
-import { createAddon } from "../../../server/addonActions";
+import { FormEvent, useState } from "react";
+import { createAddon } from "@repo/data-services";
 
 export default function AddonForm() {
     const [name, setName] = useState("");
@@ -28,7 +28,7 @@ export default function AddonForm() {
             // Convertir los valores numéricos
             const priceValue = parseFloat(price);
 
-            // Usar la Server Action para crear el complemento
+            // Llamar directamente a la función createAddon del paquete @repo/data-services
             await createAddon({
                 name,
                 description,
@@ -37,7 +37,7 @@ export default function AddonForm() {
                 color: color || null,
             });
 
-            // La redirección la maneja la Server Action
+            // La redirección la maneja automáticamente el sistema
         } catch (error) {
             console.error("Error creating addon:", error);
             setError("Hubo un error al crear el complemento. Por favor intenta de nuevo.");

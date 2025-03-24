@@ -1,6 +1,6 @@
 import DialogWrapper from "../../../components/DialogWrapper";
 import AddonForm from "./AddonForm";
-import { getAddonById } from "../../../../server/addonActions";
+import { getAddonById } from "@repo/data-services";
 
 export default async function EditAddonModal({ params }: { params: Promise<{ addonId: string }> }) {
     const { addonId } = await params;

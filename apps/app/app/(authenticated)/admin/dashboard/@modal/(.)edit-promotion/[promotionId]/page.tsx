@@ -1,9 +1,6 @@
 import DialogWrapper from "../../../components/DialogWrapper";
 import PromotionForm from "./PromotionForm";
-import { getPromotionById } from "../../../../server/promotionActions";
-import { getAllServices } from "../../../../server/serviceActions";
-import { getAllPlans } from "../../../../server/planActions";
-import { getAllAddons } from "../../../../server/addonActions";
+import { getPromotionById, getAllServices, getAllPlans, getAllAddons } from "@repo/data-services";
 
 export default async function EditPromotionModal({ params }: { params: Promise<{ promotionId: string }> }) {
     const { promotionId } = await params;

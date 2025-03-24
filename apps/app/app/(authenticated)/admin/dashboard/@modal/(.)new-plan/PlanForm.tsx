@@ -7,7 +7,7 @@ import { Switch } from "@repo/design-system/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../components/ModalActions";
 import { useState } from "react";
-import { createPlan } from "../../../server/planActions";
+import { createPlan } from "@repo/data-services";
 
 export default function PlanForm() {
     const [name, setName] = useState("");
@@ -36,7 +36,7 @@ export default function PlanForm() {
             const promoMonthsValue = promoMonths ? parseInt(promoMonths) : null;
             const channelCountValue = channelCount ? parseInt(channelCount) : null;
 
-            // Usar la Server Action para crear el plan de Zapping
+            // Usar la función del paquete directamente pero sin enviar el icon
             await createPlan({
                 name,
                 description,
@@ -46,11 +46,10 @@ export default function PlanForm() {
                 channelCount: channelCountValue,
                 premiumContent,
                 noAds,
-                icon,
                 planType: "ZAPPING", // Fixed as Zapping
             });
 
-            // La redirección la maneja la Server Action
+            // La redirección la maneja automáticamente el sistema
         } catch (error) {
             console.error("Error creating zapping plan:", error);
             setError("Hubo un error al crear el plan. Por favor intenta de nuevo.");

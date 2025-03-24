@@ -1,24 +1,11 @@
 'use server'
 
-import { revalidatePath } from "next/cache";
-import { db } from "@/lib/db";
-
-// Tipo para los datos del plan
-export type PlanFormData = {
-    name: string;
-    description?: string;
-    price: number;
-    regularPrice?: number | null;
-    promoMonths?: number | null;
-    channelCount?: number | null;
-    premiumContent?: boolean;
-    noAds?: boolean;
-    icon?: string | null;
-    planType: string;
-};
+import { PlanFormData } from '../types/plan';
+import { database as db } from '@repo/database';
+import { revalidatePath } from 'next/cache';
 
 /**
- * Get all plans
+ * Obtener todos los planes
  */
 export async function getAllPlans() {
     try {
@@ -33,17 +20,15 @@ export async function getAllPlans() {
                 channelCount: true,
                 premiumContent: true,
                 noAds: true,
+                planType: true
             },
             orderBy: {
                 name: 'asc'
             }
         });
 
-        // Until the schema is updated, add planType
-        return plans.map(plan => ({
-            ...plan,
-            planType: 'ZAPPING' // Now default to Zapping
-        }));
+        // Ya contiene planType, no necesitamos mapearlo
+        return plans;
     } catch (error) {
         console.error("Error fetching plans:", error);
         throw new Error("Failed to fetch plans");
@@ -51,9 +36,10 @@ export async function getAllPlans() {
 }
 
 /**
- * Create a new plan
+ * Crear un nuevo plan
  */
 export async function createPlan(data: PlanFormData) {
+    "use server";
     try {
         const {
             name,
@@ -67,8 +53,8 @@ export async function createPlan(data: PlanFormData) {
             planType
         } = data;
 
-        // Create the plan
-        await db.plan.create({
+        // Crear el plan
+        const plan = await db.plan.create({
             data: {
                 name,
                 description: description || null,
@@ -81,65 +67,83 @@ export async function createPlan(data: PlanFormData) {
                 planType,
             },
         });
-
-        // Revalidate cache to reflect changes
-        revalidatePath("/admin/dashboard");
+        revalidatePath('/admin/dashboard');
+        return plan;
     } catch (error) {
         console.error("Error creating plan:", error);
         throw new Error("Failed to create plan");
     }
 }
 
-// Actualizar un plan existente
-export async function updatePlan(planId: string, formData: PlanFormData) {
+/**
+ * Actualizar un plan existente
+ */
+export async function updatePlan(planId: string, data: PlanFormData) {
+    "use server";
     try {
-        // Actualizar el plan en la base de datos
-        await db.plan.update({
+        const {
+            name,
+            description,
+            price,
+            regularPrice,
+            promoMonths,
+            channelCount,
+            premiumContent,
+            noAds,
+            planType
+        } = data;
+
+        // Actualizar el plan
+        const plan = await db.plan.update({
             where: { id: planId },
             data: {
-                name: formData.name,
-                description: formData.description,
-                price: formData.price,
-                regularPrice: formData.regularPrice,
-                promoMonths: formData.promoMonths,
-                channelCount: formData.channelCount,
-                premiumContent: formData.premiumContent,
-                noAds: formData.noAds,
+                name,
+                description: description || null,
+                price,
+                regularPrice,
+                promoMonths,
+                channelCount,
+                premiumContent,
+                noAds,
+                planType
             },
         });
-
-        // Revalidar el path para actualizar los datos
         revalidatePath('/admin/dashboard');
-
+        return plan;
     } catch (error) {
         console.error("Error updating plan:", error);
         throw new Error("Failed to update plan");
     }
 }
 
-// Obtener un plan por ID
+/**
+ * Obtener un plan por ID
+ */
 export async function getPlanById(planId: string) {
     try {
-        return await db.plan.findUnique({
+        const plan = await db.plan.findUnique({
             where: { id: planId },
         });
+        return plan;
     } catch (error) {
-        console.error(`Error fetching plan with ID ${planId}:`, error);
+        console.error("Error fetching plan:", error);
         throw new Error("Failed to fetch plan");
     }
 }
 
-// Eliminar un plan
+/**
+ * Eliminar un plan
+ */
 export async function deletePlan(planId: string) {
+    "use server";
     try {
         await db.plan.delete({
             where: { id: planId },
         });
-
-        // Revalidar el path para actualizar los datos
         revalidatePath('/admin/dashboard');
+        return { success: true };
     } catch (error) {
-        console.error(`Error deleting plan with ID ${planId}:`, error);
+        console.error("Error deleting plan:", error);
         throw new Error("Failed to delete plan");
     }
-}
+} 

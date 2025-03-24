@@ -1,13 +1,13 @@
 import { Button } from "@repo/design-system/components/ui/button"
 import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react"
 import Link from "next/link"
-import { getAllServices, deleteService } from "../../server/serviceActions"
+import { getAllServices, deleteService } from "@repo/data-services"
+import { revalidatePath } from "next/cache";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/design-system/components/ui/card"
 
 export default async function ServicesTab() {
     // Obtener todos los servicios
     const services = await getAllServices()
-
 
     return (
         <div className="space-y-6">
@@ -45,6 +45,7 @@ export default async function ServicesTab() {
                                         <form action={async () => {
                                             "use server"
                                             await deleteService(service.id)
+                                            revalidatePath('/admin/dashboard')
                                         }}>
                                             <Button variant="ghost" size="icon" type="submit" className="text-red-500 hover:text-red-600">
                                                 <TrashIcon className="h-4 w-4" />

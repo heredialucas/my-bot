@@ -7,7 +7,8 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Image as ImageIcon, Loader2 } from "lucide-react";
 import ModalActions from "../../../components/ModalActions";
 import { useState, useRef } from "react";
-import { uploadImage, updateImage } from "../../../../server/imageActions";
+import { uploadImage, updateImage } from "@repo/data-services";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
 // Updated Image type to match the database schema
 type Image = {
@@ -35,6 +36,7 @@ export default function ImageForm({ image, imageId }: ImageFormProps) {
     const [previewUrl, setPreviewUrl] = useState<string | null>(image?.url || null);
     const [isFormDirty, setIsFormDirty] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,6 +53,10 @@ export default function ImageForm({ image, imageId }: ImageFormProps) {
     };
 
     const handleSave = async () => {
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+
         try {
             if (!name || !alt) return;
 
@@ -84,12 +90,13 @@ export default function ImageForm({ image, imageId }: ImageFormProps) {
                 url: imageUrl
             });
 
-            // No necesitamos hacer router.back() aquí porque updateImage ya incluye redirección
+            // La redirección la maneja automáticamente el sistema
         } catch (error) {
-            console.error("Error saving image:", error);
+            console.error("Error updating image:", error);
             throw error;
         } finally {
             setIsLoading(false);
+            setIsSubmitting(false);
         }
     };
 

@@ -7,7 +7,7 @@ import { Switch } from "@repo/design-system/components/ui/switch";
 import { Checkbox } from "@repo/design-system/components/ui/checkbox";
 import ModalActions from "../../components/ModalActions";
 import { useState } from "react";
-import { createPromotion } from "../../../server/promotionActions";
+import { createPromotion } from "@repo/data-services";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/design-system/components/ui/tabs";
 
 type Service = {
@@ -73,7 +73,7 @@ export default function PromotionForm({ services, plans, addons }: PromotionForm
             const discountValue = parseFloat(discount);
             const durationValue = parseInt(duration);
 
-            // Usar la Server Action para crear la promoción
+            // Usar la función directamente
             await createPromotion({
                 name,
                 description,
@@ -86,10 +86,11 @@ export default function PromotionForm({ services, plans, addons }: PromotionForm
                 addonIds: selectedAddons
             });
 
-            // La redirección la maneja la Server Action
+            // La redirección la maneja automáticamente el sistema
         } catch (error) {
             console.error("Error creating promotion:", error);
             setError("Hubo un error al crear la promoción. Por favor intenta de nuevo.");
+        } finally {
             setIsSubmitting(false);
         }
     };

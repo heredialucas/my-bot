@@ -6,7 +6,7 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../../components/ModalActions";
 import { useState } from "react";
-import { updateService } from "../../../../server/serviceActions";
+import { updateService } from "@repo/data-services";
 import { useRouter } from "next/navigation";
 import { Button } from "@repo/design-system/components/ui/button";
 import { PlusCircle, X } from "lucide-react";
@@ -83,39 +83,27 @@ export default function ServiceForm({ initialData }: { initialData: ServiceData 
     const handleSave = async () => {
         if (isSubmitting) return;
 
+        setIsSubmitting(true);
+
         try {
-            setIsSubmitting(true);
-            setError(null);
-
-            // Convertir los valores numéricos
-            const speedValue = speed ? parseInt(speed) : null;
-            const priceValue = price ? parseFloat(price) : null;
-            const regularPriceValue = regularPrice ? parseFloat(regularPrice) : null;
-            const promoMonthsValue = promoMonths ? parseInt(promoMonths) : null;
-
-            // Convertir service items al formato que espera la API
-            const formattedServiceItems: ServiceItemAPI[] = serviceItems.map(item => ({
-                title: item.title,
-                description: item.description ? item.description : undefined,
-                icon: item.icon ? item.icon : undefined
-            }));
-
-            // Usar la Server Action para actualizar el servicio
             await updateService(initialData.id, {
                 name,
                 description,
                 icon,
-                serviceItems: formattedServiceItems,
-                speed: speedValue,
-                price: priceValue,
-                regularPrice: regularPriceValue,
-                promoMonths: promoMonthsValue
+                speed: speed ? parseInt(speed) : 0,
+                price: price ? parseFloat(price) : 0,
+                regularPrice: regularPrice ? parseFloat(regularPrice) : 0,
+                promoMonths: promoMonths ? parseInt(promoMonths) : 0,
+                serviceItems: serviceItems.map(item => ({
+                    title: item.title,
+                    description: item.description ? item.description : undefined,
+                    icon: item.icon ? item.icon : undefined
+                }))
             });
-
-            // La redirección la maneja la Server Action
         } catch (error) {
-            console.error("Error updating service:", error);
+            console.error('Error updating service:', error);
             setError("Hubo un error al actualizar el servicio. Por favor intenta de nuevo.");
+        } finally {
             setIsSubmitting(false);
         }
     };

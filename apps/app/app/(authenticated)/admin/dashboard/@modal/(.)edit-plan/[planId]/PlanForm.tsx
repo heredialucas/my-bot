@@ -7,7 +7,7 @@ import { Switch } from "@repo/design-system/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../../components/ModalActions";
 import { useState } from "react";
-import { updatePlan } from "../../../../server/planActions";
+import { updatePlan } from "@repo/data-services";
 
 // Definir interfaz local en lugar de importar de @/db/schema
 interface Plan {
@@ -18,10 +18,12 @@ interface Plan {
     regularPrice: number | null;
     promoMonths: number | null;
     channelCount: number | null;
-    premiumContent: boolean;
-    noAds: boolean;
-    icon: string | null;
+    premiumContent: boolean | null;
+    noAds: boolean | null;
+    icon?: string | null;
     planType: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 interface PlanFormProps {
@@ -45,8 +47,9 @@ export default function PlanForm({ plan }: PlanFormProps) {
     const handleSave = async () => {
         if (isSubmitting) return;
 
+        setIsSubmitting(true);
+
         try {
-            setIsSubmitting(true);
             setError(null);
 
             // Convertir los valores numéricos
@@ -55,7 +58,7 @@ export default function PlanForm({ plan }: PlanFormProps) {
             const promoMonthsValue = promoMonths ? parseInt(promoMonths) : null;
             const channelCountValue = channelCount ? parseInt(channelCount) : null;
 
-            // Usar la Server Action para actualizar el plan
+            // Usar la función directamente pero sin enviar el icon
             await updatePlan(plan.id, {
                 name,
                 description,
@@ -65,14 +68,14 @@ export default function PlanForm({ plan }: PlanFormProps) {
                 channelCount: channelCountValue,
                 premiumContent,
                 noAds,
-                icon,
                 planType: plan.planType // Mantener el tipo de plan original
             });
 
-            // La redirección la maneja la Server Action
+            // La redirección la maneja automáticamente el sistema
         } catch (error) {
             console.error("Error updating plan:", error);
             setError("Hubo un error al actualizar el plan. Por favor intenta de nuevo.");
+        } finally {
             setIsSubmitting(false);
         }
     };

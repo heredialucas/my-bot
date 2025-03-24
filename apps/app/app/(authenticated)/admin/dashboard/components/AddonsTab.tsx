@@ -1,7 +1,8 @@
 import { Button } from "@repo/design-system/components/ui/button"
 import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react"
 import Link from "next/link"
-import { getAllAddons, deleteAddon } from "../../server/addonActions"
+import { getAllAddons, deleteAddon } from "@repo/data-services"
+import { revalidatePath } from "next/cache"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/design-system/components/ui/card"
 
 export default async function AddonsTab() {
@@ -44,6 +45,7 @@ export default async function AddonsTab() {
                                         <form action={async () => {
                                             "use server"
                                             await deleteAddon(addon.id)
+                                            revalidatePath('/admin/dashboard')
                                         }}>
                                             <Button variant="ghost" size="icon" type="submit" className="text-red-500 hover:text-red-600">
                                                 <TrashIcon className="h-4 w-4" />
@@ -56,18 +58,13 @@ export default async function AddonsTab() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="pb-4">
-                                <div className="flex flex-col">
+                                <div className="flex items-center gap-4">
                                     <div className="text-sm text-muted-foreground">
                                         Precio: ${addon.price}
                                     </div>
                                     {addon.icon && (
                                         <div className="text-sm text-muted-foreground">
                                             Icono: {addon.icon}
-                                        </div>
-                                    )}
-                                    {addon.color && (
-                                        <div className="text-sm text-muted-foreground">
-                                            Color: {addon.color}
                                         </div>
                                     )}
                                 </div>

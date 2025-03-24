@@ -1,7 +1,8 @@
 import { Button } from "@repo/design-system/components/ui/button"
 import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react"
 import Link from "next/link"
-import { getAllPromotions, deletePromotion } from "../../server/promotionActions"
+import { getAllPromotions, deletePromotion } from "@repo/data-services"
+import { revalidatePath } from "next/cache"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/design-system/components/ui/card"
 import { Badge } from "@repo/design-system/components/ui/badge"
 
@@ -30,16 +31,25 @@ export default async function PromotionsTab() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {promotions.map((promotion) => (
-                        <Card key={promotion.id}>
+                        <Card key={promotion.id} className="overflow-hidden">
+                            {promotion.color && (
+                                <div
+                                    className="h-2 w-full"
+                                    style={{ backgroundColor: promotion.color }}
+                                ></div>
+                            )}
                             <CardHeader className="pb-2">
                                 <div className="flex justify-between items-start">
-                                    <div className="flex flex-col gap-1">
-                                        <CardTitle className="text-lg">
+                                    <div className="flex flex-col">
+                                        <CardTitle className="text-lg flex items-center gap-2">
                                             {promotion.name}
+                                            <Badge variant={promotion.active ? "default" : "outline"}>
+                                                {promotion.active ? "Activa" : "Inactiva"}
+                                            </Badge>
                                         </CardTitle>
-                                        <Badge variant={promotion.active ? "default" : "outline"}>
-                                            {promotion.active ? "Activa" : "Inactiva"}
-                                        </Badge>
+                                        <CardDescription>
+                                            {promotion.description}
+                                        </CardDescription>
                                     </div>
                                     <div className="flex gap-1">
                                         <Link href={`/admin/dashboard/edit-promotion/${promotion.id}`}>
@@ -50,6 +60,7 @@ export default async function PromotionsTab() {
                                         <form action={async () => {
                                             "use server"
                                             await deletePromotion(promotion.id)
+                                            revalidatePath('/admin/dashboard')
                                         }}>
                                             <Button variant="ghost" size="icon" type="submit" className="text-red-500 hover:text-red-600">
                                                 <TrashIcon className="h-4 w-4" />
@@ -57,23 +68,15 @@ export default async function PromotionsTab() {
                                         </form>
                                     </div>
                                 </div>
-                                <CardDescription>
-                                    {promotion.description}
-                                </CardDescription>
                             </CardHeader>
                             <CardContent className="pb-4">
-                                <div className="flex flex-col">
-                                    <div className="text-sm text-muted-foreground">
-                                        Descuento: {promotion.discount}%
+                                <div className="grid grid-cols-2 gap-2 text-sm">
+                                    <div>
+                                        <span className="font-medium">Descuento:</span> {promotion.discount}%
                                     </div>
-                                    <div className="text-sm text-muted-foreground">
-                                        Duración: {promotion.duration} meses
+                                    <div>
+                                        <span className="font-medium">Duración:</span> {promotion.duration} meses
                                     </div>
-                                    {promotion.color && (
-                                        <div className="text-sm text-muted-foreground">
-                                            Color: {promotion.color}
-                                        </div>
-                                    )}
                                 </div>
                             </CardContent>
                         </Card>

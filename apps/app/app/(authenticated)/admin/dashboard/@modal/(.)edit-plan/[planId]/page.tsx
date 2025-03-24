@@ -1,6 +1,6 @@
 import DialogWrapper from "../../../components/DialogWrapper";
 import PlanForm from "./PlanForm";
-import { getPlanById } from "../../../../server/planActions";
+import { getPlanById } from "@repo/data-services";
 
 export default async function EditPlanModal({ params }: { params: Promise<{ planId: string }> }) {
     const { planId } = await params;
@@ -21,7 +21,7 @@ export default async function EditPlanModal({ params }: { params: Promise<{ plan
 
     return (
         <DialogWrapper title="Editar Plan">
-            <PlanForm initialData={planData} />
+            <PlanForm plan={planData} />
         </DialogWrapper>
     );
 } 
