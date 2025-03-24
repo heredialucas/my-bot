@@ -3,25 +3,41 @@
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
 import { Textarea } from "@repo/design-system/components/ui/textarea";
+import { Switch } from "@repo/design-system/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../../components/ModalActions";
 import { useState } from "react";
 import { updatePlan } from "../../../../server/planActions";
 
-interface PlanData {
+// Definir interfaz local en lugar de importar de @/db/schema
+interface Plan {
     id: string;
     name: string;
     description: string | null;
     price: number;
-    speed: number | null;
-    createdAt?: Date;
-    updatedAt?: Date;
+    regularPrice: number | null;
+    promoMonths: number | null;
+    channelCount: number | null;
+    premiumContent: boolean;
+    noAds: boolean;
+    icon: string | null;
+    planType: string;
 }
 
-export default function PlanForm({ initialData }: { initialData: PlanData }) {
-    const [name, setName] = useState(initialData.name);
-    const [description, setDescription] = useState(initialData.description || "");
-    const [price, setPrice] = useState(initialData.price.toString());
-    const [speed, setSpeed] = useState(initialData.speed ? initialData.speed.toString() : "");
+interface PlanFormProps {
+    plan: Plan;
+}
+
+export default function PlanForm({ plan }: PlanFormProps) {
+    const [name, setName] = useState(plan.name);
+    const [description, setDescription] = useState(plan.description || "");
+    const [price, setPrice] = useState(plan.price.toString());
+    const [regularPrice, setRegularPrice] = useState(plan.regularPrice?.toString() || "");
+    const [promoMonths, setPromoMonths] = useState(plan.promoMonths?.toString() || "");
+    const [channelCount, setChannelCount] = useState(plan.channelCount?.toString() || "");
+    const [premiumContent, setPremiumContent] = useState(plan.premiumContent || false);
+    const [noAds, setNoAds] = useState(plan.noAds || false);
+    const [icon, setIcon] = useState(plan.icon || "");
     const [isFormDirty, setIsFormDirty] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -35,14 +51,22 @@ export default function PlanForm({ initialData }: { initialData: PlanData }) {
 
             // Convertir los valores numéricos
             const priceValue = parseFloat(price);
-            const speedValue = speed ? parseInt(speed) : null;
+            const regularPriceValue = regularPrice ? parseFloat(regularPrice) : null;
+            const promoMonthsValue = promoMonths ? parseInt(promoMonths) : null;
+            const channelCountValue = channelCount ? parseInt(channelCount) : null;
 
             // Usar la Server Action para actualizar el plan
-            await updatePlan(initialData.id, {
+            await updatePlan(plan.id, {
                 name,
                 description,
                 price: priceValue,
-                speed: speedValue,
+                regularPrice: regularPriceValue,
+                promoMonths: promoMonthsValue,
+                channelCount: channelCountValue,
+                premiumContent,
+                noAds,
+                icon,
+                planType: plan.planType // Mantener el tipo de plan original
             });
 
             // La redirección la maneja la Server Action
@@ -54,7 +78,7 @@ export default function PlanForm({ initialData }: { initialData: PlanData }) {
     };
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full max-h-[80vh]">
             <div className="p-6 overflow-y-auto flex-1">
                 <h2 className="text-2xl font-bold mb-6">Editar Plan</h2>
 
@@ -89,36 +113,138 @@ export default function PlanForm({ initialData }: { initialData: PlanData }) {
                                     setIsFormDirty(true);
                                 }}
                                 disabled={isSubmitting}
+                                className="h-20"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="price">Precio</Label>
+                            <Label htmlFor="channelCount">Cantidad de canales</Label>
                             <Input
-                                id="price"
+                                id="channelCount"
                                 type="number"
-                                step="0.01"
-                                value={price}
+                                value={channelCount}
                                 onChange={(e) => {
-                                    setPrice(e.target.value);
+                                    setChannelCount(e.target.value);
                                     setIsFormDirty(true);
                                 }}
                                 disabled={isSubmitting}
                             />
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="speed">Velocidad (Mbps)</Label>
-                            <Input
-                                id="speed"
-                                type="number"
-                                value={speed}
-                                onChange={(e) => {
-                                    setSpeed(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                            />
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-2">
+                                <Label htmlFor="icon">Icono</Label>
+                                <Select
+                                    value={icon}
+                                    onValueChange={(value) => {
+                                        setIcon(value);
+                                        setIsFormDirty(true);
+                                    }}
+                                    disabled={isSubmitting}
+                                >
+                                    <SelectTrigger id="icon">
+                                        <SelectValue placeholder="Seleccionar icono" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Basic">
+                                            <div className="flex items-center">
+                                                <div className="w-6 h-6 mr-2 flex items-center justify-center bg-blue-100 rounded-full">🔵</div>
+                                                Básico
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem value="Standard">
+                                            <div className="flex items-center">
+                                                <div className="w-6 h-6 mr-2 flex items-center justify-center bg-green-100 rounded-full">🟢</div>
+                                                Estándar
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem value="Premium">
+                                            <div className="flex items-center">
+                                                <div className="w-6 h-6 mr-2 flex items-center justify-center bg-purple-100 rounded-full">⭐</div>
+                                                Premium
+                                            </div>
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <div className="text-xs text-gray-500 mt-1">
+                                    El icono se mostrará junto al nombre del plan.
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="price">Precio promocional</Label>
+                                <Input
+                                    id="price"
+                                    type="number"
+                                    step="0.01"
+                                    value={price}
+                                    onChange={(e) => {
+                                        setPrice(e.target.value);
+                                        setIsFormDirty(true);
+                                    }}
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="regularPrice">Precio regular</Label>
+                                <Input
+                                    id="regularPrice"
+                                    type="number"
+                                    step="0.01"
+                                    value={regularPrice}
+                                    onChange={(e) => {
+                                        setRegularPrice(e.target.value);
+                                        setIsFormDirty(true);
+                                    }}
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="promoMonths">Duración (meses)</Label>
+                                <Input
+                                    id="promoMonths"
+                                    type="number"
+                                    value={promoMonths}
+                                    onChange={(e) => {
+                                        setPromoMonths(e.target.value);
+                                        setIsFormDirty(true);
+                                    }}
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 mt-4">
+                            <h3 className="text-sm font-medium">Características del plan</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="flex items-center space-x-2">
+                                    <Switch
+                                        id="premiumContent"
+                                        checked={premiumContent}
+                                        onCheckedChange={(checked) => {
+                                            setPremiumContent(checked);
+                                            setIsFormDirty(true);
+                                        }}
+                                        disabled={isSubmitting}
+                                    />
+                                    <Label htmlFor="premiumContent" className="cursor-pointer">Incluye contenido premium</Label>
+                                </div>
+
+                                <div className="flex items-center space-x-2">
+                                    <Switch
+                                        id="noAds"
+                                        checked={noAds}
+                                        onCheckedChange={(checked) => {
+                                            setNoAds(checked);
+                                            setIsFormDirty(true);
+                                        }}
+                                        disabled={isSubmitting}
+                                    />
+                                    <Label htmlFor="noAds" className="cursor-pointer">Sin anuncios</Label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

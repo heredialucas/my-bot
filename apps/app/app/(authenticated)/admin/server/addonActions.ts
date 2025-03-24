@@ -4,31 +4,32 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 
 // Tipo para los datos del complemento
-type AddonFormData = {
+export type AddonFormData = {
     name: string;
-    description: string;
+    description?: string;
     price: number;
-    icon: string | null;
-    color: string | null;
+    icon?: string;
+    color?: string | null;
 };
 
 // Crear un nuevo complemento
-export async function createAddon(formData: AddonFormData) {
+export async function createAddon(data: AddonFormData) {
     try {
+        const { name, description, price, icon, color } = data;
+
         // Crear el complemento en la base de datos
         await db.addOn.create({
             data: {
-                name: formData.name,
-                description: formData.description,
-                price: formData.price,
-                icon: formData.icon,
-                color: formData.color,
+                name,
+                description: description || null,
+                price,
+                icon: icon || null,
+                color: color || null,
             },
         });
 
         // Revalidar el path para actualizar los datos
         revalidatePath('/admin/dashboard');
-
     } catch (error) {
         console.error("Error creating addon:", error);
         throw new Error("Failed to create addon");
@@ -62,12 +63,23 @@ export async function updateAddon(addonId: string, formData: AddonFormData) {
 // Obtener todos los complementos
 export async function getAllAddons() {
     try {
-        return await db.addOn.findMany({
-            orderBy: { name: 'asc' },
+        const addons = await db.addOn.findMany({
+            select: {
+                id: true,
+                name: true,
+                price: true,
+                icon: true,
+                description: true
+            },
+            orderBy: {
+                name: 'asc'
+            }
         });
+
+        return addons;
     } catch (error) {
-        console.error("Error fetching addons:", error);
-        throw new Error("Failed to fetch addons");
+        console.error("Error fetching add-ons:", error);
+        throw new Error("Failed to fetch add-ons");
     }
 }
 

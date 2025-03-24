@@ -24,7 +24,6 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
     const [description, setDescription] = useState(initialData.description || "");
     const [price, setPrice] = useState(initialData.price.toString());
     const [icon, setIcon] = useState(initialData.icon || "Package");
-    const [color, setColor] = useState(initialData.color || "");
     const [isFormDirty, setIsFormDirty] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -45,7 +44,7 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
                 description,
                 price: priceValue,
                 icon,
-                color: color || null,
+                color: initialData.color || null,
             });
 
             // La redirección la maneja la Server Action
@@ -57,7 +56,7 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
     };
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full max-h-[80vh]">
             <div className="p-6 overflow-y-auto flex-1">
                 <h2 className="text-2xl font-bold mb-6">Editar Complemento</h2>
 
@@ -83,19 +82,6 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="description">Descripción</Label>
-                            <Textarea
-                                id="description"
-                                value={description}
-                                onChange={(e) => {
-                                    setDescription(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
                             <Label htmlFor="price">Precio</Label>
                             <Input
                                 id="price"
@@ -111,37 +97,58 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="icon">Icono</Label>
-                            <Select
-                                value={icon}
-                                onValueChange={(value) => {
-                                    setIcon(value);
+                            <Label htmlFor="description">Descripción</Label>
+                            <Textarea
+                                id="description"
+                                value={description}
+                                onChange={(e) => {
+                                    setDescription(e.target.value);
                                     setIsFormDirty(true);
                                 }}
                                 disabled={isSubmitting}
-                            >
-                                <SelectTrigger id="icon">
-                                    <SelectValue placeholder="Seleccionar icono" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="Package">Paquete</SelectItem>
-                                    <SelectItem value="Wifi">Wifi</SelectItem>
-                                    <SelectItem value="Monitor">Monitor</SelectItem>
-                                </SelectContent>
-                            </Select>
+                                className="h-20"
+                            />
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="color">Color (opcional)</Label>
-                            <Input
-                                id="color"
-                                value={color}
-                                onChange={(e) => {
-                                    setColor(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                            />
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-2">
+                                <Label htmlFor="icon">Icono</Label>
+                                <Select
+                                    value={icon}
+                                    onValueChange={(value) => {
+                                        setIcon(value);
+                                        setIsFormDirty(true);
+                                    }}
+                                    disabled={isSubmitting}
+                                >
+                                    <SelectTrigger id="icon">
+                                        <SelectValue placeholder="Seleccionar icono" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Package">
+                                            <div className="flex items-center">
+                                                <div className="w-6 h-6 mr-2 flex items-center justify-center bg-blue-100 rounded-full">📦</div>
+                                                Paquete
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem value="Wifi">
+                                            <div className="flex items-center">
+                                                <div className="w-6 h-6 mr-2 flex items-center justify-center bg-green-100 rounded-full">📶</div>
+                                                Wifi
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem value="Monitor">
+                                            <div className="flex items-center">
+                                                <div className="w-6 h-6 mr-2 flex items-center justify-center bg-purple-100 rounded-full">🖥️</div>
+                                                Monitor
+                                            </div>
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <div className="text-xs text-gray-500 mt-1">
+                                    El icono se mostrará junto al nombre del complemento.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

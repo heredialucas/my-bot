@@ -11,7 +11,7 @@ export default function DialogWrapper({ children, title }: { children: React.Rea
             open={true}
             onOpenChange={(open) => !open && router.back()}
         >
-            <DialogContent className="max-w-6xl h-[80vh] w-11/12 p-0 overflow-hidden">
+            <DialogContent className="max-w-xl h-[80vh] w-11/12 p-0 overflow-hidden">
                 <DialogTitle className="sr-only">{title}</DialogTitle>
                 {children}
             </DialogContent>

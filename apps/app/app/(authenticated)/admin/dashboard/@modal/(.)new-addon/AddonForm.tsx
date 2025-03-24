@@ -46,7 +46,7 @@ export default function AddonForm() {
     };
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full max-h-[80vh]">
             <div className="p-6 overflow-y-auto flex-1">
                 <h2 className="text-2xl font-bold mb-6">Nuevo Complemento</h2>
 
@@ -57,48 +57,49 @@ export default function AddonForm() {
                 )}
 
                 <div className="space-y-6">
-                    <div className="grid grid-cols-1 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Nombre del complemento</Label>
-                            <Input
-                                id="name"
-                                value={name}
-                                onChange={(e) => {
-                                    setName(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                            />
-                        </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="name">Nombre del complemento</Label>
+                        <Input
+                            id="name"
+                            value={name}
+                            onChange={(e) => {
+                                setName(e.target.value);
+                                setIsFormDirty(true);
+                            }}
+                            disabled={isSubmitting}
+                        />
+                    </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Descripción</Label>
-                            <Textarea
-                                id="description"
-                                value={description}
-                                onChange={(e) => {
-                                    setDescription(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                            />
-                        </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="price">Precio</Label>
+                        <Input
+                            id="price"
+                            type="number"
+                            step="0.01"
+                            value={price}
+                            onChange={(e) => {
+                                setPrice(e.target.value);
+                                setIsFormDirty(true);
+                            }}
+                            disabled={isSubmitting}
+                        />
+                    </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="price">Precio</Label>
-                            <Input
-                                id="price"
-                                type="number"
-                                step="0.01"
-                                value={price}
-                                onChange={(e) => {
-                                    setPrice(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                            />
-                        </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="description">Descripción</Label>
+                        <Textarea
+                            id="description"
+                            value={description}
+                            onChange={(e) => {
+                                setDescription(e.target.value);
+                                setIsFormDirty(true);
+                            }}
+                            disabled={isSubmitting}
+                            className="h-20"
+                        />
+                    </div>
 
+                    <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
                             <Label htmlFor="icon">Icono</Label>
                             <Select
@@ -113,24 +114,29 @@ export default function AddonForm() {
                                     <SelectValue placeholder="Seleccionar icono" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Package">Paquete</SelectItem>
-                                    <SelectItem value="Wifi">Wifi</SelectItem>
-                                    <SelectItem value="Monitor">Monitor</SelectItem>
+                                    <SelectItem value="Package">
+                                        <div className="flex items-center">
+                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-blue-100 rounded-full">📦</div>
+                                            Paquete
+                                        </div>
+                                    </SelectItem>
+                                    <SelectItem value="Wifi">
+                                        <div className="flex items-center">
+                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-green-100 rounded-full">📶</div>
+                                            Wifi
+                                        </div>
+                                    </SelectItem>
+                                    <SelectItem value="Monitor">
+                                        <div className="flex items-center">
+                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-purple-100 rounded-full">🖥️</div>
+                                            Monitor
+                                        </div>
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="color">Color (opcional)</Label>
-                            <Input
-                                id="color"
-                                value={color}
-                                onChange={(e) => {
-                                    setColor(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                            />
+                            <div className="text-xs text-gray-500 mt-1">
+                                El icono se mostrará junto al nombre del complemento.
+                            </div>
                         </div>
                     </div>
                 </div>

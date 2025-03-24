@@ -4,26 +4,83 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 
 // Tipo para los datos del servicio
-type ServiceFormData = {
+export type ServiceFormData = {
     name: string;
-    description: string;
-    icon: string;
+    description?: string;
+    icon?: string;
+    speed?: number | null;
+    price?: number | null;
+    regularPrice?: number | null;
+    promoMonths?: number | null;
+    serviceItems?: Array<{
+        title: string;
+        description?: string;
+        icon?: string;
+    }>;
 };
 
-// Crear un nuevo servicio
-export async function createService(formData: ServiceFormData) {
+/**
+ * Get all services
+ */
+export async function getAllServices() {
     try {
-        // Crear el servicio en la base de datos
-        await db.serviceType.create({
+        const services = await db.serviceType.findMany({
+            select: {
+                id: true,
+                name: true,
+                icon: true,
+                description: true,
+                speed: true,
+                price: true
+            },
+            orderBy: {
+                name: 'asc'
+            }
+        });
+
+        return services;
+    } catch (error) {
+        console.error("Error fetching services:", error);
+        throw new Error("Failed to fetch services");
+    }
+}
+
+/**
+ * Create a new service
+ */
+export async function createService(data: ServiceFormData) {
+    try {
+        const { name, description, icon, serviceItems, speed, price, regularPrice, promoMonths } = data;
+
+        // Create the service
+        const service = await db.serviceType.create({
             data: {
-                name: formData.name,
-                description: formData.description,
-                icon: formData.icon,
+                name,
+                description: description || null,
+                icon: icon || null,
+                speed: speed,
+                price: price,
+                regularPrice: regularPrice,
+                promoMonths: promoMonths,
             },
         });
 
-        // Revalidar el path para actualizar los datos
-        revalidatePath('/admin/dashboard');
+        // Create service items if provided
+        if (serviceItems && serviceItems.length > 0) {
+            for (const item of serviceItems) {
+                await db.serviceItem.create({
+                    data: {
+                        title: item.title,
+                        description: item.description || null,
+                        icon: item.icon || null,
+                        serviceTypeId: service.id,
+                    },
+                });
+            }
+        }
+
+        // Revalidate cache to reflect changes
+        revalidatePath("/admin/dashboard");
     } catch (error) {
         console.error("Error creating service:", error);
         throw new Error("Failed to create service");
@@ -38,10 +95,33 @@ export async function updateService(serviceId: string, formData: ServiceFormData
             where: { id: serviceId },
             data: {
                 name: formData.name,
-                description: formData.description,
-                icon: formData.icon,
+                description: formData.description || null,
+                icon: formData.icon || null,
+                speed: formData.speed,
+                price: formData.price,
+                regularPrice: formData.regularPrice,
+                promoMonths: formData.promoMonths,
             },
         });
+
+        // Primero eliminar los items existentes para evitar duplicados
+        await db.serviceItem.deleteMany({
+            where: { serviceTypeId: serviceId }
+        });
+
+        // Luego crear los nuevos service items
+        if (formData.serviceItems && formData.serviceItems.length > 0) {
+            for (const item of formData.serviceItems) {
+                await db.serviceItem.create({
+                    data: {
+                        title: item.title,
+                        description: item.description || null,
+                        icon: item.icon || null,
+                        serviceTypeId: serviceId,
+                    },
+                });
+            }
+        }
 
         // Revalidar el path para actualizar los datos
         revalidatePath('/admin/dashboard');
@@ -51,24 +131,14 @@ export async function updateService(serviceId: string, formData: ServiceFormData
     }
 }
 
-// Obtener todos los servicios
-export async function getAllServices() {
-    try {
-        return await db.serviceType.findMany({
-            orderBy: { name: 'asc' },
-        });
-
-    } catch (error) {
-        console.error("Error fetching services:", error);
-        throw new Error("Failed to fetch services");
-    }
-}
-
 // Obtener un servicio por ID
 export async function getServiceById(serviceId: string) {
     try {
         return await db.serviceType.findUnique({
             where: { id: serviceId },
+            include: {
+                serviceItems: true
+            }
         });
     } catch (error) {
         console.error(`Error fetching service with ID ${serviceId}:`, error);

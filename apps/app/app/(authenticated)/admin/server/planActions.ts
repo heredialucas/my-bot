@@ -4,28 +4,86 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 
 // Tipo para los datos del plan
-type PlanFormData = {
+export type PlanFormData = {
     name: string;
-    description: string;
+    description?: string;
     price: number;
-    speed: number | null;
+    regularPrice?: number | null;
+    promoMonths?: number | null;
+    channelCount?: number | null;
+    premiumContent?: boolean;
+    noAds?: boolean;
+    icon?: string | null;
+    planType: string;
 };
 
-// Crear un nuevo plan
-export async function createPlan(formData: PlanFormData) {
+/**
+ * Get all plans
+ */
+export async function getAllPlans() {
     try {
-        // Crear el plan en la base de datos
+        const plans = await db.plan.findMany({
+            select: {
+                id: true,
+                name: true,
+                price: true,
+                description: true,
+                regularPrice: true,
+                promoMonths: true,
+                channelCount: true,
+                premiumContent: true,
+                noAds: true,
+            },
+            orderBy: {
+                name: 'asc'
+            }
+        });
+
+        // Until the schema is updated, add planType
+        return plans.map(plan => ({
+            ...plan,
+            planType: 'ZAPPING' // Now default to Zapping
+        }));
+    } catch (error) {
+        console.error("Error fetching plans:", error);
+        throw new Error("Failed to fetch plans");
+    }
+}
+
+/**
+ * Create a new plan
+ */
+export async function createPlan(data: PlanFormData) {
+    try {
+        const {
+            name,
+            description,
+            price,
+            regularPrice,
+            promoMonths,
+            channelCount,
+            premiumContent,
+            noAds,
+            planType
+        } = data;
+
+        // Create the plan
         await db.plan.create({
             data: {
-                name: formData.name,
-                description: formData.description,
-                price: formData.price,
-                speed: formData.speed,
+                name,
+                description: description || null,
+                price,
+                regularPrice,
+                promoMonths,
+                channelCount,
+                premiumContent,
+                noAds,
+                planType,
             },
         });
 
-        // Revalidar el path para actualizar los datos
-        revalidatePath('/admin/dashboard');
+        // Revalidate cache to reflect changes
+        revalidatePath("/admin/dashboard");
     } catch (error) {
         console.error("Error creating plan:", error);
         throw new Error("Failed to create plan");
@@ -42,7 +100,11 @@ export async function updatePlan(planId: string, formData: PlanFormData) {
                 name: formData.name,
                 description: formData.description,
                 price: formData.price,
-                speed: formData.speed,
+                regularPrice: formData.regularPrice,
+                promoMonths: formData.promoMonths,
+                channelCount: formData.channelCount,
+                premiumContent: formData.premiumContent,
+                noAds: formData.noAds,
             },
         });
 
@@ -52,19 +114,6 @@ export async function updatePlan(planId: string, formData: PlanFormData) {
     } catch (error) {
         console.error("Error updating plan:", error);
         throw new Error("Failed to update plan");
-    }
-}
-
-// Obtener todos los planes
-export async function getAllPlans() {
-    try {
-        return await db.plan.findMany({
-            orderBy: { name: 'asc' },
-        });
-
-    } catch (error) {
-        console.error("Error fetching plans:", error);
-        throw new Error("Failed to fetch plans");
     }
 }
 

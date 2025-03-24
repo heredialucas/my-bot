@@ -11,25 +11,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Service models
+// Service models (Internet)
 model ServiceType {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  icon        String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  icon         String?
+  speed        Int? // Speed in Mbps
+  price        Float? // Promotional price
+  regularPrice Float? // Regular price after promotion
+  promoMonths  Int? // Duration of promotional price
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Service items (benefits)
+  serviceItems ServiceItem[]
+
+  // Relation to promotions
+  promotions PromotionService[]
 }
 
-// Plan models
+// Service items/benefits
+model ServiceItem {
+  id            String      @id @default(cuid())
+  title         String
+  description   String?
+  icon          String?
+  serviceTypeId String
+  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+// Zapping Plan models
 model Plan {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  price       Float
-  speed       Int? // Speed in Mbps if internet plan
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  name           String
+  description    String?
+  price          Float // Promotional price
+  regularPrice   Float? // Price after promotional period
+  promoMonths    Int? // Number of months for promotional price
+  channelCount   Int? // Number of channels
+  premiumContent Boolean? @default(false)
+  noAds          Boolean? @default(false)
+  planType       String   @default("ZAPPING") // Keep for backward compatibility
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relation to promotions
+  promotions PromotionPlan[]
 }
 
 // Promotion models
@@ -43,6 +73,42 @@ model Promotion {
   color       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // Relations
+  services PromotionService[]
+  plans    PromotionPlan[]
+  addons   PromotionAddon[]
+}
+
+// Join tables for many-to-many relationships
+model PromotionService {
+  id          String      @id @default(cuid())
+  promotionId String
+  serviceId   String
+  promotion   Promotion   @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  service     ServiceType @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([promotionId, serviceId])
+}
+
+model PromotionPlan {
+  id          String    @id @default(cuid())
+  promotionId String
+  planId      String
+  promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  plan        Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([promotionId, planId])
+}
+
+model PromotionAddon {
+  id          String    @id @default(cuid())
+  promotionId String
+  addonId     String
+  promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  addon       AddOn     @relation(fields: [addonId], references: [id], onDelete: Cascade)
+
+  @@unique([promotionId, addonId])
 }
 
 // Addon models
@@ -55,6 +121,9 @@ model AddOn {
   color       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // Relation to promotions
+  promotions PromotionAddon[]
 }
 
 // Media models
