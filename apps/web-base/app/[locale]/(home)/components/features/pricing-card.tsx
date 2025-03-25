@@ -117,9 +117,7 @@ export const PricingCard = ({
                     <div
                         className="py-4 px-4 text-center text-white font-medium"
                         style={{
-                            background: promotionColor
-                                ? `linear-gradient(90deg, ${promotionColor} 0%, #33ccff 100%)`
-                                : 'linear-gradient(90deg, #4646ff 0%, #33ccff 100%)'
+                            background: 'linear-gradient(90deg, #4900FF 25%, #00FFF9 100%)'
                         }}
                     >
                         <div className="text-2xl font-bold">{discount}% {dictionary.web.home.cases.pricing.discount}</div>
@@ -170,14 +168,14 @@ export const PricingCard = ({
                             </div>
                         ) : null}
 
-                        <div className="mt-auto w-full space-y-3">
-                            <Button className="w-full rounded-full bg-cyan-300 text-black hover:bg-cyan-400 font-medium text-sm py-2 h-auto">
+                        <div className="flex flex-col items-center mt-auto w-full space-y-3">
+                            <Button className="w-fit rounded-lg bg-cyan-300 text-black hover:bg-cyan-400 font-medium text-sm py-2 px-4 h-auto">
                                 {dictionary.web.home.cases.pricing.checkAvailability}
                             </Button>
 
                             <Link
                                 href={detailUrl}
-                                className="flex items-center justify-center text-indigo-600 text-sm px-4 py-2 rounded-full border border-indigo-600 w-full"
+                                className="flex items-center justify-center text-indigo-600 text-sm px-4 py-2 rounded-lg border border-indigo-600 w-fit"
                             >
                                 {dictionary.web.home.cases.pricing.viewInclusions} <ArrowRight className="ml-1 h-4 w-4" />
                             </Link>
@@ -185,7 +183,7 @@ export const PricingCard = ({
                             {showZappingButton && sortedZappingPlans.length > 0 && (
                                 <button
                                     onClick={handleToggleZappingPlans}
-                                    className="w-full flex items-center justify-center rounded-full bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 h-auto transition-transform active:scale-95"
+                                    className="w-fit flex items-center justify-center rounded-lg bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 px-4 h-auto transition-transform active:scale-95"
                                 >
                                     <Tv className="h-4 w-4 mr-2" />
                                     {selectedZappingPlan ? `Cambiar plan ${selectedZappingPlan.name}` : dictionary.web.home.cases.pricing.chooseTVPlan}
@@ -260,7 +258,7 @@ export const PricingCard = ({
 
                         <Button
                             onClick={() => selectedZappingPlan ? handleZappingPlanSelect(selectedZappingPlan) : setShowZappingPlans(false)}
-                            className="mt-4 w-full rounded-full bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 h-auto transition-transform active:scale-95"
+                            className="mx-auto mt-4 w-fit rounded-lg bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 h-auto transition-transform active:scale-95"
                         >
                             {selectedZappingPlan ? 'Seleccionar plan' : 'Volver sin seleccionar'}
                         </Button>

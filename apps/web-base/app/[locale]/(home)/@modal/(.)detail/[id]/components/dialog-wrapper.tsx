@@ -19,22 +19,13 @@ export default function DialogWrapper({ children }: DialogWrapperProps) {
         }
     }, [router]);
 
-    // Función para manejar el escape
-    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-        if (e.key === 'Escape') {
-            router.back();
-        }
-    }, [router]);
-
     return (
         <Dialog
             open={true}
             onOpenChange={handleOpenChange}
         >
-            <div onKeyDown={handleKeyDown} className="focus:outline-none">
-                <DialogOverlay className="bg-black/50" />
-                {children}
-            </div>
+            <DialogOverlay className="bg-black/50" />
+            {children}
         </Dialog>
     );
 } 

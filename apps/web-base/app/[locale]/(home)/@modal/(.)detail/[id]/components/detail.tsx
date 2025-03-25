@@ -151,67 +151,115 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                 <X className="h-5 w-5 text-white" />
             </button>
 
-            {/* Left Section - Blue gradient */}
+            {/* Left Section - Blue gradient with diagonal cut */}
             <div
-                className="text-white p-8 lg:w-5/12"
+                className="text-white p-7 px-8 lg:w-[48%] relative"
                 style={{
-                    background: promotion.color
-                        ? `linear-gradient(90deg, ${promotion.color} 0%, #33ccff 100%)`
-                        : 'linear-gradient(90deg, #4646ff 0%, #33ccff 100%)'
+                    background: 'linear-gradient(90deg, #4900FF 70%, #00FFF9 100%)'
                 }}
             >
-                <h2 className="text-xl font-medium mb-1">{promotion.name}</h2>
-                <h1 className="text-5xl font-bold mb-6">{speed} Mbps</h1>
-
-                <p className="mb-8">{promotion.description || 'Contrata este plan y tendrás'}</p>
-
-                <div className="space-y-6">
-                    {/* Mostrar solo items del servicio en esta sección */}
-                    {serviceItems.length > 0 && serviceItems.map((item, index) => (
-                        <div key={index} className="flex items-start mb-6">
-                            <div className="bg-blue-400/30 p-2 rounded-full mr-4 mt-1">
-                                {item.icon ?
-                                    renderServiceItemIcon(item.icon) :
-                                    <Wrench className="h-5 w-5 text-white" />
-                                }
-                            </div>
-                            <div>
-                                <h3 className="font-medium">{item.title}</h3>
-                                {item.description && <p className="text-sm">{item.description}</p>}
-                            </div>
-                        </div>
-                    ))}
+                {/* Diagonal divider - moved more towards the right */}
+                <div className="hidden lg:block absolute top-0 right-0 h-full w-24"
+                    style={{
+                        background: 'linear-gradient(90deg, #4900FF 0%, #00FFF9 100%)',
+                        clipPath: 'polygon(100% 0, 0 0, 100% 100%)'
+                    }}>
+                </div>
+                <div className="hidden lg:block absolute top-0 right-0 h-full w-24 bg-white"
+                    style={{
+                        clipPath: 'polygon(100% 0, 100% 100%, 0 100%)'
+                    }}>
                 </div>
 
-                <div className="mt-16 border-t border-white/20 pt-4">
-                    <p className="text-sm">Cliente cancela plan a contratar al momento de instalar</p>
-                    <h2 className="text-4xl font-bold mt-2">${price.toLocaleString('es-CL')}</h2>
-                    <p className="text-sm">¡Mes {promotion.duration} pagas ${regularPrice.toLocaleString('es-CL')}</p>
+                <div className="flex flex-col h-full justify-between">
+                    <div>
+                        <h2 className="text-xl font-medium mb-2">Plan internet fibra</h2>
+                        <h1 className="text-5xl font-bold mb-5 text-cyan-300">{speed} <span className="text-white">Mbps</span></h1>
 
-                    <Button className="w-full mt-4 bg-cyan-300 text-black hover:bg-cyan-400 rounded-full py-2">
-                        Lo quiero!
-                    </Button>
+                        <p className="mb-7">contrata este plan y tendrás</p>
+
+                        <div className="flex flex-col gap-y-7">
+                            {/* Velocidad semétrica */}
+                            <div className="flex items-start">
+                                <div className="bg-blue-400/30 p-2 rounded-full mr-3 mt-1">
+                                    <Gauge className="h-5 w-5 text-cyan-300" />
+                                </div>
+                                <div>
+                                    <h3 className="font-medium text-cyan-300">Velocidad semétrica</h3>
+                                    <p className="text-sm mt-1">Hasta {speed} Mbps de subida y bajada</p>
+                                </div>
+                            </div>
+
+                            {/* Sin letra chica */}
+                            <div className="flex items-start">
+                                <div className="bg-blue-400/30 p-2 rounded-full mr-3 mt-1">
+                                    <FileText className="h-5 w-5 text-cyan-300" />
+                                </div>
+                                <div>
+                                    <h3 className="font-medium text-cyan-300">Sin letra chica</h3>
+                                    <p className="text-sm mt-1">Cobros y boletas transparentes</p>
+                                </div>
+                            </div>
+
+                            {/* Contact center */}
+                            <div className="flex items-start">
+                                <div className="bg-blue-400/30 p-2 rounded-full mr-3 mt-1">
+                                    <Clock className="h-5 w-5 text-cyan-300" />
+                                </div>
+                                <div>
+                                    <h3 className="font-medium text-cyan-300">Contact center</h3>
+                                    <p className="text-sm mt-1">Lunes a viernes 9:00 a 20:00 hs</p>
+                                    <p className="text-sm">Sábados de 9:00 a 14:00 hs</p>
+                                </div>
+                            </div>
+
+                            {/* Incluye */}
+                            <div className="flex items-start">
+                                <div className="bg-blue-400/30 p-2 rounded-full mr-3 mt-1">
+                                    <Wrench className="h-5 w-5 text-cyan-300" />
+                                </div>
+                                <div>
+                                    <h3 className="font-medium text-cyan-300">Incluye</h3>
+                                    <p className="text-sm mt-1">La activación y habilitación. ¡Agendá tu instalación!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-10 pt-4 border-t border-white/20">
+                        <p className="text-sm text-center">Cliente cancela plan a contratar al momento de instalar</p>
+                        <h2 className="text-4xl font-bold mt-2 text-center">${price.toLocaleString('es-CL')}</h2>
+                        <p className="text-sm text-center">¡Mes {promotion.duration} pagas ${regularPrice.toLocaleString('es-CL')}</p>
+
+                        <div className="flex justify-center mt-6">
+                            <Button className="w-44 bg-cyan-300 text-black hover:bg-cyan-400 rounded-full py-2 text-base">
+                                Lo quiero!
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             {/* Right Section - White with plan details */}
-            <div className="bg-white p-8 lg:w-7/12">
+            <div className="bg-white p-7 px-8 lg:w-[52%]">
                 <div className="text-center mb-8">
-                    <h2 className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent text-6xl font-bold">${totalPrice.toLocaleString('es-CL')}</h2>
-                    <p className="text-gray-700">Mensual / mes {promotion.duration} pagás ${(regularPrice + selectedPlanPrice + addonsTotal).toLocaleString('es-CL')}</p>
+                    <h2 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#4900FF] to-[#00FFF9] bg-clip-text text-transparent">
+                        ${totalPrice.toLocaleString('es-CL')}
+                    </h2>
+                    <p className="text-gray-700 mt-1">Mensual / mes {promotion.duration} pagás ${(regularPrice + selectedPlanPrice + addonsTotal).toLocaleString('es-CL')}</p>
                 </div>
 
                 <div className="mb-8">
-                    <h3 className="font-medium text-gray-800 mb-2">Detalles del servicio</h3>
-                    <div className="space-y-2">
-                        <div className="flex justify-between">
+                    <h3 className="font-medium text-gray-800 mb-3">Detalles del servicio</h3>
+                    <div className="flex flex-col gap-y-3">
+                        <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                             <span>Fibra {speed}</span>
                             <span className="font-medium">${price.toLocaleString('es-CL')}</span>
                         </div>
 
                         {/* Mostrar el plan seleccionado si hay uno */}
                         {selectedPlan && (
-                            <div className="flex justify-between">
+                            <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                                 <span>Plan {selectedPlan.name}</span>
                                 <span className="font-medium">${selectedPlan.price.toLocaleString('es-CL')}</span>
                             </div>
@@ -220,7 +268,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                         {/* Mostrar los addons seleccionados (usando allAddons) */}
                         {allAddons.map((addon, index) => (
                             selectedAddons[addon.id] && (
-                                <div key={index} className="flex justify-between">
+                                <div key={index} className="flex justify-between items-center border-b border-gray-100 pb-2">
                                     <span>{addon.name}</span>
                                     <span className="font-medium">${addon.price.toLocaleString('es-CL')}</span>
                                 </div>
@@ -229,69 +277,84 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                     </div>
                 </div>
 
-                <Button className="w-full bg-cyan-300 text-black hover:bg-cyan-400 rounded-full py-2 mb-8">
-                    ¡Lo quiero!
-                </Button>
+                <div className="flex justify-center mb-8">
+                    <Button className="w-44 bg-cyan-300 text-black hover:bg-cyan-400 rounded-full py-2 text-base">
+                        ¡Lo quiero!
+                    </Button>
+                </div>
 
-                {/* Sección de selección de plan Zapping */}
+                {/* Sección de selección de plan Zapping con fondo oscuro */}
                 {promotion.plans.length > 0 && (
-                    <div className="bg-rose-500 text-white p-4 text-center rounded-lg mb-6">
-                        <h3 className="font-medium">TV Online. Elige tu plan ZAPPING</h3>
-                    </div>
-                )}
+                    <div>
+                        <div className="bg-rose-500 text-white p-3 text-center rounded-t-lg">
+                            <h3 className="font-medium">TV Online. Elige tu plan ZAPPING</h3>
+                        </div>
+                        <div className="bg-gray-900 text-white rounded-b-lg">
+                            {sortedPlans.length > 0 && (
+                                <div className="flex flex-col">
+                                    {sortedPlans.map((plan) => (
+                                        <div
+                                            key={plan.id}
+                                            className="flex items-center justify-between px-4 py-4 border-b border-gray-700 cursor-pointer"
+                                            onClick={() => handlePlanSelection(plan.id)}
+                                        >
+                                            {/* Columna izquierda: Checkbox y nombre */}
+                                            <div className="flex items-center gap-2 w-[25%]">
+                                                <div className={`w-5 h-5 rounded-full border ${selectedPlanId === plan.id ? 'border-blue-400 bg-blue-400' : 'border-gray-400'} flex items-center justify-center`}>
+                                                    <div className={`w-2.5 h-2.5 rounded-full ${selectedPlanId === plan.id ? 'bg-white' : ''}`}></div>
+                                                </div>
+                                                <span className="font-medium text-white">{plan.name}</span>
+                                            </div>
 
-                {sortedPlans.length > 0 && (
-                    <div className="space-y-4">
-                        {sortedPlans.map((plan) => (
-                            <div
-                                key={plan.id}
-                                className="flex items-center justify-between border-b pb-4 cursor-pointer"
-                                onClick={() => handlePlanSelection(plan.id)}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <div className={`w-5 h-5 rounded-full border ${selectedPlanId === plan.id ? 'border-blue-600 bg-blue-600' : 'border-gray-400'} flex items-center justify-center`}>
-                                        <div className={`w-2.5 h-2.5 rounded-full ${selectedPlanId === plan.id ? 'bg-white' : ''}`}></div>
-                                    </div>
-                                    <span className="font-medium">{plan.name}</span>
-                                </div>
-                                <div className="text-right">
-                                    <p className="font-bold">${plan.price.toLocaleString('es-CL')}</p>
-                                    <p className="text-xs text-gray-500">primer mes</p>
-                                    <p className="text-xs text-gray-500">luego ${(plan.regularPrice || plan.price + 2000).toLocaleString('es-CL')} /mes</p>
+                                            {/* Columna media: Características del plan */}
+                                            <div className="w-[45%]">
+                                                {plan.characteristics && plan.characteristics.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1 ">
+                                                        {plan.characteristics
+                                                            .filter(char => char.value)
+                                                            .map((char, idx) => (
+                                                                <span key={idx} className="text-xs bg-rose-800 text-white px-2 py-0.5 rounded">
+                                                                    {char.key}
+                                                                </span>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                )}
+                                                {plan.channelCount && (
+                                                    <div className="w-fit mt-1 text-xs text-white font-medium bg-rose-800 px-2 py-0.5 rounded">
+                                                        {plan.channelCount} canales
+                                                    </div>
+                                                )}
+                                            </div>
 
-                                    {/* Mostrar características del plan */}
-                                    {plan.characteristics && plan.characteristics.length > 0 && (
-                                        <div className="mt-1 flex flex-wrap gap-1">
-                                            {plan.characteristics
-                                                .filter(char => char.value)
-                                                .map((char, idx) => (
-                                                    <span key={idx} className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full">
-                                                        {char.key}
-                                                    </span>
-                                                ))
-                                            }
+                                            {/* Columna derecha: Precios */}
+                                            <div className="text-right w-[30%]">
+                                                <p className="font-bold text-white">${plan.price.toLocaleString('es-CL')}</p>
+                                                <p className="text-xs">primer mes</p>
+                                                <p className="text-xs text-gray-400">luego ${(plan.regularPrice || plan.price + 2000).toLocaleString('es-CL')} /mes</p>
+                                            </div>
                                         </div>
-                                    )}
+                                    ))}
                                 </div>
-                            </div>
-                        ))}
+                            )}
+                        </div>
                     </div>
                 )}
 
                 {/* Footer con addons como en la imagen de referencia (usando allAddons) */}
                 {allAddons.length > 0 && (
-                    <div className="mt-8 pt-4 border-t">
+                    <div className="mt-6 pt-3 border-t border-gray-200">
                         {allAddons.map((addon, index) => (
                             <div
                                 key={index}
-                                className="flex items-center justify-center p-3 mx-auto border border-dashed border-gray-300 rounded-xl cursor-pointer"
+                                className="flex items-center justify-center p-2 mx-auto border border-dashed border-gray-300 rounded-xl cursor-pointer mb-2"
                                 onClick={() => toggleAddon(addon.id)}
                             >
                                 <div className="flex items-center gap-2">
                                     <div className={`w-5 h-5 border-2 ${selectedAddons[addon.id] ? 'bg-indigo-600 border-indigo-600' : 'border-gray-400'} rounded-sm flex items-center justify-center`}>
                                         {selectedAddons[addon.id] && <Check className="h-3 w-3 text-white" />}
                                     </div>
-                                    <span className="text-gray-700">Agregar {addon.name} por ${addon.price.toLocaleString('es-CL')}/mes</span>
+                                    <span className="text-gray-700">Agregar {addon.name} por <span className="text-[#4900FF]">${addon.price.toLocaleString('es-CL')}</span>/mes</span>
                                 </div>
                             </div>
                         ))}
