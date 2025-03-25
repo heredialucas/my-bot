@@ -103,14 +103,13 @@ export const PricingCard = ({
     const sortedZappingPlans = uniqueZappingPlans.sort((a, b) => a.price - b.price);
 
     return (
-        <div className="flex flex-col rounded-lg bg-white shadow-md overflow-hidden h-full relative">
+        <div className="flex flex-col rounded-lg bg-white overflow-hidden h-[650px] relative" style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
             <div className="w-full h-full relative">
                 {/* Contenedor principal con transición de slide */}
                 <div
-                    className="transition-all duration-500 ease-in-out flex flex-col"
+                    className="transition-all duration-500 ease-in-out flex flex-col h-full"
                     style={{
                         transform: showZappingPlans ? 'translateX(-100%)' : 'translateX(0)',
-                        height: '100%',
                     }}
                 >
                     {/* Vista principal (frontal) */}
@@ -126,16 +125,13 @@ export const PricingCard = ({
                         {promotionName && <div className="text-sm font-bold mt-1">{promotionName}</div>}
                     </div>
 
-                    <div className="flex flex-col items-center p-6 pt-4 flex-grow">
-                        <div className="text-center mb-3">
+                    <div className="flex flex-col flex-grow p-6">
+                        <div className="text-center mb-6">
                             <div className="text-gray-800 text-lg">{dictionary.web.home.cases.pricing.plan} {planType}</div>
-                            <div className="text-indigo-600 text-3xl font-bold">{dictionary.web.home.cases.pricing.fiber} {speed}</div>
-                        </div>
-
-                        <div className="text-center mb-2">
+                            <div className="text-indigo-600 text-4xl font-bold mb-4">{dictionary.web.home.cases.pricing.fiber} {speed}</div>
                             <div className="text-gray-700">{dictionary.web.home.cases.pricing.monthly}</div>
-                            <div className="text-indigo-600 text-4xl font-bold">${totalPrice.toLocaleString('es-CL')}</div>
-                            <div className="text-xs text-gray-500">
+                            <div className="text-indigo-600 text-5xl font-bold mb-2">${totalPrice.toLocaleString('es-CL')}</div>
+                            <div className="text-sm text-gray-500">
                                 {dictionary.web.home.cases.pricing.laterMonthPrice.replace('{months}', months.toString())}
                                 ${(originalPrice + (selectedZappingPlan ? selectedZappingPlan.regularPrice || selectedZappingPlan.price : 0)).toLocaleString('es-CL')}
                             </div>
@@ -143,14 +139,13 @@ export const PricingCard = ({
 
                         {/* Service details section - only show when addons are included or Zapping plan is selected */}
                         {(includeAddons && selectedAddons.length > 0) || selectedZappingPlan ? (
-                            <div className="w-full mt-3 mb-6">
+                            <div className="w-full mb-auto">
                                 <div className="text-gray-600 text-sm font-medium mb-1">{dictionary.web.home.cases.pricing.serviceDetails}</div>
                                 <div className="flex justify-between text-sm py-1 border-b border-gray-100">
                                     <span className="text-gray-500">• {dictionary.web.home.cases.pricing.fiber} {speed}</span>
                                     <span className="text-gray-700">${price.toLocaleString('es-CL')}</span>
                                 </div>
 
-                                {/* Mostrar el plan de Zapping seleccionado */}
                                 {selectedZappingPlan && (
                                     <div className="flex justify-between text-sm py-1 border-b border-gray-100">
                                         <span className="text-gray-500">• Plan {selectedZappingPlan.name}</span>
@@ -158,7 +153,6 @@ export const PricingCard = ({
                                     </div>
                                 )}
 
-                                {/* Mostrar todos los addons seleccionados */}
                                 {selectedAddons.map(addon => (
                                     <div key={addon.id} className="flex justify-between text-sm py-1 border-b border-gray-100 last:border-0">
                                         <span className="text-gray-500">• {addon.name}</span>
@@ -168,14 +162,14 @@ export const PricingCard = ({
                             </div>
                         ) : null}
 
-                        <div className="flex flex-col items-center mt-auto w-full space-y-3">
-                            <Button className="w-fit rounded-lg bg-cyan-300 text-black hover:bg-cyan-400 font-medium text-sm py-2 px-4 h-auto">
+                        <div className="flex flex-col items-center mt-auto w-full space-y-4">
+                            <Button className="w-full max-w-[280px] rounded-lg bg-cyan-300 text-black hover:bg-cyan-400 font-medium text-sm py-2 px-4 h-auto">
                                 {dictionary.web.home.cases.pricing.checkAvailability}
                             </Button>
 
                             <Link
                                 href={detailUrl}
-                                className="flex items-center justify-center text-indigo-600 text-sm px-4 py-2 rounded-lg border border-indigo-600 w-fit"
+                                className="flex items-center justify-center text-indigo-600 text-sm px-4 py-2 rounded-lg border border-indigo-600 w-full max-w-[280px]"
                             >
                                 {dictionary.web.home.cases.pricing.viewInclusions} <ArrowRight className="ml-1 h-4 w-4" />
                             </Link>
@@ -183,7 +177,7 @@ export const PricingCard = ({
                             {showZappingButton && sortedZappingPlans.length > 0 && (
                                 <button
                                     onClick={handleToggleZappingPlans}
-                                    className="w-fit flex items-center justify-center rounded-lg bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 px-4 h-auto transition-transform active:scale-95"
+                                    className="w-full max-w-[280px] flex items-center justify-center rounded-lg bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 px-4 h-auto transition-transform active:scale-95"
                                 >
                                     <Tv className="h-4 w-4 mr-2" />
                                     {selectedZappingPlan ? `Cambiar plan ${selectedZappingPlan.name}` : dictionary.web.home.cases.pricing.chooseTVPlan}
@@ -195,14 +189,13 @@ export const PricingCard = ({
 
                 {/* Vista de selección de planes de Zapping (slide a la derecha) */}
                 <div
-                    className="absolute top-0 left-full w-full h-full transition-all duration-500 ease-in-out"
+                    className="absolute top-0 left-full w-full h-full transition-all duration-500 ease-in-out bg-white"
                     style={{
                         transform: showZappingPlans ? 'translateX(-100%)' : 'translateX(0)',
                     }}
                 >
                     <div className="bg-rose-500 py-4 px-4 text-center text-white">
-                        <h3 className="text-xl font-bold">Elige tu plan ZAPPING</h3>
-                        <p className="text-sm mt-1">TV Online con los mejores canales</p>
+                        <h3 className="text-xl font-bold">Elegí tu plan Zapping</h3>
                     </div>
 
                     <div className="p-6 flex flex-col h-[calc(100%-68px)]">
@@ -213,44 +206,54 @@ export const PricingCard = ({
                             <ChevronLeft className="h-4 w-4 mr-1" /> Volver a mi plan
                         </button>
 
-                        <div className="space-y-3 flex-grow overflow-auto">
+                        <div className="bg-gray-900 rounded-3xl overflow-auto flex-grow p-6">
                             {sortedZappingPlans.map((plan) => (
                                 <div
                                     key={plan.id}
-                                    className={`border-2 rounded-lg p-3 cursor-pointer transition-all ${selectedZappingPlan?.id === plan.id ? 'border-rose-500 bg-rose-50' : 'border-gray-200 hover:border-rose-300'
-                                        }`}
+                                    className="mb-8 last:mb-0 cursor-pointer"
                                     onClick={() => handleZappingPlanSelect(plan)}
                                 >
-                                    <div className="flex justify-between mb-1">
-                                        <div className="flex items-center">
-                                            <div className={`w-4 h-4 rounded-full border mr-2 flex items-center justify-center ${selectedZappingPlan?.id === plan.id ? 'border-rose-500 bg-rose-500' : 'border-gray-400'
-                                                }`}>
-                                                {selectedZappingPlan?.id === plan.id && <div className="w-2 h-2 bg-white rounded-full"></div>}
-                                            </div>
-                                            <span className="font-medium">{plan.name}</span>
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className={`w-6 h-6 rounded-full border-2 ${selectedZappingPlan?.id === plan.id ? 'border-white bg-transparent' : 'border-gray-400'} flex items-center justify-center`}>
+                                            {selectedZappingPlan?.id === plan.id && <div className="w-3 h-3 bg-white rounded-full"></div>}
                                         </div>
-                                        <span className="font-bold">${plan.price.toLocaleString('es-CL')}</span>
+                                        <span className="text-white text-xl font-medium">{plan.name}</span>
                                     </div>
-                                    <div className="pl-6 text-xs text-gray-500">
-                                        {/* Mostrar número de canales si está disponible */}
-                                        {plan.channelCount && (
-                                            <div className="flex items-center mb-1">
-                                                <Check className="h-3 w-3 mr-1 text-rose-500" />+ {plan.channelCount} canales
+
+                                    <div className="ml-9">
+                                        <div className="flex items-baseline gap-2 mb-1">
+                                            <span className="text-white text-2xl font-bold">${plan.price.toLocaleString('es-CL')}</span>
+                                            <span className="text-rose-400 text-sm">primer mes</span>
+                                        </div>
+                                        <div className="text-gray-400 text-sm mb-3">
+                                            luego ${(plan.regularPrice || plan.price + 2000).toLocaleString('es-CL')} /mes
+                                        </div>
+
+                                        <div className="text-gray-400 uppercase text-sm mb-1">INCLUYE</div>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className="text-white">Zapping con</span>
+                                            <span className="text-rose-400">+{plan.channelCount} canales</span>
+                                            <ArrowRight className="h-4 w-4 text-white" />
+                                        </div>
+
+                                        {plan.characteristics && plan.characteristics.length > 0 && (
+                                            <div className="space-y-1">
+                                                {plan.characteristics
+                                                    .filter(char => char.value)
+                                                    .map((char, idx) => (
+                                                        <div key={idx} className="text-white">
+                                                            {char.key}
+                                                        </div>
+                                                    ))
+                                                }
                                             </div>
                                         )}
 
-                                        {/* Mostrar características dinámicas */}
-                                        {plan.characteristics && plan.characteristics.length > 0 &&
-                                            plan.characteristics
-                                                .filter(char => char.value)
-                                                .map((characteristic, index) => (
-                                                    <div key={index} className="flex items-center mb-1">
-                                                        <Check className="h-3 w-3 mr-1 text-rose-500" /> {characteristic.key}
-                                                    </div>
-                                                ))
-                                        }
-
-                                        <div>Luego ${(plan.regularPrice || plan.price).toLocaleString('es-CL')}/mes</div>
+                                        <div className="mt-2">
+                                            <span className="bg-rose-500 text-xs text-white px-2 py-1 rounded-md">
+                                                ZAPPING
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -258,7 +261,7 @@ export const PricingCard = ({
 
                         <Button
                             onClick={() => selectedZappingPlan ? handleZappingPlanSelect(selectedZappingPlan) : setShowZappingPlans(false)}
-                            className="mx-auto mt-4 w-fit rounded-lg bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 h-auto transition-transform active:scale-95"
+                            className="mx-auto mt-4 w-full max-w-[280px] rounded-lg bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 h-auto transition-transform active:scale-95"
                         >
                             {selectedZappingPlan ? 'Seleccionar plan' : 'Volver sin seleccionar'}
                         </Button>

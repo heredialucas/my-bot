@@ -45,7 +45,7 @@ export const FaqQuestion = ({ question, answer, value }: QuestionProps) => {
             </div>
             {isOpen && (
                 <div className="bg-white border border-t-0 border-gray-200 rounded-b-xl px-6">
-                    <div className="py-4">
+                    <div className="py-4 max-h-[400px] overflow-y-auto whitespace-pre-line">
                         {answer}
                     </div>
                 </div>
