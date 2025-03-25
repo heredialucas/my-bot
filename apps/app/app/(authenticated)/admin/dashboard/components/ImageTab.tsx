@@ -53,9 +53,6 @@ export default async function ImageTab() {
                                         </form>
                                     </div>
                                 </div>
-                                <CardDescription>
-                                    {image.description}
-                                </CardDescription>
                             </CardHeader>
                             <CardContent className="pb-4">
                                 <div className="relative w-full h-32 overflow-hidden rounded-md">

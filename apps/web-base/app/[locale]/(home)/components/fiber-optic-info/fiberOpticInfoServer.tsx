@@ -11,8 +11,7 @@ export async function FiberOpticInfoServer({ dictionary }: FiberOpticInfoServerP
 
     // Filtrar las imágenes relacionadas con fibra óptica si es necesario
     const fiberOpticImages = allImages.filter(image =>
-        image.name.toLowerCase().includes('fiber') ||
-        image.description?.toLowerCase().includes('fibra')
+        image.name.toLowerCase().includes('fiber')
     );
 
     return <FiberOpticInfoClient

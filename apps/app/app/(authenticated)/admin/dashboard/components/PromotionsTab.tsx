@@ -47,9 +47,6 @@ export default async function PromotionsTab() {
                                                 {promotion.active ? "Activa" : "Inactiva"}
                                             </Badge>
                                         </CardTitle>
-                                        <CardDescription>
-                                            {promotion.description}
-                                        </CardDescription>
                                     </div>
                                     <div className="flex gap-1">
                                         <Link href={`/admin/dashboard/edit-promotion/${promotion.id}`}>

@@ -53,9 +53,6 @@ export default async function AddonsTab() {
                                         </form>
                                     </div>
                                 </div>
-                                <CardDescription>
-                                    {addon.description}
-                                </CardDescription>
                             </CardHeader>
                             <CardContent className="pb-4">
                                 <div className="flex items-center gap-4">
