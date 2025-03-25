@@ -188,4 +188,48 @@ export async function deletePromotion(promotionId: string) {
         console.error("Error deleting promotion:", error);
         throw new Error("Failed to delete promotion");
     }
+}
+
+/**
+ * Obtener todas las promociones activas con sus relaciones completas
+ */
+export async function getActivePromotionsWithDetails() {
+    try {
+        const promotions = await db.promotion.findMany({
+            where: { active: true },
+            include: {
+                services: {
+                    include: {
+                        service: {
+                            include: {
+                                serviceItems: true
+                            }
+                        }
+                    }
+                },
+                plans: {
+                    include: {
+                        plan: true
+                    }
+                },
+                addons: {
+                    include: {
+                        addon: true
+                    }
+                }
+            },
+            orderBy: { name: 'asc' },
+        });
+
+        // Transformar la respuesta para facilitar su uso en el frontend
+        return promotions.map(promo => ({
+            ...promo,
+            services: promo.services.map(s => s.service),
+            plans: promo.plans.map(p => p.plan),
+            addons: promo.addons.map(a => a.addon)
+        }));
+    } catch (error) {
+        console.error("Error fetching active promotions with details:", error);
+        throw new Error("Failed to fetch active promotions with details");
+    }
 } 

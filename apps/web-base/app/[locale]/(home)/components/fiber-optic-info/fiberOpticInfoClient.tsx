@@ -8,35 +8,39 @@ import speedImage from '@/public/speed.png';
 import signalImage from '@/public/signal.png';
 import qualityImage from '@/public/quality.png';
 
-type FiberOpticInfoProps = {
+type FiberOpticInfoClientProps = {
     dictionary: Dictionary;
+    fiberOpticImages?: any[]; // Usando any por ahora
 };
 
-export const FiberOpticInfo = ({ dictionary }: FiberOpticInfoProps) => {
+export function FiberOpticInfoClient({ dictionary, fiberOpticImages }: FiberOpticInfoClientProps) {
+    // Utilizamos las imágenes dinámicas si están disponibles, si no usamos las estáticas
+    const hasCustomImages = fiberOpticImages && fiberOpticImages.length >= 4;
+
     const features: FeatureData[] = [
         {
             id: 'bandwidth',
             title: 'Mayor ancho de banda',
             description: 'Gracias al mayor ancho de banda, tu red puede recibir un mayor tráfico de datos simultáneamente. Si el tráfico son películas, series y música podrás escuchar más canciones y ver más películas y series!',
-            image: bandwidthImage,
+            image: hasCustomImages ? fiberOpticImages[0].url : bandwidthImage,
         },
         {
             id: 'speed',
             title: 'Velocidades más altas',
             description: 'En la fibra óptica los datos se transmiten mediante pulsos de luz, esto hace que la velocidad del internet sea más rápida. ¡La información viaja a la velocidad de la luz!',
-            image: speedImage,
+            image: hasCustomImages ? fiberOpticImages[1].url : speedImage,
         },
         {
             id: 'signal',
             title: 'Menor degradación de la señal',
             description: 'En la fibra óptica los datos se transmiten mediante pulsos de luz, esto hace que la velocidad del internet sea más rápida. ¡La información viaja a la velocidad de la luz!',
-            image: signalImage,
+            image: hasCustomImages ? fiberOpticImages[2].url : signalImage,
         },
         {
             id: 'quality',
             title: 'Mejor calidad de reproducción',
             description: 'La fibra óptica permite conectar más dispositivos al mismo tiempo y realizar actividades que demandan mayor capacidad de navegación (vídeos, streaming, jugar en línea, etc.)',
-            image: qualityImage,
+            image: hasCustomImages ? fiberOpticImages[3].url : qualityImage,
         },
     ];
 
@@ -75,4 +79,4 @@ export const FiberOpticInfo = ({ dictionary }: FiberOpticInfoProps) => {
             </div>
         </div>
     );
-}; 
+} 

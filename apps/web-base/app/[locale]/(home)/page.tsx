@@ -2,12 +2,12 @@ import { showBetaFeature } from '@repo/feature-flags';
 import { getDictionary } from '@repo/internationalization';
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
-import { Features } from './components/features/features';
-import { Hero } from './components/hero/hero';
-import { InternetAvailability } from './components/internet-availability/internet-availability';
-import { FiberOpticInfo } from './components/fiber-optic-info';
-import { CallToAction } from './components/call-to-action';
-import { Faq } from './components/faq';
+import { FeaturesServer } from './components/features/featuresServer';
+import { HeroServer } from './components/hero/heroServer';
+import { InternetAvailabilityServer } from './components/internet-availability/internetAvailabilityServer';
+import { FiberOpticInfoServer } from './components/fiber-optic-info/fiberOpticInfoServer';
+import { CallToActionServer } from './components/call-to-action/callToActionServer';
+import { FaqServer } from './components/faq/faqServer';
 
 type HomeProps = {
   params: Promise<{
@@ -31,12 +31,12 @@ const Home = async ({ params }: HomeProps) => {
 
   return (
     <>
-      <Hero dictionary={dictionary} />
-      <Features dictionary={dictionary} />
-      <InternetAvailability dictionary={dictionary} />
-      <FiberOpticInfo dictionary={dictionary} />
-      <CallToAction dictionary={dictionary} />
-      <Faq dictionary={dictionary} />
+      <HeroServer dictionary={dictionary} />
+      <FeaturesServer dictionary={dictionary} />
+      <InternetAvailabilityServer dictionary={dictionary} />
+      <FiberOpticInfoServer dictionary={dictionary} />
+      <CallToActionServer dictionary={dictionary} />
+      <FaqServer dictionary={dictionary} />
     </>
   );
 };

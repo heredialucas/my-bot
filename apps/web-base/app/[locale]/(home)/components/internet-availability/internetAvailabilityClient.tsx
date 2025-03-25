@@ -7,11 +7,12 @@ import { useState } from 'react';
 import Image from 'next/image';
 import phoneImage from '@/public/phone.png';
 
-type InternetAvailabilityProps = {
+type InternetAvailabilityClientProps = {
     dictionary: Dictionary;
+    bestDeal?: any; // Usamos any por ahora
 };
 
-export const InternetAvailability = ({ dictionary }: InternetAvailabilityProps) => {
+export function InternetAvailabilityClient({ dictionary, bestDeal }: InternetAvailabilityClientProps) {
     const [formData, setFormData] = useState({
         region: '',
         comuna: '',
@@ -31,6 +32,10 @@ export const InternetAvailability = ({ dictionary }: InternetAvailabilityProps) 
         console.log('Form submitted:', formData);
     };
 
+    // Valores a mostrar, con fallbacks
+    const displaySpeed = bestDeal?.speed || 300;
+    const displayPrice = bestDeal?.price ? new Intl.NumberFormat('es-CL').format(bestDeal.price) : '14.990';
+
     return (
         <div className="w-full py-16 bg-white">
             <div className="container mx-auto px-4 max-w-6xl">
@@ -42,7 +47,7 @@ export const InternetAvailability = ({ dictionary }: InternetAvailabilityProps) 
                 {/* Speed and Price */}
                 <div className="text-center mb-12">
                     <p className="text-5xl font-bold">
-                        <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 text-transparent bg-clip-text">300 Megas a $14.990</span>
+                        <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 text-transparent bg-clip-text">{displaySpeed} Megas a ${displayPrice}</span>
                     </p>
                     <p className="mt-5 text-gray-700 space-y-2">
                         <span className="block mb-3">Descubre los mejores planes de internet</span>
@@ -168,4 +173,4 @@ export const InternetAvailability = ({ dictionary }: InternetAvailabilityProps) 
             </div>
         </div>
     );
-}; 
+} 
