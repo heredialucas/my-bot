@@ -11,8 +11,8 @@ type AboutPageContentProps = {
 
 export const AboutPageContent = ({ dictionary }: AboutPageContentProps) => {
     return (
-        <div className="w-full py-10 lg:py-20">
-            <div className="flex flex-col gap-32 container mx-auto max-w-6xl ">
+        <div className="w-full py-6 sm:py-10 lg:py-20">
+            <div className="flex flex-col gap-16 sm:gap-24 lg:gap-32 container mx-auto max-w-6xl px-4">
                 {/* Company Section */}
                 <CompanySection dictionary={dictionary} />
 

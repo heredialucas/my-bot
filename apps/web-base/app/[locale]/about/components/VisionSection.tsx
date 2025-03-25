@@ -10,21 +10,26 @@ type VisionSectionProps = {
 
 export const VisionSection = ({ dictionary }: VisionSectionProps) => {
     return (
-        <div className="flex max-w-[800px] h-[350px] mx-auto rounded-3xl bg-white shadow-lg border-4 border-gray-100 shadow-gray-200 ">
-            {/* Left side - Image card that overlaps */}
-            <div className="w-[25%] md:w-[38%] lg:w-[30%] relative">
-                <div className="rounded-3xl overflow-hidden h-[350px] w-[300px] relative top-[-20%] left-[-15%] z-10">
-                    <Image src={handsWifi} alt="Vision" fill className='object-fit' />
+        <div className="flex flex-col sm:flex-row max-w-[800px] h-auto sm:h-[350px] mx-auto rounded-3xl bg-white shadow-lg border-4 border-gray-100 shadow-gray-200">
+            {/* Image card - Top on mobile, Left on desktop */}
+            <div className="w-full sm:w-[25%] md:w-[38%] lg:w-[30%] relative h-[200px] sm:h-auto">
+                <div className="sm:rounded-3xl overflow-hidden h-[200px] sm:h-[350px] w-full sm:w-[300px] relative sm:top-[-20%] sm:left-[-15%] z-10">
+                    <Image
+                        src={handsWifi}
+                        alt="Vision"
+                        fill
+                        className='object-cover sm:object-fit'
+                    />
                 </div>
             </div>
 
-            {/* Right side - Content card */}
-            <div className="w-[75%] p-14">
-                <div className=" p-10 pl-[15%]">
-                    <h2 className="text-5xl font-bold text-indigo-600 mb-4">
+            {/* Content card - Bottom on mobile, Right on desktop */}
+            <div className="w-full sm:w-[75%] p-6 sm:p-14">
+                <div className="p-4 sm:p-10 sm:pl-[15%]">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-indigo-600 mb-3 sm:mb-4">
                         {dictionary.web.about.vision.title}
                     </h2>
-                    <p className="text-md text-muted-foreground leading-relaxed">
+                    <p className="text-sm sm:text-md text-muted-foreground leading-relaxed">
                         {dictionary.web.about.vision.description}
                     </p>
                 </div>

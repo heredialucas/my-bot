@@ -49,21 +49,21 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 md:p-8 lg:p-0 m-8">
+    <div className="w-full max-w-6xl mx-auto p-4 sm:p-6 md:p-8 lg:p-0 my-4 sm:m-8">
       <div className="rounded-3xl border-2 border-gray-100 overflow-hidden bg-white shadow-sm">
-        <div className="grid lg:grid-cols-12">
-          <div className="col-span-7 p-8 md:p-12 lg:p-16">
-            <h1 className="text-3xl md:text-4xl font-semibold mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12">
+          <div className="col-span-1 lg:col-span-7 p-6 sm:p-8 md:p-12 lg:p-16">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-3 sm:mb-4">
               {dictionary.web.contact.hero.title}
             </h1>
-            <p className="text-gray-600 mb-10">
+            <p className="text-gray-600 mb-6 sm:mb-10 text-sm sm:text-base">
               {dictionary.web.contact.hero.description}
             </p>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <User className="w-5 h-5 text-gray-500" />
+                  <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
                 </div>
                 <Input
                   type="text"
@@ -71,13 +71,13 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="pl-10 py-6 bg-gray-50"
+                  className="pl-10 py-5 sm:py-6 bg-gray-50 text-sm sm:text-base"
                 />
               </div>
 
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Mail className="w-5 h-5 text-gray-500" />
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
                 </div>
                 <Input
                   type="email"
@@ -85,13 +85,13 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 py-6 bg-gray-50"
+                  className="pl-10 py-5 sm:py-6 bg-gray-50 text-sm sm:text-base"
                 />
               </div>
 
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Phone className="w-5 h-5 text-gray-500" />
+                  <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
                 </div>
                 <Input
                   type="tel"
@@ -99,70 +99,70 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="pl-10 py-6 bg-gray-50"
+                  className="pl-10 py-5 sm:py-6 bg-gray-50 text-sm sm:text-base"
                 />
               </div>
 
               <div className="relative">
                 <div className="absolute top-3 left-0 flex items-start pl-3 pointer-events-none">
-                  <MessageSquare className="w-5 h-5 text-gray-500" />
+                  <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
                 </div>
                 <Textarea
                   placeholder={dictionary.web.contact.hero.form.message}
                   required
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="pl-10 min-h-[150px] bg-gray-50"
+                  className="pl-10 min-h-[120px] sm:min-h-[150px] bg-gray-50 text-sm sm:text-base"
                 />
               </div>
 
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 rounded-md flex items-center justify-center gap-2"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-5 sm:py-6 rounded-md flex items-center justify-center gap-2 text-sm sm:text-base"
               >
-                <MessageSquare className="w-6 h-6" />
+                <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
                 {dictionary.web.contact.hero.form.cta}
               </Button>
 
-              {error && <p className="text-red-500 mt-2">{error}</p>}
-              {success && <p className="text-green-500 mt-2">{dictionary.web.contact.hero.form.success}</p>}
+              {error && <p className="text-red-500 mt-2 text-sm sm:text-base">{error}</p>}
+              {success && <p className="text-green-500 mt-2 text-sm sm:text-base">{dictionary.web.contact.hero.form.success}</p>}
             </form>
           </div>
 
-          <div className="col-span-5 bg-gray-100 p-8 md:p-12 lg:p-16 flex flex-col justify-between">
+          <div className="col-span-1 lg:col-span-5 bg-gray-100 p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-between">
             <div>
               <Image
                 src={keyboard}
                 alt="Contact support"
                 width={500}
                 height={300}
-                className="rounded-lg mb-12"
+                className="rounded-lg mb-8 sm:mb-12"
               />
             </div>
 
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               <div>
-                <h3 className="text-xl font-semibold text-indigo-600 mb-4">{dictionary.web.contact.hero.social.title}</h3>
+                <h3 className="text-lg sm:text-xl font-semibold text-indigo-600 mb-3 sm:mb-4">{dictionary.web.contact.hero.social.title}</h3>
                 <div className="flex gap-3">
                   <Link href="https://www.instagram.com" target="_blank" className="p-2 bg-white rounded-full">
-                    <Instagram className="w-6 h-6" />
+                    <Instagram className="w-5 h-5 sm:w-6 sm:h-6" />
                   </Link>
                   <Link href="https://www.facebook.com" target="_blank" className="p-2 bg-white rounded-full">
-                    <Facebook className="w-6 h-6" />
+                    <Facebook className="w-5 h-5 sm:w-6 sm:h-6" />
                   </Link>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-indigo-600 mb-4">{dictionary.web.contact.hero.contact.title}</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Mail className="w-5 h-5" />
+                <h3 className="text-lg sm:text-xl font-semibold text-indigo-600 mb-3 sm:mb-4">{dictionary.web.contact.hero.contact.title}</h3>
+                <div className="space-y-2 sm:space-y-3 text-sm sm:text-base">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>{dictionary.web.contact.hero.contact.email}</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-5 h-5" />
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>{dictionary.web.contact.hero.contact.phone}</span>
                   </div>
                 </div>
