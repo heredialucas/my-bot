@@ -152,7 +152,10 @@ export const Header = ({ dictionary }: HeaderProps) => {
             onClick={() => setOpen(!isOpen)}
             id="hamburger-button"
           >
-            {isOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
+            {isOpen ?
+              <X style={{ width: '30px', height: '30px', minWidth: '30px', minHeight: '30px' }} strokeWidth={2.5} /> :
+              <Menu style={{ width: '30px', height: '30px', minWidth: '30px', minHeight: '30px' }} strokeWidth={2.5} />
+            }
           </Button>
         </div>
 

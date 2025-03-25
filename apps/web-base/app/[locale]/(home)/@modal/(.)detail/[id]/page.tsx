@@ -68,7 +68,7 @@ export default async function DetailModal({ params }: DetailModalProps) {
 
         return (
             <DialogWrapper>
-                <DialogContent className="max-w-6xl w-11/12 p-0 overflow-hidden border-none">
+                <DialogContent className="max-w-6xl w-11/12 p-0 border-none max-h-[90vh] overflow-y-auto">
                     <DialogTitle className="sr-only">Detalles del Plan</DialogTitle>
                     <Detail
                         promotion={adaptedPromotion}

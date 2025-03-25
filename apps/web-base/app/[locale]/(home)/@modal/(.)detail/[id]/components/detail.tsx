@@ -145,10 +145,10 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
             {/* Botón para cerrar el modal */}
             <button
                 onClick={handleClose}
-                className="absolute top-3 right-3 z-10 p-1 bg-white/30 hover:bg-white/50 rounded-full transition-colors"
+                className="absolute top-3 right-3 z-10 p-1 bg-white/70 hover:bg-white/90 rounded-full transition-colors"
                 aria-label="Cerrar"
             >
-                <X className="h-5 w-5 text-white" />
+                <X className="h-5 w-5 text-black" />
             </button>
 
             {/* Left Section - Blue gradient with diagonal cut */}
