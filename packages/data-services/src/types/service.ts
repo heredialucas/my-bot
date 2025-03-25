@@ -1,13 +1,11 @@
 // Tipos para servicios
 export type ServiceItemData = {
     title: string;
-    description?: string;
     icon?: string;
 };
 
 export type ServiceFormData = {
     name: string;
-    description?: string;
     icon?: string | null;
     serviceItems?: ServiceItemData[];
     speed?: number | null;

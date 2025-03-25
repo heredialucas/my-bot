@@ -2,18 +2,18 @@
 
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
-import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Switch } from "@repo/design-system/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../../components/ModalActions";
 import { useState } from "react";
 import { updatePlan } from "@repo/data-services";
+import { Button } from "@repo/design-system/components/ui/button";
+import { PlusCircle, X } from "lucide-react";
 
 // Definir interfaz local en lugar de importar de @/db/schema
 interface Plan {
     id: string;
     name: string;
-    description: string | null;
     price: number;
     regularPrice: number | null;
     promoMonths: number | null;
@@ -32,17 +32,42 @@ interface PlanFormProps {
 
 export default function PlanForm({ plan }: PlanFormProps) {
     const [name, setName] = useState(plan.name);
-    const [description, setDescription] = useState(plan.description || "");
     const [price, setPrice] = useState(plan.price.toString());
     const [regularPrice, setRegularPrice] = useState(plan.regularPrice?.toString() || "");
     const [promoMonths, setPromoMonths] = useState(plan.promoMonths?.toString() || "");
     const [channelCount, setChannelCount] = useState(plan.channelCount?.toString() || "");
-    const [premiumContent, setPremiumContent] = useState(plan.premiumContent || false);
-    const [noAds, setNoAds] = useState(plan.noAds || false);
     const [icon, setIcon] = useState(plan.icon || "");
     const [isFormDirty, setIsFormDirty] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Dynamic characteristics
+    const [planCharacteristics, setPlanCharacteristics] = useState<Array<{
+        key: string;
+        value: boolean;
+    }>>([
+        { key: "Contenido Premium", value: plan.premiumContent || false },
+        { key: "Sin Anuncios", value: plan.noAds || false }
+    ]);
+
+    const handleAddCharacteristic = () => {
+        setPlanCharacteristics([...planCharacteristics, { key: "", value: false }]);
+        setIsFormDirty(true);
+    };
+
+    const handleRemoveCharacteristic = (index: number) => {
+        const newItems = [...planCharacteristics];
+        newItems.splice(index, 1);
+        setPlanCharacteristics(newItems);
+        setIsFormDirty(true);
+    };
+
+    const handleCharacteristicChange = (index: number, field: string, value: string | boolean) => {
+        const newItems = [...planCharacteristics];
+        newItems[index] = { ...newItems[index], [field]: value };
+        setPlanCharacteristics(newItems);
+        setIsFormDirty(true);
+    };
 
     const handleSave = async () => {
         if (isSubmitting) return;
@@ -58,10 +83,13 @@ export default function PlanForm({ plan }: PlanFormProps) {
             const promoMonthsValue = promoMonths ? parseInt(promoMonths) : null;
             const channelCountValue = channelCount ? parseInt(channelCount) : null;
 
+            // Extract premium content and no ads values from characteristics
+            const premiumContent = planCharacteristics.find(c => c.key === "Contenido Premium")?.value || false;
+            const noAds = planCharacteristics.find(c => c.key === "Sin Anuncios")?.value || false;
+
             // Usar la función directamente pero sin enviar el icon
             await updatePlan(plan.id, {
                 name,
-                description,
                 price: priceValue,
                 regularPrice: regularPriceValue,
                 promoMonths: promoMonthsValue,
@@ -107,16 +135,46 @@ export default function PlanForm({ plan }: PlanFormProps) {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="description">Descripción</Label>
-                            <Textarea
-                                id="description"
-                                value={description}
+                            <Label htmlFor="price">Precio Promocional</Label>
+                            <Input
+                                id="price"
+                                type="number"
+                                step="0.01"
+                                value={price}
                                 onChange={(e) => {
-                                    setDescription(e.target.value);
+                                    setPrice(e.target.value);
                                     setIsFormDirty(true);
                                 }}
                                 disabled={isSubmitting}
-                                className="h-20"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="regularPrice">Precio regular</Label>
+                            <Input
+                                id="regularPrice"
+                                type="number"
+                                step="0.01"
+                                value={regularPrice}
+                                onChange={(e) => {
+                                    setRegularPrice(e.target.value);
+                                    setIsFormDirty(true);
+                                }}
+                                disabled={isSubmitting}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="promoMonths">Duración (meses)</Label>
+                            <Input
+                                id="promoMonths"
+                                type="number"
+                                value={promoMonths}
+                                onChange={(e) => {
+                                    setPromoMonths(e.target.value);
+                                    setIsFormDirty(true);
+                                }}
+                                disabled={isSubmitting}
                             />
                         </div>
 
@@ -173,80 +231,61 @@ export default function PlanForm({ plan }: PlanFormProps) {
                                     El icono se mostrará junto al nombre del plan.
                                 </div>
                             </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="price">Precio promocional</Label>
-                                <Input
-                                    id="price"
-                                    type="number"
-                                    step="0.01"
-                                    value={price}
-                                    onChange={(e) => {
-                                        setPrice(e.target.value);
-                                        setIsFormDirty(true);
-                                    }}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="regularPrice">Precio regular</Label>
-                                <Input
-                                    id="regularPrice"
-                                    type="number"
-                                    step="0.01"
-                                    value={regularPrice}
-                                    onChange={(e) => {
-                                        setRegularPrice(e.target.value);
-                                        setIsFormDirty(true);
-                                    }}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="promoMonths">Duración (meses)</Label>
-                                <Input
-                                    id="promoMonths"
-                                    type="number"
-                                    value={promoMonths}
-                                    onChange={(e) => {
-                                        setPromoMonths(e.target.value);
-                                        setIsFormDirty(true);
-                                    }}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
                         </div>
 
                         <div className="space-y-4 mt-4">
-                            <h3 className="text-sm font-medium">Características del plan</h3>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="flex items-center space-x-2">
-                                    <Switch
-                                        id="premiumContent"
-                                        checked={premiumContent}
-                                        onCheckedChange={(checked) => {
-                                            setPremiumContent(checked);
-                                            setIsFormDirty(true);
-                                        }}
-                                        disabled={isSubmitting}
-                                    />
-                                    <Label htmlFor="premiumContent" className="cursor-pointer">Incluye contenido premium</Label>
-                                </div>
+                            <div className="flex justify-between items-center">
+                                <Label>Características del plan</Label>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleAddCharacteristic}
+                                    disabled={isSubmitting}
+                                >
+                                    <PlusCircle className="mr-1 h-4 w-4" />
+                                    Agregar
+                                </Button>
+                            </div>
 
-                                <div className="flex items-center space-x-2">
-                                    <Switch
-                                        id="noAds"
-                                        checked={noAds}
-                                        onCheckedChange={(checked) => {
-                                            setNoAds(checked);
-                                            setIsFormDirty(true);
-                                        }}
-                                        disabled={isSubmitting}
-                                    />
-                                    <Label htmlFor="noAds" className="cursor-pointer">Sin anuncios</Label>
-                                </div>
+                            <div className="space-y-3">
+                                {planCharacteristics.map((characteristic, index) => (
+                                    <div key={index} className="border rounded-md bg-gray-50 p-3 flex items-center gap-3">
+                                        <div className="flex-grow">
+                                            <Input
+                                                placeholder="Nombre de la característica"
+                                                value={characteristic.key}
+                                                onChange={(e) => handleCharacteristicChange(index, 'key', e.target.value)}
+                                                disabled={isSubmitting}
+                                                className="h-8 text-sm mb-2"
+                                            />
+                                            <div className="flex items-center space-x-2">
+                                                <Switch
+                                                    id={`characteristic-value-${index}`}
+                                                    checked={characteristic.value}
+                                                    onCheckedChange={(checked) => handleCharacteristicChange(index, 'value', checked)}
+                                                    disabled={isSubmitting}
+                                                />
+                                                <Label
+                                                    htmlFor={`characteristic-value-${index}`}
+                                                    className="text-xs"
+                                                >
+                                                    {characteristic.value ? 'Activado' : 'Desactivado'}
+                                                </Label>
+                                            </div>
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => handleRemoveCharacteristic(index)}
+                                            disabled={isSubmitting}
+                                            className="h-6 w-6 text-red-500 hover:text-red-600"
+                                        >
+                                            <X className="h-3 w-3" />
+                                        </Button>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -255,7 +294,7 @@ export default function PlanForm({ plan }: PlanFormProps) {
 
             <ModalActions
                 onSave={handleSave}
-                isDisabled={isSubmitting || !isFormDirty || !name || !description || !price}
+                isDisabled={isSubmitting || !isFormDirty || !name || !price}
             />
         </div>
     );

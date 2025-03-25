@@ -2,7 +2,6 @@
 
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
-import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../../components/ModalActions";
 import { useState } from "react";
@@ -11,19 +10,16 @@ import { updateAddon } from "@repo/data-services";
 interface AddonData {
     id: string;
     name: string;
-    description: string | null;
     price: number;
     icon: string | null;
     color: string | null;
-    createdAt?: Date;
-    updatedAt?: Date;
 }
 
 export default function AddonForm({ initialData }: { initialData: AddonData }) {
     const [name, setName] = useState(initialData.name);
-    const [description, setDescription] = useState(initialData.description || "");
     const [price, setPrice] = useState(initialData.price.toString());
-    const [icon, setIcon] = useState(initialData.icon || "Package");
+    const [icon, setIcon] = useState(initialData.icon || "");
+    const [color, setColor] = useState(initialData.color || "");
     const [isFormDirty, setIsFormDirty] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -32,14 +28,14 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
         if (isSubmitting) return;
 
         setIsSubmitting(true);
+        setError(null);
 
         try {
             await updateAddon(initialData.id, {
                 name,
-                description,
                 price: parseFloat(price),
-                icon,
-                color: initialData.color || null,
+                icon: icon || null,
+                color: color || null,
             });
         } catch (error) {
             console.error("Error updating addon:", error);
@@ -90,20 +86,6 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
                             />
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Descripción</Label>
-                            <Textarea
-                                id="description"
-                                value={description}
-                                onChange={(e) => {
-                                    setDescription(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                                className="h-20"
-                            />
-                        </div>
-
                         <div className="grid grid-cols-2 gap-3">
                             <div className="space-y-2">
                                 <Label htmlFor="icon">Icono</Label>
@@ -119,15 +101,9 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
                                         <SelectValue placeholder="Seleccionar icono" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Package">
-                                            <div className="flex items-center">
-                                                <div className="w-6 h-6 mr-2 flex items-center justify-center bg-blue-100 rounded-full">📦</div>
-                                                Paquete
-                                            </div>
-                                        </SelectItem>
                                         <SelectItem value="Wifi">
                                             <div className="flex items-center">
-                                                <div className="w-6 h-6 mr-2 flex items-center justify-center bg-green-100 rounded-full">📶</div>
+                                                <div className="w-6 h-6 mr-2 flex items-center justify-center bg-blue-100 rounded-full">📶</div>
                                                 Wifi
                                             </div>
                                         </SelectItem>
@@ -143,6 +119,22 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
                                     El icono se mostrará junto al nombre del complemento.
                                 </div>
                             </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="color">Color</Label>
+                                <Input
+                                    id="color"
+                                    value={color}
+                                    onChange={(e) => {
+                                        setColor(e.target.value);
+                                        setIsFormDirty(true);
+                                    }}
+                                    disabled={isSubmitting}
+                                />
+                                <div className="text-xs text-gray-500 mt-1">
+                                    Color para resaltar el complemento.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -150,7 +142,7 @@ export default function AddonForm({ initialData }: { initialData: AddonData }) {
 
             <ModalActions
                 onSave={handleSave}
-                isDisabled={isSubmitting || !isFormDirty || !name || !description || !price}
+                isDisabled={isSubmitting || !isFormDirty || !name || !price}
             />
         </div>
     );

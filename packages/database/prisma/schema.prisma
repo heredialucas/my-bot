@@ -15,7 +15,6 @@ datasource db {
 model ServiceType {
   id           String   @id @default(cuid())
   name         String
-  description  String?
   icon         String?
   speed        Int? // Speed in Mbps
   price        Float? // Promotional price
@@ -35,7 +34,6 @@ model ServiceType {
 model ServiceItem {
   id            String      @id @default(cuid())
   title         String
-  description   String?
   icon          String?
   serviceTypeId String
   serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id], onDelete: Cascade)
@@ -47,7 +45,6 @@ model ServiceItem {
 model Plan {
   id             String   @id @default(cuid())
   name           String
-  description    String?
   price          Float // Promotional price
   regularPrice   Float? // Price after promotional period
   promoMonths    Int? // Number of months for promotional price
@@ -64,15 +61,14 @@ model Plan {
 
 // Promotion models
 model Promotion {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  discount    Float // Percentage discount
-  duration    Int // Duration in months
-  active      Boolean  @default(true)
-  color       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  discount  Float // Percentage discount
+  duration  Int // Duration in months
+  active    Boolean  @default(true)
+  color     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   services PromotionService[]
@@ -113,14 +109,13 @@ model PromotionAddon {
 
 // Addon models
 model AddOn {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  price       Float
-  icon        String?
-  color       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  price     Float
+  icon      String?
+  color     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relation to promotions
   promotions PromotionAddon[]
@@ -128,14 +123,13 @@ model AddOn {
 
 // Media models
 model Media {
-  id          String    @id @default(cuid())
-  name        String
-  description String?
-  url         String
-  alt         String?
-  type        MediaType @default(IMAGE)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String    @id @default(cuid())
+  name      String
+  url       String
+  alt       String?
+  type      MediaType @default(IMAGE)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 enum MediaType {

@@ -2,17 +2,15 @@
 
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
-import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../components/ModalActions";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { createAddon } from "@repo/data-services";
 
 export default function AddonForm() {
     const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
-    const [icon, setIcon] = useState("Package");
+    const [icon, setIcon] = useState("");
     const [color, setColor] = useState("");
     const [isFormDirty, setIsFormDirty] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,10 +29,9 @@ export default function AddonForm() {
             // Llamar directamente a la función createAddon del paquete @repo/data-services
             await createAddon({
                 name,
-                description,
                 price: priceValue,
-                icon,
-                color: color || null,
+                icon: icon || null,
+                color: color || null
             });
 
             // La redirección la maneja automáticamente el sistema
@@ -85,20 +82,6 @@ export default function AddonForm() {
                         />
                     </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="description">Descripción</Label>
-                        <Textarea
-                            id="description"
-                            value={description}
-                            onChange={(e) => {
-                                setDescription(e.target.value);
-                                setIsFormDirty(true);
-                            }}
-                            disabled={isSubmitting}
-                            className="h-20"
-                        />
-                    </div>
-
                     <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
                             <Label htmlFor="icon">Icono</Label>
@@ -114,15 +97,9 @@ export default function AddonForm() {
                                     <SelectValue placeholder="Seleccionar icono" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Package">
-                                        <div className="flex items-center">
-                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-blue-100 rounded-full">📦</div>
-                                            Paquete
-                                        </div>
-                                    </SelectItem>
                                     <SelectItem value="Wifi">
                                         <div className="flex items-center">
-                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-green-100 rounded-full">📶</div>
+                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-blue-100 rounded-full">📶</div>
                                             Wifi
                                         </div>
                                     </SelectItem>
@@ -138,13 +115,29 @@ export default function AddonForm() {
                                 El icono se mostrará junto al nombre del complemento.
                             </div>
                         </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="color">Color</Label>
+                            <Input
+                                id="color"
+                                value={color}
+                                onChange={(e) => {
+                                    setColor(e.target.value);
+                                    setIsFormDirty(true);
+                                }}
+                                disabled={isSubmitting}
+                            />
+                            <div className="text-xs text-gray-500 mt-1">
+                                Color para resaltar el complemento.
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <ModalActions
                 onSave={handleSave}
-                isDisabled={isSubmitting || !isFormDirty || !name || !description || !price}
+                isDisabled={isSubmitting || !isFormDirty || !name || !price}
             />
         </div>
     );

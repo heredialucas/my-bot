@@ -11,7 +11,6 @@ import { AddOn } from './types';
 type Promotion = {
     id: string;
     name: string;
-    description?: string | null;
     discount: number;
     duration: number;
     active: boolean;
@@ -26,7 +25,6 @@ type Promotion = {
 type Service = {
     id: string;
     name: string;
-    description?: string | null;
     icon?: string | null;
     speed?: number | null;
     price?: number | null;
@@ -38,7 +36,6 @@ type Service = {
 type Plan = {
     id: string;
     name: string;
-    description?: string | null;
     price: number;
     regularPrice?: number | null;
     promoMonths?: number | null;
@@ -97,7 +94,6 @@ export function FeaturesClient({ dictionary, promotions, addons }: FeaturesClien
             promotionId: promo.id,
             promotionName: promo.name,
             promotionColor: promo.color,
-            promotionDescription: promo.description,
             serviceItems: service.serviceItems || []
         }))
     );
@@ -163,7 +159,6 @@ export function FeaturesClient({ dictionary, promotions, addons }: FeaturesClien
                             promotionColor={plan.promotionColor || undefined}
                             promotionName={plan.promotionName}
                             promotionId={plan.promotionId}
-                            promotionDescription={plan.promotionDescription || ''}
                             serviceItems={plan.serviceItems}
                             zappingPlans={zappingPlans}
                         />

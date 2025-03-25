@@ -2,7 +2,6 @@
 
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
-import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
 import ModalActions from "../../components/ModalActions";
 import { useState } from "react";
@@ -10,12 +9,10 @@ import { createService } from "@repo/data-services";
 import { useRouter } from "next/navigation";
 import { Button } from "@repo/design-system/components/ui/button";
 import { PlusCircle, X } from "lucide-react";
-import { FormEvent } from "react";
 
 export default function ServiceForm() {
     const router = useRouter();
     const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
     const [icon, setIcon] = useState("Wifi");
     const [speed, setSpeed] = useState("");
     const [price, setPrice] = useState("");
@@ -28,7 +25,6 @@ export default function ServiceForm() {
     // Service items (benefits)
     const [serviceItems, setServiceItems] = useState<Array<{
         title: string;
-        description?: string;
         icon?: string;
     }>>([]);
 
@@ -52,20 +48,21 @@ export default function ServiceForm() {
     };
 
     const handleSave = async () => {
-        if (isSubmitting) return;
-
         setIsSubmitting(true);
+        setError(null);
 
         try {
             await createService({
                 name,
-                description,
                 icon,
-                speed: speed ? parseInt(speed) : 0,
-                price: price ? parseFloat(price) : 0,
-                regularPrice: regularPrice ? parseFloat(regularPrice) : 0,
-                promoMonths: promoMonths ? parseInt(promoMonths) : 0,
-                serviceItems
+                speed: speed ? parseInt(speed) : null,
+                price: price ? parseFloat(price) : null,
+                regularPrice: regularPrice ? parseFloat(regularPrice) : null,
+                promoMonths: promoMonths ? parseInt(promoMonths) : null,
+                serviceItems: serviceItems.map(item => ({
+                    title: item.title,
+                    icon: item.icon || undefined
+                }))
             });
         } catch (error) {
             console.error('Error creating service:', error);
@@ -121,40 +118,25 @@ export default function ServiceForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="description">Descripción</Label>
-                        <Textarea
-                            id="description"
-                            value={description}
+                        <Label htmlFor="speed">Velocidad (Mbps)</Label>
+                        <Input
+                            id="speed"
+                            type="number"
+                            value={speed}
                             onChange={(e) => {
-                                setDescription(e.target.value);
+                                setSpeed(e.target.value);
                                 setIsFormDirty(true);
                             }}
                             disabled={isSubmitting}
-                            className="h-20"
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
-                            <Label htmlFor="speed">Velocidad (Mbps)</Label>
-                            <Input
-                                id="speed"
-                                type="number"
-                                value={speed}
-                                onChange={(e) => {
-                                    setSpeed(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="price">Precio promocional</Label>
+                            <Label htmlFor="price">Precio Promocional</Label>
                             <Input
                                 id="price"
                                 type="number"
-                                step="0.01"
                                 value={price}
                                 onChange={(e) => {
                                     setPrice(e.target.value);
@@ -165,11 +147,10 @@ export default function ServiceForm() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="regularPrice">Precio regular</Label>
+                            <Label htmlFor="regularPrice">Precio Regular</Label>
                             <Input
                                 id="regularPrice"
                                 type="number"
-                                step="0.01"
                                 value={regularPrice}
                                 onChange={(e) => {
                                     setRegularPrice(e.target.value);
@@ -178,20 +159,20 @@ export default function ServiceForm() {
                                 disabled={isSubmitting}
                             />
                         </div>
+                    </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="promoMonths">Duración (meses)</Label>
-                            <Input
-                                id="promoMonths"
-                                type="number"
-                                value={promoMonths}
-                                onChange={(e) => {
-                                    setPromoMonths(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                            />
-                        </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="promoMonths">Duración (meses)</Label>
+                        <Input
+                            id="promoMonths"
+                            type="number"
+                            value={promoMonths}
+                            onChange={(e) => {
+                                setPromoMonths(e.target.value);
+                                setIsFormDirty(true);
+                            }}
+                            disabled={isSubmitting}
+                        />
                     </div>
 
                     {/* Service Items Section */}
@@ -233,36 +214,35 @@ export default function ServiceForm() {
                                         disabled={isSubmitting}
                                         className="h-7 text-sm mb-2"
                                     />
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div className="space-y-1">
-                                            <Label htmlFor={`item-description-${index}`} className="text-xs">Descripción</Label>
-                                            <Input
-                                                id={`item-description-${index}`}
-                                                value={item.description || ''}
-                                                onChange={(e) => handleServiceItemChange(index, 'description', e.target.value)}
-                                                disabled={isSubmitting}
-                                                className="h-7 text-sm"
-                                            />
-                                        </div>
-                                        <div className="space-y-1">
-                                            <Label htmlFor={`item-icon-${index}`} className="text-xs">Icono</Label>
-                                            <Select
-                                                value={item.icon}
-                                                onValueChange={(value) => handleServiceItemChange(index, 'icon', value)}
-                                                disabled={isSubmitting}
-                                            >
-                                                <SelectTrigger id={`item-icon-${index}`} className="h-7 text-sm">
-                                                    <SelectValue placeholder="Icono" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="CheckCircle">Check</SelectItem>
-                                                    <SelectItem value="Wifi">Wifi</SelectItem>
-                                                    <SelectItem value="Clock">Reloj</SelectItem>
-                                                    <SelectItem value="Zap">Rayo</SelectItem>
-                                                    <SelectItem value="Shield">Escudo</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
+                                    <div className="space-y-1">
+                                        <Label htmlFor={`item-icon-${index}`} className="text-xs">Icono</Label>
+                                        <Select
+                                            value={item.icon}
+                                            onValueChange={(value) => handleServiceItemChange(index, 'icon', value)}
+                                            disabled={isSubmitting}
+                                        >
+                                            <SelectTrigger id={`item-icon-${index}`} className="h-7 text-sm">
+                                                <SelectValue placeholder="Icono" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="CheckCircle">Check</SelectItem>
+                                                <SelectItem value="Wifi">Wifi</SelectItem>
+                                                <SelectItem value="Clock">Reloj</SelectItem>
+                                                <SelectItem value="Zap">Rayo</SelectItem>
+                                                <SelectItem value="Shield">Escudo</SelectItem>
+                                                <SelectItem value="Star">Estrella</SelectItem>
+                                                <SelectItem value="Award">Premio</SelectItem>
+                                                <SelectItem value="Cpu">CPU</SelectItem>
+                                                <SelectItem value="Database">Base de datos</SelectItem>
+                                                <SelectItem value="HardDrive">Disco duro</SelectItem>
+                                                <SelectItem value="Monitor">Monitor</SelectItem>
+                                                <SelectItem value="Package">Paquete</SelectItem>
+                                                <SelectItem value="Phone">Teléfono</SelectItem>
+                                                <SelectItem value="Radio">Radio</SelectItem>
+                                                <SelectItem value="Tv">TV</SelectItem>
+                                                <SelectItem value="Signal">Señal</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                 </div>
                             ))}
@@ -273,7 +253,7 @@ export default function ServiceForm() {
 
             <ModalActions
                 onSave={handleSave}
-                isDisabled={isSubmitting || !isFormDirty || !name || !description || !icon || !speed || !price}
+                isDisabled={isSubmitting || !isFormDirty || !name || !icon || !speed || !price}
             />
         </div>
     );

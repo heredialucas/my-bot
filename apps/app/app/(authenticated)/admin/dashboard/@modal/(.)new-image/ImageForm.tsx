@@ -3,7 +3,6 @@
 import { Button } from "@repo/design-system/components/ui/button";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
-import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Image as ImageIcon } from "lucide-react";
 import ModalActions from "../../components/ModalActions";
 import { useState, useRef } from "react";
@@ -11,14 +10,13 @@ import { uploadImage, createImage } from "@repo/data-services";
 
 export default function ImageForm() {
     const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
     const [alt, setAlt] = useState("");
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isFormDirty, setIsFormDirty] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -44,7 +42,7 @@ export default function ImageForm() {
             // Preparamos los datos para la acción de uploadImage
             const imageData = {
                 name,
-                description,
+                description: "",
                 alt,
                 url: "", // Esta URL se obtendrá desde el servidor después de subir el archivo
                 file: selectedFile,
@@ -61,7 +59,7 @@ export default function ImageForm() {
             // Creamos el registro en la base de datos con la URL obtenida
             await createImage({
                 name,
-                description,
+                description: "",
                 alt,
                 url: uploadResult.url,
                 file: selectedFile || new Blob(),
@@ -124,19 +122,6 @@ export default function ImageForm() {
                                 value={name}
                                 onChange={(e) => {
                                     setName(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Descripción</Label>
-                            <Textarea
-                                id="description"
-                                placeholder="Describe para qué se usa esta imagen"
-                                value={description}
-                                onChange={(e) => {
-                                    setDescription(e.target.value);
                                     setIsFormDirty(true);
                                 }}
                             />

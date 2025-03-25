@@ -3,7 +3,7 @@ import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react"
 import Link from "next/link"
 import { getAllServices, deleteService } from "@repo/data-services"
 import { revalidatePath } from "next/cache";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/design-system/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/design-system/components/ui/card"
 
 export default async function ServicesTab() {
     // Obtener todos los servicios
@@ -53,9 +53,6 @@ export default async function ServicesTab() {
                                         </form>
                                     </div>
                                 </div>
-                                <CardDescription>
-                                    {service.description}
-                                </CardDescription>
                             </CardHeader>
                             <CardContent className="pb-4">
                                 <div className="flex items-center">

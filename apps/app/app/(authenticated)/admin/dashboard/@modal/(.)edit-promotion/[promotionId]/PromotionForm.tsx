@@ -2,7 +2,6 @@
 
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
-import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { Switch } from "@repo/design-system/components/ui/switch";
 import { Checkbox } from "@repo/design-system/components/ui/checkbox";
 import ModalActions from "../../../components/ModalActions";
@@ -22,7 +21,6 @@ type Plan = {
     name: string;
     price: number;
     planType: string;
-    description?: string | null;
     speed?: number | null;
 };
 
@@ -31,13 +29,11 @@ type Addon = {
     name: string;
     price: number;
     icon?: string | null;
-    description?: string | null;
 };
 
 interface PromotionData {
     id: string;
     name: string;
-    description: string | null;
     discount: number;
     duration: number;
     active: boolean;
@@ -58,7 +54,6 @@ interface PromotionFormProps {
 
 export default function PromotionForm({ initialData, services, plans, addons }: PromotionFormProps) {
     const [name, setName] = useState(initialData.name);
-    const [description, setDescription] = useState(initialData.description || "");
     const [discount, setDiscount] = useState(initialData.discount.toString());
     const [duration, setDuration] = useState(initialData.duration.toString());
     const [active, setActive] = useState(initialData.active);
@@ -126,7 +121,6 @@ export default function PromotionForm({ initialData, services, plans, addons }: 
             // Usar la función directamente
             await updatePromotion(initialData.id, {
                 name,
-                description,
                 discount: discountValue,
                 duration: durationValue,
                 active,
@@ -168,20 +162,6 @@ export default function PromotionForm({ initialData, services, plans, addons }: 
                                     setIsFormDirty(true);
                                 }}
                                 disabled={isSubmitting}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Descripción</Label>
-                            <Textarea
-                                id="description"
-                                value={description}
-                                onChange={(e) => {
-                                    setDescription(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                                className="h-20"
                             />
                         </div>
 
@@ -324,7 +304,7 @@ export default function PromotionForm({ initialData, services, plans, addons }: 
 
             <ModalActions
                 onSave={handleSave}
-                isDisabled={isSubmitting || !isFormDirty || !name || !description || !discount || !duration}
+                isDisabled={isSubmitting || !isFormDirty || !name || !discount || !duration}
             />
         </div>
     );
