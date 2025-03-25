@@ -13,20 +13,21 @@ export const FaqQuestion = ({ question, answer, value }: QuestionProps) => {
 
     // Custom accordion without the default arrow
     return (
-        <div className="mb-4">
+        <div className="mb-3 sm:mb-4">
             <div
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center justify-between p-6 rounded-xl border border-gray-200 bg-white hover:shadow-sm transition-all cursor-pointer"
+                className="flex items-center justify-between p-3 sm:p-6 rounded-xl border border-gray-200 bg-white hover:shadow-sm transition-all cursor-pointer"
                 style={{ borderBottomLeftRadius: isOpen ? 0 : undefined, borderBottomRightRadius: isOpen ? 0 : undefined }}
             >
-                <span className="text-gray-800 font-medium">{question}</span>
-                <div className="bg-black rounded-full p-3 flex items-center justify-center ml-4">
+                <span className="text-sm sm:text-base text-gray-800 font-medium">{question}</span>
+                <div className="bg-black rounded-full p-2 sm:p-3 flex items-center justify-center ml-2 sm:ml-4 flex-shrink-0">
                     <svg
-                        width="20"
-                        height="20"
+                        width="16"
+                        height="16"
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        className="sm:w-5 sm:h-5"
                         style={{
                             transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
                             transition: 'transform 0.3s ease'
@@ -44,8 +45,8 @@ export const FaqQuestion = ({ question, answer, value }: QuestionProps) => {
                 </div>
             </div>
             {isOpen && (
-                <div className="bg-white border border-t-0 border-gray-200 rounded-b-xl px-6">
-                    <div className="py-4 max-h-[400px] overflow-y-auto whitespace-pre-line">
+                <div className="bg-white border border-t-0 border-gray-200 rounded-b-xl px-3 sm:px-6">
+                    <div className="py-3 sm:py-4 max-h-[250px] sm:max-h-[400px] overflow-y-auto whitespace-pre-line text-xs sm:text-sm">
                         {answer}
                     </div>
                 </div>

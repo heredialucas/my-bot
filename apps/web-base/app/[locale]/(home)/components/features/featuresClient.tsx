@@ -120,12 +120,26 @@ export function FeaturesClient({ dictionary, promotions, addons }: FeaturesClien
                         {allAddons.map(addon => (
                             <div
                                 key={addon.id}
-                                className="flex flex-col max-w-2xl mx-auto md:flex-row md:items-center md:justify-between px-5 py-5 border-4 border-dashed border-gray-300 rounded-3xl mb-4 last:mb-0 relative"
+                                className="flex flex-col md:flex-row md:items-center max-w-2xl mx-auto md:justify-between md:px-5 px-4 md:py-5 py-3 md:border-4 border md:border-dashed border-gray-200 md:border-gray-300 rounded-lg md:rounded-3xl mb-3 md:mb-4 last:mb-0 relative"
                             >
-                                <div className="text-lg font-medium">
+                                <div className="text-base text-center md:text-left md:text-lg font-medium mb-2 md:mb-0">
                                     ¿Quiere llevar un {addon.name}?
                                 </div>
-                                <div className="flex items-center mt-2 md:mt-0">
+                                <div className="flex md:hidden items-center justify-center">
+                                    <div className="text-sm flex items-center gap-2">
+                                        Agregar por <span className="text-indigo-600 font-bold">${formatPrice(addon.price)}</span>/mes
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={!!selectedAddons[addon.id]}
+                                                onChange={() => toggleAddon(addon.id)}
+                                                className="sr-only peer"
+                                            />
+                                            <div className="w-4 h-4 border-2 border-gray-400 rounded-sm peer-checked:bg-indigo-600 peer-checked:border-0 relative z-10 flex items-center justify-center after:content-['✓'] after:hidden peer-checked:after:block after:text-white after:text-xs"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div className="hidden md:flex items-center mt-0">
                                     <div className="mr-4">
                                         Agregar por <span className="text-indigo-600 font-bold">${formatPrice(addon.price)}</span>/mes
                                     </div>

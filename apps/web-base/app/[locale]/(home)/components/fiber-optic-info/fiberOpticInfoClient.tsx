@@ -45,24 +45,24 @@ export function FiberOpticInfoClient({ dictionary, fiberOpticImages }: FiberOpti
     ];
 
     return (
-        <div className="w-full py-16 bg-white">
+        <div className="w-full py-8 sm:py-16 bg-white">
             <div className="container mx-auto px-4 max-w-6xl">
-                <div className="text-center mb-6">
-                    <h2 className="text-4xl font-bold">
+                <div className="text-center mb-4 sm:mb-6">
+                    <h2 className="text-2xl sm:text-4xl font-bold">
                         ¿Qué es la <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 text-transparent bg-clip-text">fibra óptica</span>
                     </h2>
-                    <h2 className="text-4xl font-bold">y cómo funciona?</h2>
+                    <h2 className="text-2xl sm:text-4xl font-bold">y cómo funciona?</h2>
                 </div>
 
-                <div className="text-center mx-auto max-w-4xl mb-12">
-                    <p className="text-base text-gray-700">
+                <div className="text-center mx-auto max-w-4xl mb-6 sm:mb-12">
+                    <p className="text-sm sm:text-base text-gray-700">
                         La fibra óptica es la tecnología que brindamos con el servicio de acceso a internet,
                         permitiendo navegar de manera estable, con mayor velocidad y en múltiples dispositivos al
                         mismo tiempo.
                     </p>
                 </div>
 
-                <div className="flex gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:flex lg:gap-6 gap-3">
                     <div className="w-full">
                         <FiberFeatureCard feature={features[0]} />
                     </div>

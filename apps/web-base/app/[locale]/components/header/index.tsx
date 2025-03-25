@@ -1,6 +1,4 @@
 'use client';
-
-import { env } from '@/env';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,7 +10,7 @@ import {
 import { Button } from '@repo/design-system/components/ui/button';
 import { Menu, MoveRight, X } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import type { Dictionary } from '@repo/internationalization';
 import Image from 'next/image';
@@ -57,24 +55,54 @@ export const Header = ({ dictionary }: HeaderProps) => {
   ];
 
   const [isOpen, setOpen] = useState(false);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const mobileMenu = document.getElementById('mobile-menu');
+      const hamburgerButton = document.getElementById('hamburger-button');
+
+      if (mobileMenu && hamburgerButton &&
+        !mobileMenu.contains(event.target as Node) &&
+        !hamburgerButton.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   return (
     <header className="sticky top-0 left-0 z-40 w-full bg-[#1D4971] text-white">
-      <div className="container relative mx-auto flex min-h-20 flex-row items-center">
+      <div className="container relative mx-auto flex min-h-20 flex-row items-center px-4 lg:px-6">
         {/* Logo on the left */}
-        <div className="flex items-center gap-2 w-1/4">
-          <Link href="/" className="relative w-14 h-14 rounded-full overflow-hidden">
+        <div className="flex items-center gap-2">
+          <Link href="/" className="relative w-20 h-20 rounded-full overflow-hidden flex items-center justify-center">
             <Image
               src={Logo}
               alt="Logo"
               fill
-              className="dark:invert"
+              className="dark:invert object-contain p-1"
               priority
             />
           </Link>
         </div>
 
         {/* Navigation items in center for desktop */}
-        <div className="hidden lg:flex justify-center w-1/2">
+        <div className="hidden lg:flex justify-center flex-1">
           <NavigationMenu>
             <NavigationMenuList className="flex flex-row justify-center gap-4">
               {navigationItems.map((item, index) => (
@@ -116,45 +144,60 @@ export const Header = ({ dictionary }: HeaderProps) => {
           </NavigationMenu>
         </div>
 
-        {/* Empty space to balance the layout */}
-        <div className="w-1/4 flex justify-end">
-          {/* Mobile menu toggle */}
-          <div className="flex items-center lg:hidden">
-            <Button variant="ghost" className="text-white" onClick={() => setOpen(!isOpen)}>
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
-            {isOpen && (
-              <div className="container absolute top-20 right-0 flex w-full flex-col gap-8 border-t bg-[#1D4971] py-4 shadow-lg">
+        {/* Mobile menu button */}
+        <div className="ml-auto lg:hidden">
+          <Button
+            variant="ghost"
+            className="text-white p-3"
+            onClick={() => setOpen(!isOpen)}
+            id="hamburger-button"
+          >
+            {isOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
+          </Button>
+        </div>
+
+        {/* Mobile menu overlay */}
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+              onClick={() => setOpen(false)}
+            />
+
+            {/* Mobile menu */}
+            <div
+              id="mobile-menu"
+              className="fixed top-20 right-4 w-[calc(100%-2rem)] max-w-sm rounded-lg bg-[#1D4971] py-6 shadow-lg z-50 lg:hidden"
+            >
+              <nav className="flex flex-col gap-2 px-4">
                 {navigationItems.map((item, index) => (
-                  <div key={`mobile-nav-item-${index}`}>
-                    <div className="flex flex-col gap-2">
-                      {item.href ? (
-                        <Link
-                          href={item.href}
-                          className="flex items-center justify-between text-white"
-                          target={
-                            item.href.startsWith('http') ? '_blank' : undefined
-                          }
-                          rel={
-                            item.href.startsWith('http')
-                              ? 'noopener noreferrer'
-                              : undefined
-                          }
-                        >
-                          <span className="text-lg">{item.title}</span>
-                          <MoveRight className="h-4 w-4 stroke-1 text-gray-300" />
-                        </Link>
-                      ) : (
-                        <p className="text-lg text-white">{item.title}</p>
-                      )}
-                    </div>
+                  <div
+                    key={`mobile-nav-item-${index}`}
+                    className="border-b border-[#2E5A86] last:border-none"
+                  >
+                    {item.href ? (
+                      <Link
+                        href={item.href}
+                        className="flex items-center justify-between py-4 text-white hover:text-cyan-300 transition-colors"
+                        target={item.href.startsWith('http') ? '_blank' : undefined}
+                        rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        onClick={() => setOpen(false)}
+                      >
+                        <span className="text-base font-medium">{item.title}</span>
+                        <MoveRight className="h-4 w-4 stroke-2" />
+                      </Link>
+                    ) : (
+                      <p className="py-4 text-base font-medium text-white">{item.title}</p>
+                    )}
                   </div>
                 ))}
-              </div>
-            )}
-          </div>
-        </div>
+              </nav>
+            </div>
+          </>
+        )}
       </div>
     </header>
   );
 };
+

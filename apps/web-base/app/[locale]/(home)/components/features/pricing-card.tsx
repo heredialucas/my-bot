@@ -103,7 +103,7 @@ export const PricingCard = ({
     const sortedZappingPlans = uniqueZappingPlans.sort((a, b) => a.price - b.price);
 
     return (
-        <div className="flex flex-col rounded-lg bg-white overflow-hidden h-[650px] relative" style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
+        <div className="flex flex-col rounded-lg bg-white overflow-hidden h-auto sm:h-[650px] relative" style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
             <div className="w-full h-full relative">
                 {/* Contenedor principal con transición de slide */}
                 <div
@@ -114,23 +114,24 @@ export const PricingCard = ({
                 >
                     {/* Vista principal (frontal) */}
                     <div
-                        className="py-4 px-4 text-center text-white font-medium"
+                        className="py-3 sm:py-4 px-3 sm:px-4 text-center text-white font-medium sticky sm:static top-0 z-10"
                         style={{
                             background: 'linear-gradient(90deg, #4900FF 25%, #00FFF9 100%)'
                         }}
                     >
-                        <div className="text-2xl font-bold">{discount}% {dictionary.web.home.cases.pricing.discount}</div>
-                        <div className="text-xl">X {months} {dictionary.web.home.cases.pricing.months}</div>
-                        {isNewCustomer && <div className="text-sm mt-1">{dictionary.web.home.cases.pricing.newCustomerPromo}</div>}
-                        {promotionName && <div className="text-sm font-bold mt-1">{promotionName}</div>}
+                        <div className="text-xl sm:text-2xl font-bold">{discount}% {dictionary.web.home.cases.pricing.discount}</div>
+                        <div className="text-lg sm:text-xl">X {months} {dictionary.web.home.cases.pricing.months}</div>
+                        {isNewCustomer && <div className="text-xs sm:text-sm mt-1">{dictionary.web.home.cases.pricing.newCustomerPromo}</div>}
+                        {promotionName && <div className="text-xs sm:text-sm font-bold mt-1">{promotionName}</div>}
                     </div>
 
-                    <div className="flex flex-col flex-grow p-6">
-                        <div className="text-center mb-6">
-                            <div className="text-gray-800 text-lg">{dictionary.web.home.cases.pricing.plan} {planType}</div>
-                            <div className="text-indigo-600 text-4xl font-bold mb-4">{dictionary.web.home.cases.pricing.fiber} {speed}</div>
+                    <div className="flex flex-col flex-grow p-4 sm:p-6 overflow-y-auto sm:overflow-visible">
+                        <div className="text-center mb-4 sm:mb-6">
+                            <div className="text-lg text-gray-800">{dictionary.web.home.cases.pricing.plan} {planType}</div>
+                            <div className="hidden sm:block text-indigo-600 text-4xl font-bold mb-4">{dictionary.web.home.cases.pricing.fiber} {speed}</div>
+                            <div className="block sm:hidden text-indigo-600 text-2xl font-bold">{dictionary.web.home.cases.pricing.fiber} {speed}</div>
                             <div className="text-gray-700">{dictionary.web.home.cases.pricing.monthly}</div>
-                            <div className="text-indigo-600 text-5xl font-bold mb-2">${totalPrice.toLocaleString('es-CL')}</div>
+                            <div className="text-indigo-600 text-4xl sm:text-5xl font-bold mb-2">${totalPrice.toLocaleString('es-CL')}</div>
                             <div className="text-sm text-gray-500">
                                 {dictionary.web.home.cases.pricing.laterMonthPrice.replace('{months}', months.toString())}
                                 ${(originalPrice + (selectedZappingPlan ? selectedZappingPlan.regularPrice || selectedZappingPlan.price : 0)).toLocaleString('es-CL')}
@@ -139,7 +140,7 @@ export const PricingCard = ({
 
                         {/* Service details section - only show when addons are included or Zapping plan is selected */}
                         {(includeAddons && selectedAddons.length > 0) || selectedZappingPlan ? (
-                            <div className="w-full mb-auto">
+                            <div className="w-full mb-4 sm:mb-auto">
                                 <div className="text-gray-600 text-sm font-medium mb-1">{dictionary.web.home.cases.pricing.serviceDetails}</div>
                                 <div className="flex justify-between text-sm py-1 border-b border-gray-100">
                                     <span className="text-gray-500">• {dictionary.web.home.cases.pricing.fiber} {speed}</span>
@@ -162,7 +163,7 @@ export const PricingCard = ({
                             </div>
                         ) : null}
 
-                        <div className="flex flex-col items-center mt-auto w-full space-y-4">
+                        <div className="flex flex-col items-center mt-auto w-full space-y-3 sm:space-y-4">
                             <Button className="w-full max-w-[280px] rounded-lg bg-cyan-300 text-black hover:bg-cyan-400 font-medium text-sm py-2 px-4 h-auto">
                                 {dictionary.web.home.cases.pricing.checkAvailability}
                             </Button>
@@ -194,54 +195,54 @@ export const PricingCard = ({
                         transform: showZappingPlans ? 'translateX(-100%)' : 'translateX(0)',
                     }}
                 >
-                    <div className="bg-rose-500 py-4 px-4 text-center text-white">
-                        <h3 className="text-xl font-bold">Elegí tu plan Zapping</h3>
+                    <div className="bg-rose-500 py-3 sm:py-4 px-3 sm:px-4 text-center text-white sticky sm:static top-0 z-10">
+                        <h3 className="text-lg sm:text-xl font-bold">Elegí tu plan Zapping</h3>
                     </div>
 
-                    <div className="p-6 flex flex-col h-[calc(100%-68px)]">
+                    <div className="p-4 sm:p-6 flex flex-col h-[calc(100%-56px)] sm:h-[calc(100%-68px)] overflow-y-auto sm:overflow-visible">
                         <button
                             onClick={handleToggleZappingPlans}
-                            className="flex items-center text-rose-500 mb-4 text-sm font-medium transition-transform active:scale-95"
+                            className="flex items-center text-rose-500 mb-3 sm:mb-4 text-sm font-medium transition-transform active:scale-95 sticky sm:static top-0 bg-white sm:bg-transparent z-10 py-1 sm:py-0"
                         >
                             <ChevronLeft className="h-4 w-4 mr-1" /> Volver a mi plan
                         </button>
 
-                        <div className="bg-gray-900 rounded-3xl overflow-auto flex-grow p-6">
+                        <div className="bg-gray-900 rounded-xl sm:rounded-3xl overflow-auto flex-grow p-4 sm:p-6 space-y-4 sm:space-y-0">
                             {sortedZappingPlans.map((plan) => (
                                 <div
                                     key={plan.id}
-                                    className="mb-8 last:mb-0 cursor-pointer"
+                                    className="sm:mb-8 sm:last:mb-0 cursor-pointer"
                                     onClick={() => handleZappingPlanSelect(plan)}
                                 >
                                     <div className="flex items-center gap-3 mb-2">
-                                        <div className={`w-6 h-6 rounded-full border-2 ${selectedZappingPlan?.id === plan.id ? 'border-white bg-transparent' : 'border-gray-400'} flex items-center justify-center`}>
+                                        <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 ${selectedZappingPlan?.id === plan.id ? 'border-white bg-transparent' : 'border-gray-400'} flex items-center justify-center`}>
                                             {selectedZappingPlan?.id === plan.id && <div className="w-3 h-3 bg-white rounded-full"></div>}
                                         </div>
-                                        <span className="text-white text-xl font-medium">{plan.name}</span>
+                                        <span className="text-white font-medium text-lg sm:text-xl">{plan.name}</span>
                                     </div>
 
-                                    <div className="ml-9">
+                                    <div className="ml-8 sm:ml-9">
                                         <div className="flex items-baseline gap-2 mb-1">
-                                            <span className="text-white text-2xl font-bold">${plan.price.toLocaleString('es-CL')}</span>
-                                            <span className="text-rose-400 text-sm">primer mes</span>
+                                            <span className="text-white text-xl sm:text-2xl font-bold">${plan.price.toLocaleString('es-CL')}</span>
+                                            <span className="text-rose-400 text-xs sm:text-sm">primer mes</span>
                                         </div>
-                                        <div className="text-gray-400 text-sm mb-3">
+                                        <div className="text-gray-400 text-xs sm:text-sm mb-2 sm:mb-3">
                                             luego ${(plan.regularPrice || plan.price + 2000).toLocaleString('es-CL')} /mes
                                         </div>
 
-                                        <div className="text-gray-400 uppercase text-sm mb-1">INCLUYE</div>
-                                        <div className="flex items-center gap-2 mb-2">
+                                        <div className="text-xs sm:text-sm text-gray-400 uppercase mb-1">INCLUYE</div>
+                                        <div className="flex items-center gap-2 mb-2 text-sm">
                                             <span className="text-white">Zapping con</span>
                                             <span className="text-rose-400">+{plan.channelCount} canales</span>
                                             <ArrowRight className="h-4 w-4 text-white" />
                                         </div>
 
                                         {plan.characteristics && plan.characteristics.length > 0 && (
-                                            <div className="space-y-1">
+                                            <div className="mt-0 space-y-1">
                                                 {plan.characteristics
                                                     .filter(char => char.value)
                                                     .map((char, idx) => (
-                                                        <div key={idx} className="text-white">
+                                                        <div key={idx} className="text-sm text-white">
                                                             {char.key}
                                                         </div>
                                                     ))
@@ -261,7 +262,7 @@ export const PricingCard = ({
 
                         <Button
                             onClick={() => selectedZappingPlan ? handleZappingPlanSelect(selectedZappingPlan) : setShowZappingPlans(false)}
-                            className="mx-auto mt-4 w-full max-w-[280px] rounded-lg bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 h-auto transition-transform active:scale-95"
+                            className="mt-4 self-center w-full max-w-[280px] rounded-lg bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 h-auto transition-transform active:scale-95"
                         >
                             {selectedZappingPlan ? 'Seleccionar plan' : 'Volver sin seleccionar'}
                         </Button>
