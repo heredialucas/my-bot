@@ -141,7 +141,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
     const totalPrice = price + selectedPlanPrice + addonsTotal;
 
     return (
-        <div className="flex flex-col lg:flex-row rounded-lg overflow-hidden relative">
+        <div className="flex flex-col lg:flex-row rounded-lg overflow-hidden relative w-full">
             {/* Botón para cerrar el modal */}
             <button
                 onClick={handleClose}
@@ -153,19 +153,19 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
 
             {/* Left Section - Blue gradient with diagonal cut */}
             <div
-                className="text-white p-7 px-8 lg:w-[48%] relative"
+                className="text-white p-7 lg:w-[48%] relative"
                 style={{
                     background: 'linear-gradient(90deg, #4900FF 70%, #00FFF9 100%)'
                 }}
             >
                 {/* Diagonal divider - moved more towards the right */}
-                <div className="hidden lg:block absolute top-0 right-0 h-full w-24"
+                <div className="hidden lg:block absolute top-0 right-0 h-full w-16"
                     style={{
                         background: 'linear-gradient(90deg, #4900FF 0%, #00FFF9 100%)',
                         clipPath: 'polygon(100% 0, 0 0, 100% 100%)'
                     }}>
                 </div>
-                <div className="hidden lg:block absolute top-0 right-0 h-full w-24 bg-white"
+                <div className="hidden lg:block absolute top-0 right-0 h-full w-16 bg-white"
                     style={{
                         clipPath: 'polygon(100% 0, 100% 100%, 0 100%)'
                     }}>
@@ -173,19 +173,19 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
 
                 <div className="flex flex-col h-full justify-between">
                     <div>
-                        <h2 className="text-xl font-medium mb-2">Plan internet fibra</h2>
-                        <h1 className="text-5xl font-bold mb-5 text-cyan-300">{speed} <span className="text-white">Mbps</span></h1>
+                        <h2 className="text-lg font-medium mb-2">Plan internet fibra</h2>
+                        <h1 className="text-5xl font-bold mb-4 text-cyan-300">{speed} <span className="text-white">Mbps</span></h1>
 
-                        <p className="mb-7">contrata este plan y tendrás</p>
+                        <p className="mb-6 text-base">contrata este plan y tendrás</p>
 
-                        <div className="flex flex-col gap-y-7">
+                        <div className="flex flex-col gap-y-6 mb-8">
                             {/* Velocidad semétrica */}
                             <div className="flex items-start">
                                 <div className="bg-blue-400/30 p-2 rounded-full mr-3 mt-1">
                                     <Gauge className="h-5 w-5 text-cyan-300" />
                                 </div>
                                 <div>
-                                    <h3 className="font-medium text-cyan-300">Velocidad semétrica</h3>
+                                    <h3 className="font-medium text-cyan-300 text-base">Velocidad semétrica</h3>
                                     <p className="text-sm mt-1">Hasta {speed} Mbps de subida y bajada</p>
                                 </div>
                             </div>
@@ -196,7 +196,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                                     <FileText className="h-5 w-5 text-cyan-300" />
                                 </div>
                                 <div>
-                                    <h3 className="font-medium text-cyan-300">Sin letra chica</h3>
+                                    <h3 className="font-medium text-cyan-300 text-base">Sin letra chica</h3>
                                     <p className="text-sm mt-1">Cobros y boletas transparentes</p>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                                     <Clock className="h-5 w-5 text-cyan-300" />
                                 </div>
                                 <div>
-                                    <h3 className="font-medium text-cyan-300">Contact center</h3>
+                                    <h3 className="font-medium text-cyan-300 text-base">Contact center</h3>
                                     <p className="text-sm mt-1">Lunes a viernes 9:00 a 20:00 hs</p>
                                     <p className="text-sm">Sábados de 9:00 a 14:00 hs</p>
                                 </div>
@@ -219,14 +219,14 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                                     <Wrench className="h-5 w-5 text-cyan-300" />
                                 </div>
                                 <div>
-                                    <h3 className="font-medium text-cyan-300">Incluye</h3>
+                                    <h3 className="font-medium text-cyan-300 text-base">Incluye</h3>
                                     <p className="text-sm mt-1">La activación y habilitación. ¡Agendá tu instalación!</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-10 pt-4 border-t border-white/20">
+                    <div className="pt-6 border-t border-white/20">
                         <p className="text-sm text-center">Cliente cancela plan a contratar al momento de instalar</p>
                         <h2 className="text-4xl font-bold mt-2 text-center">${price.toLocaleString('es-CL')}</h2>
                         <p className="text-sm text-center">¡Mes {promotion.duration} pagas ${regularPrice.toLocaleString('es-CL')}</p>
@@ -241,7 +241,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
             </div>
 
             {/* Right Section - White with plan details */}
-            <div className="bg-white p-7 px-8 lg:w-[52%]">
+            <div className="bg-white p-7 lg:w-[52%]">
                 <div className="text-center mb-8">
                     <h2 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#4900FF] to-[#00FFF9] bg-clip-text text-transparent">
                         ${totalPrice.toLocaleString('es-CL')}
@@ -289,13 +289,13 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                         <div className="bg-rose-500 text-white p-3 text-center rounded-t-lg">
                             <h3 className="font-medium">TV Online. Elige tu plan ZAPPING</h3>
                         </div>
-                        <div className="bg-gray-900 text-white rounded-b-lg">
+                        <div className="bg-gray-900 text-white rounded-b-lg max-h-[220px] overflow-y-auto">
                             {sortedPlans.length > 0 && (
                                 <div className="flex flex-col">
                                     {sortedPlans.map((plan) => (
                                         <div
                                             key={plan.id}
-                                            className="flex items-center justify-between px-4 py-4 border-b border-gray-700 cursor-pointer"
+                                            className="flex items-center justify-between px-4 py-3 border-b border-gray-700 cursor-pointer"
                                             onClick={() => handlePlanSelection(plan.id)}
                                         >
                                             {/* Columna izquierda: Checkbox y nombre */}
@@ -309,7 +309,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                                             {/* Columna media: Características del plan */}
                                             <div className="w-[45%]">
                                                 {plan.characteristics && plan.characteristics.length > 0 && (
-                                                    <div className="flex flex-wrap gap-1 ">
+                                                    <div className="flex flex-wrap gap-1">
                                                         {plan.characteristics
                                                             .filter(char => char.value)
                                                             .map((char, idx) => (
@@ -330,7 +330,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                                             {/* Columna derecha: Precios */}
                                             <div className="text-right w-[30%]">
                                                 <p className="font-bold text-white">${plan.price.toLocaleString('es-CL')}</p>
-                                                <p className="text-xs">primer mes</p>
+                                                <p className="text-xs text-gray-400">primer mes</p>
                                                 <p className="text-xs text-gray-400">luego ${(plan.regularPrice || plan.price + 2000).toLocaleString('es-CL')} /mes</p>
                                             </div>
                                         </div>
@@ -347,14 +347,14 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                         {allAddons.map((addon, index) => (
                             <div
                                 key={index}
-                                className="flex items-center justify-center p-2 mx-auto border border-dashed border-gray-300 rounded-xl cursor-pointer mb-2"
+                                className="flex items-center justify-center p-3 mx-auto border border-dashed border-gray-300 rounded-lg cursor-pointer mb-2.5"
                                 onClick={() => toggleAddon(addon.id)}
                             >
                                 <div className="flex items-center gap-2">
                                     <div className={`w-5 h-5 border-2 ${selectedAddons[addon.id] ? 'bg-indigo-600 border-indigo-600' : 'border-gray-400'} rounded-sm flex items-center justify-center`}>
                                         {selectedAddons[addon.id] && <Check className="h-3 w-3 text-white" />}
                                     </div>
-                                    <span className="text-gray-700">Agregar {addon.name} por <span className="text-[#4900FF]">${addon.price.toLocaleString('es-CL')}</span>/mes</span>
+                                    <span className="text-base">Agregar {addon.name} por <span className="text-[#4900FF]">${addon.price.toLocaleString('es-CL')}</span>/mes</span>
                                 </div>
                             </div>
                         ))}
