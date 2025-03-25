@@ -43,7 +43,6 @@ export async function createImage(data: ImageFormData) {
         const image = await db.media.create({
             data: {
                 name: data.name,
-                description: data.description || null,
                 alt: data.alt || null,
                 url: data.url,
                 type: 'IMAGE',
@@ -67,7 +66,6 @@ export async function updateImage(imageId: string, data: ImageFormData) {
             where: { id: imageId },
             data: {
                 name: data.name,
-                description: data.description || null,
                 alt: data.alt || null,
                 url: data.url,
             },

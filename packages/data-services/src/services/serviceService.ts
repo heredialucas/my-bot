@@ -49,7 +49,6 @@ export async function updateService(serviceId: string, data: ServiceFormData) {
     try {
         const {
             name,
-            description,
             icon,
             serviceItems,
             speed,
@@ -63,7 +62,6 @@ export async function updateService(serviceId: string, data: ServiceFormData) {
             where: { id: serviceId },
             data: {
                 name,
-                description: description || null,
                 icon: icon || null,
                 speed,
                 price,
@@ -122,7 +120,6 @@ export async function createService(data: ServiceFormData) {
     try {
         const {
             name,
-            description,
             icon,
             serviceItems,
             speed,
@@ -135,7 +132,6 @@ export async function createService(data: ServiceFormData) {
         const service = await db.serviceType.create({
             data: {
                 name,
-                description: description || null,
                 icon: icon || null,
                 speed,
                 price,

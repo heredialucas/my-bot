@@ -21,32 +21,31 @@ export default function PlanForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Dynamic characteristics
-    const [planCharacteristics, setPlanCharacteristics] = useState<Array<{
-        key: string;
-        value: boolean;
-    }>>([
-        { key: "Contenido Premium", value: false },
-        { key: "Sin Anuncios", value: false }
+    // Estado para las características dinámicas
+    const [planCharacteristics, setPlanCharacteristics] = useState<Array<{ key: string; value: boolean }>>([
+        { key: '', value: true }
     ]);
 
-    const handleAddCharacteristic = () => {
-        setPlanCharacteristics([...planCharacteristics, { key: "", value: false }]);
-        setIsFormDirty(true);
+    // Añadir nueva característica al formulario
+    const addCharacteristic = () => {
+        setPlanCharacteristics([...planCharacteristics, { key: '', value: true }]);
     };
 
-    const handleRemoveCharacteristic = (index: number) => {
-        const newItems = [...planCharacteristics];
-        newItems.splice(index, 1);
-        setPlanCharacteristics(newItems);
-        setIsFormDirty(true);
+    // Eliminar una característica del formulario
+    const removeCharacteristic = (index: number) => {
+        const updatedCharacteristics = [...planCharacteristics];
+        updatedCharacteristics.splice(index, 1);
+        setPlanCharacteristics(updatedCharacteristics);
     };
 
-    const handleCharacteristicChange = (index: number, field: string, value: string | boolean) => {
-        const newItems = [...planCharacteristics];
-        newItems[index] = { ...newItems[index], [field]: value };
-        setPlanCharacteristics(newItems);
-        setIsFormDirty(true);
+    // Actualizar una característica específica
+    const updateCharacteristic = (index: number, field: 'key' | 'value', value: string | boolean) => {
+        const updatedCharacteristics = [...planCharacteristics];
+        updatedCharacteristics[index] = {
+            ...updatedCharacteristics[index],
+            [field]: value
+        };
+        setPlanCharacteristics(updatedCharacteristics);
     };
 
     const handleSave = async () => {
@@ -62,20 +61,15 @@ export default function PlanForm() {
             const promoMonthsValue = promoMonths ? parseInt(promoMonths) : null;
             const channelCountValue = channelCount ? parseInt(channelCount) : null;
 
-            // Extract premium content and no ads values from characteristics
-            const premiumContent = planCharacteristics.find(c => c.key === "Contenido Premium")?.value || false;
-            const noAds = planCharacteristics.find(c => c.key === "Sin Anuncios")?.value || false;
-
-            // Usar la función del paquete directamente pero sin enviar el icon
+            // Ahora usamos directamente las características dinámicas y no extraemos premiumContent/noAds
             await createPlan({
                 name,
                 price: priceValue,
                 regularPrice: regularPriceValue,
                 promoMonths: promoMonthsValue,
                 channelCount: channelCountValue,
-                premiumContent,
-                noAds,
-                planType: "ZAPPING"
+                planType: "ZAPPING",
+                characteristics: planCharacteristics
             });
 
             // La redirección la maneja automáticamente el sistema
@@ -218,7 +212,7 @@ export default function PlanForm() {
                                     type="button"
                                     variant="outline"
                                     size="sm"
-                                    onClick={handleAddCharacteristic}
+                                    onClick={addCharacteristic}
                                     disabled={isSubmitting}
                                 >
                                     <PlusCircle className="mr-1 h-4 w-4" />
@@ -233,7 +227,7 @@ export default function PlanForm() {
                                             <Input
                                                 placeholder="Nombre de la característica"
                                                 value={characteristic.key}
-                                                onChange={(e) => handleCharacteristicChange(index, 'key', e.target.value)}
+                                                onChange={(e) => updateCharacteristic(index, 'key', e.target.value)}
                                                 disabled={isSubmitting}
                                                 className="h-8 text-sm mb-2"
                                             />
@@ -241,7 +235,7 @@ export default function PlanForm() {
                                                 <Switch
                                                     id={`characteristic-value-${index}`}
                                                     checked={characteristic.value}
-                                                    onCheckedChange={(checked) => handleCharacteristicChange(index, 'value', checked)}
+                                                    onCheckedChange={(checked) => updateCharacteristic(index, 'value', checked)}
                                                     disabled={isSubmitting}
                                                 />
                                                 <Label
@@ -256,7 +250,7 @@ export default function PlanForm() {
                                             type="button"
                                             variant="ghost"
                                             size="icon"
-                                            onClick={() => handleRemoveCharacteristic(index)}
+                                            onClick={() => removeCharacteristic(index)}
                                             disabled={isSubmitting}
                                             className="h-6 w-6 text-red-500 hover:text-red-600"
                                         >

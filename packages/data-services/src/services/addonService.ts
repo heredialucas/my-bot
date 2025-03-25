@@ -14,7 +14,6 @@ export async function getAllAddons() {
                 id: true,
                 name: true,
                 price: true,
-                description: true,
                 icon: true,
                 color: true,
             },
@@ -56,7 +55,6 @@ export async function createAddon(data: AddonFormData) {
         const addon = await db.addOn.create({
             data: {
                 name,
-                description: description || null,
                 price,
                 icon: icon || null,
                 color: color || null,
@@ -81,7 +79,6 @@ export async function updateAddon(addonId: string, data: AddonFormData) {
             where: { id: addonId },
             data: {
                 name: data.name,
-                description: data.description || null,
                 price: data.price,
                 icon: data.icon || null,
                 color: data.color || null,

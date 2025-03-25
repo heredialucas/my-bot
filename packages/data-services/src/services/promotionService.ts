@@ -45,7 +45,6 @@ export async function createPromotion(data: PromotionFormData) {
         const promotion = await db.promotion.create({
             data: {
                 name: promotionData.name,
-                description: promotionData.description || null,
                 discount: promotionData.discount,
                 duration: promotionData.duration,
                 active: promotionData.active,
@@ -109,7 +108,6 @@ export async function updatePromotion(promotionId: string, data: PromotionFormDa
             where: { id: promotionId },
             data: {
                 name: promotionData.name,
-                description: promotionData.description || null,
                 discount: promotionData.discount,
                 duration: promotionData.duration,
                 active: promotionData.active,
@@ -209,7 +207,11 @@ export async function getActivePromotionsWithDetails() {
                 },
                 plans: {
                     include: {
-                        plan: true
+                        plan: {
+                            include: {
+                                characteristics: true
+                            }
+                        }
                     }
                 },
                 addons: {

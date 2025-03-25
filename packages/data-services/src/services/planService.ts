@@ -9,25 +9,17 @@ import { revalidatePath } from 'next/cache';
  */
 export async function getAllPlans() {
     try {
+        // Consultar todos los planes incluyendo sus características
         const plans = await db.plan.findMany({
-            select: {
-                id: true,
-                name: true,
-                price: true,
-                description: true,
-                regularPrice: true,
-                promoMonths: true,
-                channelCount: true,
-                premiumContent: true,
-                noAds: true,
-                planType: true
+            include: {
+                characteristics: true
             },
             orderBy: {
                 name: 'asc'
             }
         });
 
-        // Ya contiene planType, no necesitamos mapearlo
+        // Transformar el resultado para que sea más fácil de usar en el frontend
         return plans;
     } catch (error) {
         console.error("Error fetching plans:", error);
@@ -43,32 +35,53 @@ export async function createPlan(data: PlanFormData) {
     try {
         const {
             name,
-            description,
             price,
             regularPrice,
             promoMonths,
             channelCount,
-            premiumContent,
-            noAds,
-            planType
+            planType,
+            characteristics
         } = data;
 
-        // Crear el plan
+        console.log("Creando plan con características:", characteristics);
+
+        // Primero crear el plan base
         const plan = await db.plan.create({
             data: {
                 name,
-                description: description || null,
                 price,
                 regularPrice,
                 promoMonths,
                 channelCount,
-                premiumContent,
-                noAds,
                 planType,
-            },
+            }
         });
+
+        // Luego crear las características de forma separada
+        if (characteristics && characteristics.length > 0) {
+            const validCharacteristics = characteristics.filter(c => c.key.trim() !== '');
+
+            if (validCharacteristics.length > 0) {
+                await db.planCharacteristic.createMany({
+                    data: validCharacteristics.map(char => ({
+                        key: char.key,
+                        value: char.value,
+                        planId: plan.id
+                    }))
+                });
+            }
+        }
+
+        // Consultar el plan con sus características para devolverlo
+        const planWithCharacteristics = await db.plan.findUnique({
+            where: { id: plan.id },
+            include: {
+                characteristics: true
+            }
+        });
+
         revalidatePath('/admin/dashboard');
-        return plan;
+        return planWithCharacteristics;
     } catch (error) {
         console.error("Error creating plan:", error);
         throw new Error("Failed to create plan");
@@ -83,33 +96,59 @@ export async function updatePlan(planId: string, data: PlanFormData) {
     try {
         const {
             name,
-            description,
             price,
             regularPrice,
             promoMonths,
             channelCount,
-            premiumContent,
-            noAds,
-            planType
+            planType,
+            characteristics
         } = data;
 
-        // Actualizar el plan
-        const plan = await db.plan.update({
+        console.log("Actualizando plan con características:", characteristics);
+
+        // Primero actualizar el plan base
+        await db.plan.update({
             where: { id: planId },
             data: {
                 name,
-                description: description || null,
                 price,
                 regularPrice,
                 promoMonths,
                 channelCount,
-                premiumContent,
-                noAds,
                 planType
-            },
+            }
         });
+
+        // Eliminar todas las características existentes
+        await db.planCharacteristic.deleteMany({
+            where: { planId }
+        });
+
+        // Crear las nuevas características
+        if (characteristics && characteristics.length > 0) {
+            const validCharacteristics = characteristics.filter(c => c.key.trim() !== '');
+
+            if (validCharacteristics.length > 0) {
+                await db.planCharacteristic.createMany({
+                    data: validCharacteristics.map(char => ({
+                        key: char.key,
+                        value: char.value,
+                        planId
+                    }))
+                });
+            }
+        }
+
+        // Consultar el plan con sus características para devolverlo
+        const updatedPlan = await db.plan.findUnique({
+            where: { id: planId },
+            include: {
+                characteristics: true
+            }
+        });
+
         revalidatePath('/admin/dashboard');
-        return plan;
+        return updatedPlan;
     } catch (error) {
         console.error("Error updating plan:", error);
         throw new Error("Failed to update plan");
@@ -123,6 +162,9 @@ export async function getPlanById(planId: string) {
     try {
         const plan = await db.plan.findUnique({
             where: { id: planId },
+            include: {
+                characteristics: true
+            }
         });
         return plan;
     } catch (error) {

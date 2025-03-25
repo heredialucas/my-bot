@@ -1,6 +1,7 @@
 // Tipos para servicios
 export type ServiceItemData = {
     title: string;
+    description?: string;
     icon?: string;
 };
 

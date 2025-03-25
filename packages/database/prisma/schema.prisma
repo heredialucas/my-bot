@@ -34,6 +34,7 @@ model ServiceType {
 model ServiceItem {
   id            String      @id @default(cuid())
   title         String
+  description   String?
   icon          String?
   serviceTypeId String
   serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id], onDelete: Cascade)
@@ -43,20 +44,32 @@ model ServiceItem {
 
 // Zapping Plan models
 model Plan {
-  id             String   @id @default(cuid())
-  name           String
-  price          Float // Promotional price
-  regularPrice   Float? // Price after promotional period
-  promoMonths    Int? // Number of months for promotional price
-  channelCount   Int? // Number of channels
-  premiumContent Boolean? @default(false)
-  noAds          Boolean? @default(false)
-  planType       String   @default("ZAPPING") // Keep for backward compatibility
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id           String   @id @default(cuid())
+  name         String
+  price        Float // Promotional price
+  regularPrice Float? // Price after promotional period
+  promoMonths  Int? // Number of months for promotional price
+  channelCount Int? // Number of channels
+  planType     String   @default("ZAPPING") // Keep for backward compatibility
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relación con características dinámicas
+  characteristics PlanCharacteristic[]
 
   // Relation to promotions
   promotions PromotionPlan[]
+}
+
+// Modelo para características dinámicas de planes
+model PlanCharacteristic {
+  id     String  @id @default(cuid())
+  key    String // Nombre de la característica
+  value  Boolean @default(false) // Si está activa o no
+  planId String // ID del plan al que pertenece
+  plan   Plan    @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, key]) // Para evitar características duplicadas
 }
 
 // Promotion models

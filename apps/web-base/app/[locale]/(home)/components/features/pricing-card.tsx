@@ -12,14 +12,17 @@ import { AddOn } from './types';
 type Plan = {
     id: string;
     name: string;
-    description?: string | null;
     price: number;
     regularPrice?: number | null;
     promoMonths?: number | null;
     channelCount?: number | null;
-    premiumContent?: boolean | null;
-    noAds?: boolean | null;
     planType: string;
+    characteristics: Array<{
+        id?: string;
+        key: string;
+        value: boolean;
+        planId?: string;
+    }>;
 };
 
 type PricingCardProps = {
@@ -120,7 +123,7 @@ export const PricingCard = ({
                         }}
                     >
                         <div className="text-2xl font-bold">{discount}% {dictionary.web.home.cases.pricing.discount}</div>
-                        <div className="text-xl">{dictionary.web.home.cases.pricing.months} {months} {dictionary.web.home.cases.pricing.months}</div>
+                        <div className="text-xl">X {months} {dictionary.web.home.cases.pricing.months}</div>
                         {isNewCustomer && <div className="text-sm mt-1">{dictionary.web.home.cases.pricing.newCustomerPromo}</div>}
                         {promotionName && <div className="text-sm font-bold mt-1">{promotionName}</div>}
                     </div>
@@ -234,21 +237,21 @@ export const PricingCard = ({
                                         {/* Mostrar número de canales si está disponible */}
                                         {plan.channelCount && (
                                             <div className="flex items-center mb-1">
-                                                <Check className="h-3 w-3 mr-1 text-rose-500" /> {plan.channelCount} canales
+                                                <Check className="h-3 w-3 mr-1 text-rose-500" />+ {plan.channelCount} canales
                                             </div>
                                         )}
-                                        {/* Mostrar si tiene contenido premium */}
-                                        {plan.premiumContent && (
-                                            <div className="flex items-center mb-1">
-                                                <Check className="h-3 w-3 mr-1 text-rose-500" /> TNT Sports Premium
-                                            </div>
-                                        )}
-                                        {/* Mostrar si no tiene anuncios */}
-                                        {plan.noAds && (
-                                            <div className="flex items-center mb-1">
-                                                <Check className="h-3 w-3 mr-1 text-rose-500" /> Sin anuncios
-                                            </div>
-                                        )}
+
+                                        {/* Mostrar características dinámicas */}
+                                        {plan.characteristics && plan.characteristics.length > 0 &&
+                                            plan.characteristics
+                                                .filter(char => char.value)
+                                                .map((characteristic, index) => (
+                                                    <div key={index} className="flex items-center mb-1">
+                                                        <Check className="h-3 w-3 mr-1 text-rose-500" /> {characteristic.key}
+                                                    </div>
+                                                ))
+                                        }
+
                                         <div>Luego ${(plan.regularPrice || plan.price).toLocaleString('es-CL')}/mes</div>
                                     </div>
                                 </div>

@@ -40,9 +40,13 @@ type Plan = {
     regularPrice?: number | null;
     promoMonths?: number | null;
     channelCount?: number | null;
-    premiumContent?: boolean | null;
-    noAds?: boolean | null;
     planType: string;
+    characteristics: Array<{
+        id?: string;
+        key: string;
+        value: boolean;
+        planId?: string;
+    }>;
 };
 
 type FeaturesClientProps = {

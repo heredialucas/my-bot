@@ -34,9 +34,8 @@ function adaptPromotion(promotion: any) {
             regularPrice: plan.regularPrice,
             promoMonths: plan.promoMonths,
             channelCount: plan.channelCount,
-            premiumContent: plan.premiumContent,
-            noAds: plan.noAds,
-            planType: plan.planType || 'DEFAULT'
+            planType: plan.planType || 'DEFAULT',
+            characteristics: plan.characteristics || []
         })),
         addons: promotion.addons.map((addon: any) => ({
             id: addon.id,

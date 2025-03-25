@@ -14,12 +14,14 @@ import { PlusCircle, X } from "lucide-react";
 interface ServiceItemForm {
     id?: string;
     title: string;
+    description: string | null;
     icon: string | null;
 }
 
 // Tipo que espera la API (server action)
 type ServiceItemAPI = {
     title: string;
+    description?: string;
     icon?: string;
 };
 
@@ -56,7 +58,7 @@ export default function ServiceForm({ initialData }: { initialData: ServiceData 
     const handleAddServiceItem = () => {
         setServiceItems([
             ...serviceItems,
-            { title: "", icon: null }
+            { title: "", description: null, icon: null }
         ]);
         setIsFormDirty(true);
     };
@@ -93,6 +95,7 @@ export default function ServiceForm({ initialData }: { initialData: ServiceData 
                 serviceItems: serviceItems.map(item => ({
                     id: item.id,
                     title: item.title,
+                    description: item.description || undefined,
                     icon: item.icon || undefined
                 }))
             };
@@ -267,6 +270,15 @@ export default function ServiceForm({ initialData }: { initialData: ServiceData 
                                             />
                                         </div>
                                         <div className="space-y-2">
+                                            <Label htmlFor={`item-description-${index}`}>Descripción</Label>
+                                            <Input
+                                                id={`item-description-${index}`}
+                                                value={item.description || ""}
+                                                onChange={(e) => handleServiceItemChange(index, 'description', e.target.value)}
+                                                disabled={isSubmitting}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
                                             <Label htmlFor={`item-icon-${index}`}>Icono</Label>
                                             <Select
                                                 value={item.icon || ""}
@@ -277,6 +289,36 @@ export default function ServiceForm({ initialData }: { initialData: ServiceData 
                                                     <SelectValue placeholder="Seleccionar icono" />
                                                 </SelectTrigger>
                                                 <SelectContent>
+                                                    <SelectItem value="Gauge">
+                                                        <div className="flex items-center">
+                                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-cyan-100 rounded-full">🔄</div>
+                                                            Velocímetro
+                                                        </div>
+                                                    </SelectItem>
+                                                    <SelectItem value="FileText">
+                                                        <div className="flex items-center">
+                                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-cyan-100 rounded-full">📄</div>
+                                                            Documento
+                                                        </div>
+                                                    </SelectItem>
+                                                    <SelectItem value="Calendar">
+                                                        <div className="flex items-center">
+                                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-cyan-100 rounded-full">📅</div>
+                                                            Calendario
+                                                        </div>
+                                                    </SelectItem>
+                                                    <SelectItem value="Clock">
+                                                        <div className="flex items-center">
+                                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-cyan-100 rounded-full">⏰</div>
+                                                            Reloj
+                                                        </div>
+                                                    </SelectItem>
+                                                    <SelectItem value="Wrench">
+                                                        <div className="flex items-center">
+                                                            <div className="w-6 h-6 mr-2 flex items-center justify-center bg-cyan-100 rounded-full">🔧</div>
+                                                            Herramientas
+                                                        </div>
+                                                    </SelectItem>
                                                     <SelectItem value="Wifi">
                                                         <div className="flex items-center">
                                                             <div className="w-6 h-6 mr-2 flex items-center justify-center bg-blue-100 rounded-full">📶</div>

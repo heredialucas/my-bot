@@ -5,7 +5,7 @@ import { getServiceById } from "@repo/data-services";
 export default async function EditServiceModal({ params }: { params: Promise<{ serviceId: string }> }) {
     const { serviceId } = await params;
 
-    // Obtener datos del servicio usando la Server Action
+    // Obtener datos del servicio
     const serviceData = await getServiceById(serviceId);
 
     // Si no se encuentra el servicio, mostrar un mensaje

@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Wrench, X } from "lucide-react";
+import { Check, Wrench, X, FileText, Calendar, Clock, Gauge } from "lucide-react";
 import { Button } from "@repo/design-system/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -30,6 +30,7 @@ type Promotion = {
             id: string;
             title: string;
             description?: string | null;
+            icon?: string | null;
         }>;
     }>;
     plans: Array<{
@@ -40,9 +41,13 @@ type Promotion = {
         regularPrice?: number | null;
         promoMonths?: number | null;
         channelCount?: number | null;
-        premiumContent?: boolean | null;
-        noAds?: boolean | null;
         planType: string;
+        characteristics: Array<{
+            id?: string;
+            key: string;
+            value: boolean;
+            planId?: string;
+        }>;
     }>;
     addons: Array<{
         id: string;
@@ -58,6 +63,24 @@ type DetailProps = {
     promotion: Promotion;
     selectedAddonsFromLanding?: AddOn[]; // Addons seleccionados desde la landing
     allAddons: AddOn[]; // Todos los addons disponibles
+};
+
+// Función para renderizar el ícono adecuado basado en el nombre de ícono
+const renderServiceItemIcon = (iconName: string) => {
+    switch (iconName) {
+        case 'Gauge':
+            return <Gauge className="h-5 w-5 text-white" />;
+        case 'FileText':
+            return <FileText className="h-5 w-5 text-white" />;
+        case 'Calendar':
+            return <Calendar className="h-5 w-5 text-white" />;
+        case 'Clock':
+            return <Clock className="h-5 w-5 text-white" />;
+        case 'Wrench':
+            return <Wrench className="h-5 w-5 text-white" />;
+        default:
+            return <Wrench className="h-5 w-5 text-white" />;
+    }
 };
 
 export default function Detail({ promotion, selectedAddonsFromLanding = [], allAddons = [] }: DetailProps) {
@@ -144,19 +167,20 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
 
                 <div className="space-y-6">
                     {/* Mostrar solo items del servicio en esta sección */}
-                    {serviceItems.length > 0 && (
-                        <div className="flex items-start">
+                    {serviceItems.length > 0 && serviceItems.map((item, index) => (
+                        <div key={index} className="flex items-start mb-6">
                             <div className="bg-blue-400/30 p-2 rounded-full mr-4 mt-1">
-                                <Wrench className="h-5 w-5 text-white" />
+                                {item.icon ?
+                                    renderServiceItemIcon(item.icon) :
+                                    <Wrench className="h-5 w-5 text-white" />
+                                }
                             </div>
                             <div>
-                                <h3 className="font-medium">Incluye</h3>
-                                {serviceItems.map((item, index) => (
-                                    <p key={index} className="text-sm">{item.title}</p>
-                                ))}
+                                <h3 className="font-medium">{item.title}</h3>
+                                {item.description && <p className="text-sm">{item.description}</p>}
                             </div>
                         </div>
-                    )}
+                    ))}
                 </div>
 
                 <div className="mt-16 border-t border-white/20 pt-4">
@@ -234,6 +258,20 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                                     <p className="font-bold">${plan.price.toLocaleString('es-CL')}</p>
                                     <p className="text-xs text-gray-500">primer mes</p>
                                     <p className="text-xs text-gray-500">luego ${(plan.regularPrice || plan.price + 2000).toLocaleString('es-CL')} /mes</p>
+
+                                    {/* Mostrar características del plan */}
+                                    {plan.characteristics && plan.characteristics.length > 0 && (
+                                        <div className="mt-1 flex flex-wrap gap-1">
+                                            {plan.characteristics
+                                                .filter(char => char.value)
+                                                .map((char, idx) => (
+                                                    <span key={idx} className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full">
+                                                        {char.key}
+                                                    </span>
+                                                ))
+                                            }
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}

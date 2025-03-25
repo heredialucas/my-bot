@@ -5,9 +5,28 @@ import { getAllPlans, deletePlan } from "@repo/data-services";
 import { revalidatePath } from "next/cache";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/design-system/components/ui/card";
 
+// Definir el tipo Plan con características dinámicas
+type Plan = {
+    id: string;
+    name: string;
+    price: number;
+    regularPrice: number | null;
+    promoMonths: number | null;
+    createdAt: Date;
+    updatedAt: Date;
+    channelCount: number | null;
+    planType: string;
+    characteristics: {
+        id: string;
+        key: string;
+        value: boolean;
+        planId: string;
+    }[];
+};
+
 export default async function PlansTab() {
     // Obtener todos los planes
-    const plans = await getAllPlans();
+    const plans = await getAllPlans() as Plan[];
 
     return (
         <div className="space-y-6">
@@ -53,9 +72,6 @@ export default async function PlansTab() {
                                         </form>
                                     </div>
                                 </div>
-                                <CardDescription>
-                                    {plan.description}
-                                </CardDescription>
                             </CardHeader>
                             <CardContent className="pb-4">
                                 <div className="grid grid-cols-2 gap-2 text-sm">
@@ -79,16 +95,18 @@ export default async function PlansTab() {
                                     )}
                                 </div>
                                 <div className="mt-2 flex flex-wrap gap-2">
-                                    {plan.premiumContent && (
-                                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
-                                            Contenido Premium
-                                        </span>
-                                    )}
-                                    {plan.noAds && (
-                                        <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                                            Sin Anuncios
-                                        </span>
-                                    )}
+                                    {/* Mostrar características dinámicas */}
+                                    {plan.characteristics && plan.characteristics
+                                        .filter(char => char.value)
+                                        .map((char, idx) => (
+                                            <span
+                                                key={idx}
+                                                className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
+                                            >
+                                                {char.key}
+                                            </span>
+                                        ))
+                                    }
                                 </div>
                             </CardContent>
                         </Card>

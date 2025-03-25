@@ -25,11 +25,12 @@ export default function ServiceForm() {
     // Service items (benefits)
     const [serviceItems, setServiceItems] = useState<Array<{
         title: string;
+        description?: string;
         icon?: string;
     }>>([]);
 
     const handleAddServiceItem = () => {
-        setServiceItems([...serviceItems, { title: "", icon: "CheckCircle" }]);
+        setServiceItems([...serviceItems, { title: "", description: "", icon: "CheckCircle" }]);
         setIsFormDirty(true);
     };
 
@@ -61,6 +62,7 @@ export default function ServiceForm() {
                 promoMonths: promoMonths ? parseInt(promoMonths) : null,
                 serviceItems: serviceItems.map(item => ({
                     title: item.title,
+                    description: item.description,
                     icon: item.icon || undefined
                 }))
             });
@@ -215,6 +217,16 @@ export default function ServiceForm() {
                                         className="h-7 text-sm mb-2"
                                     />
                                     <div className="space-y-1">
+                                        <Label htmlFor={`item-description-${index}`} className="text-xs">Descripción</Label>
+                                        <Input
+                                            id={`item-description-${index}`}
+                                            value={item.description}
+                                            onChange={(e) => handleServiceItemChange(index, 'description', e.target.value)}
+                                            disabled={isSubmitting}
+                                            className="h-7 text-sm mb-2"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
                                         <Label htmlFor={`item-icon-${index}`} className="text-xs">Icono</Label>
                                         <Select
                                             value={item.icon}
@@ -225,9 +237,13 @@ export default function ServiceForm() {
                                                 <SelectValue placeholder="Icono" />
                                             </SelectTrigger>
                                             <SelectContent>
+                                                <SelectItem value="Gauge">Velocímetro</SelectItem>
+                                                <SelectItem value="FileText">Documento</SelectItem>
+                                                <SelectItem value="Calendar">Calendario</SelectItem>
+                                                <SelectItem value="Clock">Reloj</SelectItem>
+                                                <SelectItem value="Wrench">Herramientas</SelectItem>
                                                 <SelectItem value="CheckCircle">Check</SelectItem>
                                                 <SelectItem value="Wifi">Wifi</SelectItem>
-                                                <SelectItem value="Clock">Reloj</SelectItem>
                                                 <SelectItem value="Zap">Rayo</SelectItem>
                                                 <SelectItem value="Shield">Escudo</SelectItem>
                                                 <SelectItem value="Star">Estrella</SelectItem>
