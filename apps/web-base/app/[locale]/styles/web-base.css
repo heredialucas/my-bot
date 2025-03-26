@@ -37,9 +37,30 @@
 
 /* Prevenir scroll horizontal en toda la aplicación */
 html, body {
+  padding: 0;
+  margin: 0;
   overflow-x: hidden;
   position: relative;
   width: 100%;
+}
+
+/* Estilos personalizados para el scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #F0436E transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #F0436E;
+  border-radius: 20px;
 }
 
 /* Animación para deslizamiento de derecha a izquierda */

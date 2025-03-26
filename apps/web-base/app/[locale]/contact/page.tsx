@@ -22,7 +22,11 @@ const Contact = async ({ params }: ContactProps) => {
   const { locale } = await params;
   const dictionary = await getDictionary(locale);
 
-  return <ContactForm dictionary={dictionary} />;
+  return (
+    <div className="container mx-auto">
+      <ContactForm dictionary={dictionary} />
+    </div>
+  );
 };
 
 export default Contact;

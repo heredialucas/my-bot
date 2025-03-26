@@ -289,7 +289,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                         <div className="bg-rose-500 text-white p-3 text-center rounded-t-lg">
                             <h3 className="font-medium">TV Online. Elige tu plan ZAPPING</h3>
                         </div>
-                        <div className="bg-gray-900 text-white rounded-b-lg max-h-[220px] overflow-y-auto">
+                        <div className="bg-gray-900 text-white rounded-b-lg max-h-[220px] overflow-y-auto custom-scrollbar">
                             {sortedPlans.length > 0 && (
                                 <div className="flex flex-col">
                                     {sortedPlans.map((plan) => (

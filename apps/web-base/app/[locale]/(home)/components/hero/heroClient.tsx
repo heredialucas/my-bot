@@ -17,9 +17,9 @@ export function HeroClient({ dictionary, sliderImages }: HeroClientProps) {
     const { selectedOption, setSelectedOption } = useServiceStore();
 
     return (
-        <div className="flex flex-col w-full bg-white">
+        <div className="container mx-auto flex flex-col w-full  bg-white px-0">
             {/* Swiper Carousel Section */}
-            <div className="w-full">
+            <div className="w-full h-full">
                 <Swiper
                     spaceBetween={0}
                     centeredSlides={true}
@@ -42,7 +42,7 @@ export function HeroClient({ dictionary, sliderImages }: HeroClientProps) {
                                     src={slide.url}
                                     alt="Hero slide"
                                     fill
-                                    className="object-contain md:object-cover"
+                                    className="object-cover"
                                     sizes="100vw"
                                     priority
                                 />

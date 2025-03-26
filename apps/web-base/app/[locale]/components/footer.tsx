@@ -68,7 +68,7 @@ export const Footer = () => (
           {/* Social Media Icons */}
           <div className="flex space-x-4">
             <a
-              href="https://facebook.com/netfull"
+              href="https://www.facebook.com/people/NetFull-Fibra/61551999591754/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-700 hover:text-blue-600"
@@ -79,7 +79,7 @@ export const Footer = () => (
               </svg>
             </a>
             <a
-              href="https://instagram.com/netfull"
+              href="https://www.instagram.com/netfullfibra/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-700 hover:text-blue-600"

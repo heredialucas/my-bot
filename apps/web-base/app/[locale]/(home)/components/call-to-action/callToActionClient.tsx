@@ -1,7 +1,6 @@
 'use client';
 
 import { Dictionary } from '@repo/internationalization';
-import { Button } from '@repo/design-system/components/ui/button';
 
 type CallToActionClientProps = {
     dictionary: Dictionary;
@@ -29,12 +28,14 @@ export function CallToActionClient({ dictionary, featuredService }: CallToAction
                     <p className="text-sm sm:text-base text-gray-700 mb-6 sm:mb-8">
                         Revisa tu cobertura y contrata Internet Hogar
                     </p>
-                    <Button
+                    <a
+                        href="https://api.whatsapp.com/send?phone=56994833938&text=Hola,%20me%20gustar%C3%ADa%20contratar%20Fibra%20%C3%93ptica%20Netfull"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="bg-cyan-300 hover:bg-cyan-400 text-blue-900 font-semibold py-2 px-6 sm:py-3 sm:px-8 rounded-md text-base sm:text-lg"
-                        onClick={() => { }}
                     >
                         Contratar
-                    </Button>
+                    </a>
                 </div>
             </div>
         </div>

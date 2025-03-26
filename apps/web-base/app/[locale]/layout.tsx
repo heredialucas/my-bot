@@ -10,6 +10,16 @@ import type { ReactNode } from 'react';
 import { Footer } from './components/footer';
 import { Header } from './components/header';
 import { FloatingContactButtons } from './components/floating-contact-buttons';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'NetFull',
+  description: 'Internet de alta velocidad',
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
+};
 
 type RootLayoutProperties = {
   readonly children: ReactNode;

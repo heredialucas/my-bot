@@ -178,7 +178,7 @@ export const PricingCard = ({
                             {showZappingButton && sortedZappingPlans.length > 0 && (
                                 <button
                                     onClick={handleToggleZappingPlans}
-                                    className="w-full max-w-[280px] flex items-center justify-center rounded-lg bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 px-4 h-auto transition-transform active:scale-95"
+                                    className="w-full max-w-[280px] flex items-center justify-center rounded-lg bg-[#F0436E] text-white hover:bg-rose-600 font-medium text-sm py-2 px-4 h-auto transition-transform active:scale-95"
                                 >
                                     <Tv className="h-4 w-4 mr-2" />
                                     {selectedZappingPlan ? `Cambiar plan ${selectedZappingPlan.name}` : dictionary.web.home.cases.pricing.chooseTVPlan}
@@ -190,55 +190,57 @@ export const PricingCard = ({
 
                 {/* Vista de selección de planes de Zapping (slide a la derecha) */}
                 <div
-                    className="absolute top-0 left-full w-full h-full transition-all duration-500 ease-in-out bg-white"
+                    className="absolute top-0 left-full w-full h-full transition-all duration-500 ease-in-out bg-gray-900"
                     style={{
                         transform: showZappingPlans ? 'translateX(-100%)' : 'translateX(0)',
                     }}
                 >
-                    <div className="bg-rose-500 py-3 sm:py-4 px-3 sm:px-4 text-center text-white sticky sm:static top-0 z-10">
+                    <div className="bg-[#F0436E] py-3 sm:py-4 px-3 sm:px-4 text-center text-white sticky top-0 z-10">
                         <h3 className="text-lg sm:text-xl font-bold">Elegí tu plan Zapping</h3>
                     </div>
 
-                    <div className="p-4 sm:p-6 flex flex-col h-[calc(100%-56px)] sm:h-[calc(100%-68px)] overflow-y-auto sm:overflow-visible">
-                        <button
-                            onClick={handleToggleZappingPlans}
-                            className="flex items-center text-rose-500 mb-3 sm:mb-4 text-sm font-medium transition-transform active:scale-95 sticky sm:static top-0 bg-white sm:bg-transparent z-10 py-1 sm:py-0"
-                        >
-                            <ChevronLeft className="h-4 w-4 mr-1" /> Volver a mi plan
-                        </button>
+                    <button
+                        onClick={handleToggleZappingPlans}
+                        className="absolute right-4 top-20 flex items-center text-white text-sm font-medium transition-transform active:scale-95 z-20"
+                    >
+                        <ChevronLeft className="h-4 w-4 mr-1" /> Volver a mi plan
+                    </button>
 
-                        <div className="bg-gray-900 rounded-xl sm:rounded-3xl overflow-auto flex-grow p-4 sm:p-6 space-y-4 sm:space-y-0">
+                    <div
+                        className="px-4 pt-8 pb-4 h-[calc(100%-68px)] overflow-y-auto custom-scrollbar"
+                    >
+                        <div className="space-y-6">
                             {sortedZappingPlans.map((plan) => (
                                 <div
                                     key={plan.id}
-                                    className="sm:mb-8 sm:last:mb-0 cursor-pointer"
+                                    className="cursor-pointer hover:bg-gray-800 rounded-lg p-4 transition-colors"
                                     onClick={() => handleZappingPlanSelect(plan)}
                                 >
                                     <div className="flex items-center gap-3 mb-2">
                                         <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 ${selectedZappingPlan?.id === plan.id ? 'border-white bg-transparent' : 'border-gray-400'} flex items-center justify-center`}>
                                             {selectedZappingPlan?.id === plan.id && <div className="w-3 h-3 bg-white rounded-full"></div>}
                                         </div>
-                                        <span className="text-white font-medium text-lg sm:text-xl">{plan.name}</span>
+                                        <span className="text-white font-medium text-lg">{plan.name}</span>
                                     </div>
 
-                                    <div className="ml-8 sm:ml-9">
+                                    <div className="ml-8">
                                         <div className="flex items-baseline gap-2 mb-1">
-                                            <span className="text-white text-xl sm:text-2xl font-bold">${plan.price.toLocaleString('es-CL')}</span>
-                                            <span className="text-rose-400 text-xs sm:text-sm">primer mes</span>
+                                            <span className="text-white text-xl font-bold">${plan.price.toLocaleString('es-CL')}</span>
+                                            <span className="text-[#F0436E] text-xs">primer mes</span>
                                         </div>
-                                        <div className="text-gray-400 text-xs sm:text-sm mb-2 sm:mb-3">
+                                        <div className="text-gray-400 text-xs mb-2">
                                             luego ${(plan.regularPrice || plan.price + 2000).toLocaleString('es-CL')} /mes
                                         </div>
 
-                                        <div className="text-xs sm:text-sm text-gray-400 uppercase mb-1">INCLUYE</div>
+                                        <div className="text-xs text-gray-400 uppercase mb-1">INCLUYE</div>
                                         <div className="flex items-center gap-2 mb-2 text-sm">
                                             <span className="text-white">Zapping con</span>
-                                            <span className="text-rose-400">+{plan.channelCount} canales</span>
+                                            <span className="text-[#F0436E]">+{plan.channelCount} canales</span>
                                             <ArrowRight className="h-4 w-4 text-white" />
                                         </div>
 
                                         {plan.characteristics && plan.characteristics.length > 0 && (
-                                            <div className="mt-0 space-y-1">
+                                            <div className="space-y-1">
                                                 {plan.characteristics
                                                     .filter(char => char.value)
                                                     .map((char, idx) => (
@@ -251,7 +253,7 @@ export const PricingCard = ({
                                         )}
 
                                         <div className="mt-2">
-                                            <span className="bg-rose-500 text-xs text-white px-2 py-1 rounded-md">
+                                            <span className="bg-[#F0436E] text-xs text-white px-2 py-1 rounded-md">
                                                 ZAPPING
                                             </span>
                                         </div>
@@ -259,13 +261,6 @@ export const PricingCard = ({
                                 </div>
                             ))}
                         </div>
-
-                        <Button
-                            onClick={() => selectedZappingPlan ? handleZappingPlanSelect(selectedZappingPlan) : setShowZappingPlans(false)}
-                            className="mt-4 self-center w-full max-w-[280px] rounded-lg bg-rose-500 text-white hover:bg-rose-600 font-medium text-sm py-2 h-auto transition-transform active:scale-95"
-                        >
-                            {selectedZappingPlan ? 'Seleccionar plan' : 'Volver sin seleccionar'}
-                        </Button>
                     </div>
                 </div>
             </div>

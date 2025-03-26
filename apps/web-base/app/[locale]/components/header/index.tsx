@@ -86,8 +86,8 @@ export const Header = ({ dictionary }: HeaderProps) => {
   }, [isOpen]);
 
   return (
-    <header className="sticky top-0 left-0 z-40 w-full bg-[#1D4971] text-white">
-      <div className="container relative mx-auto flex min-h-20 flex-row items-center px-4 lg:px-6">
+    <header className="container mx-auto sticky top-0 left-0 z-40 w-full bg-[#1D4971] text-white">
+      <div className=" relative flex min-h-20 flex-row items-center px-4 lg:px-6">
         {/* Logo on the left */}
         <div className="flex items-center gap-2">
           <Link href="/" className="relative w-20 h-20 rounded-full overflow-hidden flex items-center justify-center">
@@ -164,14 +164,14 @@ export const Header = ({ dictionary }: HeaderProps) => {
           <>
             {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
               onClick={() => setOpen(false)}
             />
 
             {/* Mobile menu */}
             <div
               id="mobile-menu"
-              className="fixed top-20 right-4 w-[calc(100%-2rem)] max-w-sm rounded-lg bg-[#1D4971] py-6 shadow-lg z-50 lg:hidden"
+              className="fixed top-20 left-0 w-full bg-[#1D4971] py-6 shadow-lg z-40 lg:hidden"
             >
               <nav className="flex flex-col gap-2 px-4">
                 {navigationItems.map((item, index) => (

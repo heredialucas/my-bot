@@ -145,10 +145,10 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
               <div>
                 <h3 className="text-lg sm:text-xl font-semibold text-indigo-600 mb-3 sm:mb-4">{dictionary.web.contact.hero.social.title}</h3>
                 <div className="flex gap-3">
-                  <Link href="https://www.instagram.com" target="_blank" className="p-2 bg-white rounded-full">
+                  <Link href="https://www.instagram.com/netfullfibra/" target="_blank" className="p-2 bg-white rounded-full">
                     <Instagram className="w-5 h-5 sm:w-6 sm:h-6" />
                   </Link>
-                  <Link href="https://www.facebook.com" target="_blank" className="p-2 bg-white rounded-full">
+                  <Link href="https://www.facebook.com/people/NetFull-Fibra/61551999591754/" target="_blank" className="p-2 bg-white rounded-full">
                     <Facebook className="w-5 h-5 sm:w-6 sm:h-6" />
                   </Link>
                 </div>
