@@ -14,7 +14,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'NetFull',
-  description: 'Internet de alta velocidad',
+  description: 'Internet de alta velocidad. El mejor servicio de internet para tu hogar y empresa.',
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',
