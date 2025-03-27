@@ -3,67 +3,11 @@
 import { Check, Wrench, X, FileText, Calendar, Clock, Gauge } from "lucide-react";
 import { Button } from "@repo/design-system/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AddOn } from "../../../../components/features/types";
-
-// Tipos para la promoción
-type Promotion = {
-    id: string;
-    name: string;
-    description?: string | null;
-    discount: number;
-    duration: number;
-    active: boolean;
-    color?: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-    services: Array<{
-        id: string;
-        name: string;
-        description?: string | null;
-        icon?: string | null;
-        speed?: number | null;
-        price?: number | null;
-        regularPrice?: number | null;
-        promoMonths?: number | null;
-        serviceItems: Array<{
-            id: string;
-            title: string;
-            description?: string | null;
-            icon?: string | null;
-        }>;
-    }>;
-    plans: Array<{
-        id: string;
-        name: string;
-        description?: string | null;
-        price: number;
-        regularPrice?: number | null;
-        promoMonths?: number | null;
-        channelCount?: number | null;
-        planType: string;
-        characteristics: Array<{
-            id?: string;
-            key: string;
-            value: boolean;
-            planId?: string;
-        }>;
-    }>;
-    addons: Array<{
-        id: string;
-        name: string;
-        description?: string | null;
-        price: number;
-        icon?: string | null;
-        color?: string | null;
-    }>;
-};
-
-type DetailProps = {
-    promotion: Promotion;
-    selectedAddonsFromLanding?: AddOn[]; // Addons seleccionados desde la landing
-    allAddons: AddOn[]; // Todos los addons disponibles
-};
+import { CallToActionBtn } from "@/app/[locale]/components/callToActionBtn";
+import { useServiceStore } from '@/store';
+import { DetailProps } from "./types";
 
 // Función para renderizar el ícono adecuado basado en el nombre de ícono
 const renderServiceItemIcon = (iconName: string) => {
@@ -85,6 +29,22 @@ const renderServiceItemIcon = (iconName: string) => {
 
 export default function Detail({ promotion, selectedAddonsFromLanding = [], allAddons = [] }: DetailProps) {
     const router = useRouter();
+
+    // Ref para controlar la inicialización y evitar el bucle infinito
+    const initialized = useRef(false);
+
+    // Usar el nuevo store
+    const {
+        setSelectedPromotion,
+        setSelectedService,
+        selectedPlan,
+        setSelectedPlan,
+        selectedAddons,
+        setSelectedAddons,
+        toggleAddon,
+        getFormattedSelectionText
+    } = useServiceStore();
+
     // Ordenar los planes por precio (menor a mayor)
     const sortedPlans = [...promotion.plans].sort((a, b) => a.price - b.price);
 
@@ -93,13 +53,47 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
         sortedPlans.length > 0 ? sortedPlans[0].id : null
     );
 
-    // Inicializar directamente los addons seleccionados 
-    const initialAddonState: Record<string, boolean> = {};
-    selectedAddonsFromLanding.forEach(addon => {
-        initialAddonState[addon.id] = true;
-    });
+    // Efecto para sincronizar los addons del landing con el store
+    useEffect(() => {
+        // Si ya inicializamos, no volvemos a ejecutar este efecto
+        if (initialized.current) return;
 
-    const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>(initialAddonState);
+        // Marcamos como inicializado
+        initialized.current = true;
+
+        if (selectedAddonsFromLanding.length > 0) {
+            setSelectedAddons(selectedAddonsFromLanding);
+        }
+
+        // Establecer la promoción seleccionada
+        setSelectedPromotion({
+            id: promotion.id,
+            name: promotion.name,
+            discount: promotion.discount,
+            duration: promotion.duration
+        });
+
+        // Obtener el primer servicio de la promoción
+        if (promotion.services.length > 0) {
+            const service = promotion.services[0];
+            setSelectedService({
+                id: service.id,
+                name: service.name,
+                speed: service.speed,
+                price: service.price,
+                regularPrice: service.regularPrice,
+                serviceItems: service.serviceItems
+            });
+        }
+
+        // Si hay un plan seleccionado en el landing, establecerlo
+        if (selectedPlanId) {
+            const plan = promotion.plans.find(p => p.id === selectedPlanId);
+            if (plan) {
+                setSelectedPlan(plan);
+            }
+        }
+    }, []); // Dependencias vacías para ejecutar solo una vez
 
     // Función para cerrar el modal
     const handleClose = () => {
@@ -119,26 +113,54 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
     // Manejar selección de plan
     const handlePlanSelection = (planId: string) => {
         setSelectedPlanId(planId);
+        const selectedPlan = promotion.plans.find(p => p.id === planId);
+        if (selectedPlan) {
+            setSelectedPlan(selectedPlan);
+        }
     };
 
     // Manejar selección de addon
-    const toggleAddon = (addonId: string) => {
-        setSelectedAddons(prev => ({
-            ...prev,
-            [addonId]: !prev[addonId]
-        }));
+    const handleToggleAddon = (addon: AddOn) => {
+        toggleAddon(addon);
     };
 
     // Encontrar el plan seleccionado por ID
-    const selectedPlan = promotion.plans.find(plan => plan.id === selectedPlanId) || sortedPlans[0];
-    const selectedPlanPrice = selectedPlan?.price || 0;
+    const displayPlan = promotion.plans.find(plan => plan.id === selectedPlanId) || sortedPlans[0];
+    const selectedPlanPrice = displayPlan?.price || 0;
 
-    // Usar los addons generales en lugar de los de la promoción
-    const addonsTotal = allAddons
-        .filter(addon => selectedAddons[addon.id])
-        .reduce((total, addon) => total + addon.price, 0);
+    // Calcular el total de addons
+    const addonsTotal = selectedAddons.reduce((total, addon) => total + addon.price, 0);
 
     const totalPrice = price + selectedPlanPrice + addonsTotal;
+
+    // Generar mensaje personalizado para esta selección específica
+    const getDetailFormattedText = () => {
+        const parts = ['Hola, me gustaría contratar:'];
+
+        // Agregar información del plan de internet
+        parts.push(`- Plan Fibra ${speed} Mbps por $${price.toLocaleString('es-CL')}`);
+
+        // Agregar plan de TV si está seleccionado
+        if (displayPlan) {
+            const channels = displayPlan.channelCount
+                ? `con ${displayPlan.channelCount} canales`
+                : '';
+            parts.push(`- Plan ${displayPlan.name} ${channels} por $${displayPlan.price.toLocaleString('es-CL')}`);
+        }
+
+        // Agregar complementos seleccionados
+        if (selectedAddons.length > 0) {
+            const addonsList = selectedAddons.map(addon =>
+                `${addon.name} por $${addon.price.toLocaleString('es-CL')}`
+            ).join(', ');
+            parts.push(`- Complementos: ${addonsList}`);
+        }
+
+        // Agregar precio total mensual
+        parts.push(`\nPrecio total mensual: $${totalPrice.toLocaleString('es-CL')}`);
+
+        return parts.join('\n');
+    };
 
     return (
         <div className="flex flex-col lg:flex-row rounded-lg overflow-hidden relative w-full">
@@ -232,9 +254,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                         <p className="text-sm text-center">¡Mes {promotion.duration} pagas ${regularPrice.toLocaleString('es-CL')}</p>
 
                         <div className="flex justify-center mt-6">
-                            <Button className="w-44 bg-cyan-300 text-black hover:bg-cyan-400 rounded-full py-2 text-base">
-                                Lo quiero!
-                            </Button>
+                            <CallToActionBtn options={[getDetailFormattedText()]} />
                         </div>
                     </div>
                 </div>
@@ -258,29 +278,25 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                         </div>
 
                         {/* Mostrar el plan seleccionado si hay uno */}
-                        {selectedPlan && (
+                        {displayPlan && (
                             <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                                <span>Plan {selectedPlan.name}</span>
-                                <span className="font-medium">${selectedPlan.price.toLocaleString('es-CL')}</span>
+                                <span>Plan {displayPlan.name}</span>
+                                <span className="font-medium">${displayPlan.price.toLocaleString('es-CL')}</span>
                             </div>
                         )}
 
-                        {/* Mostrar los addons seleccionados (usando allAddons) */}
-                        {allAddons.map((addon, index) => (
-                            selectedAddons[addon.id] && (
-                                <div key={index} className="flex justify-between items-center border-b border-gray-100 pb-2">
-                                    <span>{addon.name}</span>
-                                    <span className="font-medium">${addon.price.toLocaleString('es-CL')}</span>
-                                </div>
-                            )
+                        {/* Mostrar los addons seleccionados */}
+                        {selectedAddons.map((addon, index) => (
+                            <div key={index} className="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <span>{addon.name}</span>
+                                <span className="font-medium">${addon.price.toLocaleString('es-CL')}</span>
+                            </div>
                         ))}
                     </div>
                 </div>
 
                 <div className="flex justify-center mb-8">
-                    <Button className="w-44 bg-cyan-300 text-black hover:bg-cyan-400 rounded-full py-2 text-base">
-                        ¡Lo quiero!
-                    </Button>
+                    <CallToActionBtn options={[getDetailFormattedText()]} />
                 </div>
 
                 {/* Sección de selección de plan Zapping con fondo oscuro */}
@@ -341,18 +357,18 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                     </div>
                 )}
 
-                {/* Footer con addons como en la imagen de referencia (usando allAddons) */}
+                {/* Footer con addons como en la imagen de referencia */}
                 {allAddons.length > 0 && (
                     <div className="mt-6 pt-3 border-t border-gray-200">
                         {allAddons.map((addon, index) => (
                             <div
                                 key={index}
                                 className="flex items-center justify-center p-3 mx-auto border border-dashed border-gray-300 rounded-lg cursor-pointer mb-2.5"
-                                onClick={() => toggleAddon(addon.id)}
+                                onClick={() => handleToggleAddon(addon)}
                             >
                                 <div className="flex items-center gap-2">
-                                    <div className={`w-5 h-5 border-2 ${selectedAddons[addon.id] ? 'bg-indigo-600 border-indigo-600' : 'border-gray-400'} rounded-sm flex items-center justify-center`}>
-                                        {selectedAddons[addon.id] && <Check className="h-3 w-3 text-white" />}
+                                    <div className={`w-5 h-5 border-2 ${selectedAddons.some(a => a.id === addon.id) ? 'bg-indigo-600 border-indigo-600' : 'border-gray-400'} rounded-sm flex items-center justify-center`}>
+                                        {selectedAddons.some(a => a.id === addon.id) && <Check className="h-3 w-3 text-white" />}
                                     </div>
                                     <span className="text-base">Agregar {addon.name} por <span className="text-[#4900FF]">${addon.price.toLocaleString('es-CL')}</span>/mes</span>
                                 </div>

@@ -1,50 +1,14 @@
 "use client";
 
 import { Button } from '@repo/design-system/components/ui/button';
-import type { Dictionary } from '@repo/internationalization';
-import { ArrowRight, Check, ChevronLeft, Tv } from 'lucide-react';
+import { ArrowRight, ChevronLeft, Tv } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
-import { AddOn } from './types';
-
-// Plan type from database schema
-type Plan = {
-    id: string;
-    name: string;
-    price: number;
-    regularPrice?: number | null;
-    promoMonths?: number | null;
-    channelCount?: number | null;
-    planType: string;
-    characteristics: Array<{
-        id?: string;
-        key: string;
-        value: boolean;
-        planId?: string;
-    }>;
-};
-
-type PricingCardProps = {
-    discount: number;
-    months: number;
-    planType: string;
-    speed: number;
-    price: number;
-    originalPrice: number;
-    isNewCustomer?: boolean;
-    includeAddons?: boolean;
-    includeInternetTV?: boolean;
-    showZappingButton?: boolean;
-    dictionary: Dictionary;
-    selectedAddons?: AddOn[]; // Lista de complementos seleccionados
-    promotionColor?: string; // Color de la promoción
-    promotionName?: string; // Nombre de la promoción
-    promotionId?: string; // ID de la promoción
-    promotionDescription?: string; // Descripción de la promoción
-    serviceItems?: any[]; // Elementos del servicio
-    zappingPlans?: Plan[]; // Los planes de Zapping desde la DB
-};
+import { useState, useEffect, useMemo } from 'react';
+import { CallToActionBtn } from '@/app/[locale]/components/callToActionBtn';
+import { PricingCardProps, Plan as FeaturePlan } from './types';
+import { useServiceStore } from '@/store';
+import { Plan as StorePlan } from '@/store/types';
 
 export const PricingCard = ({
     discount,
@@ -64,21 +28,61 @@ export const PricingCard = ({
     promotionId,
     promotionDescription,
     serviceItems = [],
-    zappingPlans = []
+    zappingPlans = [],
+    serviceId
 }: PricingCardProps) => {
     const params = useParams();
     const locale = params.locale as string;
 
+    // Obtenemos funciones y datos del store
+    const {
+        setSelectedService,
+        selectedPlan,
+        setSelectedPlan,
+        selectedAddons: storeAddons
+    } = useServiceStore();
+
     // Estado para controlar la vista de planes de Zapping
     const [showZappingPlans, setShowZappingPlans] = useState(false);
 
-    // Estado para el plan de Zapping seleccionado
-    const [selectedZappingPlan, setSelectedZappingPlan] = useState<Plan | null>(null);
+    // Estado local para el plan de zapping seleccionado en esta tarjeta
+    const [localSelectedPlan, setLocalSelectedPlan] = useState<FeaturePlan | null>(null);
+
+    // Guardar el servicio seleccionado cuando se muestra esta tarjeta
+    useEffect(() => {
+        if (serviceId) {
+            setSelectedService({
+                id: serviceId,
+                name: planType,
+                speed: speed,
+                price: price,
+                regularPrice: originalPrice
+            });
+        }
+    }, [serviceId, planType, speed, price, originalPrice, setSelectedService]);
+
+    useEffect(() => {
+        // Sincronizar el plan local con el del store si corresponde a esta tarjeta
+        if (selectedPlan && (!localSelectedPlan || localSelectedPlan.id !== selectedPlan.id)) {
+            // Convertir el plan del store al tipo de plan de features
+            const convertedPlan: FeaturePlan = {
+                id: selectedPlan.id,
+                name: selectedPlan.name,
+                price: selectedPlan.price,
+                regularPrice: selectedPlan.regularPrice,
+                channelCount: selectedPlan.channelCount,
+                planType: selectedPlan.planType,
+                characteristics: selectedPlan.characteristics || []
+            };
+            setLocalSelectedPlan(convertedPlan);
+        }
+    }, [selectedPlan, localSelectedPlan]);
 
     // Calcular el precio total con todos los addons seleccionados
     const addonsTotal = selectedAddons.reduce((total, addon) => total + addon.price, 0);
+
     // Agregar el precio del plan de Zapping seleccionado
-    const zappingPrice = selectedZappingPlan ? selectedZappingPlan.price : 0;
+    const zappingPrice = localSelectedPlan ? localSelectedPlan.price : 0;
     const totalPrice = price + (includeAddons ? addonsTotal : 0) + zappingPrice;
 
     // Construir la URL con los IDs de los addons seleccionados
@@ -86,8 +90,20 @@ export const PricingCard = ({
     const detailUrl = `/${locale}/detail/${promotionId}${selectedAddonIds ? `?selectedAddons=${selectedAddonIds}` : ''}`;
 
     // Manejar la selección de un plan de Zapping
-    const handleZappingPlanSelect = (plan: Plan) => {
-        setSelectedZappingPlan(plan);
+    const handleZappingPlanSelect = (plan: FeaturePlan) => {
+        setLocalSelectedPlan(plan);
+
+        // Convertir el plan de features al tipo de plan del store
+        const storePlan: StorePlan = {
+            id: plan.id,
+            name: plan.name,
+            price: plan.price,
+            regularPrice: plan.regularPrice,
+            channelCount: plan.channelCount,
+            planType: plan.planType,
+            characteristics: plan.characteristics
+        };
+        setSelectedPlan(storePlan);
         setShowZappingPlans(false);
     };
 
@@ -101,6 +117,40 @@ export const PricingCard = ({
 
     // Ordenar los planes de Zapping por precio
     const sortedZappingPlans = uniqueZappingPlans.sort((a, b) => a.price - b.price);
+
+    // Generar el mensaje formateado para esta tarjeta específica
+    const getCardFormattedText = () => {
+        const parts = ['Hola, me gustaría contratar:'];
+
+        // Agregar información del plan de internet
+        parts.push(`- Plan Fibra ${speed} Mbps por $${price.toLocaleString('es-CL')}`);
+
+        // Agregar plan de Zapping si está seleccionado
+        if (localSelectedPlan) {
+            const channels = localSelectedPlan.channelCount
+                ? `con ${localSelectedPlan.channelCount} canales`
+                : '';
+            parts.push(`- Plan ${localSelectedPlan.name} ${channels} por $${localSelectedPlan.price.toLocaleString('es-CL')}`);
+        }
+
+        // Agregar complementos seleccionados
+        if (selectedAddons.length > 0) {
+            const addonsList = selectedAddons.map(addon =>
+                `${addon.name} por $${addon.price.toLocaleString('es-CL')}`
+            ).join(', ');
+            parts.push(`- Complementos: ${addonsList}`);
+        }
+
+        // Agregar precio total mensual
+        parts.push(`\nPrecio total mensual: $${totalPrice.toLocaleString('es-CL')}`);
+
+        return parts.join('\n');
+    };
+
+    // Memoizar el texto formateado para evitar recálculos innecesarios
+    const formattedMessage = useMemo(getCardFormattedText, [
+        speed, price, localSelectedPlan, selectedAddons, totalPrice
+    ]);
 
     return (
         <div className="flex flex-col rounded-lg bg-white overflow-hidden h-auto sm:h-[650px] relative" style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
@@ -133,13 +183,12 @@ export const PricingCard = ({
                             <div className="text-gray-700">{dictionary.web.home.cases.pricing.monthly}</div>
                             <div className="text-indigo-600 text-4xl sm:text-5xl font-bold mb-2">${totalPrice.toLocaleString('es-CL')}</div>
                             <div className="text-sm text-gray-500">
-                                {dictionary.web.home.cases.pricing.laterMonthPrice.replace('{months}', months.toString())}
-                                ${(originalPrice + (selectedZappingPlan ? selectedZappingPlan.regularPrice || selectedZappingPlan.price : 0)).toLocaleString('es-CL')}
+                                {dictionary.web.home.cases.pricing.laterMonthPrice.replace('{months}', months.toString())} ${(originalPrice + (localSelectedPlan ? localSelectedPlan.regularPrice || localSelectedPlan.price : 0) + addonsTotal).toLocaleString('es-CL')}
                             </div>
                         </div>
 
                         {/* Service details section - only show when addons are included or Zapping plan is selected */}
-                        {(includeAddons && selectedAddons.length > 0) || selectedZappingPlan ? (
+                        {(includeAddons && selectedAddons.length > 0) || localSelectedPlan ? (
                             <div className="w-full mb-4 sm:mb-auto">
                                 <div className="text-gray-600 text-sm font-medium mb-1">{dictionary.web.home.cases.pricing.serviceDetails}</div>
                                 <div className="flex justify-between text-sm py-1 border-b border-gray-100">
@@ -147,10 +196,10 @@ export const PricingCard = ({
                                     <span className="text-gray-700">${price.toLocaleString('es-CL')}</span>
                                 </div>
 
-                                {selectedZappingPlan && (
+                                {localSelectedPlan && (
                                     <div className="flex justify-between text-sm py-1 border-b border-gray-100">
-                                        <span className="text-gray-500">• Plan {selectedZappingPlan.name}</span>
-                                        <span className="text-gray-700">${selectedZappingPlan.price.toLocaleString('es-CL')}</span>
+                                        <span className="text-gray-500">• Plan {localSelectedPlan.name}</span>
+                                        <span className="text-gray-700">${localSelectedPlan.price.toLocaleString('es-CL')}</span>
                                     </div>
                                 )}
 
@@ -164,9 +213,7 @@ export const PricingCard = ({
                         ) : null}
 
                         <div className="flex flex-col items-center mt-auto w-full space-y-3 sm:space-y-4">
-                            <Button className="w-full max-w-[280px] rounded-lg bg-cyan-300 text-black hover:bg-cyan-400 font-medium text-sm py-2 px-4 h-auto">
-                                {dictionary.web.home.cases.pricing.checkAvailability}
-                            </Button>
+                            <CallToActionBtn options={[formattedMessage]} />
 
                             <Link
                                 href={detailUrl}
@@ -181,7 +228,7 @@ export const PricingCard = ({
                                     className="w-full max-w-[280px] flex items-center justify-center rounded-lg bg-[#F0436E] text-white hover:bg-rose-600 font-medium text-sm py-2 px-4 h-auto transition-transform active:scale-95"
                                 >
                                     <Tv className="h-4 w-4 mr-2" />
-                                    {selectedZappingPlan ? `Cambiar plan ${selectedZappingPlan.name}` : dictionary.web.home.cases.pricing.chooseTVPlan}
+                                    {localSelectedPlan ? `Modificar plan Zapping` : dictionary.web.home.cases.pricing.chooseTVPlan}
                                 </button>
                             )}
                         </div>
@@ -217,8 +264,8 @@ export const PricingCard = ({
                                     onClick={() => handleZappingPlanSelect(plan)}
                                 >
                                     <div className="flex items-center gap-3 mb-2">
-                                        <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 ${selectedZappingPlan?.id === plan.id ? 'border-white bg-transparent' : 'border-gray-400'} flex items-center justify-center`}>
-                                            {selectedZappingPlan?.id === plan.id && <div className="w-3 h-3 bg-white rounded-full"></div>}
+                                        <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 ${localSelectedPlan?.id === plan.id ? 'border-white bg-transparent' : 'border-gray-400'} flex items-center justify-center`}>
+                                            {localSelectedPlan?.id === plan.id && <div className="w-3 h-3 bg-white rounded-full"></div>}
                                         </div>
                                         <span className="text-white font-medium text-lg">{plan.name}</span>
                                     </div>

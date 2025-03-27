@@ -9,7 +9,7 @@ import { getDictionary } from '@repo/internationalization';
 import type { ReactNode } from 'react';
 import { Footer } from './components/footer';
 import { Header } from './components/header';
-import { FloatingContactButtons } from './components/floating-contact-buttons';
+import { FloatingContactButtons } from './components/floatingContactBtn';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

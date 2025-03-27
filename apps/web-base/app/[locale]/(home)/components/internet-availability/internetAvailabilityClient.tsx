@@ -105,12 +105,12 @@ export function InternetAvailabilityClient({ dictionary, bestDeal }: InternetAva
         <div className="w-full py-8 sm:py-16 bg-white">
             <div className="container mx-auto px-4 max-w-6xl">
                 {/* Fiber Optic Plans Heading */}
-                <div className="text-center mb-3 sm:mb-4">
+                <div className="text-center mb-3 sm:mb-4" id="availability-form">
                     <h2 className="text-2xl sm:text-4xl font-bold">Planes fibra óptica</h2>
                 </div>
 
                 {/* Speed and Price */}
-                <div className="text-center mb-8 sm:mb-12">
+                <div className="text-center mb-8 sm:mb-12" >
                     <p className="text-3xl sm:text-5xl font-bold">
                         <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 text-transparent bg-clip-text">{displaySpeed} Megas a ${displayPrice}</span>
                     </p>

@@ -5,10 +5,9 @@ import { useState } from 'react';
 type QuestionProps = {
     question: string;
     answer: string;
-    value: string;
 };
 
-export const FaqQuestion = ({ question, answer, value }: QuestionProps) => {
+export const FaqQuestion = ({ question, answer }: QuestionProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
     // Custom accordion without the default arrow
@@ -20,7 +19,7 @@ export const FaqQuestion = ({ question, answer, value }: QuestionProps) => {
                 style={{ borderBottomLeftRadius: isOpen ? 0 : undefined, borderBottomRightRadius: isOpen ? 0 : undefined }}
             >
                 <span className="text-sm sm:text-base text-gray-800 font-medium">{question}</span>
-                <div className="bg-black rounded-full p-2 sm:p-3 flex items-center justify-center ml-2 sm:ml-4 flex-shrink-0">
+                <div className="bg-indigo-600 rounded-full p-2 sm:p-3 flex items-center justify-center ml-2 sm:ml-4 flex-shrink-0">
                     <svg
                         width="16"
                         height="16"
