@@ -6,8 +6,33 @@ import PlansTab from "./PlansTab"
 import PromotionsTab from "./PromotionsTab"
 import AddonsTab from "./AddonsTab"
 import ImageTab from "./ImageTab"
+import { getAllServices, deleteService, getAllPlans, deletePlan, getAllAddons } from "@repo/data-services"
+import { revalidatePath } from "next/cache"
 
 export default async function DashboardContent() {
+    // Obtener todos los servicios para ServicesTab
+    const services = await getAllServices();
+
+    // Obtener todos los planes para PlansTab
+    const plans = await getAllPlans();
+
+    // Obtener todos los addons para AddonsTab
+    const addons = await getAllAddons();
+
+    // Server action para eliminar un servicio
+    async function handleDeleteService(id: string) {
+        "use server";
+        await deleteService(id);
+        revalidatePath('/admin/dashboard');
+    }
+
+    // Server action para eliminar un plan
+    async function handleDeletePlan(id: string) {
+        "use server";
+        await deletePlan(id);
+        revalidatePath('/admin/dashboard');
+    }
+
     return (
         <div className="space-y-6">
             <Alert className="bg-blue-50 border-blue-200">
@@ -23,26 +48,26 @@ export default async function DashboardContent() {
                     <TabsList className="inline-flex w-auto min-w-full md:grid md:grid-cols-5 mb-4">
                         <TabsTrigger value="services">Servicios</TabsTrigger>
                         <TabsTrigger value="plans">Planes</TabsTrigger>
-                        <TabsTrigger value="promotions">Promociones</TabsTrigger>
                         <TabsTrigger value="addons">Complementos</TabsTrigger>
+                        <TabsTrigger value="promotions">Promociones</TabsTrigger>
                         <TabsTrigger value="images">Imágenes</TabsTrigger>
                     </TabsList>
                 </div>
 
                 <TabsContent value="services" className="space-y-4">
-                    <ServicesTab />
+                    <ServicesTab services={services} onDeleteService={handleDeleteService} />
                 </TabsContent>
 
                 <TabsContent value="plans" className="space-y-4">
-                    <PlansTab />
+                    <PlansTab plans={plans} onDeletePlan={handleDeletePlan} />
+                </TabsContent>
+
+                <TabsContent value="addons" className="space-y-4">
+                    <AddonsTab addons={addons} />
                 </TabsContent>
 
                 <TabsContent value="promotions" className="space-y-4">
                     <PromotionsTab />
-                </TabsContent>
-
-                <TabsContent value="addons" className="space-y-4">
-                    <AddonsTab />
                 </TabsContent>
 
                 <TabsContent value="images" className="space-y-4">
