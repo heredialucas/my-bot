@@ -45,8 +45,8 @@ export const contact = async (
     const toEmail = 'netfull.cuenta.produccion@gmail.com';
 
     const { data, error } = await resend.emails.send({
-      from: fromEmail,
-      to: toEmail,
+      from: 'onboarding@resend.dev',
+      to: 'netfull.cuenta.produccion@gmail.com',
       subject: 'Nuevo contacto desde la web',
       replyTo: email,
       react: <ContactTemplate name={name} email={email} message={message} phone={phone} />,
