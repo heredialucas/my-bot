@@ -72,7 +72,6 @@ export function FaqClient({ dictionary, usabilityFaqs, networkFaqs }: FaqClientP
                             {usabilityFaqs.map((faq) => (
                                 <FaqQuestion
                                     key={faq.id}
-                                    value={faq.id}
                                     question={faq.question}
                                     answer={faq.answer}
                                 />
@@ -87,7 +86,6 @@ export function FaqClient({ dictionary, usabilityFaqs, networkFaqs }: FaqClientP
                             {networkFaqs.map((faq) => (
                                 <FaqQuestion
                                     key={faq.id}
-                                    value={faq.id}
                                     question={faq.question}
                                     answer={faq.answer}
                                 />

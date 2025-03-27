@@ -26,19 +26,19 @@ export const ContactTemplate = ({
   <Tailwind>
     <Html>
       <Head />
-      <Preview>New email from {name}</Preview>
+      <Preview>Nuevo correo de {name}</Preview>
       <Body className="bg-zinc-50 font-sans">
         <Container className="mx-auto py-12">
           <Section className="mt-8 rounded-md bg-zinc-200 p-px">
             <Section className="rounded-[5px] bg-white p-8">
               <Text className="mt-0 mb-4 font-semibold text-2xl text-zinc-950">
-                New email from {name}
+                Nuevo correo de {name}
               </Text>
               <Text className="m-0 text-zinc-500">
-                {name} ({email}) has sent you a message:
+                {name} ({email}) te ha enviado un mensaje:
               </Text>
               {phone && (
-                <Text className="m-0 text-zinc-500">Phone: {phone}</Text>
+                <Text className="m-0 text-zinc-500">Teléfono: {phone}</Text>
               )}
               <Hr className="my-4" />
               <Text className="m-0 text-zinc-500">{message}</Text>
@@ -54,7 +54,7 @@ const ExampleContactEmail = () => (
   <ContactTemplate
     name="Jane Smith"
     email="jane@example.com"
-    message="Hello, how do I get started?"
+    message="Hola, ¿cómo puedo comenzar?"
   />
 );
 

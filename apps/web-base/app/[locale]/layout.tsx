@@ -16,19 +16,25 @@ export const metadata: Metadata = {
   title: 'NetFull',
   description: 'Internet de alta velocidad. El mejor servicio de internet para tu hogar y empresa.',
   icons: {
-    icon: '/logo.png',
-    apple: '/logo.png',
+    icon: [
+      { url: '/logo.png', type: 'image/png' }
+    ],
+    shortcut: '/logo.png',
+    apple: [
+      { url: '/logo.png' }
+    ],
   },
 };
 
 type RootLayoutProperties = {
   readonly children: ReactNode;
+  readonly modal: ReactNode;
   readonly params: Promise<{
     locale: string;
   }>;
 };
 
-const RootLayout = async ({ children, params }: RootLayoutProperties) => {
+const RootLayout = async ({ children, modal, params }: RootLayoutProperties) => {
   const { locale } = await params;
   const dictionary = await getDictionary(locale);
 
@@ -43,6 +49,7 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
           <div className="overflow-x-hidden relative w-full">
             <Header dictionary={dictionary} />
             {children}
+            {modal}
             <Footer />
             <FloatingContactButtons />
           </div>

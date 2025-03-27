@@ -7,13 +7,13 @@ type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
   image?: string;
 };
 
-const applicationName = 'next-forge';
+const applicationName = 'NetFull';
 const author: Metadata['authors'] = {
-  name: 'Hayden Bleasel',
-  url: 'https://haydenbleasel.com/',
+  name: 'App Wise Innovations',
+  url: 'https://appwiseinnovations.com/',
 };
-const publisher = 'Hayden Bleasel';
-const twitterHandle = '@haydenbleasel';
+const publisher = 'App Wise Innovations';
+const twitterHandle = '@appwiseinnovations';
 
 export const createMetadata = ({
   title,
@@ -47,6 +47,15 @@ export const createMetadata = ({
     twitter: {
       card: 'summary_large_image',
       creator: twitterHandle,
+    },
+    icons: {
+      icon: [
+        { url: '/logo.png', type: 'image/png' }
+      ],
+      shortcut: '/logo.png',
+      apple: [
+        { url: '/logo.png' }
+      ],
     },
   };
 

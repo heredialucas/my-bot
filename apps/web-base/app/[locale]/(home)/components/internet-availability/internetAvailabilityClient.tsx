@@ -7,6 +7,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import phoneImage from '@/public/phone.png';
 import { ChevronDown } from 'lucide-react';
+import { contact } from '../../../contact/actions/contact';
 
 type InternetAvailabilityClientProps = {
     dictionary: Dictionary;
@@ -55,6 +56,10 @@ export function InternetAvailabilityClient({ dictionary, bestDeal }: InternetAva
         item4: false
     });
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState(false);
+
     const toggleAccordion = (item: keyof typeof accordionState) => {
         setAccordionState(prev => ({
             ...prev,
@@ -67,10 +72,38 @@ export function InternetAvailabilityClient({ dictionary, bestDeal }: InternetAva
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle form submission, API call, etc.
-        console.log('Form submitted:', formData);
+        setIsSubmitting(true);
+        setError(null);
+        setSuccess(false);
+
+        try {
+            // Usar la acción de contacto existente
+            const result = await contact(
+                `Factibilidad: ${formData.region} - ${formData.comuna}`, // Nombre (prefijado para identificar)
+                'factibilidad@service.netfull.com', // Email de servicio (solo como replyTo)
+                `Consulta de factibilidad para la dirección: ${formData.address}. RUT: ${formData.rut}.`, // Mensaje
+                formData.phone // Teléfono
+            );
+
+            if (result.error) {
+                setError(result.error);
+            } else {
+                setSuccess(true);
+                setFormData({
+                    region: '',
+                    comuna: '',
+                    address: '',
+                    rut: '',
+                    phone: '',
+                });
+            }
+        } catch (err) {
+            setError("Ha ocurrido un error al procesar tu solicitud. Por favor intenta nuevamente.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     // Valores a mostrar, con fallbacks
@@ -205,11 +238,24 @@ export function InternetAvailabilityClient({ dictionary, bestDeal }: InternetAva
                                 <div className="mt-10 sm:mt-14 flex justify-center">
                                     <Button
                                         type="submit"
+                                        disabled={isSubmitting}
                                         className="bg-cyan-400 hover:bg-cyan-500 text-indigo-900 font-semibold px-6 sm:px-10 py-2.5 sm:py-3 rounded-md transition-colors text-sm sm:text-base"
                                     >
-                                        Consultar
+                                        {isSubmitting ? "Enviando..." : "Consultar"}
                                     </Button>
                                 </div>
+
+                                {error && (
+                                    <p className="mt-4 text-red-500 text-center text-sm sm:text-base">
+                                        {error}
+                                    </p>
+                                )}
+
+                                {success && (
+                                    <p className="mt-4 text-green-500 text-center text-sm sm:text-base">
+                                        ¡Gracias por tu consulta! Nos pondremos en contacto contigo a la brevedad.
+                                    </p>
+                                )}
                             </form>
                         </div>
                     </div>

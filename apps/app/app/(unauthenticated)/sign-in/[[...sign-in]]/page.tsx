@@ -2,7 +2,7 @@ import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 
-const title = 'Bienvenido de nuevo';
+const title = 'Iniciar sesión';
 const description = 'Ingresa tus datos para iniciar sesión.';
 const SignIn = dynamic(() =>
   import('@repo/auth/components/sign-in').then((mod) => mod.SignIn)
