@@ -9,6 +9,7 @@ import { CallToActionBtn } from "@/app/[locale]/components/callToActionBtn";
 import { DetailProps } from "./types";
 import { ChannelGalleryModal } from "../../../../components/features/channel-gallery-modal";
 import { partnerLogos } from "../../../../components/features/images";
+import Star from '@/public/star.png'
 
 
 export default function Detail({ promotion, selectedAddonsFromLanding = [], allAddons = [] }: DetailProps) {
@@ -142,6 +143,24 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                         }}>
                     </div>
 
+                    {/* Star for desktop view - centered on the right edge */}
+                    <div className="hidden lg:block absolute right-0 top-[45%] z-10 rotate-12 translate-x-1/3">
+                        <div className="relative">
+                            <Image
+                                src={Star}
+                                alt="Promoción Zapping"
+                                width={140}
+                                height={140}
+                                className="w-36 h-36"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center text-center px-3">
+                                <p className="text-sm font-semibold text-gray-800 leading-tight">
+                                    No olvides<br />tu plan<br />Zapping
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="flex flex-col h-full justify-between">
                         <div>
                             <h2 className="text-base lg:text-lg font-medium mb-1 lg:mb-2">Plan internet fibra</h2>
@@ -210,7 +229,25 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                 </div>
 
                 {/* Right Section - White with plan details */}
-                <div className="bg-white p-4 sm:p-7 lg:w-[52%]">
+                <div className="bg-white p-4 sm:p-7 lg:w-[52%] relative">
+                    {/* Star for mobile view - absolute to the right section */}
+                    <div className="absolute bottom-1/3 -right-4 lg:hidden z-10 rotate-12">
+                        <div className="relative">
+                            <Image
+                                src={Star}
+                                alt="Promoción Zapping"
+                                width={140}
+                                height={140}
+                                className="w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center text-center px-3">
+                                <p className="text-xs sm:text-sm font-semibold text-gray-800 leading-tight">
+                                    No olvides<br />tu plan<br />Zapping
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="hidden lg:block text-center mb-6 lg:mb-8">
                         <h2 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-[#4900FF] to-[#00FFF9] bg-clip-text text-transparent">
                             ${totalPrice.toLocaleString('es-CL')}
@@ -250,7 +287,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
 
                     {/* Sección de selección de plan Zapping con fondo oscuro */}
                     {promotion.plans.length > 0 && (
-                        <div>
+                        <div className="relative">
                             <div className="bg-rose-500 text-white p-2 lg:p-3 text-center rounded-t-lg">
                                 <h3 className="font-medium text-sm lg:text-base">TV Online. Elige tu plan ZAPPING</h3>
                             </div>
