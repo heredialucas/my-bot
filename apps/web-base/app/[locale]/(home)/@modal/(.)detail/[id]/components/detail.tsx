@@ -34,13 +34,13 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
 
     // Obtener el primer servicio de la promoción
     const service = promotion.services[0] || {};
-    const speed = service.speed || 300;
-    const price = service.price || 14990;
-    const regularPrice = service.regularPrice || 16990;
+    const speed = service.speed || 0;
+    const price = service.price || 0;
+    const regularPrice = service.price || 0;
 
     // Estado local para el plan seleccionado
     const [selectedPlanId, setSelectedPlanId] = useState<string | null>(
-        sortedPlans.length > 0 ? sortedPlans[0].id : null
+        null // Ya no seleccionamos un plan por defecto
     );
 
     // Estado local para addons
@@ -73,27 +73,35 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
     };
 
     // Encontrar el plan seleccionado por ID
-    const displayPlan = promotion.plans.find(plan => plan.id === selectedPlanId) || sortedPlans[0];
+    const displayPlan = selectedPlanId ? promotion.plans.find(plan => plan.id === selectedPlanId) : null;
     const selectedPlanPrice = displayPlan?.price || 0;
 
     // Calcular el total de addons
     const addonsTotal = localAddons.reduce((total, addon) => total + addon.price, 0);
 
-    const totalPrice = price + selectedPlanPrice + addonsTotal;
+    // Calcular el precio con descuento aplicando el porcentaje de la promoción
+    // Solo se aplica descuento al servicio principal (fibra), no a los planes de Zapping
+    const discountedPrice = price * (1 - promotion.discount / 100);
+
+    // El precio total incluye: precio con descuento del servicio + precio SIN descuento del plan Zapping + addons
+    const totalPrice = discountedPrice + selectedPlanPrice + addonsTotal;
+
+    // El precio regular (después de la promoción) es el precio regular del servicio + precio del plan + addons
+    const regularTotalPrice = regularPrice + selectedPlanPrice + addonsTotal;
 
     // Generar mensaje personalizado para esta selección específica
     const getDetailFormattedText = () => {
         const parts = ['Hola, me gustaría contratar:'];
 
         // Agregar información del plan de internet
-        parts.push(`- Plan Fibra ${speed} Mbps por $${price.toLocaleString('es-CL')}`);
+        parts.push(`- Plan Fibra ${speed} Mbps por $${discountedPrice.toLocaleString('es-CL')}`);
 
         // Agregar plan de TV si está seleccionado
         if (displayPlan) {
             const channels = displayPlan.channelCount
                 ? `con ${displayPlan.channelCount} canales`
                 : '';
-            parts.push(`- Plan ${displayPlan.name} ${channels} por $${displayPlan.price.toLocaleString('es-CL')}`);
+            parts.push(`- Plan ${displayPlan.name} ${channels} por $${selectedPlanPrice.toLocaleString('es-CL')}`);
         }
 
         // Agregar complementos seleccionados
@@ -106,6 +114,9 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
 
         // Agregar precio total mensual
         parts.push(`\nPrecio total mensual: $${totalPrice.toLocaleString('es-CL')}`);
+
+        // Agregar información sobre el precio después de la promoción
+        parts.push(`Después del mes ${promotion.duration}, el precio será $${regularTotalPrice.toLocaleString('es-CL')}`);
 
         return parts.join('\n');
     };
@@ -198,8 +209,8 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
 
                     <div className="pt-6 border-t border-white/20">
                         <p className="text-sm text-center">Cliente cancela plan a contratar al momento de instalar</p>
-                        <h2 className="text-4xl font-bold mt-2 text-center">${price.toLocaleString('es-CL')}</h2>
-                        <p className="text-sm text-center">¡Mes {promotion.duration} pagas ${regularPrice.toLocaleString('es-CL')}</p>
+                        <h2 className="text-4xl font-bold mt-2 text-center">${(discountedPrice + (selectedPlanPrice > 0 ? selectedPlanPrice : 0) + addonsTotal).toLocaleString('es-CL')}</h2>
+                        <p className="text-sm text-center">¡Mes {promotion.duration} pagas ${(regularPrice + (selectedPlanPrice > 0 ? selectedPlanPrice : 0) + addonsTotal).toLocaleString('es-CL')}</p>
 
                         <div className="flex justify-center mt-6">
                             <CallToActionBtn options={[getDetailFormattedText()]} />
@@ -214,7 +225,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                     <h2 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#4900FF] to-[#00FFF9] bg-clip-text text-transparent">
                         ${totalPrice.toLocaleString('es-CL')}
                     </h2>
-                    <p className="text-gray-700 mt-1">Mensual / mes {promotion.duration} pagás ${(regularPrice + selectedPlanPrice + addonsTotal).toLocaleString('es-CL')}</p>
+                    <p className="text-gray-700 mt-1">Mensual / mes {promotion.duration} pagás ${regularTotalPrice.toLocaleString('es-CL')}</p>
                 </div>
 
                 <div className="mb-8">
@@ -222,14 +233,14 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                     <div className="flex flex-col gap-y-3">
                         <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                             <span>Fibra {speed}</span>
-                            <span className="font-medium">${price.toLocaleString('es-CL')}</span>
+                            <span className="font-medium">${discountedPrice.toLocaleString('es-CL')}</span>
                         </div>
 
                         {/* Mostrar el plan seleccionado si hay uno */}
                         {displayPlan && (
                             <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                                 <span>Plan {displayPlan.name}</span>
-                                <span className="font-medium">${displayPlan.price.toLocaleString('es-CL')}</span>
+                                <span className="font-medium">${selectedPlanPrice.toLocaleString('es-CL')}</span>
                             </div>
                         )}
 
@@ -294,8 +305,8 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                                             {/* Columna derecha: Precios */}
                                             <div className="text-right w-[30%]">
                                                 <p className="font-bold text-white">${plan.price.toLocaleString('es-CL')}</p>
-                                                <p className="text-xs text-gray-400">primer mes</p>
-                                                <p className="text-xs text-gray-400">luego ${(plan.regularPrice || plan.price + 2000).toLocaleString('es-CL')} /mes</p>
+                                                <p className="text-xs text-gray-400">{`${plan.promoMonths} meses`}</p>
+                                                <p className="text-xs text-gray-400">luego ${(plan.regularPrice || plan.price).toLocaleString('es-CL')} /mes</p>
                                             </div>
                                         </div>
                                     ))}

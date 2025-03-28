@@ -90,7 +90,10 @@ export const PricingCard = ({
 
     // Agregar el precio del plan de Zapping seleccionado
     const zappingPrice = localSelectedPlan ? localSelectedPlan.price : 0;
-    const totalPrice = price + (includeAddons ? addonsTotal : 0) + zappingPrice;
+
+    // Calcular el precio con descuento
+    const discountedPrice = price * (1 - discount / 100);
+    const totalPrice = discountedPrice + (includeAddons ? addonsTotal : 0) + zappingPrice;
 
     // Construir la URL con los IDs de los addons seleccionados
     const selectedAddonIds = selectedAddons.map(addon => addon.id).join(',');
@@ -190,7 +193,7 @@ export const PricingCard = ({
                             <div className="text-gray-700">{dictionary.web.home.cases.pricing.monthly}</div>
                             <div className="text-indigo-600 text-4xl sm:text-5xl font-bold mb-2">${totalPrice.toLocaleString('es-CL')}</div>
                             <div className="text-sm text-gray-500">
-                                {dictionary.web.home.cases.pricing.laterMonthPrice.replace('{months}', months.toString())} ${(originalPrice + (localSelectedPlan ? localSelectedPlan.regularPrice || localSelectedPlan.price : 0) + addonsTotal).toLocaleString('es-CL')}
+                                {dictionary.web.home.cases.pricing.laterMonthPrice.replace('{months}', months.toString())} ${(price + (includeAddons ? addonsTotal : 0) + zappingPrice).toLocaleString('es-CL')}
                             </div>
                         </div>
 
