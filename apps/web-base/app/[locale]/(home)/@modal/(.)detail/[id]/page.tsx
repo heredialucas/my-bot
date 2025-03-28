@@ -9,10 +9,15 @@ type DetailModalProps = {
     params: Promise<{
         id: string;
     }>;
+    searchParams: Promise<{
+        addons?: string;
+    }>;
 };
 
 // Función para adaptar la promoción al formato esperado por el componente Detail
 function adaptPromotion(promotion: any) {
+    if (!promotion) return null;
+
     return {
         ...promotion,
         services: promotion.services.map((service: any) => ({
@@ -49,9 +54,12 @@ function adaptPromotion(promotion: any) {
 }
 
 // Componente de servidor que obtiene los datos de la promoción
-export default async function DetailModal({ params }: DetailModalProps) {
-    // Obtener los params
+export default async function DetailModal({ params, searchParams }: DetailModalProps) {
+    // Obtener el ID de los params de forma asíncrona
     const { id } = await params;
+
+    // Obtener los searchParams de forma asíncrona
+    const resolvedSearchParams = await searchParams;
 
     try {
         // Obtener la promoción y todos los addons en paralelo
@@ -61,17 +69,25 @@ export default async function DetailModal({ params }: DetailModalProps) {
         ]);
 
         // Buscar la promoción específica por ID
-        const promotion = promotions.find(p => p.id === id);
+        const promotion = promotions.find((p: any) => p.id === id);
 
-        // Adaptar la promoción al formato esperado por el componente Detail
-        const adaptedPromotion = adaptPromotion(promotion);
+        if (!promotion) {
+            redirect('/');
+            return null;
+        }
+
+        // Parsear los addons seleccionados desde los query params
+        const selectedAddonsFromLanding = resolvedSearchParams?.addons ?
+            allAddons.filter(addon => resolvedSearchParams.addons?.split(',').includes(addon.id)) :
+            [];
 
         return (
             <DialogWrapper>
                 <DialogContent className="max-w-6xl w-11/12 p-0 border-none max-h-[90vh] overflow-y-auto">
                     <DialogTitle className="sr-only">Detalles del Plan</DialogTitle>
                     <Detail
-                        promotion={adaptedPromotion}
+                        promotion={promotion}
+                        selectedAddonsFromLanding={selectedAddonsFromLanding}
                         allAddons={allAddons}
                     />
                 </DialogContent>
@@ -79,6 +95,7 @@ export default async function DetailModal({ params }: DetailModalProps) {
         );
     } catch (error) {
         console.error("Error al obtener la promoción:", error);
-        redirect(`/`);
+        redirect('/');
+        return null;
     }
 } 
