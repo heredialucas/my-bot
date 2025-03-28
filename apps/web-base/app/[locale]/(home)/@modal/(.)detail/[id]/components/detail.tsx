@@ -1,12 +1,14 @@
 "use client";
 
 import { Check, Wrench, X, FileText, Calendar, Clock, Gauge, Eye } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AddOn } from "../../../../components/features/types";
 import { CallToActionBtn } from "@/app/[locale]/components/callToActionBtn";
 import { DetailProps } from "./types";
 import { ChannelGalleryModal } from "../../../../components/features/channel-gallery-modal";
+import { partnerLogos } from "../../../../components/features/images";
 
 
 export default function Detail({ promotion, selectedAddonsFromLanding = [], allAddons = [] }: DetailProps) {
@@ -266,7 +268,34 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                                                     <div className={`w-4 h-4 lg:w-5 lg:h-5 rounded-full border ${selectedPlanId === plan.id ? 'border-blue-400 bg-blue-400' : 'border-gray-400'} flex items-center justify-center`}>
                                                         <div className={`w-2 h-2 lg:w-2.5 lg:h-2.5 rounded-full ${selectedPlanId === plan.id ? 'bg-white' : ''}`}></div>
                                                     </div>
-                                                    <span className="font-medium text-white text-sm lg:text-base">{plan.name}</span>
+                                                    <div className="flex flex-col">
+                                                        <span className="font-medium text-white text-sm lg:text-base">{plan.name}</span>
+                                                        <div className="flex gap-1 mt-1">
+                                                            {(() => {
+                                                                const planName = plan.name?.toLowerCase() || '';
+                                                                let channelSet: 'national' | 'football' | 'plus' | 'cine' = 'national';
+
+                                                                if (planName.includes('cine')) {
+                                                                    channelSet = 'cine';
+                                                                } else if (planName.includes('plus')) {
+                                                                    channelSet = 'plus';
+                                                                } else if (planName.includes('fútbol') || planName.includes('futbol')) {
+                                                                    channelSet = 'football';
+                                                                }
+
+                                                                return partnerLogos[channelSet].map((partner, idx) => (
+                                                                    <Image
+                                                                        key={idx}
+                                                                        src={partner.logo}
+                                                                        alt={partner.name}
+                                                                        className={`h-3 sm:h-4 w-auto object-contain ${idx === 1 ? 'bg-white rounded-sm p-0.5' : ''}`}
+                                                                        width={40}
+                                                                        height={16}
+                                                                    />
+                                                                ))
+                                                            })()}
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 {/* Columna media: Características del plan */}

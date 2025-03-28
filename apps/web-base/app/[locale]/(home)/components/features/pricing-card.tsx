@@ -9,6 +9,8 @@ import { PricingCardProps, Plan as FeaturePlan } from './types';
 import { useServiceStore } from '@/store';
 import { Plan as StorePlan } from '@/store/types';
 import { ChannelGalleryModal } from './channel-gallery-modal';
+import Image from 'next/image';
+import { partnerLogos } from './images';
 
 export const PricingCard = ({
     discount,
@@ -336,9 +338,36 @@ export const PricingCard = ({
                                         )}
 
                                         <div className="mt-2">
-                                            <span className="bg-[#F0436E] text-xs text-white px-2 py-1 rounded-md">
-                                                ZAPPING
-                                            </span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="bg-[#F0436E] text-xs text-white px-2 py-1 rounded-md">
+                                                    ZAPPING
+                                                </span>
+                                                {(() => {
+                                                    // Determine the channel set based on the plan name
+                                                    const planName = plan.name.toLowerCase();
+                                                    let channelSet: 'national' | 'football' | 'plus' | 'cine' = 'national';
+
+                                                    if (planName.includes('cine')) {
+                                                        channelSet = 'cine';
+                                                    } else if (planName.includes('plus')) {
+                                                        channelSet = 'plus';
+                                                    } else if (planName.includes('fútbol') || planName.includes('futbol')) {
+                                                        channelSet = 'football';
+                                                    }
+
+                                                    // Show partner logos based on channel set
+                                                    return partnerLogos[channelSet].map((partner, idx) => (
+                                                        <Image
+                                                            key={idx}
+                                                            src={partner.logo}
+                                                            alt={partner.name}
+                                                            className={`h-4 sm:h-5 w-auto object-contain ${idx === 1 ? 'bg-white rounded-sm p-0.5' : ''}`}
+                                                            width={50}
+                                                            height={20}
+                                                        />
+                                                    ))
+                                                })()}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

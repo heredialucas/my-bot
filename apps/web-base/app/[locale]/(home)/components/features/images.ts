@@ -1231,6 +1231,46 @@ export const PlusImages = [
         "logo": "https://davinci.zappingtv.com/gato/media/256/canales/color/arirang.jpg"
     },
     {
+        "nombre": "HBO",
+        "numero": 145,
+        "logo": "https://davinci.zappingtv.com/gato/media/256/canales/color/hbo.jpg"
+    },
+    {
+        "nombre": "HBO 2",
+        "numero": 146,
+        "logo": "https://davinci.zappingtv.com/gato/media/256/canales/color/hbo2b.jpg"
+    },
+    {
+        "nombre": "HBO Family",
+        "numero": 147,
+        "logo": "https://davinci.zappingtv.com/gato/media/256/canales/color/hbofamily.jpg"
+    },
+    {
+        "nombre": "HBO Plus",
+        "numero": 148,
+        "logo": "https://davinci.zappingtv.com/gato/media/256/canales/color/hboplus.jpg"
+    },
+    {
+        "nombre": "HBO Xtreme",
+        "numero": 149,
+        "logo": "https://davinci.zappingtv.com/gato/media/256/canales/color/hboxtreme.jpg"
+    },
+    {
+        "nombre": "HBO Signature",
+        "numero": 150,
+        "logo": "https://davinci.zappingtv.com/gato/media/256/canales/color/hbosignature.jpg"
+    },
+    {
+        "nombre": "HBO Pop",
+        "numero": 151,
+        "logo": "https://davinci.zappingtv.com/gato/media/256/canales/color/hbopop.jpg"
+    },
+    {
+        "nombre": "HBO Mundi",
+        "numero": 152,
+        "logo": "https://davinci.zappingtv.com/gato/media/256/canales/color/hbomundi.jpg"
+    },
+    {
         "nombre": "Cámara de Diputados TV",
         "numero": 160,
         "logo": "https://davinci.zappingtv.com/gato/media/256/canales/color/camara.jpg"
@@ -2220,3 +2260,33 @@ export type Channel = {
     numero?: number;
     logo: string;
 }
+
+export const partnerLogos = {
+    football: [
+        {
+            name: "TNT Sports Premium",
+            logo: "https://cdn.prod.website-files.com/60467fdad665324c974b586c/66fc428ebc5bca1ed5c1def9_tntsports-premium-whitetext.png"
+        },
+        {
+            name: "MAX",
+            logo: "https://cdn.prod.website-files.com/60467fdad665324c974b586c/6710108418a97fc68ee10dd0_MAX.jpg"
+        }
+    ],
+    cine: [
+        {
+            name: "HBO Pack",
+            logo: "https://cdn.prod.website-files.com/60467fdad665324c974b586c/66fc3584b67d85eea3160821_hbo-pack-sinamargen.png"
+        },
+        {
+            name: "MAX",
+            logo: "https://cdn.prod.website-files.com/60467fdad665324c974b586c/6710108418a97fc68ee10dd0_MAX.jpg"
+        }
+    ],
+    plus: [
+        {
+            name: "MAX",
+            logo: "https://cdn.prod.website-files.com/60467fdad665324c974b586c/6710108418a97fc68ee10dd0_MAX.jpg"
+        }
+    ],
+    national: []
+};

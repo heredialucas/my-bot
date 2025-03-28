@@ -27,6 +27,10 @@ export const config: NextConfig = {
         protocol: 'https',
         hostname: 'davinci.zappingtv.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.prod.website-files.com',
+      }
     ],
   },
 
