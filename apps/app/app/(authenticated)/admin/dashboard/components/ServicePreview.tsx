@@ -39,8 +39,6 @@ interface ServicePreviewProps {
         name: string;
         speed?: number | null;
         price?: number | null;
-        regularPrice?: number | null;
-        promoMonths?: number | null;
         serviceItems?: Array<{
             title: string;
             description?: string | null;
@@ -54,8 +52,6 @@ export default function ServicePreview({ service }: ServicePreviewProps) {
         name,
         speed = 300,
         price = 14990,
-        regularPrice = 16990,
-        promoMonths = 6,
         serviceItems = []
     } = service;
 
@@ -115,7 +111,7 @@ export default function ServicePreview({ service }: ServicePreviewProps) {
                 <div className="pt-4 border-t border-white/20 mt-auto">
                     <p className="text-xs text-center">Cliente cancela plan a contratar al momento de instalar</p>
                     <h2 className="text-2xl font-bold mt-1 text-center">${price?.toLocaleString('es-CL')}</h2>
-                    <p className="text-xs text-center">¡Mes {promoMonths} pagas ${regularPrice?.toLocaleString('es-CL')}!</p>
+                    <p className="text-xs text-center">El precio podría variar con promociones</p>
                 </div>
             </div>
         </div>

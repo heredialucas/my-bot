@@ -43,8 +43,6 @@ interface ServiceData {
     serviceItems?: ServiceItemForm[];
     speed?: number | null;
     price?: number | null;
-    regularPrice?: number | null;
-    promoMonths?: number | null;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -54,8 +52,6 @@ interface ServicePreviewData {
     name: string;
     speed?: number | null;
     price?: number | null;
-    regularPrice?: number | null;
-    promoMonths?: number | null;
     serviceItems?: Array<{
         title: string;
         description?: string | null;
@@ -68,8 +64,6 @@ export default function ServiceForm({ initialData }: { initialData: ServiceData 
     const [name, setName] = useState(initialData.name);
     const [speed, setSpeed] = useState(initialData.speed ? initialData.speed.toString() : "");
     const [price, setPrice] = useState(initialData.price ? initialData.price.toString() : "");
-    const [regularPrice, setRegularPrice] = useState(initialData.regularPrice ? initialData.regularPrice.toString() : "");
-    const [promoMonths, setPromoMonths] = useState(initialData.promoMonths ? initialData.promoMonths.toString() : "");
     const [isFormDirty, setIsFormDirty] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -86,8 +80,6 @@ export default function ServiceForm({ initialData }: { initialData: ServiceData 
         name,
         speed: speed ? parseInt(speed) : null,
         price: price ? parseFloat(price) : null,
-        regularPrice: regularPrice ? parseFloat(regularPrice) : null,
-        promoMonths: promoMonths ? parseInt(promoMonths) : null,
         serviceItems: serviceItems
     };
 
@@ -126,8 +118,6 @@ export default function ServiceForm({ initialData }: { initialData: ServiceData 
                 icon: null, // Ya no usamos icon
                 speed: speed ? parseInt(speed) : null,
                 price: price ? parseFloat(price) : null,
-                regularPrice: regularPrice ? parseFloat(regularPrice) : null,
-                promoMonths: promoMonths ? parseInt(promoMonths) : null,
                 serviceItems: serviceItems.map(item => ({
                     id: item.id,
                     title: item.title,
@@ -217,58 +207,22 @@ export default function ServiceForm({ initialData }: { initialData: ServiceData 
                             />
                         </div>
 
-                        {/* Precios alineados en grid de dos columnas */}
-                        <div className="grid md:grid-cols-2 gap-3">
-                            <div className="space-y-2">
-                                <Label htmlFor="price">Precio Promocional</Label>
-                                <div className="relative">
-                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2">$</span>
-                                    <Input
-                                        id="price"
-                                        type="number"
-                                        value={price}
-                                        onChange={(e) => {
-                                            setPrice(e.target.value);
-                                            setIsFormDirty(true);
-                                        }}
-                                        disabled={isSubmitting}
-                                        className="h-10 pl-7"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="regularPrice">Precio Regular</Label>
-                                <div className="relative">
-                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2">$</span>
-                                    <Input
-                                        id="regularPrice"
-                                        type="number"
-                                        value={regularPrice}
-                                        onChange={(e) => {
-                                            setRegularPrice(e.target.value);
-                                            setIsFormDirty(true);
-                                        }}
-                                        disabled={isSubmitting}
-                                        className="h-10 pl-7"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
                         <div className="space-y-2">
-                            <Label htmlFor="promoMonths">Duración (meses)</Label>
-                            <Input
-                                id="promoMonths"
-                                type="number"
-                                value={promoMonths}
-                                onChange={(e) => {
-                                    setPromoMonths(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                                className="h-10"
-                            />
+                            <Label htmlFor="price">Precio</Label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 transform -translate-y-1/2">$</span>
+                                <Input
+                                    id="price"
+                                    type="number"
+                                    value={price}
+                                    onChange={(e) => {
+                                        setPrice(e.target.value);
+                                        setIsFormDirty(true);
+                                    }}
+                                    disabled={isSubmitting}
+                                    className="h-10 pl-7"
+                                />
+                            </div>
                         </div>
 
                         {/* Service Items Section */}

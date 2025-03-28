@@ -48,6 +48,13 @@ export const PricingCard = ({
     // Estado local para el plan de zapping seleccionado en esta tarjeta
     const [localSelectedPlan, setLocalSelectedPlan] = useState<FeaturePlan | null>(null);
 
+    // Clear the local selected plan when internet-tv is disabled
+    useEffect(() => {
+        if (!includeInternetTV && localSelectedPlan) {
+            setLocalSelectedPlan(null);
+        }
+    }, [includeInternetTV, localSelectedPlan]);
+
     // Guardar el servicio seleccionado cuando se muestra esta tarjeta
     useEffect(() => {
         if (serviceId) {
@@ -276,7 +283,7 @@ export const PricingCard = ({
                                             <span className="text-[#F0436E] text-xs">primer mes</span>
                                         </div>
                                         <div className="text-gray-400 text-xs mb-2">
-                                            luego ${(plan.regularPrice || plan.price + 2000).toLocaleString('es-CL')} /mes
+                                            luego ${(plan.regularPrice || plan.price).toLocaleString('es-CL')} /mes
                                         </div>
 
                                         <div className="text-xs text-gray-400 uppercase mb-1">INCLUYE</div>

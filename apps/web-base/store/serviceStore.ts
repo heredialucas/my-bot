@@ -5,7 +5,14 @@ import { ServiceStore, ServiceOption, Promotion, Service, Plan, AddOn } from './
 const useServiceStore = create<ServiceStore>()((set, get) => ({
     // Estado básico
     selectedOption: 'internet-hogar',
-    setSelectedOption: (option: ServiceOption) => set({ selectedOption: option }),
+    setSelectedOption: (option: ServiceOption) => {
+        // If switching to internet-hogar from internet-tv, clear the selected plan (Zapping)
+        if (option === 'internet-hogar' && get().selectedOption === 'internet-tv') {
+            set({ selectedOption: option, selectedPlan: null });
+        } else {
+            set({ selectedOption: option });
+        }
+    },
 
     // Estado detallado
     selectedPromotion: null,

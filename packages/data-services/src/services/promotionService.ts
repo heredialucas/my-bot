@@ -234,4 +234,51 @@ export async function getActivePromotionsWithDetails() {
         console.error("Error fetching active promotions with details:", error);
         throw new Error("Failed to fetch active promotions with details");
     }
+}
+
+/**
+ * Obtener todas las promociones con sus relaciones completas (activas e inactivas)
+ */
+export async function getAllPromotionsWithDetails() {
+    try {
+        const promotions = await db.promotion.findMany({
+            include: {
+                services: {
+                    include: {
+                        service: {
+                            include: {
+                                serviceItems: true
+                            }
+                        }
+                    }
+                },
+                plans: {
+                    include: {
+                        plan: {
+                            include: {
+                                characteristics: true
+                            }
+                        }
+                    }
+                },
+                addons: {
+                    include: {
+                        addon: true
+                    }
+                }
+            },
+            orderBy: { name: 'asc' },
+        });
+
+        // Transformar la respuesta para facilitar su uso en el frontend
+        return promotions.map(promo => ({
+            ...promo,
+            services: promo.services.map(s => s.service),
+            plans: promo.plans.map(p => p.plan),
+            addons: promo.addons.map(a => a.addon)
+        }));
+    } catch (error) {
+        console.error("Error fetching all promotions with details:", error);
+        throw new Error("Failed to fetch all promotions with details");
+    }
 } 

@@ -168,7 +168,7 @@ export default function ServicesTab({ services = [], onDeleteService }: Services
                                 <CardContent className="pb-4">
                                     <div className="space-y-3">
                                         {/* Información básica del servicio */}
-                                        {(service.speed || service.price || service.regularPrice) && (
+                                        {(service.speed || service.price) && (
                                             <div className="grid grid-cols-2 gap-2 text-sm">
                                                 {service.speed && (
                                                     <div>
@@ -178,16 +178,6 @@ export default function ServicesTab({ services = [], onDeleteService }: Services
                                                 {service.price && (
                                                     <div>
                                                         <span className="font-medium">Precio:</span> ${service.price.toLocaleString('es-CL')}
-                                                    </div>
-                                                )}
-                                                {service.regularPrice && (
-                                                    <div>
-                                                        <span className="font-medium">Precio regular:</span> ${service.regularPrice.toLocaleString('es-CL')}
-                                                    </div>
-                                                )}
-                                                {service.promoMonths && (
-                                                    <div>
-                                                        <span className="font-medium">Meses promo:</span> {service.promoMonths}
                                                     </div>
                                                 )}
                                             </div>

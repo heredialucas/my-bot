@@ -32,8 +32,6 @@ export default function ServiceForm() {
     const [name, setName] = useState("");
     const [speed, setSpeed] = useState("");
     const [price, setPrice] = useState("");
-    const [regularPrice, setRegularPrice] = useState("");
-    const [promoMonths, setPromoMonths] = useState("");
     const [isFormDirty, setIsFormDirty] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -52,8 +50,6 @@ export default function ServiceForm() {
         name,
         speed: speed ? parseInt(speed) : null,
         price: price ? parseFloat(price) : null,
-        regularPrice: regularPrice ? parseFloat(regularPrice) : null,
-        promoMonths: promoMonths ? parseInt(promoMonths) : null,
         serviceItems
     };
 
@@ -86,8 +82,6 @@ export default function ServiceForm() {
                 icon: null, // Ya no usamos icon
                 speed: speed ? parseInt(speed) : null,
                 price: price ? parseFloat(price) : null,
-                regularPrice: regularPrice ? parseFloat(regularPrice) : null,
-                promoMonths: promoMonths ? parseInt(promoMonths) : null,
                 serviceItems: serviceItems.map(item => ({
                     title: item.title,
                     description: item.description,
@@ -173,58 +167,22 @@ export default function ServiceForm() {
                             />
                         </div>
 
-                        {/* Precios alineados en grid de dos columnas */}
-                        <div className="grid md:grid-cols-2 gap-3">
-                            <div className="space-y-2">
-                                <Label htmlFor="price">Precio Promocional</Label>
-                                <div className="relative">
-                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2">$</span>
-                                    <Input
-                                        id="price"
-                                        type="number"
-                                        value={price}
-                                        onChange={(e) => {
-                                            setPrice(e.target.value);
-                                            setIsFormDirty(true);
-                                        }}
-                                        disabled={isSubmitting}
-                                        className="h-10 pl-7"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="regularPrice">Precio Regular</Label>
-                                <div className="relative">
-                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2">$</span>
-                                    <Input
-                                        id="regularPrice"
-                                        type="number"
-                                        value={regularPrice}
-                                        onChange={(e) => {
-                                            setRegularPrice(e.target.value);
-                                            setIsFormDirty(true);
-                                        }}
-                                        disabled={isSubmitting}
-                                        className="h-10 pl-7"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
                         <div className="space-y-2">
-                            <Label htmlFor="promoMonths">Duración (meses)</Label>
-                            <Input
-                                id="promoMonths"
-                                type="number"
-                                value={promoMonths}
-                                onChange={(e) => {
-                                    setPromoMonths(e.target.value);
-                                    setIsFormDirty(true);
-                                }}
-                                disabled={isSubmitting}
-                                className="h-10"
-                            />
+                            <Label htmlFor="price">Precio</Label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 transform -translate-y-1/2">$</span>
+                                <Input
+                                    id="price"
+                                    type="number"
+                                    value={price}
+                                    onChange={(e) => {
+                                        setPrice(e.target.value);
+                                        setIsFormDirty(true);
+                                    }}
+                                    disabled={isSubmitting}
+                                    className="h-10 pl-7"
+                                />
+                            </div>
                         </div>
 
                         {/* Service Items Section */}

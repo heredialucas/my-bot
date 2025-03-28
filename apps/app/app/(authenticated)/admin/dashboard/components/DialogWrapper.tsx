@@ -12,7 +12,7 @@ export default function DialogWrapper({ children, title }: { children: React.Rea
             open={true}
             onOpenChange={(open) => !open && router.back()}
         >
-            <DialogContent className="max-w-2xl h-[80vh] p-0 overflow-hidden">
+            <DialogContent className="max-w-4xl h-[80vh] p-0 overflow-hidden">
                 <DialogTitle className="sr-only">{title}</DialogTitle>
                 <ScrollArea className="h-full max-h-[80vh] w-full">
                     {children}

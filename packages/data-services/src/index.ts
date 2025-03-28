@@ -6,4 +6,14 @@ export * from './services/promotionService';
 export * from './services/imageService';
 
 // Exportar todos los tipos
-export * from './types'; 
+export * from './types';
+
+export {
+    getAllPromotions,
+    createPromotion,
+    getPromotionById,
+    updatePromotion,
+    deletePromotion,
+    getActivePromotionsWithDetails,
+    getAllPromotionsWithDetails
+} from './services/promotionService'; 

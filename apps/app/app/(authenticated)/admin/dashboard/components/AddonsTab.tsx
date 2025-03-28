@@ -16,6 +16,12 @@ interface Addon {
     color?: string | null;
 }
 
+// Modify the component interface to accept onDeleteAddon
+interface AddonsTabProps {
+    addons: Addon[];
+    onDeleteAddon?: (id: string) => Promise<void>;
+}
+
 // Componente para previsualizar cómo se verá el addon en el front
 function AddonPreview({ addon, isSelected }: { addon: Addon, isSelected: boolean }) {
     // Renderizar el icono correcto según el nombre
@@ -64,7 +70,8 @@ function AddonPreview({ addon, isSelected }: { addon: Addon, isSelected: boolean
     );
 }
 
-export default function AddonsTab({ addons }: { addons: Addon[] }) {
+// Update the component function to accept and use onDeleteAddon
+export default function AddonsTab({ addons, onDeleteAddon }: AddonsTabProps) {
     // Estado para los addons seleccionados
     const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
     // Estado para el addon seleccionado para previsualizar
@@ -72,12 +79,17 @@ export default function AddonsTab({ addons }: { addons: Addon[] }) {
     // Estado para mostrar vista previa en móvil
     const [showPreviewMobile, setShowPreviewMobile] = useState(false);
 
-    // Manejar eliminación de addon
+    // Update handleDelete to use the prop
     const handleDelete = async (id: string) => {
         if (window.confirm('¿Estás seguro de que deseas eliminar este complemento?')) {
             try {
-                await deleteAddon(id);
-                window.location.reload();
+                if (onDeleteAddon) {
+                    await onDeleteAddon(id);
+                } else {
+                    // Fallback to direct API call if prop not provided
+                    await deleteAddon(id);
+                    window.location.reload();
+                }
             } catch (error) {
                 console.error("Error al eliminar el complemento:", error);
                 alert("Hubo un error al eliminar el complemento");
