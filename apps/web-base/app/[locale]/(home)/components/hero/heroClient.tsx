@@ -19,38 +19,36 @@ export function HeroClient({ dictionary, sliderImages }: HeroClientProps) {
     return (
         <div className="container mx-auto flex flex-col w-full  bg-white px-0">
             {/* Swiper Carousel Section */}
-            <div className="w-full h-full">
-                <Swiper
-                    spaceBetween={0}
-                    centeredSlides={true}
-                    autoplay={{
-                        delay: 4000,
-                        disableOnInteraction: false,
-                    }}
-                    pagination={{
-                        clickable: true,
-                        bulletActiveClass: "bg-cyan-300",
-                        bulletClass: "inline-block h-2 w-2 rounded-full bg-gray-300 mx-1"
-                    }}
-                    modules={[Autoplay, Pagination]}
-                    className="w-full"
-                >
-                    {sliderImages?.map((slide) => (
-                        <SwiperSlide key={slide.id}>
-                            <div className="relative h-[220px] md:h-[400px] lg:h-[500px] w-full overflow-hidden">
-                                <Image
-                                    src={slide.url}
-                                    alt="Hero slide"
-                                    fill
-                                    className="object-cover"
-                                    sizes="100vw"
-                                    priority
-                                />
-                            </div>
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-            </div>
+            <Swiper
+                spaceBetween={0}
+                centeredSlides={true}
+                autoplay={{
+                    delay: 4000,
+                    disableOnInteraction: false,
+                }}
+                pagination={{
+                    clickable: true,
+                    bulletActiveClass: "bg-cyan-300",
+                    bulletClass: "inline-block h-2 w-2 rounded-full bg-gray-300 mx-1"
+                }}
+                modules={[Autoplay, Pagination]}
+                className="w-full"
+            >
+                {sliderImages?.map((slide) => (
+                    <SwiperSlide key={slide.id}>
+                        <div className="relative h-[200px] md:h-[400px] lg:h-[500px] w-full overflow-hidden">
+                            <Image
+                                src={slide.url}
+                                alt="Hero slide"
+                                fill
+                                className="object-contain"
+                                sizes="100vw"
+                                priority
+                            />
+                        </div>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
 
             {/* Option Switcher Section */}
             <div className="w-full flex justify-center mt-6">

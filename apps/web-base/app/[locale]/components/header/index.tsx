@@ -86,7 +86,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
   }, [isOpen]);
 
   return (
-    <header className="container mx-auto sticky top-0 left-0 z-40 w-full bg-[#1D4971] text-white">
+    <header className="container mx-auto sticky top-0 left-0 z-40 w-full bg-white lg:bg-[#1D4971] text-[#1D4971] lg:text-white shadow-sm">
       <div className=" relative flex min-h-20 flex-row items-center px-4 lg:px-6">
         {/* Logo on the left */}
         <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
               src={Logo}
               alt="Logo"
               fill
-              className="dark:invert object-contain p-1"
+              className="lg:dark:invert object-contain p-1"
               priority
             />
           </Link>
@@ -110,7 +110,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                   {item.href ? (
                     <>
                       <NavigationMenuLink asChild>
-                        <Button variant="ghost" className="text-white hover:text-white hover:bg-[#2E5A86]" asChild>
+                        <Button variant="ghost" className="text-[#1D4971] lg:text-white hover:text-[#1D4971] lg:hover:text-white hover:bg-gray-100 lg:hover:bg-[#2E5A86]" asChild>
                           <Link href={item.href}
                             target={
                               item.href.startsWith('http') ? '_blank' : undefined
@@ -121,15 +121,15 @@ export const Header = ({ dictionary }: HeaderProps) => {
                     </>
                   ) : (
                     <>
-                      <NavigationMenuTrigger className="font-medium text-sm text-white hover:text-white hover:bg-[#2E5A86]">
+                      <NavigationMenuTrigger className="font-medium text-sm text-[#1D4971] lg:text-white hover:text-[#1D4971] lg:hover:text-white hover:bg-gray-100 lg:hover:bg-[#2E5A86]">
                         {item.title}
                       </NavigationMenuTrigger>
-                      <NavigationMenuContent className="!w-[450px] p-4 bg-[#1D4971]">
+                      <NavigationMenuContent className="!w-[450px] p-4 bg-white lg:bg-[#1D4971]">
                         <div className="flex grid-cols-2 flex-col gap-4 lg:grid">
                           <div className="flex h-full flex-col justify-between">
                             <div className="flex flex-col">
-                              <p className="text-base text-white">{item.title}</p>
-                              <p className="text-gray-300 text-sm">
+                              <p className="text-base text-[#1D4971] lg:text-white">{item.title}</p>
+                              <p className="text-gray-600 lg:text-gray-300 text-sm">
                                 {item.description}
                               </p>
                             </div>
@@ -148,7 +148,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
         <div className="ml-auto lg:hidden">
           <Button
             variant="ghost"
-            className="text-white p-3"
+            className="text-[#1D4971] p-3"
             onClick={() => setOpen(!isOpen)}
             id="hamburger-button"
           >
@@ -171,18 +171,18 @@ export const Header = ({ dictionary }: HeaderProps) => {
             {/* Mobile menu */}
             <div
               id="mobile-menu"
-              className="fixed top-20 left-0 w-full bg-[#1D4971] py-6 shadow-lg z-40 lg:hidden"
+              className="fixed top-20 left-0 w-full bg-white py-6 shadow-lg z-40 lg:hidden"
             >
               <nav className="flex flex-col gap-2 px-4">
                 {navigationItems.map((item, index) => (
                   <div
                     key={`mobile-nav-item-${index}`}
-                    className="border-b border-[#2E5A86] last:border-none"
+                    className="border-b border-gray-200 last:border-none"
                   >
                     {item.href ? (
                       <Link
                         href={item.href}
-                        className="flex items-center justify-between py-4 text-white hover:text-cyan-300 transition-colors"
+                        className="flex items-center justify-between py-4 text-[#1D4971] hover:text-cyan-600 transition-colors"
                         target={item.href.startsWith('http') ? '_blank' : undefined}
                         rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                         onClick={() => setOpen(false)}
@@ -191,7 +191,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                         <MoveRight className="h-4 w-4 stroke-2" />
                       </Link>
                     ) : (
-                      <p className="py-4 text-base font-medium text-white">{item.title}</p>
+                      <p className="py-4 text-base font-medium text-[#1D4971]">{item.title}</p>
                     )}
                   </div>
                 ))}
