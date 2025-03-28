@@ -23,6 +23,10 @@ export const config: NextConfig = {
         protocol: 'https',
         hostname: 'appwiseinnovations.dev',
       },
+      {
+        protocol: 'https',
+        hostname: 'davinci.zappingtv.com',
+      },
     ],
   },
 

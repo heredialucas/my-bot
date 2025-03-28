@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from '@repo/design-system/components/ui/button';
-import { ArrowRight, ChevronLeft, Tv } from 'lucide-react';
+import { ArrowRight, ChevronLeft, Tv, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState, useEffect, useMemo } from 'react';
@@ -9,6 +8,7 @@ import { CallToActionBtn } from '@/app/[locale]/components/callToActionBtn';
 import { PricingCardProps, Plan as FeaturePlan } from './types';
 import { useServiceStore } from '@/store';
 import { Plan as StorePlan } from '@/store/types';
+import { ChannelGalleryModal } from './channel-gallery-modal';
 
 export const PricingCard = ({
     discount,
@@ -44,6 +44,10 @@ export const PricingCard = ({
 
     // Estado para controlar la vista de planes de Zapping
     const [showZappingPlans, setShowZappingPlans] = useState(false);
+    // Estado para controlar el modal de canales
+    const [showChannelModal, setShowChannelModal] = useState(false);
+    // Estado para el set de canales seleccionado
+    const [selectedChannelSet, setSelectedChannelSet] = useState<'national' | 'football' | 'plus' | 'cine'>('national');
 
     // Estado local para el plan de zapping seleccionado en esta tarjeta
     const [localSelectedPlan, setLocalSelectedPlan] = useState<FeaturePlan | null>(null);
@@ -292,7 +296,29 @@ export const PricingCard = ({
                                         <div className="text-xs text-gray-400 uppercase mb-1">INCLUYE</div>
                                         <div className="flex items-center gap-2 mb-2 text-sm">
                                             <span className="text-white">Zapping con</span>
-                                            <span className="text-[#F0436E]">+{plan.channelCount} canales</span>
+                                            <button
+                                                className="text-[#F0436E] flex items-center gap-1 bg-transparent hover:bg-[#F0436E20] px-2 py-1 rounded-md border border-[#F0436E] transition-colors"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    // Determine the channel set based on the plan name
+                                                    const planName = plan.name.toLowerCase();
+                                                    let channelSet: 'national' | 'football' | 'plus' | 'cine' = 'national';
+
+                                                    if (planName.includes('cine')) {
+                                                        channelSet = 'cine';
+                                                    } else if (planName.includes('plus')) {
+                                                        channelSet = 'plus';
+                                                    } else if (planName.includes('fútbol') || planName.includes('futbol')) {
+                                                        channelSet = 'football';
+                                                    }
+
+                                                    setSelectedChannelSet(channelSet);
+                                                    setShowChannelModal(true);
+                                                }}
+                                            >
+                                                +{plan.channelCount} canales
+                                                <Eye className="h-4 w-4 text-white" />
+                                            </button>
                                             <ArrowRight className="h-4 w-4 text-white" />
                                         </div>
 
@@ -321,6 +347,13 @@ export const PricingCard = ({
                     </div>
                 </div>
             </div>
+
+            {/* Channel Gallery Modal */}
+            <ChannelGalleryModal
+                isOpen={showChannelModal}
+                onClose={() => setShowChannelModal(false)}
+                channelSet={selectedChannelSet}
+            />
         </div>
     );
 }; 
