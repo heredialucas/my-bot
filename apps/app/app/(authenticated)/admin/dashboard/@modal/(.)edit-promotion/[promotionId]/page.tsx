@@ -6,7 +6,7 @@ export default async function EditPromotionModal({ params }: { params: Promise<{
     const { promotionId } = await params;
 
     // Obtener datos en paralelo
-    const [promotionData, services, plans, addons] = await Promise.all([
+    const [promotionData, servicesData, plans, addons] = await Promise.all([
         getPromotionById(promotionId),
         getAllServices(),
         getAllPlans(),
@@ -23,6 +23,16 @@ export default async function EditPromotionModal({ params }: { params: Promise<{
             </DialogWrapper>
         );
     }
+
+    // Transform services to match the expected Service type
+    const services = servicesData.map(service => ({
+        id: service.id,
+        name: service.name,
+        icon: service.icon,
+        description: null, // Since description doesn't exist on the service, use null
+        price: service.price === null ? undefined : service.price,
+        speed: service.speed === null ? undefined : service.speed
+    }));
 
     return (
         <DialogWrapper title="Editar Promoción">
