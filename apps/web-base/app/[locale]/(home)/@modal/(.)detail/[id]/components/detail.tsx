@@ -123,6 +123,16 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
         }
     };
 
+    // Function to scroll to the bottom of the modal
+    const scrollToBottom = () => {
+        if (modalRef.current) {
+            modalRef.current.scrollTo({
+                top: modalRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    };
+
     // Add scroll event listener
     useEffect(() => {
         const modalElement = modalRef.current;
@@ -163,8 +173,8 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                 >
                     {/* Scroll indicator arrow - only visible on mobile when not scrolled to bottom */}
                     {!isScrolledToBottom && (
-                        <div className="lg:hidden absolute bottom-4 right-4 animate-bounce">
-                            <ChevronDown className="w-10 h-10 text-[#4900FF] drop-shadow-md" />
+                        <div className="lg:hidden absolute bottom-4 right-4 animate-bounce" onClick={scrollToBottom}>
+                            <ChevronDown className="w-10 h-10 text-[#4900FF] drop-shadow-md cursor-pointer" />
                         </div>
                     )}
 

@@ -6,7 +6,7 @@ import Link from 'next/link';
 export const FloatingContactButtons = () => {
 
     return (
-        <div className="fixed right-0 bottom-1/4 sm:top-1/2 z-50 flex flex-col gap-1 animate-slide-in overflow-visible">
+        <div className="fixed right-0 bottom-4 sm:top-1/2 z-50 flex flex-col gap-1 animate-slide-in overflow-visible">
             {/* Botón de llamada */}
             <Link
                 href="/toCall"
