@@ -1,19 +1,21 @@
 "use client";
 
-import { Check, Wrench, X, FileText, Calendar, Clock, Gauge, Eye } from "lucide-react";
+import { Check, Wrench, X, FileText, Calendar, Clock, Gauge, Eye, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AddOn } from "../../../../components/features/types";
 import { CallToActionBtn } from "@/app/[locale]/components/callToActionBtn";
 import { DetailProps } from "./types";
 import { ChannelGalleryModal } from "../../../../components/features/channel-gallery-modal";
 import { partnerLogos } from "../../../../components/features/images";
 import Star from '@/public/star.png'
-
+import { floorNumber } from "@/utils/formatData";
 
 export default function Detail({ promotion, selectedAddonsFromLanding = [], allAddons = [] }: DetailProps) {
     const router = useRouter();
+    const modalRef = useRef<HTMLDivElement>(null);
+    const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
 
     // Ordenar los planes por precio (menor a mayor)
     const sortedPlans = [...promotion.plans].sort((a, b) => a.price - b.price);
@@ -84,36 +86,65 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
         const parts = ['Hola, me gustaría contratar:'];
 
         // Agregar información del plan de internet
-        parts.push(`- Plan Fibra ${speed} Mbps por $${discountedPrice.toLocaleString('es-CL')}`);
+        parts.push(`- Plan Fibra ${speed} Mbps por $${floorNumber(discountedPrice).toLocaleString('es-CL')}`);
 
         // Agregar plan de TV si está seleccionado
         if (displayPlan) {
             const channels = displayPlan.channelCount
                 ? `con ${displayPlan.channelCount} canales`
                 : '';
-            parts.push(`- Plan ${displayPlan.name} ${channels} por $${selectedPlanPrice.toLocaleString('es-CL')}`);
+            parts.push(`- Plan ${displayPlan.name} ${channels} por $${floorNumber(selectedPlanPrice).toLocaleString('es-CL')}`);
         }
 
         // Agregar complementos seleccionados
         if (localAddons.length > 0) {
             const addonsList = localAddons.map(addon =>
-                `${addon.name} por $${addon.price.toLocaleString('es-CL')}`
+                `${addon.name} por $${floorNumber(addon.price).toLocaleString('es-CL')}`
             ).join(', ');
             parts.push(`- Complementos: ${addonsList}`);
         }
 
         // Agregar precio total mensual
-        parts.push(`\nPrecio total mensual: $${totalPrice.toLocaleString('es-CL')}`);
+        parts.push(`\nPrecio total mensual: $${floorNumber(totalPrice).toLocaleString('es-CL')}`);
 
         // Agregar información sobre el precio después de la promoción
-        parts.push(`Después del mes ${promotion.duration}, el precio será $${regularTotalPrice.toLocaleString('es-CL')}`);
+        parts.push(`Después del mes ${promotion.duration}, el precio será $${floorNumber(regularTotalPrice).toLocaleString('es-CL')}`);
 
         return parts.join('\n');
     };
 
+    // Handle scroll events to show/hide scroll indicator
+    const handleScroll = () => {
+        if (modalRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = modalRef.current;
+            // Consider it "scrolled to bottom" when within 20px of the bottom
+            const isBottom = scrollHeight - scrollTop - clientHeight < 20;
+            setIsScrolledToBottom(isBottom);
+        }
+    };
+
+    // Add scroll event listener
+    useEffect(() => {
+        const modalElement = modalRef.current;
+        if (modalElement) {
+            modalElement.addEventListener('scroll', handleScroll);
+            // Initialize scroll position
+            handleScroll();
+        }
+
+        return () => {
+            if (modalElement) {
+                modalElement.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, []);
+
     return (
         <>
-            <div className="flex flex-col lg:flex-row rounded-lg overflow-hidden relative w-full max-h-[90vh] lg:max-h-none overflow-y-auto lg:overflow-visible">
+            <div
+                ref={modalRef}
+                className="flex flex-col lg:flex-row rounded-lg overflow-hidden relative w-full max-h-[90vh] lg:max-h-none overflow-y-auto lg:overflow-visible"
+            >
                 {/* Botón para cerrar el modal */}
                 <button
                     onClick={handleClose}
@@ -130,6 +161,13 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                         background: 'linear-gradient(90deg, #4900FF 70%, #00FFF9 100%)'
                     }}
                 >
+                    {/* Scroll indicator arrow - only visible on mobile when not scrolled to bottom */}
+                    {!isScrolledToBottom && (
+                        <div className="lg:hidden absolute bottom-4 right-4 animate-bounce">
+                            <ChevronDown className="w-10 h-10 text-[#4900FF] drop-shadow-md" />
+                        </div>
+                    )}
+
                     {/* Diagonal divider - moved more towards the right */}
                     <div className="hidden lg:block absolute top-0 right-0 h-full w-16"
                         style={{
@@ -218,8 +256,8 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
 
                         <div className="pt-4 lg:pt-6 border-t border-white/20">
                             <p className="text-xs lg:text-sm text-center">Cliente cancela plan a contratar al momento de instalar</p>
-                            <h2 className="text-3xl lg:text-4xl font-bold mt-1 lg:mt-2 text-center">${(discountedPrice + (selectedPlanPrice > 0 ? selectedPlanPrice : 0) + addonsTotal).toLocaleString('es-CL')}</h2>
-                            <p className="text-xs lg:text-sm text-center">¡Mes {promotion.duration} pagas ${(regularPrice + (selectedPlanPrice > 0 ? selectedPlanPrice : 0) + addonsTotal).toLocaleString('es-CL')}</p>
+                            <h2 className="text-3xl lg:text-4xl font-bold mt-1 lg:mt-2 text-center">${(floorNumber(discountedPrice + (selectedPlanPrice > 0 ? selectedPlanPrice : 0) + addonsTotal)).toLocaleString('es-CL')}</h2>
+                            <p className="text-xs lg:text-sm text-center">¡Mes {promotion.duration} pagas ${(floorNumber(regularPrice + (selectedPlanPrice > 0 ? selectedPlanPrice : 0) + addonsTotal)).toLocaleString('es-CL')}</p>
 
                             <div className="flex justify-center mt-4 lg:mt-6">
                                 <CallToActionBtn options={[getDetailFormattedText()]} />
@@ -250,9 +288,9 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
 
                     <div className="hidden lg:block text-center mb-6 lg:mb-8">
                         <h2 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-[#4900FF] to-[#00FFF9] bg-clip-text text-transparent">
-                            ${totalPrice.toLocaleString('es-CL')}
+                            ${floorNumber(totalPrice).toLocaleString('es-CL')}
                         </h2>
-                        <p className="text-gray-700 mt-1 text-sm lg:text-base">Mensual / mes {promotion.duration} pagás ${regularTotalPrice.toLocaleString('es-CL')}</p>
+                        <p className="text-gray-700 mt-1 text-sm lg:text-base">Mensual / mes {promotion.duration} pagás ${floorNumber(regularTotalPrice).toLocaleString('es-CL')}</p>
                     </div>
 
                     <div className="mb-6 lg:mb-8">
@@ -260,14 +298,14 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                         <div className="flex flex-col gap-y-2 lg:gap-y-3">
                             <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                                 <span className="text-sm lg:text-base">Fibra {speed}</span>
-                                <span className="font-medium text-sm lg:text-base">${discountedPrice.toLocaleString('es-CL')}</span>
+                                <span className="font-medium text-sm lg:text-base">${floorNumber(discountedPrice).toLocaleString('es-CL')}</span>
                             </div>
 
                             {/* Mostrar el plan seleccionado si hay uno */}
                             {displayPlan && (
                                 <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                                     <span className="text-sm lg:text-base">Plan {displayPlan.name}</span>
-                                    <span className="font-medium text-sm lg:text-base">${selectedPlanPrice.toLocaleString('es-CL')}</span>
+                                    <span className="font-medium text-sm lg:text-base">${floorNumber(selectedPlanPrice).toLocaleString('es-CL')}</span>
                                 </div>
                             )}
 
@@ -275,7 +313,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                             {localAddons.map((addon, index) => (
                                 <div key={index} className="flex justify-between items-center border-b border-gray-100 pb-2">
                                     <span className="text-sm lg:text-base">{addon.name}</span>
-                                    <span className="font-medium text-sm lg:text-base">${addon.price.toLocaleString('es-CL')}</span>
+                                    <span className="font-medium text-sm lg:text-base">${floorNumber(addon.price).toLocaleString('es-CL')}</span>
                                 </div>
                             ))}
                         </div>
@@ -380,9 +418,9 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
 
                                                 {/* Columna derecha: Precios */}
                                                 <div className="text-left lg:text-right w-full lg:w-[30%] pl-6 lg:pl-0">
-                                                    <p className="font-bold text-white text-sm lg:text-base">${plan.price.toLocaleString('es-CL')}</p>
+                                                    <p className="font-bold text-white text-sm lg:text-base">${floorNumber(plan.price).toLocaleString('es-CL')}</p>
                                                     <p className="text-[10px] lg:text-xs text-gray-400">{`${plan.promoMonths} meses`}</p>
-                                                    <p className="text-[10px] lg:text-xs text-gray-400">luego ${(plan.regularPrice || plan.price).toLocaleString('es-CL')} /mes</p>
+                                                    <p className="text-[10px] lg:text-xs text-gray-400">luego ${(floorNumber(plan.regularPrice || plan.price)).toLocaleString('es-CL')} /mes</p>
                                                 </div>
                                             </div>
                                         ))}
@@ -405,7 +443,7 @@ export default function Detail({ promotion, selectedAddonsFromLanding = [], allA
                                         <div className={`w-4 h-4 lg:w-5 lg:h-5 border-2 ${localAddons.some(a => a.id === addon.id) ? 'bg-indigo-600 border-indigo-600' : 'border-gray-400'} rounded-sm flex items-center justify-center`}>
                                             {localAddons.some(a => a.id === addon.id) && <Check className="h-2.5 w-2.5 lg:h-3 lg:w-3 text-white" />}
                                         </div>
-                                        <span className="text-sm lg:text-base">Agregar {addon.name} por <span className="text-[#4900FF]">${addon.price.toLocaleString('es-CL')}</span>/mes</span>
+                                        <span className="text-sm lg:text-base">Agregar {addon.name} por <span className="text-[#4900FF]">${floorNumber(addon.price).toLocaleString('es-CL')}</span>/mes</span>
                                     </div>
                                 </div>
                             ))}

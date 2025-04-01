@@ -10,6 +10,7 @@ import { Plan as FeaturePlan } from './types';
 import Link from 'next/link';
 import { Button } from '@repo/design-system/components/ui/button';
 import { MapPin } from 'lucide-react';
+import { floorNumber } from '@/utils/formatData';
 
 // Definir tipos para las promociones
 type Promotion = {
@@ -98,7 +99,7 @@ export function FeaturesClient({ dictionary, promotions, addons }: FeaturesClien
 
     // Formatear precio para mostrar
     const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('es-CL').format(price);
+        return new Intl.NumberFormat('es-CL').format(floorNumber(price));
     };
 
     // Obtener solo planes de tipo ZAPPING para pasarlos a la tarjeta

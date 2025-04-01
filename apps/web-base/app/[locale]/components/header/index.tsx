@@ -86,7 +86,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
   }, [isOpen]);
 
   return (
-    <header className="container mx-auto sticky top-0 left-0 z-40 w-full bg-white lg:bg-[#1D4971] text-[#1D4971] lg:text-white shadow-sm">
+    <header className="container mx-auto sticky top-0 left-0 z-40 w-full bg-[#1D4971] text-white shadow-sm">
       <div className=" relative flex min-h-20 flex-row items-center px-4 lg:px-6">
         {/* Logo on the left */}
         <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                   {item.href ? (
                     <>
                       <NavigationMenuLink asChild>
-                        <Button variant="ghost" className="text-[#1D4971] lg:text-white hover:text-[#1D4971] lg:hover:text-white hover:bg-gray-100 lg:hover:bg-[#2E5A86]" asChild>
+                        <Button variant="ghost" className="text-white hover:text-white hover:bg-gray-100 lg:hover:bg-[#2E5A86]" asChild>
                           <Link href={item.href}
                             target={
                               item.href.startsWith('http') ? '_blank' : undefined
@@ -121,7 +121,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                     </>
                   ) : (
                     <>
-                      <NavigationMenuTrigger className="font-medium text-sm text-[#1D4971] lg:text-white hover:text-[#1D4971] lg:hover:text-white hover:bg-gray-100 lg:hover:bg-[#2E5A86]">
+                      <NavigationMenuTrigger className="font-medium text-sm text-white hover:text-white hover:bg-gray-100 lg:hover:bg-[#2E5A86]">
                         {item.title}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent className="!w-[450px] p-4 bg-white lg:bg-[#1D4971]">
@@ -148,7 +148,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
         <div className="ml-auto lg:hidden">
           <Button
             variant="ghost"
-            className="text-[#1D4971] p-3"
+            className="text-white p-3"
             onClick={() => setOpen(!isOpen)}
             id="hamburger-button"
           >

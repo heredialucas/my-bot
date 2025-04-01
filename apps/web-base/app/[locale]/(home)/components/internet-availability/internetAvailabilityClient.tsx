@@ -8,6 +8,7 @@ import Image from 'next/image';
 import phoneImage from '@/public/phone.png';
 import { ChevronDown } from 'lucide-react';
 import { contact } from '../../../contact/actions/contact';
+import { floorNumber } from '@/utils/formatData';
 
 type InternetAvailabilityClientProps = {
     dictionary: Dictionary;
@@ -108,7 +109,7 @@ export function InternetAvailabilityClient({ dictionary, bestDeal }: InternetAva
 
     // Valores a mostrar, con fallbacks
     const displaySpeed = bestDeal?.speed || 300;
-    const displayPrice = bestDeal?.price ? new Intl.NumberFormat('es-CL').format(bestDeal.price) : '14.990';
+    const displayPrice = bestDeal?.price ? new Intl.NumberFormat('es-CL').format(floorNumber(bestDeal.price)) : '14.990';
 
     // Data para el acordeón
     const accordionData = [

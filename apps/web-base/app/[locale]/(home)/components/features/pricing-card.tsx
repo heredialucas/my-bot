@@ -11,6 +11,7 @@ import { Plan as StorePlan } from '@/store/types';
 import { ChannelGalleryModal } from './channel-gallery-modal';
 import Image from 'next/image';
 import { partnerLogos } from './images';
+import { floorNumber } from '@/utils/formatData';
 
 export const PricingCard = ({
     discount,
@@ -139,26 +140,26 @@ export const PricingCard = ({
         const parts = ['Hola, me gustaría contratar:'];
 
         // Agregar información del plan de internet
-        parts.push(`- Plan Fibra ${speed} Mbps por $${price.toLocaleString('es-CL')}`);
+        parts.push(`- Plan Fibra ${speed} Mbps por $${floorNumber(price).toLocaleString('es-CL')}`);
 
         // Agregar plan de Zapping si está seleccionado
         if (localSelectedPlan) {
             const channels = localSelectedPlan.channelCount
                 ? `con ${localSelectedPlan.channelCount} canales`
                 : '';
-            parts.push(`- Plan ${localSelectedPlan.name} ${channels} por $${localSelectedPlan.price.toLocaleString('es-CL')}`);
+            parts.push(`- Plan ${localSelectedPlan.name} ${channels} por $${floorNumber(localSelectedPlan.price).toLocaleString('es-CL')}`);
         }
 
         // Agregar complementos seleccionados
         if (selectedAddons.length > 0) {
             const addonsList = selectedAddons.map(addon =>
-                `${addon.name} por $${addon.price.toLocaleString('es-CL')}`
+                `${addon.name} por $${floorNumber(addon.price).toLocaleString('es-CL')}`
             ).join(', ');
             parts.push(`- Complementos: ${addonsList}`);
         }
 
         // Agregar precio total mensual
-        parts.push(`\nPrecio total mensual: $${totalPrice.toLocaleString('es-CL')}`);
+        parts.push(`\nPrecio total mensual: $${floorNumber(totalPrice).toLocaleString('es-CL')}`);
 
         return parts.join('\n');
     };
@@ -197,7 +198,7 @@ export const PricingCard = ({
                             <div className="hidden sm:block text-indigo-600 text-4xl font-bold mb-4">{dictionary.web.home.cases.pricing.fiber} {speed}</div>
                             <div className="block sm:hidden text-indigo-600 text-2xl font-bold">{dictionary.web.home.cases.pricing.fiber} {speed}</div>
                             <div className="text-gray-700">{dictionary.web.home.cases.pricing.monthly}</div>
-                            <div className="text-indigo-600 text-4xl sm:text-5xl font-bold mb-2">${totalPrice.toLocaleString('es-CL')}</div>
+                            <div className="text-indigo-600 text-4xl sm:text-5xl font-bold mb-2">${floorNumber(totalPrice).toLocaleString('es-CL')}</div>
                             <div className="text-sm text-gray-500">
                                 {dictionary.web.home.cases.pricing.laterMonthPrice.replace('{months}', months.toString())} ${(price + (includeAddons ? addonsTotal : 0) + zappingPrice).toLocaleString('es-CL')}
                             </div>
@@ -209,20 +210,20 @@ export const PricingCard = ({
                                 <div className="text-gray-600 text-sm font-medium mb-1">{dictionary.web.home.cases.pricing.serviceDetails}</div>
                                 <div className="flex justify-between text-sm py-1 border-b border-gray-100">
                                     <span className="text-gray-500">• {dictionary.web.home.cases.pricing.fiber} {speed}</span>
-                                    <span className="text-gray-700">${price.toLocaleString('es-CL')}</span>
+                                    <span className="text-gray-700">${floorNumber(price).toLocaleString('es-CL')}</span>
                                 </div>
 
                                 {localSelectedPlan && (
                                     <div className="flex justify-between text-sm py-1 border-b border-gray-100">
                                         <span className="text-gray-500">• Plan {localSelectedPlan.name}</span>
-                                        <span className="text-gray-700">${localSelectedPlan.price.toLocaleString('es-CL')}</span>
+                                        <span className="text-gray-700">${floorNumber(localSelectedPlan.price).toLocaleString('es-CL')}</span>
                                     </div>
                                 )}
 
                                 {selectedAddons.map(addon => (
                                     <div key={addon.id} className="flex justify-between text-sm py-1 border-b border-gray-100 last:border-0">
                                         <span className="text-gray-500">• {addon.name}</span>
-                                        <span className="text-gray-700">${addon.price.toLocaleString('es-CL')}</span>
+                                        <span className="text-gray-700">${floorNumber(addon.price).toLocaleString('es-CL')}</span>
                                     </div>
                                 ))}
                             </div>
@@ -288,7 +289,7 @@ export const PricingCard = ({
 
                                     <div className="ml-8">
                                         <div className="flex items-baseline gap-2 mb-1">
-                                            <span className="text-white text-xl font-bold">${plan.price.toLocaleString('es-CL')}</span>
+                                            <span className="text-white text-xl font-bold">${floorNumber(plan.price).toLocaleString('es-CL')}</span>
                                             <span className="text-[#F0436E] text-xs">primer mes</span>
                                         </div>
                                         <div className="text-gray-400 text-xs mb-2">
