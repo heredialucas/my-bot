@@ -36,7 +36,7 @@ export function HeroClient({ dictionary, sliderImages }: HeroClientProps) {
             >
                 {sliderImages?.map((slide) => (
                     <SwiperSlide key={slide.id}>
-                        <div className="relative h-[200px] md:h-[400px] lg:h-[500px] w-full overflow-hidden">
+                        <div className="relative h-[120px] sm:h-[150px] md:h-[500px] lg:h-[700px] w-full overflow-hidden">
                             <Image
                                 src={slide.url}
                                 alt="Hero slide"
