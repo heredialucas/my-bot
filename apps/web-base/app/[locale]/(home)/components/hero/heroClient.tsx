@@ -26,22 +26,18 @@ export function HeroClient({ dictionary, sliderImages }: HeroClientProps) {
                     delay: 4000,
                     disableOnInteraction: false,
                 }}
-                pagination={{
-                    clickable: true,
-                    bulletActiveClass: "bg-cyan-300",
-                    bulletClass: "inline-block h-2 w-2 rounded-full bg-gray-300 mx-1"
-                }}
+                pagination={false}
                 modules={[Autoplay, Pagination]}
                 className="w-full"
             >
                 {sliderImages?.map((slide) => (
-                    <SwiperSlide key={slide.id}>
+                    <SwiperSlide key={slide.id} >
                         <div className="relative h-[120px] sm:h-[150px] md:h-[500px] lg:h-[700px] w-full overflow-hidden">
                             <Image
                                 src={slide.url}
                                 alt="Hero slide"
                                 fill
-                                className="object-contain"
+                                className="object-cover"
                                 sizes="100vw"
                                 priority
                             />
