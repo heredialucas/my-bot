@@ -1,3 +1,4 @@
+/* Eliminar toda la sección de importación de fuentes y clases personalizadas */
 .shiki {
   background-color: var(--shiki-light-bg);
   color: var(--shiki-light);
@@ -33,51 +34,4 @@
 .shiki[title]:before {
   content: attr(title);
   @apply inline-block text-muted-foreground text-right mb-6 text-sm;
-}
-
-/* Prevenir scroll horizontal en toda la aplicación */
-html, body {
-  padding: 0;
-  margin: 0;
-  overflow-x: hidden;
-  position: relative;
-  width: 100%;
-}
-
-/* Estilos personalizados para el scrollbar */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #F0436E transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #F0436E;
-  border-radius: 20px;
-}
-
-/* Animación para deslizamiento de derecha a izquierda */
-@keyframes slide-in {
-  0% {
-    transform: translate(100%, -50%);
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(0, -50%);
-    opacity: 1;
-  }
-}
-
-.animate-slide-in {
-  animation: slide-in 1.5s ease-out forwards;
 }

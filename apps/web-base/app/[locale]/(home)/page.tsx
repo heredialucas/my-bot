@@ -2,12 +2,13 @@ import { showBetaFeature } from '@repo/feature-flags';
 import { getDictionary } from '@repo/internationalization';
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
-import { FeaturesServer } from './components/features/featuresServer';
-import { HeroServer } from './components/hero/heroServer';
-import { InternetAvailabilityServer } from './components/internet-availability/internetAvailabilityServer';
-import { FiberOpticInfoServer } from './components/fiber-optic-info/fiberOpticInfoServer';
-import { CallToActionServer } from './components/call-to-action/callToActionServer';
-import { FaqServer } from './components/faq/faqServer';
+import { Hero } from './components/hero';
+import { Cases } from './components/cases';
+import { CTA } from './components/cta';
+import { FAQ } from './components/faq';
+import { Features } from './components/features';
+import { Stats } from './components/stats';
+import { Testimonials } from './components/testimonials';
 
 type HomeProps = {
   params: Promise<{
@@ -31,12 +32,18 @@ const Home = async ({ params }: HomeProps) => {
 
   return (
     <>
-      <HeroServer dictionary={dictionary} />
-      <FeaturesServer dictionary={dictionary} />
-      <InternetAvailabilityServer dictionary={dictionary} />
-      <FiberOpticInfoServer dictionary={dictionary} />
-      <CallToActionServer dictionary={dictionary} />
-      <FaqServer dictionary={dictionary} />
+      {betaFeature && (
+        <div className="w-full bg-black py-2 text-center text-white">
+          Beta feature now available
+        </div>
+      )}
+      <Hero dictionary={dictionary} />
+      <Cases dictionary={dictionary} />
+      <Features dictionary={dictionary} />
+      <Stats dictionary={dictionary} />
+      <Testimonials dictionary={dictionary} />
+      <FAQ dictionary={dictionary} />
+      <CTA dictionary={dictionary} />
     </>
   );
 };

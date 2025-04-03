@@ -1,9 +1,6 @@
 'use client';
 
-import { SearchUsers } from '../../components/SearchUsers';
-import { useClerk } from '@repo/auth/client';
-import { useEffect, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@repo/design-system/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@repo/design-system/components/ui/avatar';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
@@ -23,84 +20,30 @@ import {
     TableRow
 } from '@repo/design-system/components/ui/table';
 import { UserCog } from 'lucide-react';
-import { removeRole, setRole } from '../server/_actionUser';
-
-interface User {
-    id: string;
-    firstName: string | null;
-    lastName: string | null;
-    imageUrl: string;
-    emailAddresses: Array<{
-        id: string;
-        emailAddress: string;
-    }>;
-    primaryEmailAddressId: string | null;
-    publicMetadata: {
-        role?: string;
-    };
-}
+import { getAllUsers } from '@repo/data-services';
+import { UserData } from '@repo/data-services';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 export default function UsersManagementPage() {
-    const { user: currentUser } = useClerk();
-    const [users, setUsers] = useState<User[]>([]);
+
+    const [users, setUsers] = useState<UserData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const fetchUsers = async () => {
-            setIsLoading(true);
             try {
-                const response = await fetch(`/api/users${searchQuery ? `?search=${searchQuery}` : ''}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setUsers(data.users);
-                }
+                const users = await getAllUsers();
+                setUsers(users);
+                setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching users:', error);
-            } finally {
                 setIsLoading(false);
             }
         };
 
         fetchUsers();
-    }, [searchQuery]);
-
-    // Imprimir el rol del usuario para depuración
-    useEffect(() => {
-        if (currentUser) {
-            console.log('ROLES DEL USUARIO:', {
-                publicMetadataRole: currentUser.publicMetadata?.role,
-                orgRole: currentUser.organizationMemberships?.[0]?.role
-            });
-        }
-    }, [currentUser]);
-
-    const handleSearch = (query: string) => {
-        setSearchQuery(query);
-    };
-
-    // Verificación manual de roles
-    const isAdmin =
-        currentUser?.publicMetadata?.role === 'admin' ||
-        currentUser?.organizationMemberships?.some(m => m.role === 'org:admin');
-
-    // Si no es admin, mostrar mensaje de error
-    if (!isAdmin) {
-        return (
-            <div className="p-6">
-                <p className="text-red-500 mb-4">No tienes permisos para acceder a esta página. Se requiere rol de administrador.</p>
-
-                <div className="border rounded p-4 bg-gray-50 mt-4">
-                    <h3 className="font-bold mb-2">Información de Depuración</h3>
-                    <p className="mb-2">Roles detectados:</p>
-                    <ul className="list-disc pl-5">
-                        <li>Public Metadata Role: {String(currentUser?.publicMetadata?.role || "No definido")}</li>
-                        <li>Organization Role: {currentUser?.organizationMemberships?.[0]?.role || "No definido"}</li>
-                    </ul>
-                </div>
-            </div>
-        );
-    }
+    }, []);
 
     return (
         <div className="py-6">
@@ -114,7 +57,6 @@ export default function UsersManagementPage() {
                 <UserCog className="h-8 w-8 text-gray-400 dark:text-gray-500" />
             </div>
 
-            <SearchUsers onSearch={handleSearch} />
 
             <div className="my-6">
                 <Card>
@@ -141,28 +83,22 @@ export default function UsersManagementPage() {
                                 </TableHeader>
                                 <TableBody>
                                     {users.map((user) => {
-                                        const primaryEmail = user.emailAddresses.find(
-                                            (email) => email.id === user.primaryEmailAddressId
-                                        )?.emailAddress;
+                                        const primaryEmail = user.email;
 
-                                        const currentRole = user.publicMetadata?.role;
+                                        const currentRole = user.role;
 
                                         return (
                                             <TableRow key={user.id}>
                                                 <TableCell>
                                                     <div className="flex items-center gap-3">
                                                         <Avatar>
-                                                            <AvatarImage
-                                                                src={user.imageUrl}
-                                                                alt={`${user.firstName} ${user.lastName}`}
-                                                            />
                                                             <AvatarFallback>
-                                                                {user.firstName?.[0]}{user.lastName?.[0]}
+                                                                {user.name?.[0]}
                                                             </AvatarFallback>
                                                         </Avatar>
                                                         <div>
                                                             <p className="font-medium">
-                                                                {user.firstName} {user.lastName}
+                                                                {user.name}
                                                             </p>
                                                             <p className="text-xs text-gray-500">
                                                                 ID: {user.id.slice(0, 8)}...
@@ -177,8 +113,8 @@ export default function UsersManagementPage() {
                                                     {currentRole ? (
                                                         <Badge
                                                             variant={
-                                                                currentRole === 'admin' ? 'default' :
-                                                                    currentRole === 'accountant' ? 'outline' : 'secondary'
+                                                                currentRole === 'ADMIN' ? 'default' :
+                                                                    currentRole === 'USER' ? 'outline' : 'secondary'
                                                             }
                                                         >
                                                             {currentRole}
@@ -191,47 +127,47 @@ export default function UsersManagementPage() {
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="flex gap-2">
-                                                        <form action={setRole}>
+                                                        <form >
                                                             <input type="hidden" name="id" value={user.id} />
                                                             <input type="hidden" name="role" value="admin" />
                                                             <Button
                                                                 type="submit"
                                                                 size="sm"
-                                                                variant={currentRole === 'admin' ? 'default' : 'outline'}
-                                                                disabled={currentRole === 'admin'}
+                                                                variant={currentRole === 'ADMIN' ? 'default' : 'outline'}
+                                                                disabled={currentRole === 'ADMIN'}
                                                             >
                                                                 Admin
                                                             </Button>
                                                         </form>
 
-                                                        <form action={setRole}>
+                                                        <form >
                                                             <input type="hidden" name="id" value={user.id} />
                                                             <input type="hidden" name="role" value="accountant" />
                                                             <Button
                                                                 type="submit"
                                                                 size="sm"
-                                                                variant={currentRole === 'accountant' ? 'default' : 'outline'}
-                                                                disabled={currentRole === 'accountant'}
+                                                                variant={currentRole === 'USER' ? 'default' : 'outline'}
+                                                                disabled={currentRole === 'USER'}
                                                             >
                                                                 Contador
                                                             </Button>
                                                         </form>
 
-                                                        <form action={setRole}>
+                                                        <form >
                                                             <input type="hidden" name="id" value={user.id} />
                                                             <input type="hidden" name="role" value="user" />
                                                             <Button
                                                                 type="submit"
                                                                 size="sm"
-                                                                variant={currentRole === 'user' ? 'default' : 'outline'}
-                                                                disabled={currentRole === 'user'}
+                                                                variant={currentRole === 'USER' ? 'default' : 'outline'}
+                                                                disabled={currentRole === 'USER'}
                                                             >
                                                                 Cliente
                                                             </Button>
                                                         </form>
 
                                                         {currentRole && (
-                                                            <form action={removeRole}>
+                                                            <form >
                                                                 <input type="hidden" name="id" value={user.id} />
                                                                 <Button type="submit" size="sm" variant="destructive">
                                                                     Quitar Rol

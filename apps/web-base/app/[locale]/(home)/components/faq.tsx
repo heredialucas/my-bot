@@ -1,0 +1,59 @@
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@repo/design-system/components/ui/accordion';
+import { Button } from '@repo/design-system/components/ui/button';
+import type { Dictionary } from '@repo/internationalization';
+import { PhoneCall } from 'lucide-react';
+import Link from 'next/link';
+
+type FAQProps = {
+  dictionary: Dictionary;
+};
+
+export const FAQ = ({ dictionary }: FAQProps) => (
+  <div className="w-full py-20 lg:py-40">
+    <div className="container mx-auto">
+      <div className="grid gap-10 lg:grid-cols-2">
+        <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <h4 className="max-w-xl text-left font-black text-3xl tracking-tighter md:text-5xl var(--font-nunito) bg-gradient-to-r from-[#FFB800] via-purple-500 to-blue-600 inline-block text-transparent bg-clip-text">
+                {dictionary.web.home.faq.title}
+              </h4>
+              <p className="max-w-xl text-left text-lg text-muted-foreground leading-relaxed tracking-tight lg:max-w-lg var(--font-nunito)">
+                {dictionary.web.home.faq.description}
+              </p>
+            </div>
+            <div className="">
+              <Button className="gap-4 bg-[#FFB800] hover:bg-[#FFE01B] text-black var(--font-nunito) font-black" asChild>
+                <Link href="/contact">
+                  {dictionary.web.home.faq.cta}{' '}
+                  <PhoneCall className="h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+        <Accordion type="single" collapsible className="w-full">
+          {dictionary.web.home.faq.items.map((item, index) => (
+            <AccordionItem
+              key={index}
+              value={`index-${index}`}
+              className="border border-[#7dd3c8] mb-4 rounded-md overflow-hidden"
+            >
+              <AccordionTrigger className="bg-[#7dd3c8] px-4 py-3 text-black font-black hover:no-underline hover:bg-[#6bc0b5] var(--font-nunito)">
+                {item.question}
+              </AccordionTrigger>
+              <AccordionContent className="px-4 py-3 text-gray-700 var(--font-nunito) font-bold">
+                {item.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </div>
+  </div>
+);

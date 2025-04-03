@@ -10,8 +10,7 @@ import { headers } from 'next/headers';
 export const contact = async (
   name: string,
   email: string,
-  message: string,
-  phone?: string
+  message: string
 ): Promise<{
   error?: string;
 }> => {
@@ -36,31 +35,18 @@ export const contact = async (
       throw new Error('RESEND_FROM is not set');
     }
 
-    // Para entorno de desarrollo, usa onboarding@resend.dev como remitente
-    const fromEmail = process.env.NODE_ENV === 'development'
-      ? 'onboarding@resend.dev'
-      : env.RESEND_FROM;
-
-    // Siempre enviar a la cuenta de producción de NetFull
-    const toEmail = 'netfull.cuenta.produccion@gmail.com';
-
-    const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: 'netfull.cuenta.produccion@gmail.com',
-      subject: 'Nuevo contacto desde la web',
+    await resend.emails.send({
+      from: env.RESEND_FROM,
+      to: env.RESEND_FROM,
+      subject: 'Contact form submission',
       replyTo: email,
-      react: <ContactTemplate name={name} email={email} message={message} phone={phone} />,
+      react: <ContactTemplate name={name} email={email} message={message} />,
     });
 
-    if (error) {
-      console.error('Error al enviar correo:', error);
-      throw new Error(`Error al enviar correo: ${error.message}`);
-    }
-
-    console.log('Correo enviado con éxito:', data);
     return {};
   } catch (error) {
     const errorMessage = parseError(error);
+
     return { error: errorMessage };
   }
 };

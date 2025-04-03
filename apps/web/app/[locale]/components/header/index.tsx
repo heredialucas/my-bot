@@ -16,9 +16,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import type { Dictionary } from '@repo/internationalization';
-import Image from 'next/image';
 import { LanguageSwitcher } from './language-switcher';
-import Logo from './logo.png';
 
 type HeaderProps = {
   dictionary: Dictionary;
@@ -48,13 +46,13 @@ export const Header = ({ dictionary }: HeaderProps) => {
     },
   ];
 
-  if (env.NEXT_PUBLIC_DOCS_URL) {
-    navigationItems.push({
-      title: dictionary.web.header.docs,
-      href: env.NEXT_PUBLIC_DOCS_URL,
-      description: '',
-    });
-  }
+  // if (env.NEXT_PUBLIC_DOCS_URL) {
+  //   navigationItems.push({
+  //     title: dictionary.web.header.docs,
+  //     href: env.NEXT_PUBLIC_DOCS_URL,
+  //     description: '',
+  //   });
+  // }
 
   const [isOpen, setOpen] = useState(false);
   return (
@@ -115,13 +113,13 @@ export const Header = ({ dictionary }: HeaderProps) => {
           </NavigationMenu>
         </div>
         <div className="flex items-center gap-2 lg:justify-center">
-          <Image
+          {/* <Image
             src={Logo}
             alt="Logo"
             width={24}
             height={24}
             className="dark:invert"
-          />
+          /> */}
           <p className="whitespace-nowrap font-semibold">next-forge</p>
         </div>
         <div className="flex w-full justify-end gap-4">

@@ -1,181 +1,178 @@
 {
   "web": {
     "global": {
-      "primaryCta": "Reserva una llamada",
-      "secondaryCta": "Regístrate"
+      "primaryCta": "Contactar",
+      "secondaryCta": "Comenzar ahora"
     },
     "header": {
       "home": "Inicio",
-      "product": "Internet hogar",
+      "product": {
+        "title": "Producto",
+        "description": "Gestionar registros tributarios para pequeñas empresas ya es un desafío suficiente.",
+        "pricing": "Precios"
+      },
       "blog": "Blog",
-      "docs": "Documentos",
       "contact": "Contacto",
       "signIn": "Iniciar sesión",
-      "signUp": "Comienza",
-      "nosotros": "Nosotros",
-      "sucursalVirtual": "Sucursal virtual",
-      "pagaTuBoleta": "Pagá tu boleta"
+      "signUp": "Comienza"
     },
     "home": {
       "meta": {
-        "title": "Transforma las operaciones de tu negocio hoy",
-        "description": "En el mundo acelerado de hoy, tu negocio merece más que sistemas de comercio obsoletos. Nuestra plataforma innovadora simplifica las operaciones, reduce la complejidad y ayuda a las pequeñas empresas a prosperar en la economía moderna."
+        "title": "SOPY - Gestión Tributaria Simple",
+        "description": "La plataforma que conecta contadores con sus clientes para simplificar el control de registros tributarios, cumplimiento fiscal y seguimiento de obligaciones."
       },
       "hero": {
-        "announcement": "Lee nuestro último artículo",
-        "serviceOptions": {
-          "internetHogar": "Internet hogar",
-          "internetTV": "Internet + TV online"
-        }
+        "announcement": "Lee nuestra última actualización fiscal"
       },
       "cases": {
-        "title": "Historias de éxito que empoderan en todo el mundo",
-        "wifiExtender": {
-          "question": "¿Quiere llevar un extensor Wifi?",
-          "add": "Agregar por",
-          "price": "$2.400",
-          "perMonth": "/mes"
-        },
-        "pricing": {
-          "discount": "DESCUENTO",
-          "months": "MESES",
-          "newCustomerPromo": "Promoción clientes nuevos",
-          "plan": "Plan",
-          "fiber": "Fibra",
-          "monthly": "Mensual",
-          "laterMonthPrice": "Mes {months} pagás",
-          "serviceDetails": "Detalles del servicio",
-          "wifiExtender": "Extensor Wifi",
-          "checkAvailability": "Revisar factibilidad en mi domicilio",
-          "viewInclusions": "Ver lo que incluye",
-          "chooseTVPlan": "Elegí tu plan de Zapping"
-        },
-        "infoBoxes": {
-          "billing": "Todo lo que debes saber de tu facturación te lo explicamos aquí",
-          "fiberPlans": "Importante planes de fibra óptica",
-          "payNow": "Paga aquí",
-          "billingContent": [
-            "Tu servicio considera cobro vencido, es decir, el periodo de facturación de tu boleta inicia el día que se instala del mes en curso hasta 30 días después. Recuerda que al momento de instalar se cancela ($) el monto convenido por proceso de habilitación. Este monto es equivalente al plan a contratar. Para dueños de casa solo cancela el plan, para arrendatarios o extranjeros cancela el plan + $10.000 al momento de instalar. Para modificar la fecha debes contactarnos directamente vía teléfonica. Estas solicitudes NO serán consideradas si utilizas otro medio de comunicación (WhatsApp, mensajes de texto, entre otros).",
-            "La boleta se distribuye por email 15 días antes del día de pago.",
-            "En caso de no pago, tu servicio se suspenderá 5 días después de la fecha máxima de pago, es decir, si tu fecha de pago son 01 tu servicio será suspendido el día 06 a las 09:00 aplicando el costo de corte y reposición.",
-            "Si tu servicio fue suspendido por no pago y pagas tu deuda, la reactivación de este se realizará como máximo dentro de las 24hrs siguientes al pago."
-          ],
-          "fiberPlansContent": [
-            "La velocidad se comparte entre los dispositivos que tienes conectados simultáneamente. Además la cobertura de red se puede ver afectada mientras más dispositivos tengas conectados al mismo tiempo.",
-            "La señal de WIFI podrá verse obstaculizada por muros, vidrios, entre otras cosas. Además la cercanía con otros dispositivos electrónicos pueden causar interferencia en la señal.",
-            "La señal se debilita a medida que te alejas del router, es por eso que la velocidad de navegación se ve afectada."
-          ]
-        }
+        "title": "De confianza para Contadores y Profesionales Financieros"
       },
       "features": {
-        "title": "Herramientas poderosas para el negocio moderno",
-        "description": "Descubre cómo nuestras características de vanguardia pueden revolucionar tus operaciones diarias.",
+        "title": "Herramientas Poderosas para Contadores Modernos",
+        "description": "Descubre cómo nuestras características especializadas pueden revolucionar la gestión tributaria para tus clientes.",
         "items": [
           {
-            "title": "Operaciones simplificadas",
-            "description": "Nuestra plataforma simplifica las operaciones, reduce la complejidad y ayuda a las pequeñas empresas a prosperar en la economía moderna."
+            "title": "Registros Tributarios Simplificados",
+            "description": "Nuestra plataforma simplifica la gestión de registros tributarios, reduce la complejidad del cumplimiento y ayuda a las empresas a cumplir con las normativas cambiantes."
+          },
+          {
+            "title": "Panel de Control para Clientes",
+            "description": "Proporciona a tus clientes una visión clara de su situación fiscal con paneles e informes fáciles de entender."
+          },
+          {
+            "title": "Actualizaciones en Tiempo Real",
+            "description": "Mantente informado con actualizaciones en tiempo real sobre las regulaciones fiscales y requisitos de cumplimiento relevantes para tus clientes."
+          },
+          {
+            "title": "Gestión Multi-cliente",
+            "description": "Gestiona eficientemente los registros tributarios de múltiples clientes desde una interfaz unificada diseñada para contadores."
           }
         ]
       },
       "stats": {
-        "title": "Resultados reales, impacto real",
-        "description": "Únete a miles de negocios que han transformado sus operaciones con nuestra plataforma. Nuestras soluciones han ayudado a las empresas a reducir los costos administrativos en un 60% y aumentar la eficiencia comercial en un 45% de media.",
+        "title": "Resultados Reales para Profesionales Contables",
+        "description": "Nuestra plataforma está diseñada específicamente para ayudar a contadores a gestionar mejor los registros tributarios de sus clientes, reducir la carga administrativa y aumentar la satisfacción.",
         "items": [
-          "Usuarios activos mensuales",
-          "Usuarios activos diarios",
-          "Ingresos recurrentes mensuales",
-          "Costo por adquisición"
+          "Registros tributarios procesados",
+          "Firmas contables activas",
+          "Tiempo ahorrado en cumplimiento",
+          "Satisfacción del cliente"
         ]
       },
       "testimonials": {
-        "title": "Escucha a nuestra comunidad próspera",
+        "title": "Escucha a los Contadores Profesionales que Usan SOPY",
         "items": [
           {
-            "title": "Mejor decisión",
-            "description": "Nuestro objetivo era simplificar el comercio de las pequeñas y medianas empresas, haciéndolo más fácil y rápido que nunca, y lo logramos juntos.",
+            "title": "Revolucionó mi práctica contable",
+            "description": "SOPY ha transformado la forma en que gestiono los registros tributarios de mis clientes. La plataforma es intuitiva, potente y me ahorra horas cada semana en tareas administrativas.",
             "author": {
-              "name": "Hayden Bleasel",
+              "name": "María Rodríguez",
+              "image": "https://github.com/haydenbleasel.png"
+            }
+          },
+          {
+            "title": "Mis clientes la adoran",
+            "description": "SOPY no solo facilita mi trabajo, sino que mis clientes aprecian la transparencia y claridad que aporta a su situación fiscal. Es beneficioso para todos.",
+            "author": {
+              "name": "Juan Pérez",
               "image": "https://github.com/haydenbleasel.png"
             }
           }
         ]
       },
       "faq": {
-        "title": "Preguntas comunes, respuestas de expertos",
-        "description": "Obtén respuestas rápidas a tus preguntas más urgentes sobre nuestra plataforma. Hemos recopilado todo lo que necesitas saber sobre la transformación de las operaciones de tu negocio y cómo comenzar con soluciones comerciales modernas.",
+        "title": "Preguntas Frecuentes sobre SOPY",
+        "description": "Obtén respuestas rápidas a tus preguntas más urgentes sobre nuestra plataforma de gestión tributaria. Hemos recopilado todo lo que los contadores necesitan saber sobre la transformación de la gestión de registros tributarios de sus clientes.",
         "cta": "¿Tienes preguntas? Contáctanos",
         "items": [
           {
-            "question": "¿Qué es la plataforma?",
-            "answer": "La plataforma es una plataforma de comercio que te permite comerciar con confianza."
+            "question": "¿Qué es SOPY?",
+            "answer": "SOPY es una plataforma SaaS especializada que ayuda a los contadores a gestionar los registros tributarios de sus clientes de manera eficiente y precisa, garantizando el cumplimiento y reduciendo la carga administrativa."
+          },
+          {
+            "question": "¿Cómo ayuda SOPY a mi práctica contable?",
+            "answer": "SOPY agiliza la gestión de registros tributarios, automatiza tareas rutinarias de cumplimiento, proporciona actualizaciones en tiempo real sobre las normativas y ofrece interfaces amigables para el cliente, permitiéndote centrarte en proporcionar servicios de valor añadido."
+          },
+          {
+            "question": "¿Pueden mis clientes acceder a sus propios datos?",
+            "answer": "Sí, SOPY proporciona un portal seguro para clientes donde pueden ver sus registros tributarios, seguir su estado de cumplimiento y comunicarse directamente contigo sobre sus asuntos fiscales."
+          },
+          {
+            "question": "¿Es SOPY seguro y cumple con las normativas?",
+            "answer": "Absolutamente. SOPY está construido con protocolos de seguridad líderes en la industria y cumple completamente con las regulaciones de protección de datos, asegurando que la información fiscal sensible de tus clientes esté siempre protegida."
           }
         ]
       },
       "cta": {
-        "title": "Inicia la transformación de tu negocio",
-        "description": "Únete a miles de empresas visionarias que ya han modernizado sus operaciones. Nuestra plataforma ofrece las herramientas, el apoyo y la eficiencia que necesitas para tener éxito en el competitivo mercado actual. Comienza en minutos."
+        "title": "Transforma tu Práctica Contable Hoy",
+        "description": "Únete a cientos de contadores visionarios que ya han modernizado sus procesos de gestión tributaria. SOPY ofrece las herramientas, el apoyo y la eficiencia que necesitas para destacar en la prestación de servicios fiscales a tus clientes. Comienza en minutos."
+      }
+    },
+    "pricing": {
+      "title": "Precios que tienen sentido para tu práctica",
+      "description": "Elige el plan que se adapte a las necesidades de tu práctica contable",
+      "monthly": "mes",
+      "popular": "POPULAR",
+      "tryIt": "Pruébalo",
+      "contactUs": "Contáctanos",
+      "plans": [
+        {
+          "name": "Pequeña Empresa",
+          "description": "Perfecto para pequeñas prácticas contables que están comenzando",
+          "price": "40"
+        },
+        {
+          "name": "Mediana Empresa",
+          "description": "Ideal para firmas establecidas que buscan expandir sus servicios",
+          "price": "80"
+        },
+        {
+          "name": "Empresarial",
+          "description": "Solución completa para grandes firmas contables con necesidades complejas",
+          "price": "160"
+        }
+      ],
+      "features": {
+        "sso": "Inicio de Sesión Único (SSO)",
+        "ai": "Asistente de IA",
+        "version": "Control de Versiones",
+        "members": "{count} miembros del equipo"
       }
     },
     "blog": {
       "meta": {
-        "title": "Blog",
-        "description": "Pensamientos, ideas y opiniones."
+        "title": "Blog de Perspectivas Fiscales",
+        "description": "Análisis expertos, consejos y actualizaciones sobre gestión tributaria para contadores y profesionales financieros."
       }
     },
     "contact": {
       "meta": {
-        "title": "Hablemos sobre tu negocio",
-        "description": "Programa una consulta con nuestro equipo para discutir cómo podemos ayudar a agilizar tus operaciones e impulsar el crecimiento de tu negocio."
+        "title": "Hablemos sobre tu Práctica Contable",
+        "description": "Contacta con nuestro equipo para discutir cómo SOPY puede ayudar a simplificar la gestión tributaria para tus clientes y hacer crecer tu práctica."
       },
       "hero": {
-        "title": "Estamos para ayudarte",
-        "description": "Para nosotros es un placer atenderte. Resuelve todas tus dudas relativas a nuestro servicio de forma ágil y sencilla a través de nuestro formulario de contacto. Es importante entregarte el mejor servicio posible, es por eso que responderemos tu mensaje lo antes posible.",
         "benefits": [
           {
-            "title": "Consultoría personalizada",
-            "description": "Obtén soluciones a medida y asesoramiento experto específico para las necesidades de tu negocio."
+            "title": "Consulta Personalizada",
+            "description": "Obtén soluciones personalizadas y asesoramiento experto específico para las necesidades de tu práctica contable."
+          },
+          {
+            "title": "Soporte Completo",
+            "description": "Nuestro equipo está disponible para ayudarte en cada paso del camino con tu experiencia en SOPY."
+          },
+          {
+            "title": "Soporte de Implementación",
+            "description": "Nuestros expertos te ayudarán a hacer la transición a SOPY sin problemas y con mínima interrupción para tu práctica."
           }
         ],
         "form": {
-          "title": "Reserva una reunión",
+          "title": "Contacta con nosotros",
           "date": "Fecha",
           "firstName": "Nombre",
           "lastName": "Apellido",
-          "name": "Ingresa tu nombre*",
-          "email": "Ingresa tu correo*",
-          "phone": "Ingresa tu teléfono*",
-          "message": "Ingresa tu mensaje*",
-          "resume": "Subir currículum",
-          "cta": "Enviar mensaje",
-          "success": "Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.",
-          "error": "Ha ocurrido un error. Por favor, inténtalo de nuevo."
-        },
-        "social": {
-          "title": "Síguenos"
-        },
-        "contact": {
-          "title": "Info de contacto",
-          "email": "ventas@netfull.net",
-          "phone": "+569 9483 3938"
+          "resume": "Detalles de tu práctica",
+          "cta": "Enviar consulta"
         }
-      }
-    },
-    "about": {
-      "metaTitle": "Sobre Nosotros | Nuestra Historia y Misión",
-      "metaDescription": "Conozca nuestra trayectoria, nuestra misión y el equipo que trabaja para transformar las operaciones empresariales en todo el mundo.",
-      "title": "Sobre Nuestra Empresa",
-      "subtitle": "Estamos en una misión para revolucionar cómo las empresas operan en la era digital.",
-      "imageAlt": "Nuestro equipo trabajando juntos",
-      "company": {
-        "description": "Es una empresa chilena, responsable y comprometida con nuestros clientes"
-      },
-      "vision": {
-        "title": "Visión",
-        "description": "Ser uno de los principales proveedores de acceso a internet y puntos de intercambio de internet del País"
-      },
-      "mission": {
-        "title": "Misión",
-        "description": "Transformarnos en la empresa líder en conectividad, telecomunicaciones y de intercambio de internet, facilitando el acceso a la red sin distinción, satisfaciendo las necesidades de nuestros clientes con un servicio oportuno, de alta calidad y confiabilidad, mediante procesos óptimos, rápidos, eficientes y transparentes."
       }
     }
   }

@@ -11,6 +11,7 @@ import { env } from './env';
 // Dynamic role system - easily extendable
 const ROLES = {
   ADMIN: 'admin',
+  ACCOUNTANT: 'accountant',
   USER: 'user',
   // Add more roles as needed
 } as const;
@@ -30,6 +31,10 @@ const ROLE_CONFIGURATION: Record<Role, RoleConfig> = {
     defaultRedirect: '/admin/dashboard',
     allowedRoutes: ['/admin']
   },
+  [ROLES.ACCOUNTANT]: {
+    defaultRedirect: '/accountant/dashboard',
+    allowedRoutes: ['/accountant']
+  },
   [ROLES.USER]: {
     defaultRedirect: '/access-denied',
     allowedRoutes: []
@@ -46,7 +51,7 @@ const PUBLIC_ROUTES = [
   '/sign-in',
   '/sign-up',
   '/api/webhooks',
-  '/access-denied'
+  '/access-denied',
 ];
 
 // Security middleware
@@ -89,6 +94,12 @@ const getUserRole = (claims: any): Role => {
     orgRole === `org:${ROLES.ADMIN}`
   ) {
     return ROLES.ADMIN;
+  }
+  if (
+    orgRole === ROLES.ACCOUNTANT ||
+    orgRole === `org:${ROLES.ACCOUNTANT}`
+  ) {
+    return ROLES.ACCOUNTANT;
   }
 
   // Add more role checks as needed
@@ -133,8 +144,18 @@ export default authMiddleware(async (auth, req) => {
 
     // Check if user has access to the requested route
     if (!hasAccessToRoute(pathname, userRole)) {
-      // If attempting to access admin route without admin role, redirect to access-denied
-      if (pathname.startsWith('/admin') && userRole !== ROLES.ADMIN) {
+
+      // Admin can access any route
+      if (userRole === ROLES.ADMIN) {
+        return securityHeaders();
+      }
+
+      // Handle specific route access permissions
+      if (pathname.startsWith('/accountant') && userRole !== ROLES.ACCOUNTANT) {
+        return NextResponse.redirect(new URL('/access-denied', req.url));
+      }
+
+      if (pathname.startsWith('/admin')) {
         return NextResponse.redirect(new URL('/access-denied', req.url));
       }
 

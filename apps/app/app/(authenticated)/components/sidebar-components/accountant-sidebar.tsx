@@ -2,18 +2,19 @@
 
 import { cn } from '@repo/design-system/lib/utils';
 import {
-    BarChart3,
-    Calendar,
-    ClipboardCheck,
-    CreditCard,
-    FileText,
-    Home as HomeIcon,
-    LayoutDashboard,
-    Search as SearchIcon,
-    Settings,
-    Shield as ShieldIcon,
     User,
-    Users as UsersIcon
+    Calendar,
+    Folder,
+    Headphones,
+    MessageSquare,
+    Receipt,
+    FileQuestion,
+    BookOpen,
+    Briefcase,
+    Calculator,
+    LayoutDashboard,
+    Users,
+    FileText
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -32,54 +33,60 @@ type MenuItemProps = {
     href: string;
 };
 
-export function AdminSidebar() {
+
+export function AccountantSidebar() {
     const pathname = usePathname();
     const menuItems: MenuItemProps[] = [
         {
-            title: 'Panel de principal',
-            icon: BarChart3,
-            href: '/admin/dashboard',
+            title: 'Panel Principal',
+            icon: LayoutDashboard,
+            href: '/accountant/dashboard',
         },
-        {
-            title: 'Gestión de Usuarios',
-            icon: UsersIcon,
-            href: '/admin/users',
-        },
-        // {
-        //     title: 'Contadores',
-        //     icon: ClipboardCheck,
-        //     href: '/admin/accountants',
-        // },
-        /* Comentado temporalmente para enfocarnos en la gestión de contadores
         {
             title: 'Clientes',
-            icon: UsersIcon,
-            href: '/admin/clients',
+            icon: Users,
+            href: '/accountant/clients',
+        },
+        /* Comentado temporalmente para enfocarnos en la gestión de clientes
+        {
+            title: 'Perfil Tributario',
+            icon: User,
+            href: '/accountant/tax-profile',
         },
         {
-            title: 'Finanzas',
-            icon: CreditCard,
-            href: '/admin/finances',
-        },
-        {
-            title: 'Documentos',
-            icon: FileText,
-            href: '/admin/documents',
-        },
-        {
-            title: 'Calendario',
+            title: 'Impuestos Mensuales',
             icon: Calendar,
-            href: '/admin/calendar',
+            href: '/accountant/monthly-taxes',
         },
         {
-            title: 'Ajustes',
-            icon: Settings,
-            href: '/admin/settings',
+            title: 'RRHH',
+            icon: Briefcase,
+            href: '/accountant/human-resources',
+        },
+        {
+            title: 'Impuestos Anuales',
+            icon: Calculator,
+            href: '/accountant/annual-taxes',
+        },
+        {
+            title: 'Carpeta Tributaria',
+            icon: Folder,
+            href: '/accountant/tax-folder',
+        },
+        {
+            title: 'Asesoría',
+            icon: Headphones,
+            href: '/accountant/advisory',
+        },
+        {
+            title: 'Contacto',
+            icon: MessageSquare,
+            href: '/accountant/contact',
         },
         */
     ];
 
-    const isActivePath = (path: string) => pathname.startsWith(path);
+    const isActivePath = (path: string) => pathname.endsWith(path);
 
     return (
         <>
@@ -88,9 +95,8 @@ export function AdminSidebar() {
                 <div className="p-3">
                     <div className="relative">
                         <div className="rounded-md border px-3 py-1 flex items-center gap-2">
-                            <SearchIcon className="h-4 w-4 text-gray-500 dark:text-zinc-400" />
                             <input
-                                className="w-full rounded-md border-0 bg-transparent pl-0 pr-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-white"
+                                className="w-full rounded-md border-0 bg-transparent pl-9 pr-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500 text-gray-900 dark:text-white"
                                 placeholder="Buscar..."
                             />
                         </div>
@@ -104,7 +110,7 @@ export function AdminSidebar() {
                                 <SidebarMenuItem
                                     key={item.title}
                                     className={cn(
-                                        isActivePath(item.href) && "text-blue-500 bg-blue-500/10",
+                                        isActivePath(item.href) && "text-green-500 bg-green-500/10",
                                         !isActivePath(item.href) && "text-gray-600 dark:text-zinc-400"
                                     )}
                                 >
@@ -130,7 +136,7 @@ export function AdminSidebar() {
                             className={cn(
                                 "flex flex-col items-center p-1 rounded-md",
                                 isActive
-                                    ? "text-blue-500"
+                                    ? "text-green-500"
                                     : "text-gray-600 dark:text-zinc-400"
                             )}
                         >

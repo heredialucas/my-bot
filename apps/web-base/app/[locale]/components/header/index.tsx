@@ -1,4 +1,8 @@
 'use client';
+
+import { env } from '@/env';
+import { ModeToggle } from '@repo/design-system/components/mode-toggle';
+import { Button } from '@repo/design-system/components/ui/button';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -7,132 +11,90 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@repo/design-system/components/ui/navigation-menu';
-import { Button } from '@repo/design-system/components/ui/button';
 import { Menu, MoveRight, X } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import type { Dictionary } from '@repo/internationalization';
 import Image from 'next/image';
-import Logo from '@/public/logo.png';
+import { LanguageSwitcher } from './language-switcher';
 
 type HeaderProps = {
   dictionary: Dictionary;
 };
 
 export const Header = ({ dictionary }: HeaderProps) => {
-  // Utilizar acceso indexado para evitar errores de TypeScript
-  const headerDict = dictionary.web.header as Record<string, any>;
-
   const navigationItems = [
     {
-      title: headerDict['home'] || 'Inicio',
+      title: dictionary.web.header.home,
       href: '/',
       description: '',
     },
     {
-      title: headerDict['about'] || 'Nosotros',
-      href: '/about',
-      description: '',
+      title: dictionary.web.header.product.title,
+      description: dictionary.web.header.product.description,
+      items: [
+        {
+          title: dictionary.web.header.product.pricing,
+          href: '/pricing',
+        },
+      ],
     },
     {
-      title: headerDict['contact'] || 'Contacto',
+      title: dictionary.web.header.contact,
       href: '/contact',
       description: '',
-    },
-    {
-      title: headerDict['sucursalVirtual'] || 'Sucursal virtual',
-      href: 'https://clientes.netfull.net/cliente/login',
-      target: '_blank',
-      description: '',
-    },
-    {
-      title: headerDict['pagaTuBoleta'] || 'Pagá tu boleta',
-      href: 'https://clientes.netfull.net/cliente/webpay',
-      target: '_blank',
-      description: '',
-    },
+    }
   ];
 
   const [isOpen, setOpen] = useState(false);
-
-  // Close mobile menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const mobileMenu = document.getElementById('mobile-menu');
-      const hamburgerButton = document.getElementById('hamburger-button');
-
-      if (mobileMenu && hamburgerButton &&
-        !mobileMenu.contains(event.target as Node) &&
-        !hamburgerButton.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Prevent body scroll when mobile menu is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
   return (
-    <header className="container mx-auto sticky top-0 left-0 z-40 w-full bg-[#1D4971] text-white shadow-sm">
-      <div className=" relative flex min-h-20 flex-row items-center px-4 lg:px-6">
-        {/* Logo on the left */}
-        <div className="flex items-center gap-2">
-          <Link href="/" className="relative w-20 h-20 rounded-full overflow-hidden flex items-center justify-center">
-            <Image
-              src={Logo}
-              alt="Logo"
-              fill
-              className="lg:dark:invert object-contain p-1"
-              priority
-            />
-          </Link>
-        </div>
-
-        {/* Navigation items in center for desktop */}
-        <div className="hidden lg:flex justify-center flex-1">
-          <NavigationMenu>
-            <NavigationMenuList className="flex flex-row justify-center gap-4">
-              {navigationItems.map((item, index) => (
-                <NavigationMenuItem key={`nav-item-${index}`}>
+    <header className="sticky top-0 left-0 z-40 w-full border-b bg-background">
+      <div className="container relative mx-auto flex min-h-20 flex-row items-center gap-4 lg:grid lg:grid-cols-3">
+        <div className="hidden flex-row items-center justify-start gap-4 lg:flex">
+          <NavigationMenu className="flex items-start justify-start">
+            <NavigationMenuList className="flex flex-row justify-start gap-4">
+              {navigationItems.map((item) => (
+                <NavigationMenuItem key={item.title}>
                   {item.href ? (
                     <>
                       <NavigationMenuLink asChild>
-                        <Button variant="ghost" className="text-white hover:text-white hover:bg-gray-100 lg:hover:bg-[#2E5A86]" asChild>
-                          <Link href={item.href}
-                            target={
-                              item.href.startsWith('http') ? '_blank' : undefined
-                            }
-                          >{item.title}</Link>
+                        <Button variant="ghost" asChild className="font-nunito font-bold">
+                          <Link href={item.href}>{item.title}</Link>
                         </Button>
                       </NavigationMenuLink>
                     </>
                   ) : (
                     <>
-                      <NavigationMenuTrigger className="font-medium text-sm text-white hover:text-white hover:bg-gray-100 lg:hover:bg-[#2E5A86]">
+                      <NavigationMenuTrigger className="font-nunito font-bold text-sm">
                         {item.title}
                       </NavigationMenuTrigger>
-                      <NavigationMenuContent className="!w-[450px] p-4 bg-white lg:bg-[#1D4971]">
+                      <NavigationMenuContent className="!w-[450px] p-4">
                         <div className="flex grid-cols-2 flex-col gap-4 lg:grid">
                           <div className="flex h-full flex-col justify-between">
                             <div className="flex flex-col">
-                              <p className="text-base text-[#1D4971] lg:text-white">{item.title}</p>
-                              <p className="text-gray-600 lg:text-gray-300 text-sm">
+                              <p className="text-base font-nunito font-bold title-gradient">{item.title}</p>
+                              <p className="text-muted-foreground text-sm font-nunito">
                                 {item.description}
                               </p>
                             </div>
+                            <Button size="sm" className="mt-10 bg-[#FFB800] hover:bg-[#FFE01B] text-black font-nunito font-bold" asChild>
+                              <Link href="/contact">
+                                {dictionary.web.global.primaryCta}
+                              </Link>
+                            </Button>
+                          </div>
+                          <div className="flex h-full flex-col justify-end text-sm">
+                            {item.items?.map((subItem, idx) => (
+                              <NavigationMenuLink
+                                href={subItem.href}
+                                key={idx}
+                                className="flex flex-row items-center justify-between rounded px-4 py-2 hover:bg-muted font-nunito"
+                              >
+                                <span>{subItem.title}</span>
+                                <MoveRight className="h-4 w-4 text-muted-foreground" />
+                              </NavigationMenuLink>
+                            ))}
                           </div>
                         </div>
                       </NavigationMenuContent>
@@ -143,64 +105,75 @@ export const Header = ({ dictionary }: HeaderProps) => {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-
-        {/* Mobile menu button */}
-        <div className="ml-auto lg:hidden">
-          <Button
-            variant="ghost"
-            className="text-white p-3"
-            onClick={() => setOpen(!isOpen)}
-            id="hamburger-button"
-          >
-            {isOpen ?
-              <X style={{ width: '30px', height: '30px', minWidth: '30px', minHeight: '30px' }} strokeWidth={2.5} /> :
-              <Menu style={{ width: '30px', height: '30px', minWidth: '30px', minHeight: '30px' }} strokeWidth={2.5} />
-            }
+        <div className="flex items-center gap-2 lg:justify-center">
+          <p className="whitespace-nowrap text-5xl font-black tracking-[6px] text-[#FFB800]">SOPY</p>
+        </div>
+        <div className="flex w-full justify-end gap-4">
+          <div className="hidden border-r md:inline" />
+          <div className="hidden md:inline">
+            <LanguageSwitcher />
+          </div>
+          <div className="hidden md:inline">
+            <ModeToggle />
+          </div>
+          <Button variant="outline" asChild className="hidden md:inline font-nunito font-bold">
+            <Link href={`${env.NEXT_PUBLIC_APP_URL}/sign-in`}>
+              {dictionary.web.header.signIn}
+            </Link>
+          </Button>
+          <Button className="bg-[#FFB800] hover:bg-[#FFE01B] text-black font-nunito font-bold" asChild>
+            <Link href={`${env.NEXT_PUBLIC_APP_URL}/sign-up`}>
+              {dictionary.web.header.signUp}
+            </Link>
           </Button>
         </div>
-
-        {/* Mobile menu overlay */}
-        {isOpen && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-              onClick={() => setOpen(false)}
-            />
-
-            {/* Mobile menu */}
-            <div
-              id="mobile-menu"
-              className="fixed top-20 left-0 w-full bg-white py-6 shadow-lg z-40 lg:hidden"
-            >
-              <nav className="flex flex-col gap-2 px-4">
-                {navigationItems.map((item, index) => (
-                  <div
-                    key={`mobile-nav-item-${index}`}
-                    className="border-b border-gray-200 last:border-none"
-                  >
+        <div className="flex w-12 shrink items-end justify-end lg:hidden">
+          <Button variant="ghost" onClick={() => setOpen(!isOpen)}>
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+          {isOpen && (
+            <div className="container absolute top-20 right-0 flex w-full flex-col gap-8 border-t bg-background py-4 shadow-lg">
+              {navigationItems.map((item) => (
+                <div key={item.title}>
+                  <div className="flex flex-col gap-2">
                     {item.href ? (
                       <Link
                         href={item.href}
-                        className="flex items-center justify-between py-4 text-[#1D4971] hover:text-cyan-600 transition-colors"
-                        target={item.href.startsWith('http') ? '_blank' : undefined}
-                        rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                        onClick={() => setOpen(false)}
+                        className="flex items-center justify-between font-nunito font-bold"
+                        target={
+                          item.href.startsWith('http') ? '_blank' : undefined
+                        }
+                        rel={
+                          item.href.startsWith('http')
+                            ? 'noopener noreferrer'
+                            : undefined
+                        }
                       >
-                        <span className="text-base font-medium">{item.title}</span>
-                        <MoveRight className="h-4 w-4 stroke-2" />
+                        <span className="text-lg">{item.title}</span>
+                        <MoveRight className="h-4 w-4 stroke-1 text-muted-foreground" />
                       </Link>
                     ) : (
-                      <p className="py-4 text-base font-medium text-[#1D4971]">{item.title}</p>
+                      <p className="text-lg font-nunito font-bold">{item.title}</p>
                     )}
+                    {item.items?.map((subItem) => (
+                      <Link
+                        key={subItem.title}
+                        href={subItem.href}
+                        className="flex items-center justify-between font-nunito"
+                      >
+                        <span className="text-muted-foreground">
+                          {subItem.title}
+                        </span>
+                        <MoveRight className="h-4 w-4 stroke-1" />
+                      </Link>
+                    ))}
                   </div>
-                ))}
-              </nav>
+                </div>
+              ))}
             </div>
-          </>
-        )}
+          )}
+        </div>
       </div>
     </header>
   );
 };
-

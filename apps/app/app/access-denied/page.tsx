@@ -1,7 +1,6 @@
 import { SignOutButton } from '@repo/auth/client';
 import { Button } from '@repo/design-system/components/ui/button';
 import { ShieldIcon } from 'lucide-react';
-import Link from 'next/link';
 
 export default function AccessDenied() {
     return (

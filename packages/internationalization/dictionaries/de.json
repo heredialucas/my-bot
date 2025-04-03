@@ -1,86 +1,59 @@
 {
   "web": {
     "global": {
-      "primaryCta": "Termin vereinbaren",
+      "primaryCta": "Rufen Sie an",
       "secondaryCta": "Registrieren"
     },
     "header": {
       "home": "Startseite",
-      "product": "Produkt",
+      "product": {
+        "title": "Produkt",
+        "description": "Die Verwaltung eines kleinen Unternehmens ist heute bereits schwierig.",
+        "pricing": "Preise"
+      },
       "blog": "Blog",
       "docs": "Dokumente",
       "contact": "Kontakt",
       "signIn": "Anmelden",
-      "signUp": "Loslegen",
-      "nosotros": "Über uns",
-      "sucursalVirtual": "Virtuelle Filiale",
-      "pagaTuBoleta": "Rechnung bezahlen"
+      "signUp": "Loslegen"
     },
     "home": {
       "meta": {
         "title": "Transformieren Sie Ihre Geschäftsabläufe noch heute",
-        "description": "In der heutigen schnelllebigen Welt verdient Ihr Unternehmen mehr als veraltete Handelssysteme. Unsere innovative Plattform strafft die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
+        "description": "In der heutigen schnelllebigen Welt verdient Ihr Unternehmen bessere Lösungen als veraltete Handelssysteme. Unsere innovative Plattform optimiert die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
       },
       "hero": {
-        "announcement": "Lesen Sie unseren neuesten Artikel",
-        "serviceOptions": {
-          "internetHogar": "Internet zu Hause",
-          "internetTV": "Internet + Online-TV"
-        }
+        "announcement": "Lesen Sie unseren neuesten Artikel"
       },
       "cases": {
-        "title": "Erfolgsgeschichten, die weltweit Menschen stärken",
-        "wifiExtender": {
-          "question": "Möchten Sie einen WLAN-Verstärker mitnehmen?",
-          "add": "Hinzufügen für",
-          "price": "2.400 €",
-          "perMonth": "/Monat"
-        },
-        "pricing": {
-          "discount": "RABATT",
-          "months": "FÜR",
-          "newCustomerPromo": "Neukunden-Angebot",
-          "plan": "Plan",
-          "fiber": "Glasfaser",
-          "monthly": "Monatlich",
-          "laterMonthPrice": "Monat {months} zahlen Sie",
-          "serviceDetails": "Service-Details",
-          "wifiExtender": "WLAN-Verstärker",
-          "checkAvailability": "Verfügbarkeit prüfen",
-          "viewInclusions": "Sehen Sie, was enthalten ist",
-          "chooseTVPlan": "Wählen Sie Ihren Zapping-Plan"
-        },
-        "infoBoxes": {
-          "billing": "Alles, was Sie über Ihre Abrechnung wissen müssen, erklären wir hier",
-          "fiberPlans": "Wichtige Glasfaserpläne"
-        }
+        "title": "Erfolgreiche Geschichten aus aller Welt"
       },
       "features": {
-        "title": "Leistungsstarke Tools für moderne Unternehmen",
-        "description": "Entdecken Sie, wie unsere modernsten Funktionen Ihre täglichen Abläufe revolutionieren können.",
+        "title": "Leistungsstarke Werkzeuge für moderne Unternehmen",
+        "description": "Entdecken Sie, wie unsere hochmodernen Funktionen Ihre täglichen Abläufe revolutionieren können.",
         "items": [
           {
             "title": "Optimierte Abläufe",
-            "description": "Unsere Plattform strafft die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
+            "description": "Unsere Plattform optimiert die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
           }
         ]
       },
       "stats": {
-        "title": "Echte Ergebnisse, echte Wirkung",
-        "description": "Schließen Sie sich Tausenden von Unternehmen an, die ihre Abläufe mit unserer Plattform transformiert haben. Unsere Lösungen haben Unternehmen geholfen, die Verwaltungskosten um 60 % zu senken und die Handelseffizienz um durchschnittlich 45 % zu steigern.",
+        "title": "Echte Ergebnisse, echte Auswirkungen",
+        "description": "Schließen Sie sich Tausenden von Unternehmen an, die ihre Abläufe mit unserer Plattform transformiert haben. Unsere Lösungen haben Unternehmen geholfen, die Verwaltungskosten um 60 % zu senken und die Handelseffizienz im Durchschnitt um 45 % zu steigern.",
         "items": [
           "Monatlich aktive Nutzer",
           "Täglich aktive Nutzer",
           "Monatlich wiederkehrende Einnahmen",
-          "Akquisitionskosten"
+          "Kosten pro Akquisition"
         ]
       },
       "testimonials": {
-        "title": "Hören Sie von unserer erfolgreichen Community",
+        "title": "Hören Sie von unserer florierenden Gemeinschaft",
         "items": [
           {
             "title": "Beste Entscheidung",
-            "description": "Unser Ziel war es, den Handel von kleinen und mittleren Unternehmen zu optimieren, ihn einfacher und schneller als je zuvor zu gestalten, und das haben wir gemeinsam geschafft.",
+            "description": "Unser Ziel war es, den Handel für kleine und mittlere Unternehmen zu optimieren, um ihn einfacher und schneller als je zuvor zu gestalten, und das haben wir gemeinsam erreicht.",
             "author": {
               "name": "Hayden Bleasel",
               "image": "https://github.com/haydenbleasel.png"
@@ -91,7 +64,7 @@
       "faq": {
         "title": "Häufige Fragen, Expertenantworten",
         "description": "Erhalten Sie schnelle Antworten auf Ihre dringendsten Fragen zu unserer Plattform. Wir haben alles zusammengestellt, was Sie über die Transformation Ihrer Geschäftsabläufe und den Einstieg in moderne Handelslösungen wissen müssen.",
-        "cta": "Fragen? Kontaktieren Sie uns",
+        "cta": "Haben Sie Fragen? Kontaktieren Sie uns",
         "items": [
           {
             "question": "Was ist die Plattform?",
@@ -100,57 +73,74 @@
         ]
       },
       "cta": {
-        "title": "Starten Sie Ihre Geschäftstransformation",
-        "description": "Schließen Sie sich Tausenden von zukunftsorientierten Unternehmen an, die ihre Abläufe bereits modernisiert haben. Unsere Plattform bietet die Tools, die Unterstützung und die Effizienz, die Sie benötigen, um auf dem heutigen Wettbewerbsmarkt erfolgreich zu sein. Starten Sie in Minuten."
+        "title": "Transformieren Sie Ihre Buchhaltungspraxis noch heute",
+        "description": "Schließen Sie sich Hunderten von zukunftsorientierten Buchhaltern an, die ihre Steuerverwaltungsprozesse bereits modernisiert haben. SOPY bietet die Werkzeuge, die Unterstützung und die Effizienz, die Sie benötigen, um bei der Erbringung von Steuerdienstleistungen für Ihre Kunden zu brillieren. Starten Sie in Minuten."
+      }
+    },
+    "pricing": {
+      "title": "Preise, die für Ihre Praxis sinnvoll sind",
+      "description": "Wählen Sie den Plan, der zu den Bedürfnissen Ihrer Buchhaltungspraxis passt",
+      "monthly": "Monat",
+      "popular": "BELIEBT",
+      "tryIt": "Testen Sie es",
+      "contactUs": "Kontaktieren Sie uns",
+      "plans": [
+        {
+          "name": "Startup",
+          "description": "Perfekt für kleine Buchhaltungspraxen, die gerade anfangen",
+          "price": "40"
+        },
+        {
+          "name": "Wachstum",
+          "description": "Ideal für etablierte Unternehmen, die ihre Dienstleistungen erweitern möchten",
+          "price": "80"
+        },
+        {
+          "name": "Unternehmen",
+          "description": "Komplettlösung für große Buchhaltungsfirmen mit komplexen Anforderungen",
+          "price": "160"
+        }
+      ],
+      "features": {
+        "sso": "Single Sign-On (SSO)",
+        "ai": "KI-Assistent",
+        "version": "Versionskontrolle",
+        "members": "{count} Teammitglieder"
       }
     },
     "blog": {
       "meta": {
-        "title": "Blog",
-        "description": "Gedanken, Ideen und Meinungen."
-      }
-    },
-    "about": {
-      "metaTitle": "Über uns | Unsere Geschichte und Mission",
-      "metaDescription": "Erfahren Sie mehr über unsere Reise, unsere Mission und das Team, das daran arbeitet, Geschäftsabläufe weltweit zu transformieren.",
-      "title": "Über unser Unternehmen",
-      "subtitle": "Wir haben es uns zur Aufgabe gemacht, die Arbeitsweise von Unternehmen im digitalen Zeitalter zu revolutionieren.",
-      "imageAlt": "Unser Team arbeitet zusammen",
-      "company": {
-        "description": "NetFull Fibra ist ein chilenisches Unternehmen, verantwortungsbewusst und engagiert für unsere Kunden"
-      },
-      "vision": {
-        "title": "Vision",
-        "description": "Einer der wichtigsten Anbieter für Internetzugang und Internet-Austauschpunkte im Land zu sein"
-      },
-      "mission": {
-        "title": "Mission",
-        "description": "Uns zum führenden Unternehmen in den Bereichen Konnektivität, Telekommunikation und Internet-Austausch zu entwickeln, den Zugang zum Netzwerk ohne Unterschied zu erleichtern und die Bedürfnisse unserer Kunden mit einem zeitnahen, hochwertigen und zuverlässigen Service durch optimale, schnelle, effiziente und transparente Prozesse zu erfüllen."
+        "title": "Steuerliche Einblicke Blog",
+        "description": "Expertenmeinungen, Tipps und Updates zum Thema Steuermanagement für Buchhalter und Finanzfachleute."
       }
     },
     "contact": {
       "meta": {
-        "title": "Lassen Sie uns über Ihr Unternehmen sprechen",
-        "description": "Vereinbaren Sie ein Beratungsgespräch mit unserem Team, um zu besprechen, wie wir Ihnen helfen können, Ihre Abläufe zu optimieren und das Wachstum Ihres Unternehmens zu fördern."
-      },
-      "floating": {
-        "callMe": "Sollen wir Sie anrufen?",
-        "chat": "Ich möchte chatten"
+        "title": "Lassen Sie uns über Ihre Buchhaltungspraxis sprechen",
+        "description": "Kontaktieren Sie unser Team, um zu besprechen, wie SOPY dabei helfen kann, die Steuerverwaltung für Ihre Kunden zu vereinfachen und Ihre Praxis auszubauen."
       },
       "hero": {
         "benefits": [
           {
             "title": "Personalisierte Beratung",
-            "description": "Erhalten Sie maßgeschneiderte Lösungen und Expertenratschläge, die auf die Bedürfnisse Ihres Unternehmens zugeschnitten sind."
+            "description": "Erhalten Sie maßgeschneiderte Lösungen und Expertenberatung speziell für die Bedürfnisse Ihrer Buchhaltungspraxis."
+          },
+          {
+            "title": "Vollständige Unterstützung",
+            "description": "Unser Team steht Ihnen auf jedem Schritt des Weges mit Ihrer SOPY-Erfahrung zur Verfügung."
+          },
+          {
+            "title": "Implementierungsunterstützung",
+            "description": "Unsere Experten helfen Ihnen, reibungslos zu SOPY zu wechseln, mit minimaler Unterbrechung Ihrer Praxis."
           }
         ],
         "form": {
-          "title": "Meeting buchen",
+          "title": "Kontaktieren Sie uns",
           "date": "Datum",
           "firstName": "Vorname",
           "lastName": "Nachname",
-          "resume": "Lebenslauf hochladen",
-          "cta": "Meeting buchen"
+          "resume": "Details Ihrer Praxis",
+          "cta": "Anfrage einreichen"
         }
       }
     }
