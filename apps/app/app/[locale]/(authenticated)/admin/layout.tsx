@@ -6,13 +6,13 @@ import { UserHeader } from '../components/user-header';
 
 type AdminLayoutProps = {
     readonly children: ReactNode;
-    readonly params: {
+    readonly params: Promise<{
         locale: string;
-    };
+    }>;
 };
 
 export default async function AdminLayout({ children, params }: AdminLayoutProps) {
-    const { locale } = params;
+    const { locale } = await params;
     const dictionary = await getDictionary(locale);
 
     return (

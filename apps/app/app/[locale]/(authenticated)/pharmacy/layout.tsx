@@ -6,13 +6,13 @@ import { UserHeader } from '../components/user-header';
 
 type PharmacyLayoutProps = {
     readonly children: ReactNode;
-    readonly params: {
+    readonly params: Promise<{
         locale: string;
-    };
+    }>;
 };
 
 export default async function PharmacyLayout({ children, params }: PharmacyLayoutProps) {
-    const { locale } = params;
+    const { locale } = await params;
     const dictionary = await getDictionary(locale);
 
     return (
