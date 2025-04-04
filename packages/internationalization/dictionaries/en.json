@@ -1,4 +1,36 @@
 {
+  "app": {
+    "admin": {
+      "title": "Admin Dashboard",
+      "navigation": {
+        "dashboard": "Dashboard",
+        "users": "Users",
+        "settings": "Settings",
+        "logout": "Logout"
+      }
+    },
+    "client": {
+      "title": "Client Portal",
+      "navigation": {
+        "dashboard": "Dashboard",
+        "profile": "Profile",
+        "orders": "Orders",
+        "settings": "Settings",
+        "logout": "Logout"
+      }
+    },
+    "pharmacy": {
+      "title": "Pharmacy Management",
+      "navigation": {
+        "dashboard": "Dashboard",
+        "clients": "Clients",
+        "inventory": "Inventory",
+        "orders": "Orders",
+        "settings": "Settings",
+        "logout": "Logout"
+      }
+    }
+  },
   "web": {
     "global": {
       "primaryCta": "Contact us",

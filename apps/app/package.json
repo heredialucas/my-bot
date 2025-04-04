@@ -16,6 +16,7 @@
     "@repo/auth": "workspace:*",
     "@repo/collaboration": "workspace:*",
     "@repo/data-services": "workspace:*",
+    "@repo/internationalization": "workspace:*",
     "@repo/database": "workspace:*",
     "@repo/design-system": "workspace:*",
     "@repo/feature-flags": "workspace:*",

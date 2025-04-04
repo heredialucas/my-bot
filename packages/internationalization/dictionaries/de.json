@@ -1,4 +1,36 @@
 {
+  "app": {
+    "admin": {
+      "title": "Administrationsbereich",
+      "navigation": {
+        "dashboard": "Dashboard",
+        "users": "Benutzer",
+        "settings": "Einstellungen",
+        "logout": "Abmelden"
+      }
+    },
+    "client": {
+      "title": "Kundenportal",
+      "navigation": {
+        "dashboard": "Dashboard",
+        "profile": "Profil",
+        "orders": "Bestellungen",
+        "settings": "Einstellungen",
+        "logout": "Abmelden"
+      }
+    },
+    "pharmacy": {
+      "title": "Apothekenverwaltung",
+      "navigation": {
+        "dashboard": "Dashboard",
+        "clients": "Kunden",
+        "inventory": "Bestand",
+        "orders": "Bestellungen",
+        "settings": "Einstellungen",
+        "logout": "Abmelden"
+      }
+    }
+  },
   "web": {
     "global": {
       "primaryCta": "Rufen Sie an",

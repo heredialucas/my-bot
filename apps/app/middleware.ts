@@ -5,7 +5,7 @@ import {
   noseconeOptionsWithToolbar,
 } from '@repo/security/middleware';
 import { env } from './env';
-
+import { internationalizationMiddleware } from '@repo/internationalization/middleware';
 // Dynamic role system - easily extendable
 const ROLES = {
   ADMIN: 'admin',
@@ -109,10 +109,23 @@ const getUserRole = (role?: string): Role => {
 };
 
 export function middleware(req: NextRequest) {
+  // Primero aplicar middleware de internacionalización
+  const i18nResponse = internationalizationMiddleware({
+    headers: req.headers,
+    nextUrl: req.nextUrl
+  });
+  if (i18nResponse) {
+    return i18nResponse;
+  }
+
   const { pathname } = req.nextUrl;
 
+  // Extraer el locale de la URL
+  const locale = pathname.match(/^\/([a-z]{2})(?:\/|$)/)?.[1] || 'es';
+  const pathnameWithoutLocale = pathname.replace(/^\/[a-z]{2}(?:\/|$)/, '/');
+
   // Always allow public routes
-  if (isPublicRoute(pathname)) {
+  if (isPublicRoute(pathnameWithoutLocale)) {
     return securityHeaders();
   }
 
@@ -130,47 +143,42 @@ export function middleware(req: NextRequest) {
     } catch (error) {
       console.error('Error parsing auth token:', error);
     }
-  } else {
-    console.log('No se encontró la cookie de autenticación');
   }
 
   // User is not authenticated but trying to access an authenticated route
-  if (!userId && isAuthenticatedRoute(pathname)) {
-    return NextResponse.redirect(new URL('/sign-in', req.url));
+  if (!userId && isAuthenticatedRoute(pathnameWithoutLocale)) {
+    return NextResponse.redirect(new URL(`/${locale}/sign-in`, req.url));
   }
 
   // User is authenticated
   if (userId) {
     // Root path redirect to role-specific dashboard
-    if (pathname === '/' || pathname === '') {
-      return NextResponse.redirect(new URL(
-        ROLE_CONFIGURATION[userRole]?.defaultRedirect || ROLE_CONFIGURATION[ROLES.USER].defaultRedirect,
-        req.url
-      ));
+    if (pathnameWithoutLocale === '/' || pathnameWithoutLocale === '') {
+      const redirectUrl = ROLE_CONFIGURATION[userRole]?.defaultRedirect ||
+        ROLE_CONFIGURATION[ROLES.USER].defaultRedirect;
+      return NextResponse.redirect(new URL(`/${locale}${redirectUrl}`, req.url));
     }
 
     // Check if user has access to the requested route
-    if (!hasAccessToRoute(pathname, userRole)) {
-
+    if (!hasAccessToRoute(pathnameWithoutLocale, userRole)) {
       // Admin can access any route
       if (userRole === ROLES.ADMIN) {
         return securityHeaders();
       }
 
       // Handle specific route access permissions
-      if (pathname.startsWith('/accountant') && userRole !== ROLES.ACCOUNTANT) {
-        return NextResponse.redirect(new URL('/access-denied', req.url));
+      if (pathnameWithoutLocale.startsWith('/accountant') && userRole !== ROLES.ACCOUNTANT) {
+        return NextResponse.redirect(new URL(`/${locale}/access-denied`, req.url));
       }
 
-      if (pathname.startsWith('/admin')) {
-        return NextResponse.redirect(new URL('/access-denied', req.url));
+      if (pathnameWithoutLocale.startsWith('/admin')) {
+        return NextResponse.redirect(new URL(`/${locale}/access-denied`, req.url));
       }
 
       // Otherwise redirect to their default route
-      return NextResponse.redirect(new URL(
-        ROLE_CONFIGURATION[userRole]?.defaultRedirect || ROLE_CONFIGURATION[ROLES.USER].defaultRedirect,
-        req.url
-      ));
+      const redirectUrl = ROLE_CONFIGURATION[userRole]?.defaultRedirect ||
+        ROLE_CONFIGURATION[ROLES.USER].defaultRedirect;
+      return NextResponse.redirect(new URL(`/${locale}${redirectUrl}`, req.url));
     }
   }
 

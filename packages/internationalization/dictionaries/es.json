@@ -1,4 +1,36 @@
 {
+  "app": {
+    "admin": {
+      "title": "Panel de Administración",
+      "navigation": {
+        "dashboard": "Tablero",
+        "users": "Usuarios",
+        "settings": "Configuración",
+        "logout": "Cerrar Sesión"
+      }
+    },
+    "client": {
+      "title": "Portal del Cliente",
+      "navigation": {
+        "dashboard": "Tablero",
+        "profile": "Perfil",
+        "orders": "Pedidos",
+        "settings": "Configuración",
+        "logout": "Cerrar Sesión"
+      }
+    },
+    "pharmacy": {
+      "title": "Gestión de Farmacia",
+      "navigation": {
+        "dashboard": "Tablero",
+        "clients": "Clientes",
+        "inventory": "Inventario",
+        "orders": "Pedidos",
+        "settings": "Configuración",
+        "logout": "Cerrar Sesión"
+      }
+    }
+  },
   "web": {
     "global": {
       "primaryCta": "Contactar",
