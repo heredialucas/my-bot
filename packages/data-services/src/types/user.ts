@@ -1,17 +1,33 @@
-// Tipo para usuarios
-export type UserData = {
+/**
+ * User data returned from the database
+ */
+export interface UserData {
     id: string;
     name: string;
+    lastName: string;
     email: string;
-    role: 'ADMIN' | 'USER';
+    role: string;
     createdAt: Date;
     updatedAt: Date;
-};
+}
 
-// Tipo para crear/actualizar usuarios
-export type UserFormData = {
+/**
+ * User data for form submissions
+ */
+export interface UserFormData {
     name: string;
+    lastName: string;
     email: string;
-    password?: string;
-    role?: 'ADMIN' | 'USER';
-}; 
+    password: string;
+}
+
+/**
+ * User data for display (without sensitive information)
+ */
+export interface UserDisplay {
+    id: string;
+    name: string;
+    lastName: string;
+    email: string;
+    role: string;
+} 

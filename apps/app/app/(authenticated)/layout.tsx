@@ -1,5 +1,6 @@
 import { env } from '@/env';
 import { auth, currentUser } from '@repo/auth/server';
+import { getUserById } from '@repo/data-services';
 import { SidebarProvider } from '@repo/design-system/components/ui/sidebar';
 import { showBetaFeature } from '@repo/feature-flags';
 import { NotificationsProvider } from '@repo/notifications/components/provider';
@@ -16,22 +17,17 @@ const AppLayout = async ({ children }: AppLayoutProperties) => {
     await secure(['CATEGORY:PREVIEW']);
   }
 
-  const user = await currentUser();
-  const { redirectToSignIn } = await auth();
   const betaFeature = await showBetaFeature();
 
-  if (!user) {
-    return redirectToSignIn();
-  }
 
   return (
-    <NotificationsProvider userId={user.id}>
-      <AuthProvider>
-        <SidebarProvider>
-          {children}
-        </SidebarProvider>
-      </AuthProvider>
-    </NotificationsProvider>
+    // <NotificationsProvider userId={user.id}>
+    //   <AuthProvider>
+    <SidebarProvider>
+      {children}
+    </SidebarProvider>
+    //   </AuthProvider>
+    // </NotificationsProvider>
   );
 };
 

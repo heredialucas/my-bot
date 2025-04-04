@@ -2,26 +2,46 @@
 
 import { revalidatePath } from 'next/cache';
 import { UserData, UserFormData } from '../types/user';
+import { database } from '@repo/database';
 
 /**
- * Obtener todos los usuarios
+ * Crear un nuevo usuario
  */
-export async function getAllUsers() {
+export async function createUser(data: UserFormData & { role: string }) {
     try {
-        // MOCKUP: Replace with actual database call
-        return [
-            { id: '1', name: 'Usuario 1', email: 'user1@example.com', role: 'USER', createdAt: new Date(), updatedAt: new Date() },
-            { id: '2', name: 'Usuario 2', email: 'user2@example.com', role: 'ADMIN', createdAt: new Date(), updatedAt: new Date() }
-        ] as UserData[];
+        // Verificar si ya existe un usuario con ese email
+        const existingUser = await database.user.findUnique({
+            where: { email: data.email },
+        });
 
-        // Implementation example:
-        // const users = await db.user.findMany({
-        //     orderBy: { createdAt: 'desc' },
-        // });
-        // return users;
+        if (existingUser) {
+            throw new Error('Ya existe un usuario con este email');
+        }
+
+        // Crear el usuario (sin hash de contraseña por simplicidad)
+        const user = await database.user.create({
+            data: {
+                name: data.name,
+                lastName: data.lastName,
+                email: data.email,
+                password: data.password,
+                role: data.role,
+            },
+        });
+
+        // Retornar usuario sin contraseña
+        return {
+            id: user.id,
+            name: user.name,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        };
     } catch (error) {
-        console.error("Error fetching users:", error);
-        throw new Error("Failed to fetch users");
+        console.error('Error al crear usuario:', error);
+        throw new Error('No se pudo crear el usuario');
     }
 }
 
@@ -30,93 +50,89 @@ export async function getAllUsers() {
  */
 export async function getUserById(userId: string) {
     try {
-        // MOCKUP: Replace with actual database call
-        return {
-            id: userId,
-            name: 'Usuario de ejemplo',
-            email: 'user@example.com',
-            role: 'USER',
-            createdAt: new Date(),
-            updatedAt: new Date()
-        } as UserData;
+        const user = await database.user.findUnique({
+            where: { id: userId },
+        });
 
-        // Implementation example:
-        // const user = await db.user.findUnique({
-        //     where: { id: userId },
-        // });
-        // return user;
+        if (!user) {
+            return null;
+        }
+
+        // Retornar usuario sin contraseña
+        return {
+            id: user.id,
+            name: user.name,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        };
     } catch (error) {
-        console.error("Error fetching user:", error);
-        throw new Error("Failed to fetch user");
+        console.error('Error al obtener usuario por ID:', error);
+        throw new Error('No se pudo obtener el usuario');
     }
 }
 
 /**
- * Crear un nuevo usuario
+ * Obtener todos los usuarios
  */
-export async function createUser(data: UserFormData) {
-    "use server";
+export async function getAllUsers() {
     try {
-        // MOCKUP: Replace with actual database call
-        console.log('Creating user with data:', data);
-        return {
-            id: '123',
-            name: data.name,
-            email: data.email,
-            role: data.role || 'USER',
-            createdAt: new Date(),
-            updatedAt: new Date()
-        } as UserData;
+        // Implementación real con la base de datos
+        const users = await database.user.findMany({
+            orderBy: { createdAt: 'desc' },
+        });
 
-        // Implementation example:
-        // const user = await db.user.create({
-        //     data: {
-        //         name: data.name,
-        //         email: data.email,
-        //         role: data.role || 'USER',
-        //         // Hash password and other operations
-        //     },
-        // });
-        revalidatePath('/admin/dashboard');
-        // return user;
+        // Mapear para no incluir passwords
+        return users.map(user => ({
+            id: user.id,
+            name: user.name,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        })) as UserData[];
     } catch (error) {
-        console.error("Error creating user:", error);
-        throw new Error("Failed to create user");
+        console.error("Error al obtener usuarios:", error);
+        throw new Error("No se pudieron obtener los usuarios");
     }
 }
 
 /**
  * Actualizar un usuario existente
  */
-export async function updateUser(userId: string, data: UserFormData) {
+export async function updateUser(userId: string, data: UserFormData & { role?: string }) {
     "use server";
     try {
-        // MOCKUP: Replace with actual database call
-        console.log('Updating user', userId, 'with data:', data);
-        return {
-            id: userId,
-            name: data.name,
-            email: data.email,
-            role: data.role || 'USER',
-            createdAt: new Date(),
-            updatedAt: new Date()
-        } as UserData;
+        // Actualizar usuario en la base de datos
+        const user = await database.user.update({
+            where: { id: userId },
+            data: {
+                name: data.name,
+                lastName: data.lastName,
+                email: data.email,
+                role: data.role,
+                ...(data.password ? { password: data.password } : {})
+            },
+        });
 
-        // Implementation example:
-        // const user = await db.user.update({
-        //     where: { id: userId },
-        //     data: {
-        //         name: data.name,
-        //         email: data.email,
-        //         role: data.role,
-        //         // Handle password update if provided
-        //     },
-        // });
         revalidatePath('/admin/dashboard');
-        // return user;
+
+        // Devolver usuario sin password
+        return {
+            id: user.id,
+            name: user.name,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        } as UserData;
     } catch (error) {
-        console.error("Error updating user:", error);
-        throw new Error("Failed to update user");
+        console.error("Error al actualizar usuario:", error);
+        throw new Error("No se pudo actualizar el usuario");
     }
 }
 
@@ -126,17 +142,46 @@ export async function updateUser(userId: string, data: UserFormData) {
 export async function deleteUser(userId: string) {
     "use server";
     try {
-        // MOCKUP: Replace with actual database call
-        console.log('Deleting user:', userId);
+        // Eliminar usuario de la base de datos
+        await database.user.delete({
+            where: { id: userId },
+        });
 
-        // Implementation example:
-        // await db.user.delete({
-        //     where: { id: userId },
-        // });
         revalidatePath('/admin/dashboard');
         return { success: true };
     } catch (error) {
-        console.error("Error deleting user:", error);
-        throw new Error("Failed to delete user");
+        console.error("Error al eliminar usuario:", error);
+        throw new Error("No se pudo eliminar el usuario");
+    }
+}
+
+/**
+ * Verificar credenciales de usuario (comparación simple, sin hash)
+ */
+export async function verifyUserCredentials(email: string, password: string) {
+    try {
+        // Buscar usuario por email
+        const user = await database.user.findUnique({
+            where: { email },
+        });
+
+        // Si no se encuentra el usuario, retornar fallo
+        if (!user) {
+            return { success: false, message: 'Credenciales inválidas' };
+        }
+
+        // Comparación simple de contraseña (sin hash por simplicidad)
+        const passwordMatch = user.password === password;
+
+        // Si las contraseñas no coinciden, retornar fallo
+        if (!passwordMatch) {
+            return { success: false, message: 'Credenciales inválidas' };
+        }
+
+        // Retornar éxito con ID de usuario
+        return { success: true, userId: user.id };
+    } catch (error) {
+        console.error('Error al verificar credenciales:', error);
+        throw new Error('No se pudieron verificar las credenciales');
     }
 } 

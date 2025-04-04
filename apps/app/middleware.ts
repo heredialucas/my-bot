@@ -1,11 +1,9 @@
-import { authMiddleware } from '@repo/auth/middleware';
+import { NextRequest, NextResponse } from 'next/server';
 import {
   noseconeMiddleware,
   noseconeOptions,
   noseconeOptionsWithToolbar,
 } from '@repo/security/middleware';
-import type { NextMiddleware } from 'next/server';
-import { NextResponse } from 'next/server';
 import { env } from './env';
 
 // Dynamic role system - easily extendable
@@ -36,8 +34,8 @@ const ROLE_CONFIGURATION: Record<Role, RoleConfig> = {
     allowedRoutes: ['/accountant']
   },
   [ROLES.USER]: {
-    defaultRedirect: '/access-denied',
-    allowedRoutes: []
+    defaultRedirect: '/client/dashboard',
+    allowedRoutes: ['/client']
   }
   // Example for adding a new role:
   // [ROLES.PROFESSIONAL]: {
@@ -53,6 +51,9 @@ const PUBLIC_ROUTES = [
   '/api/webhooks',
   '/access-denied',
 ];
+
+// Authentication cookie name
+const AUTH_COOKIE_NAME = 'auth-token';
 
 // Security middleware
 const securityHeaders = env.FLAGS_SECRET
@@ -82,28 +83,24 @@ const hasAccessToRoute = (pathname: string, userRole: Role): boolean => {
 };
 
 // Determine user role from session claims
-const getUserRole = (claims: any): Role => {
-  if (!claims) return ROLES.USER;
+const getUserRole = (role?: string): Role => {
+  if (!role) return ROLES.USER;
 
-  // Extract org_role from claims
-  const orgRole = claims?.org_role;
+  // Normalizar a minúsculas
+  const roleStr = role.toLowerCase();
 
-  // Check for admin role in various formats
-  if (
-    orgRole === ROLES.ADMIN ||
-    orgRole === `org:${ROLES.ADMIN}`
-  ) {
+  // Check for admin role
+  if (roleStr === ROLES.ADMIN) {
     return ROLES.ADMIN;
   }
-  if (
-    orgRole === ROLES.ACCOUNTANT ||
-    orgRole === `org:${ROLES.ACCOUNTANT}`
-  ) {
+
+  // Check for accountant role
+  if (roleStr === ROLES.ACCOUNTANT) {
     return ROLES.ACCOUNTANT;
   }
 
   // Add more role checks as needed
-  // if (orgRole === ROLES.PROFESSIONAL || orgRole === `org:${ROLES.PROFESSIONAL}`) {
+  // if (roleStr === ROLES.PROFESSIONAL) {
   //   return ROLES.PROFESSIONAL;
   // }
 
@@ -111,17 +108,30 @@ const getUserRole = (claims: any): Role => {
   return ROLES.USER;
 };
 
-export default authMiddleware(async (auth, req) => {
-  const { userId, sessionClaims } = await auth();
-
-  // If no request, just apply security
-  if (!req) return securityHeaders();
-
+export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Always allow public routes
   if (isPublicRoute(pathname)) {
     return securityHeaders();
+  }
+
+  // Get authentication cookie
+  const tokenCookie = req.cookies.get(AUTH_COOKIE_NAME);
+  let userId: string | undefined;
+  let userRole: Role = ROLES.USER;
+
+  // Parse token if it exists
+  if (tokenCookie) {
+    try {
+      const token = JSON.parse(tokenCookie.value);
+      userId = token.id;
+      userRole = getUserRole(token.role);
+    } catch (error) {
+      console.error('Error parsing auth token:', error);
+    }
+  } else {
+    console.log('No se encontró la cookie de autenticación');
   }
 
   // User is not authenticated but trying to access an authenticated route
@@ -131,9 +141,6 @@ export default authMiddleware(async (auth, req) => {
 
   // User is authenticated
   if (userId) {
-    // Determine user role
-    const userRole = getUserRole(sessionClaims);
-
     // Root path redirect to role-specific dashboard
     if (pathname === '/' || pathname === '') {
       return NextResponse.redirect(new URL(
@@ -169,7 +176,7 @@ export default authMiddleware(async (auth, req) => {
 
   // Apply security headers
   return securityHeaders();
-}) as unknown as NextMiddleware;
+}
 
 export const config = {
   matcher: [

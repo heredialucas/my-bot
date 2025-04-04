@@ -1,6 +1,8 @@
-import { SignOutButton } from '@repo/auth/client';
+// import { SignOutButton } from '@repo/auth/client';
+import { signOut } from '@repo/data-services/src/services/authService';
 import { Button } from '@repo/design-system/components/ui/button';
 import { ShieldIcon } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 export default function AccessDenied() {
     return (
@@ -30,11 +32,15 @@ export default function AccessDenied() {
                 </div>
 
                 <div className="flex justify-center">
-                    <SignOutButton>
+                    <form action={async () => {
+                        'use server';
+                        await signOut();
+                        redirect('/sign-in');
+                    }}>
                         <Button variant="outline">
                             Cerrar Sesión
                         </Button>
-                    </SignOutButton>
+                    </form>
                 </div>
             </div>
         </div>
