@@ -1,34 +1,82 @@
-import { env } from '@/env';
-import { Button } from '@repo/design-system/components/ui/button';
+'use client';
+
 import type { Dictionary } from '@repo/internationalization';
-import { MoveRight } from 'lucide-react';
-import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { fadeIn } from '../lib/animations';
+import { Calendar, CheckCircle } from 'lucide-react';
 
 type CTAProps = {
   dictionary: Dictionary;
 };
 
-export const CTA = ({ dictionary }: CTAProps) => (
-  <div className="w-full py-20 lg:py-40 bg-gray-50">
-    <div className="container mx-auto">
-      <div className="flex flex-col items-center gap-8 rounded-md bg-[#7dd3c8] p-4 text-center lg:p-14">
-        <div className="flex flex-col gap-2">
-          <h3 className="max-w-xl font-black text-3xl tracking-tighter md:text-5xl text-black var(--font-nunito) bg-gradient-to-r from-[#FFB800] via-purple-500 to-blue-600 inline-block text-transparent bg-clip-text">
-            {dictionary.web.home.cta.title}
-          </h3>
-          <p className="max-w-xl text-lg text-black leading-relaxed tracking-tight var(--font-nunito) font-bold">
-            {dictionary.web.home.cta.description}
+export const CTA = ({ dictionary }: CTAProps) => {
+  // Hardcoded values as fallback if translations aren't available
+  const title = dictionary.web.home.cta.calendly?.title || "Schedule a call";
+  const subtitle = dictionary.web.home.cta.calendly?.subtitle || "30 minutes · Free";
+  const benefits = dictionary.web.home.cta.calendly?.benefits || [
+    "Know our process",
+    "Solve your doubts",
+    "Define the scope of your project"
+  ];
+
+  return (
+    <div className="w-full py-20 lg:py-40">
+      <div className="container mx-auto">
+        <motion.div
+          variants={fadeIn}
+          className="text-center max-w-2xl mx-auto mb-12"
+          id="contact"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Ready to make your idea a reality?
+          </h2>
+          <div className="w-20 h-1 bg-white/20 rounded-full mx-auto mb-4"></div>
+          <p>
+            Choose your preferred option to start your project
           </p>
-        </div>
-        <div className="flex flex-row gap-4">
-          <Button className="gap-4 bg-[#FFB800] hover:bg-[#FFE01B] text-black var(--font-nunito) font-black" asChild>
-            <Link href={env.NEXT_PUBLIC_APP_URL}>
-              {dictionary.web.global.secondaryCta}{' '}
-              <MoveRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
+        </motion.div>
+        {/* Calendly */}
+        <motion.div
+          variants={{
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+          }}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          className="max-w-xl mx-auto bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors"
+        >
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
+              <Calendar className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold">
+                {title}
+              </h3>
+              <p className="text-sm">{subtitle}</p>
+            </div>
+          </div>
+
+          <div className="aspect-video rounded-xl overflow-hidden bg-white/5">
+            <iframe
+              src="https://calendly.com/appwise-innovations/30min"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+            ></iframe>
+          </div>
+
+          <div className="mt-6 space-y-4">
+            {benefits.map((benefit: string, index: number) => (
+              <div key={index} className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <span className="text-sm">{benefit}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
-  </div>
-);
+  );
+};

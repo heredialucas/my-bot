@@ -9,6 +9,7 @@ import { FAQ } from './components/faq';
 import { Features } from './components/features';
 import { Stats } from './components/stats';
 import { Testimonials } from './components/testimonials';
+import { Newsletter } from './components/newsletter';
 
 type HomeProps = {
   params: Promise<{
@@ -38,12 +39,13 @@ const Home = async ({ params }: HomeProps) => {
         </div>
       )}
       <Hero dictionary={dictionary} />
-      <Cases dictionary={dictionary} />
+      <Cases dictionary={dictionary} projects={[]} />
       <Features dictionary={dictionary} />
       <Stats dictionary={dictionary} />
       <Testimonials dictionary={dictionary} />
-      <FAQ dictionary={dictionary} />
       <CTA dictionary={dictionary} />
+      <FAQ dictionary={dictionary} />
+      <Newsletter dictionary={dictionary} />
     </>
   );
 };

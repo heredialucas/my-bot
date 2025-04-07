@@ -14,35 +14,55 @@ import {
 import { Menu, MoveRight, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 import type { Dictionary } from '@repo/internationalization';
 import Image from 'next/image';
 import { LanguageSwitcher } from './language-switcher';
+import logo from '@/public/logo.png';
+import appwiseFullText from '@/public/appwise-full-text.png';
 
 type HeaderProps = {
   dictionary: Dictionary;
 };
 
+// Interfaz para los subitems en caso de que existan
+interface SubItem {
+  title: string;
+  href: string;
+}
+
+// Interfaz para los elementos de navegación
+interface NavigationItem {
+  title: string;
+  href?: string;
+  description: string;
+  items?: SubItem[];
+}
+
 export const Header = ({ dictionary }: HeaderProps) => {
-  const navigationItems = [
+  const pathname = usePathname();
+  const isContactPage = pathname === "/contact" || pathname.includes("/contact");
+
+  const navigationItems: NavigationItem[] = [
     {
-      title: dictionary.web.header.home,
-      href: '/',
+      title: dictionary.web.header.projects || 'Projects',
+      href: isContactPage ? "/" : "#projects",
       description: '',
     },
     {
-      title: dictionary.web.header.product.title,
-      description: dictionary.web.header.product.description,
-      items: [
-        {
-          title: dictionary.web.header.product.pricing,
-          href: '/pricing',
-        },
-      ],
+      title: dictionary.web.header.services || 'Services',
+      href: isContactPage ? "/#servicios" : "#servicios",
+      description: dictionary.web.header.servicesDescription || 'Our services for software development',
     },
     {
-      title: dictionary.web.header.contact,
-      href: '/contact',
+      title: dictionary.web.header.process || 'Process',
+      href: isContactPage ? "/#process" : "#process",
+      description: dictionary.web.header.processDescription || 'How we work with our clients',
+    },
+    {
+      title: dictionary.web.header.contact || 'Contact',
+      href: "/contact",
       description: '',
     }
   ];
@@ -85,7 +105,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                             </Button>
                           </div>
                           <div className="flex h-full flex-col justify-end text-sm">
-                            {item.items?.map((subItem, idx) => (
+                            {item.items?.map((subItem: SubItem, idx: number) => (
                               <NavigationMenuLink
                                 href={subItem.href}
                                 key={idx}
@@ -106,7 +126,22 @@ export const Header = ({ dictionary }: HeaderProps) => {
           </NavigationMenu>
         </div>
         <div className="flex items-center gap-2 lg:justify-center">
-          <p className="whitespace-nowrap text-5xl font-black tracking-[6px] text-[#FFB800]">SOPY</p>
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src={logo}
+              alt="AppWise Innovations - Consultora de Desarrollo de Software y MVPs"
+              width={120}
+              height={40}
+              className="w-auto h-8"
+            />
+            <Image
+              src={appwiseFullText}
+              alt="AppWise Innovations - Consultora de Desarrollo de Software y MVPs"
+              width={120}
+              height={40}
+              className="w-auto h-8"
+            />
+          </Link>
         </div>
         <div className="flex w-full justify-end gap-4">
           <div className="hidden border-r md:inline" />
@@ -122,7 +157,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
             </Link>
           </Button>
           <Button className="bg-[#FFB800] hover:bg-[#FFE01B] text-black font-nunito font-bold" asChild>
-            <Link href={`${env.NEXT_PUBLIC_APP_URL}/sign-up`}>
+            <Link href="/contact">
               {dictionary.web.header.signUp}
             </Link>
           </Button>
@@ -140,14 +175,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                       <Link
                         href={item.href}
                         className="flex items-center justify-between font-nunito font-bold"
-                        target={
-                          item.href.startsWith('http') ? '_blank' : undefined
-                        }
-                        rel={
-                          item.href.startsWith('http')
-                            ? 'noopener noreferrer'
-                            : undefined
-                        }
+                        onClick={() => setOpen(false)}
                       >
                         <span className="text-lg">{item.title}</span>
                         <MoveRight className="h-4 w-4 stroke-1 text-muted-foreground" />
@@ -155,7 +183,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                     ) : (
                       <p className="text-lg font-nunito font-bold">{item.title}</p>
                     )}
-                    {item.items?.map((subItem) => (
+                    {item.items?.map((subItem: SubItem) => (
                       <Link
                         key={subItem.title}
                         href={subItem.href}

@@ -38,9 +38,14 @@
     },
     "header": {
       "home": "Home",
+      "projects": "Projects",
+      "services": "Services",
+      "servicesDescription": "Our services for software development",
+      "process": "Process",
+      "processDescription": "How we work with our clients",
       "product": {
         "title": "Product",
-        "description": "Managing tax records for small businesses is already challenging enough.",
+        "description": "Custom software development requires expertise and proven methodologies.",
         "pricing": "Pricing"
       },
       "blog": "Blog",
@@ -50,61 +55,100 @@
     },
     "home": {
       "meta": {
-        "title": "SOPY - Simple Tax Management",
-        "description": "The platform that connects accountants with their clients to simplify tax record control, fiscal compliance, and obligation tracking."
+        "title": "AppWise - Custom Software Development",
+        "description": "The platform that connects innovators with developers to create high-quality digital solutions, web and mobile applications."
       },
       "hero": {
-        "announcement": "Read our latest tax update"
+        "announcement": "Read our latest technology update",
+        "title": "We launch your idea today to transform the future tomorrow.",
+        "subtitle": "Dare to test, iterate, and conquer.",
+        "cta": "Let's start now!"
       },
       "cases": {
-        "title": "Trusted by Accountants and Financial Professionals"
+        "title": "Trusted by Businesses and Entrepreneurs",
+        "subtitle": "Discover how we are helping other entrepreneurs make their ideas a reality.",
+        "quote": "Each project is a success story in development",
+        "projectsTitle": "Projects",
+        "projectStatus": {
+          "finished": "Finished",
+          "inProgress": "In progress"
+        }
       },
       "features": {
-        "title": "Powerful Tools for Modern Accountants",
-        "description": "Discover how our specialized features can revolutionize tax management for your clients.",
+        "title": "Why choose us?",
+        "description": "We combine cutting-edge technology with agile methodologies to deliver exceptional solutions",
         "items": [
           {
-            "title": "Simplified Tax Records",
-            "description": "Our platform streamlines tax record management, reduces compliance complexity, and helps businesses stay compliant with changing regulations."
+            "title": "Custom Development",
+            "description": "We build tailor-made solutions that perfectly fit your unique business requirements and objectives."
           },
           {
-            "title": "Client Dashboard",
-            "description": "Give your clients a clear view of their tax situation with easy-to-understand dashboards and reporting tools."
+            "title": "Web Applications",
+            "description": "Modern, responsive web applications that provide exceptional user experiences across all devices."
           },
           {
-            "title": "Real-time Updates",
-            "description": "Stay informed with real-time updates on tax regulations and compliance requirements relevant to your clients."
+            "title": "UI/UX Design",
+            "description": "Intuitive interfaces and engaging user experiences that keep your customers coming back."
           },
           {
-            "title": "Multi-client Management",
-            "description": "Efficiently manage tax records for multiple clients from a single, unified interface designed for accountants."
+            "title": "Data Integration",
+            "description": "Seamless integration with existing systems and third-party services to maximize your data potential."
+          },
+          {
+            "title": "Agile Development",
+            "description": "Iterative approach ensuring quick delivery of valuable features and continuous improvement."
+          },
+          {
+            "title": "Ongoing Support",
+            "description": "Reliable maintenance and support to ensure your solution continues to perform at its best."
           }
         ]
       },
       "stats": {
-        "title": "Real Results for Accounting Professionals",
-        "description": "Our platform is specifically designed to help accountants better manage their clients' tax records, reduce administrative burden, and increase satisfaction.",
-        "items": [
-          "Tax records processed",
-          "Active accounting firms",
-          "Time saved on compliance",
-          "Client satisfaction"
+        "title": "Our Process",
+        "description": "We follow a proven methodology to deliver successful projects",
+        "process": [
+          {
+            "title": "Discovery",
+            "description": "We start by understanding your business needs, target audience, and objectives to establish a clear project roadmap."
+          },
+          {
+            "title": "Design",
+            "description": "Our creative team crafts intuitive interfaces and user experiences that align with your brand identity and objectives."
+          },
+          {
+            "title": "Development",
+            "description": "Using agile methodology, we build your solution iteratively, ensuring quality at every stage of the development process."
+          },
+          {
+            "title": "Testing",
+            "description": "Comprehensive testing guarantees your solution works flawlessly across all devices and scenarios."
+          },
+          {
+            "title": "Deployment",
+            "description": "We carefully launch your project and provide training to ensure a smooth transition and adoption."
+          },
+          {
+            "title": "Support",
+            "description": "Our relationship continues with ongoing maintenance, updates, and improvements to keep your solution performing optimally."
+          }
         ]
       },
       "testimonials": {
-        "title": "Hear from Professional Accountants Using SOPY",
+        "title": "Hear from Our Clients",
+        "description": "What our clients say about our work and collaboration",
         "items": [
           {
-            "title": "Game changer for my practice",
-            "description": "SOPY has transformed how I manage tax records for my clients. The platform is intuitive, powerful, and saves me hours every week on administrative tasks.",
+            "title": "Game changer for my business",
+            "description": "Working with this team has completely transformed our digital presence. Their attention to detail and technical expertise made the entire process smooth and effective.",
             "author": {
               "name": "Maria Rodriguez",
               "image": "https://github.com/haydenbleasel.png"
             }
           },
           {
-            "title": "My clients love it",
-            "description": "Not only does SOPY make my job easier, but my clients appreciate the transparency and clarity it brings to their tax situation. It's a win-win for everyone.",
+            "title": "Exceeded all expectations",
+            "description": "Not only did they deliver the project on time, but they added value at every step with insightful suggestions that improved our original concept significantly.",
             "author": {
               "name": "John Davies",
               "image": "https://github.com/haydenbleasel.png"
@@ -113,31 +157,53 @@
         ]
       },
       "faq": {
-        "title": "Common Questions About SOPY",
-        "description": "Get quick answers to your most pressing questions about our tax management platform. We've compiled everything accountants need to know about transforming their client's tax record management.",
-        "cta": "Any questions? Reach out to our team",
+        "title": "Frequently Asked Questions",
+        "description": "Get quick answers to your most pressing questions about our software development services at AppWise Innovation.",
+        "cta": "Still have questions? Contact us",
+        "needMore": "Need more information?",
+        "contactDescription": "If you couldn't find the answer to your question, our development team is ready to help you transform your idea into reality.",
         "items": [
           {
-            "question": "What is SOPY?",
-            "answer": "SOPY is a specialized SaaS platform that helps accountants manage their clients' tax records efficiently and accurately, ensuring compliance and reducing administrative overhead."
+            "question": "What services does AppWise Innovation offer?",
+            "answer": "AppWise Innovation provides full-cycle software development services, including web and mobile app development, UI/UX design, custom software solutions, and ongoing maintenance and support services."
           },
           {
-            "question": "How does SOPY help my accounting practice?",
-            "answer": "SOPY streamlines tax record management, automates routine compliance tasks, provides real-time updates on regulations, and offers client-friendly interfaces, allowing you to focus on providing value-added services."
+            "question": "How does your development process work?",
+            "answer": "Our development process follows agile methodology with iterative cycles. We start with discovery to understand your needs, move to design and development phases, conduct comprehensive testing, and finally deploy your solution with ongoing support."
           },
           {
-            "question": "Can my clients access their own data?",
-            "answer": "Yes, SOPY provides a secure client portal where your clients can view their tax records, track their compliance status, and communicate with you directly about their tax matters."
+            "question": "How long does it typically take to develop a software solution?",
+            "answer": "Development timelines vary based on project complexity. Simple applications may take a few weeks, while more comprehensive enterprise solutions can take several months. We'll provide detailed timelines during our initial consultation."
           },
           {
-            "question": "Is SOPY secure and compliant?",
-            "answer": "Absolutely. SOPY is built with industry-leading security protocols and is fully compliant with data protection regulations, ensuring your clients' sensitive tax information is always protected."
+            "question": "Do you provide post-launch support?",
+            "answer": "Absolutely! We offer comprehensive maintenance and support packages to ensure your software continues to perform optimally after launch. Our team handles updates, bug fixes, and feature enhancements to keep your solution running smoothly."
           }
         ]
       },
       "cta": {
-        "title": "Transform Your Accounting Practice Today",
-        "description": "Join hundreds of forward-thinking accountants who have already modernized their tax management processes. SOPY offers the tools, support, and efficiency you need to excel in providing tax services to your clients. Get started in minutes."
+        "title": "Transform Your Idea Into Reality Today",
+        "description": "Join hundreds of entrepreneurs and businesses who have already transformed their ideas into successful digital products. AppWise offers the tools, support, and technology you need to excel in the digital marketplace. Get started in minutes.",
+        "calendly": {
+          "title": "Schedule a call",
+          "subtitle": "30 minutes · Free",
+          "benefits": [
+            "Know our process",
+            "Solve your doubts",
+            "Define the scope of your project"
+          ]
+        }
+      },
+      "newsletter": {
+        "title": "Stay Updated",
+        "description": "Subscribe to receive the latest news about digital product development and MVPs",
+        "placeholder": "Your email address",
+        "subscribe": "Subscribe",
+        "subscribing": "Subscribing...",
+        "success": "Thank you for subscribing! You'll receive our next update.",
+        "error": "Something went wrong. Please try again.",
+        "validation": "Please enter a valid email address.",
+        "privacy": "We promise not to send spam, only relevant content"
       }
     },
     "pricing": {
@@ -179,31 +245,34 @@
     },
     "contact": {
       "meta": {
-        "title": "Let's Talk About Your Accounting Practice",
-        "description": "Contact our team to discuss how SOPY can help streamline tax management for your clients and grow your practice."
+        "title": "Contact Us",
+        "description": "Contact our team to discuss how AppWise can help transform your ideas into successful digital solutions and grow your business."
       },
       "hero": {
+        "title": "We're here to help",
+        "description": "Our team is available to help you every step of the way with your development project.",
+        "cta": "Send message",
         "benefits": [
           {
-            "title": "Personalized Consultation",
-            "description": "Get tailored solutions and expert advice specific to your accounting practice needs."
+            "title": "Quick response",
+            "description": "Our experts will help you take your idea to the next level with custom digital solutions."
           },
           {
-            "title": "Complete Support",
-            "description": "Our team is available to help you every step of the way with your SOPY experience."
+            "title": "Ongoing support",
+            "description": "We offer technical assistance and continuous improvements to keep your application running perfectly."
           },
           {
-            "title": "Implementation Support",
-            "description": "Our experts will help you transition smoothly to SOPY with minimal disruption to your practice."
+            "title": "Custom solutions",
+            "description": "Every project is unique, which is why we develop tailored solutions that adapt to your specific needs."
           }
         ],
         "form": {
-          "title": "Contact us",
-          "date": "Date",
+          "title": "Let's talk about your project",
           "firstName": "First name",
           "lastName": "Last name",
-          "resume": "Your practice details",
-          "cta": "Submit inquiry"
+          "date": "Preferred date",
+          "resume": "Attach relevant files",
+          "cta": "Submit"
         }
       }
     }

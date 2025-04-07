@@ -33,14 +33,19 @@
   },
   "web": {
     "global": {
-      "primaryCta": "Rufen Sie an",
-      "secondaryCta": "Registrieren"
+      "primaryCta": "Kontaktieren Sie uns",
+      "secondaryCta": "Jetzt loslegen"
     },
     "header": {
       "home": "Startseite",
+      "projects": "Projekte",
+      "services": "Dienstleistungen",
+      "servicesDescription": "Unsere Dienstleistungen für Softwareentwicklung",
+      "process": "Prozess",
+      "processDescription": "Wie wir mit unseren Kunden arbeiten",
       "product": {
         "title": "Produkt",
-        "description": "Die Verwaltung eines kleinen Unternehmens ist heute bereits schwierig.",
+        "description": "Individuelle Softwareentwicklung erfordert Fachwissen und bewährte Methoden.",
         "pricing": "Preise"
       },
       "blog": "Blog",
@@ -51,62 +56,155 @@
     },
     "home": {
       "meta": {
-        "title": "Transformieren Sie Ihre Geschäftsabläufe noch heute",
-        "description": "In der heutigen schnelllebigen Welt verdient Ihr Unternehmen bessere Lösungen als veraltete Handelssysteme. Unsere innovative Plattform optimiert die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
+        "title": "AppWise - Individuelle Softwareentwicklung",
+        "description": "Die Plattform, die Innovatoren mit Entwicklern verbindet, um hochwertige digitale Lösungen, Web- und Mobile-Anwendungen zu erstellen."
       },
       "hero": {
-        "announcement": "Lesen Sie unseren neuesten Artikel"
+        "announcement": "Lesen Sie unser neuestes Technologie-Update",
+        "title": "Wir starten Ihre Idee heute, um die Zukunft von morgen zu gestalten.",
+        "subtitle": "Trau dich zu testen, zu iterieren und zu erobern.",
+        "cta": "Lass uns jetzt anfangen!"
       },
       "cases": {
-        "title": "Erfolgreiche Geschichten aus aller Welt"
+        "title": "Vertrauenswürdig für Unternehmen und Unternehmer",
+        "subtitle": "Entdecken Sie, wie wir anderen Unternehmern helfen, ihre Ideen Wirklichkeit werden zu lassen.",
+        "quote": "Jedes Projekt ist eine Erfolgsgeschichte in der Entwicklung",
+        "projectsTitle": "Projekte",
+        "projectStatus": {
+          "finished": "Abgeschlossen",
+          "inProgress": "In Bearbeitung"
+        }
       },
       "features": {
-        "title": "Leistungsstarke Werkzeuge für moderne Unternehmen",
-        "description": "Entdecken Sie, wie unsere hochmodernen Funktionen Ihre täglichen Abläufe revolutionieren können.",
+        "title": "Warum uns wählen?",
+        "description": "Wir kombinieren modernste Technologie mit agilen Methoden, um außergewöhnliche Lösungen zu liefern",
         "items": [
           {
-            "title": "Optimierte Abläufe",
-            "description": "Unsere Plattform optimiert die Abläufe, reduziert die Komplexität und hilft kleinen Unternehmen, in der modernen Wirtschaft zu gedeihen."
+            "title": "Maßgeschneiderte Entwicklung",
+            "description": "Wir entwickeln maßgeschneiderte Lösungen, die perfekt zu Ihren einzigartigen Geschäftsanforderungen und -zielen passen."
+          },
+          {
+            "title": "Web-Anwendungen",
+            "description": "Moderne, responsive Web-Anwendungen, die auf allen Geräten außergewöhnliche Benutzererlebnisse bieten."
+          },
+          {
+            "title": "UI/UX Design",
+            "description": "Intuitive Schnittstellen und ansprechende Benutzererlebnisse, die Ihre Kunden immer wieder zurückkehren lassen."
+          },
+          {
+            "title": "Datenintegration",
+            "description": "Nahtlose Integration mit bestehenden Systemen und Drittanbieterdiensten, um das Potenzial Ihrer Daten zu maximieren."
+          },
+          {
+            "title": "Agile Entwicklung",
+            "description": "Iterativer Ansatz, der die schnelle Bereitstellung wertvoller Funktionen und kontinuierliche Verbesserung gewährleistet."
+          },
+          {
+            "title": "Fortlaufender Support",
+            "description": "Zuverlässige Wartung und Unterstützung, um sicherzustellen, dass Ihre Lösung weiterhin optimal funktioniert."
           }
         ]
       },
       "stats": {
-        "title": "Echte Ergebnisse, echte Auswirkungen",
-        "description": "Schließen Sie sich Tausenden von Unternehmen an, die ihre Abläufe mit unserer Plattform transformiert haben. Unsere Lösungen haben Unternehmen geholfen, die Verwaltungskosten um 60 % zu senken und die Handelseffizienz im Durchschnitt um 45 % zu steigern.",
-        "items": [
-          "Monatlich aktive Nutzer",
-          "Täglich aktive Nutzer",
-          "Monatlich wiederkehrende Einnahmen",
-          "Kosten pro Akquisition"
+        "title": "Unser Prozess",
+        "description": "Wir folgen einer bewährten Methodik, um erfolgreiche Projekte zu liefern",
+        "process": [
+          {
+            "title": "Entdeckung",
+            "description": "Wir beginnen damit, Ihre Geschäftsanforderungen, Zielgruppe und Ziele zu verstehen, um einen klaren Projektfahrplan zu erstellen."
+          },
+          {
+            "title": "Design",
+            "description": "Unser Kreativteam entwirft intuitive Schnittstellen und Benutzererlebnisse, die mit Ihrer Markenidentität und Ihren Zielen übereinstimmen."
+          },
+          {
+            "title": "Entwicklung",
+            "description": "Mit agiler Methodik entwickeln wir Ihre Lösung iterativ und gewährleisten Qualität in jeder Phase des Entwicklungsprozesses."
+          },
+          {
+            "title": "Testen",
+            "description": "Umfassende Tests garantieren, dass Ihre Lösung auf allen Geräten und in allen Szenarien einwandfrei funktioniert."
+          },
+          {
+            "title": "Bereitstellung",
+            "description": "Wir starten Ihr Projekt sorgfältig und bieten Schulungen an, um einen reibungslosen Übergang und eine problemlose Einführung zu gewährleisten."
+          },
+          {
+            "title": "Support",
+            "description": "Unsere Beziehung wird durch kontinuierliche Wartung, Updates und Verbesserungen fortgesetzt, um Ihre Lösung optimal zu halten."
+          }
         ]
       },
       "testimonials": {
-        "title": "Hören Sie von unserer florierenden Gemeinschaft",
+        "title": "Stimmen Unserer Kunden",
+        "description": "Was unsere Kunden über unsere Arbeit und Zusammenarbeit sagen",
         "items": [
           {
-            "title": "Beste Entscheidung",
-            "description": "Unser Ziel war es, den Handel für kleine und mittlere Unternehmen zu optimieren, um ihn einfacher und schneller als je zuvor zu gestalten, und das haben wir gemeinsam erreicht.",
+            "title": "Ein Wendepunkt für mein Geschäft",
+            "description": "Die Zusammenarbeit mit diesem Team hat unsere digitale Präsenz komplett verändert. Ihre Liebe zum Detail und technische Expertise haben den gesamten Prozess reibungslos und effektiv gestaltet.",
             "author": {
-              "name": "Hayden Bleasel",
+              "name": "Maria Schmidt",
+              "image": "https://github.com/haydenbleasel.png"
+            }
+          },
+          {
+            "title": "Übertraf alle Erwartungen",
+            "description": "Sie haben das Projekt nicht nur pünktlich geliefert, sondern bei jedem Schritt durch aufschlussreiche Vorschläge einen Mehrwert geschaffen, die unser ursprüngliches Konzept erheblich verbessert haben.",
+            "author": {
+              "name": "Johannes Meyer",
               "image": "https://github.com/haydenbleasel.png"
             }
           }
         ]
       },
       "faq": {
-        "title": "Häufige Fragen, Expertenantworten",
-        "description": "Erhalten Sie schnelle Antworten auf Ihre dringendsten Fragen zu unserer Plattform. Wir haben alles zusammengestellt, was Sie über die Transformation Ihrer Geschäftsabläufe und den Einstieg in moderne Handelslösungen wissen müssen.",
-        "cta": "Haben Sie Fragen? Kontaktieren Sie uns",
+        "title": "Häufig gestellte Fragen",
+        "description": "Erhalten Sie schnelle Antworten auf Ihre dringendsten Fragen zu unseren Softwareentwicklungsdienstleistungen bei AppWise Innovation.",
+        "cta": "Noch Fragen? Kontaktieren Sie uns",
+        "needMore": "Benötigen Sie weitere Informationen?",
+        "contactDescription": "Wenn Sie die Antwort auf Ihre Frage nicht gefunden haben, steht unser Entwicklungsteam bereit, Ihnen zu helfen, Ihre Idee in die Realität umzusetzen.",
         "items": [
           {
-            "question": "Was ist die Plattform?",
-            "answer": "Die Plattform ist eine Handelsplattform, die es Ihnen ermöglicht, mit Vertrauen zu handeln."
+            "question": "Welche Dienstleistungen bietet AppWise Innovation an?",
+            "answer": "AppWise Innovation bietet umfassende Softwareentwicklungsdienste, einschließlich Web- und Mobile-App-Entwicklung, UI/UX-Design, maßgeschneiderte Softwarelösungen und kontinuierliche Wartungs- und Supportservices."
+          },
+          {
+            "question": "Wie funktioniert Ihr Entwicklungsprozess?",
+            "answer": "Unser Entwicklungsprozess folgt der agilen Methodik mit iterativen Zyklen. Wir beginnen mit der Erkundungsphase, um Ihre Anforderungen zu verstehen, gehen zu Design- und Entwicklungsphasen über, führen umfassende Tests durch und stellen schließlich Ihre Lösung mit kontinuierlicher Unterstützung bereit."
+          },
+          {
+            "question": "Wie lange dauert die Entwicklung einer Softwarelösung typischerweise?",
+            "answer": "Entwicklungszeiten variieren je nach Projektkomplexität. Einfache Anwendungen können einige Wochen dauern, während umfassendere Unternehmenslösungen mehrere Monate in Anspruch nehmen können. Wir stellen detaillierte Zeitpläne während unserer ersten Beratung zur Verfügung."
+          },
+          {
+            "question": "Bieten Sie Support nach der Einführung an?",
+            "answer": "Auf jeden Fall! Wir bieten umfassende Wartungs- und Support-Pakete, um sicherzustellen, dass Ihre Software nach der Einführung weiterhin optimal funktioniert. Unser Team kümmert sich um Updates, Fehlerbehebungen und Funktionsverbesserungen, damit Ihre Lösung reibungslos läuft."
           }
         ]
       },
       "cta": {
-        "title": "Transformieren Sie Ihre Buchhaltungspraxis noch heute",
-        "description": "Schließen Sie sich Hunderten von zukunftsorientierten Buchhaltern an, die ihre Steuerverwaltungsprozesse bereits modernisiert haben. SOPY bietet die Werkzeuge, die Unterstützung und die Effizienz, die Sie benötigen, um bei der Erbringung von Steuerdienstleistungen für Ihre Kunden zu brillieren. Starten Sie in Minuten."
+        "title": "Verwandeln Sie Ihre Idee noch heute in Realität",
+        "description": "Schließen Sie sich Hunderten von Unternehmern und Unternehmen an, die ihre Ideen bereits in erfolgreiche digitale Produkte umgewandelt haben. AppWise bietet die Tools, die Unterstützung und die Technologie, die Sie benötigen, um auf dem digitalen Markt zu glänzen. Starten Sie in wenigen Minuten.",
+        "calendly": {
+          "title": "Einen Termin vereinbaren",
+          "subtitle": "30 Minuten · Kostenlos",
+          "benefits": [
+            "Lernen Sie unseren Prozess kennen",
+            "Lösen Sie Ihre Zweifel",
+            "Definieren Sie den Umfang Ihres Projekts"
+          ]
+        }
+      },
+      "newsletter": {
+        "title": "Bleiben Sie auf dem Laufenden",
+        "description": "Abonnieren Sie, um die neuesten Nachrichten über digitale Produktentwicklung und MVPs zu erhalten",
+        "placeholder": "Ihre E-Mail-Adresse",
+        "subscribe": "Abonnieren",
+        "subscribing": "Wird abonniert...",
+        "success": "Vielen Dank für Ihr Abonnement! Sie erhalten unser nächstes Update.",
+        "error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+        "validation": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "privacy": "Wir versprechen, keinen Spam zu senden, nur relevante Inhalte"
       }
     },
     "pricing": {
@@ -148,31 +246,34 @@
     },
     "contact": {
       "meta": {
-        "title": "Lassen Sie uns über Ihre Buchhaltungspraxis sprechen",
-        "description": "Kontaktieren Sie unser Team, um zu besprechen, wie SOPY dabei helfen kann, die Steuerverwaltung für Ihre Kunden zu vereinfachen und Ihre Praxis auszubauen."
+        "title": "Kontaktieren Sie uns",
+        "description": "Kontaktieren Sie unser Team, um zu besprechen, wie AppWise Ihnen helfen kann, Ihre Ideen in erfolgreiche digitale Lösungen umzuwandeln und Ihr Unternehmen zu vergrößern."
       },
       "hero": {
+        "title": "Wir sind hier, um zu helfen",
+        "description": "Unser Team steht Ihnen bei jedem Schritt Ihres Entwicklungsprojekts zur Verfügung.",
+        "cta": "Nachricht senden",
         "benefits": [
           {
-            "title": "Personalisierte Beratung",
-            "description": "Erhalten Sie maßgeschneiderte Lösungen und Expertenberatung speziell für die Bedürfnisse Ihrer Buchhaltungspraxis."
+            "title": "Schnelle Antwort",
+            "description": "Unsere Experten helfen Ihnen, Ihre Idee mit maßgeschneiderten digitalen Lösungen auf die nächste Stufe zu heben."
           },
           {
-            "title": "Vollständige Unterstützung",
-            "description": "Unser Team steht Ihnen auf jedem Schritt des Weges mit Ihrer SOPY-Erfahrung zur Verfügung."
+            "title": "Kontinuierliche Unterstützung",
+            "description": "Wir bieten technische Hilfe und kontinuierliche Verbesserungen, damit Ihre Anwendung einwandfrei funktioniert."
           },
           {
-            "title": "Implementierungsunterstützung",
-            "description": "Unsere Experten helfen Ihnen, reibungslos zu SOPY zu wechseln, mit minimaler Unterbrechung Ihrer Praxis."
+            "title": "Maßgeschneiderte Lösungen",
+            "description": "Jedes Projekt ist einzigartig, deshalb entwickeln wir maßgeschneiderte Lösungen, die sich an Ihre spezifischen Bedürfnisse anpassen."
           }
         ],
         "form": {
-          "title": "Kontaktieren Sie uns",
-          "date": "Datum",
+          "title": "Lassen Sie uns über Ihr Projekt sprechen",
           "firstName": "Vorname",
           "lastName": "Nachname",
-          "resume": "Details Ihrer Praxis",
-          "cta": "Anfrage einreichen"
+          "date": "Bevorzugtes Datum",
+          "resume": "Relevante Dateien anhängen",
+          "cta": "Senden"
         }
       }
     }

@@ -1,46 +1,62 @@
-import { env } from '@/env';
-import { Button } from '@repo/design-system/components/ui/button';
+'use client';
+
 import type { Dictionary } from '@repo/internationalization';
-import { MoveRight, FileSpreadsheet } from 'lucide-react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import animation_focus from '@/public/focus.json';
+import { staggerContainer, fadeIn, slideIn } from '../lib/animations';
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 type HeroProps = {
   dictionary: Dictionary;
 };
 
+
 export const Hero = ({ dictionary }: HeroProps) => {
   return (
-    <div className="container flex min-h-[calc(100vh-4rem)] items-center justify-center py-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
-        <div className="flex flex-col gap-8 text-left">
-          <h1 className="text-balance text-4xl font-black tracking-tight sm:text-6xl var(--font-nunito) bg-gradient-to-r from-[#FFB800] via-purple-500 to-blue-600 inline-block text-transparent bg-clip-text">
-            {dictionary.web.home.meta.title}
-          </h1>
-          <p className="text-balance text-xl text-muted-foreground var(--font-nunito)">
-            {dictionary.web.home.meta.description}
-          </p>
-          <div className="flex flex-wrap items-center gap-4">
-            <Button className="bg-[#FFB800] hover:bg-[#FFE01B] text-black var(--font-nunito) font-black" asChild>
-              <Link href={env.NEXT_PUBLIC_APP_URL}>
-                {dictionary.web.global.secondaryCta}
-                <MoveRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-        <div className="rounded-xl bg-[#7dd3c8] flex items-center justify-center p-8 h-[400px]">
-          <div className="bg-white/90 rounded-lg p-8 shadow-lg w-full max-w-md transform -translate-y-10">
-            <div className="flex flex-col items-center gap-6">
-              <FileSpreadsheet className="h-20 w-20 text-[#FFB800]" />
-              <div className="text-center var(--font-nunito)">
-                <h3 className="text-5xl font-black mb-2 tracking-[6px] text-[#FFB800]">SOPY</h3>
-                <p className="text-gray-700 text-lg">Simplifica la gestión tributaria para contadores y sus clientes</p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <motion.section
+      initial="initial"
+      animate="animate"
+      variants={staggerContainer}
+      className="container mx-auto px-4 py-16 relative"
+    >
+      {/* Elementos decorativos específicos del hero */}
+      <div className="absolute -top-10 right-1/4 w-20 h-20 bg-blue-300/20 dark:bg-blue-300/10 rounded-full blur-xl"></div>
+      <div className="absolute bottom-0 left-1/3 w-32 h-32 bg-blue-400/10 dark:bg-blue-400/5 rounded-full blur-2xl"></div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <motion.div variants={slideIn}>
+          <motion.h1
+            className="text-4xl md:text-5xl font-bold text-foreground mb-4"
+            variants={fadeIn}
+          >
+            {dictionary.web.home.hero.title}
+          </motion.h1>
+          <motion.p className="text-muted-foreground text-lg mb-4" variants={fadeIn}>
+            {dictionary.web.home.hero.subtitle}
+          </motion.p>
+          <Link href="https://wa.me/5493541286481" target="_blank">
+            <motion.button
+              className="bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground px-8 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {dictionary.web.home.hero.cta}
+            </motion.button>
+          </Link>
+        </motion.div>
+        <motion.div
+          className="flex justify-center w-full h-full"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <Lottie animationData={animation_focus} loop={true} />
+        </motion.div>
       </div>
-    </div>
+    </motion.section >
   );
 };
 

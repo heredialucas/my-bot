@@ -33,111 +33,177 @@
   },
   "web": {
     "global": {
-      "primaryCta": "Contactar",
+      "primaryCta": "Contáctanos",
       "secondaryCta": "Comenzar ahora"
     },
     "header": {
       "home": "Inicio",
+      "projects": "Proyectos",
+      "services": "Servicios",
+      "servicesDescription": "Nuestros servicios de desarrollo de software",
+      "process": "Proceso",
+      "processDescription": "Cómo trabajamos con nuestros clientes",
       "product": {
         "title": "Producto",
-        "description": "Gestionar registros tributarios para pequeñas empresas ya es un desafío suficiente.",
+        "description": "El desarrollo de software personalizado requiere experiencia y metodologías probadas.",
         "pricing": "Precios"
       },
       "blog": "Blog",
       "contact": "Contacto",
       "signIn": "Iniciar sesión",
-      "signUp": "Comienza"
+      "signUp": "Comenzar"
     },
     "home": {
       "meta": {
-        "title": "SOPY - Gestión Tributaria Simple",
-        "description": "La plataforma que conecta contadores con sus clientes para simplificar el control de registros tributarios, cumplimiento fiscal y seguimiento de obligaciones."
+        "title": "AppWise - Desarrollo de Software Personalizado",
+        "description": "La plataforma que conecta innovadores con desarrolladores para crear soluciones digitales de alta calidad, aplicaciones web y móviles."
       },
       "hero": {
-        "announcement": "Lee nuestra última actualización fiscal"
+        "announcement": "Lee nuestra última actualización tecnológica",
+        "title": "Lanzamos tu idea hoy para transformar el futuro mañana.",
+        "subtitle": "Atrévete a probar, iterar y conquistar.",
+        "cta": "¡Comencemos ahora!"
       },
       "cases": {
-        "title": "De confianza para Contadores y Profesionales Financieros"
+        "title": "De confianza para Empresas y Emprendedores",
+        "subtitle": "Descubre cómo estamos ayudando a otros emprendedores a hacer realidad sus ideas.",
+        "quote": "Cada proyecto es una historia de éxito en desarrollo",
+        "projectsTitle": "Proyectos",
+        "projectStatus": {
+          "finished": "Finalizado",
+          "inProgress": "En progreso"
+        }
       },
       "features": {
-        "title": "Herramientas Poderosas para Contadores Modernos",
-        "description": "Descubre cómo nuestras características especializadas pueden revolucionar la gestión tributaria para tus clientes.",
+        "title": "¿Por qué elegirnos?",
+        "description": "Combinamos tecnología de vanguardia con metodologías ágiles para ofrecer soluciones excepcionales",
         "items": [
           {
-            "title": "Registros Tributarios Simplificados",
-            "description": "Nuestra plataforma simplifica la gestión de registros tributarios, reduce la complejidad del cumplimiento y ayuda a las empresas a cumplir con las normativas cambiantes."
+            "title": "Desarrollo Personalizado",
+            "description": "Construimos soluciones a medida que se adaptan perfectamente a tus requisitos y objetivos empresariales únicos."
           },
           {
-            "title": "Panel de Control para Clientes",
-            "description": "Proporciona a tus clientes una visión clara de su situación fiscal con paneles e informes fáciles de entender."
+            "title": "Aplicaciones Web",
+            "description": "Aplicaciones web modernas y responsivas que proporcionan experiencias de usuario excepcionales en todos los dispositivos."
           },
           {
-            "title": "Actualizaciones en Tiempo Real",
-            "description": "Mantente informado con actualizaciones en tiempo real sobre las regulaciones fiscales y requisitos de cumplimiento relevantes para tus clientes."
+            "title": "Diseño UI/UX",
+            "description": "Interfaces intuitivas y experiencias de usuario atractivas que mantienen a tus clientes regresando."
           },
           {
-            "title": "Gestión Multi-cliente",
-            "description": "Gestiona eficientemente los registros tributarios de múltiples clientes desde una interfaz unificada diseñada para contadores."
+            "title": "Integración de Datos",
+            "description": "Integración perfecta con sistemas existentes y servicios de terceros para maximizar el potencial de tus datos."
+          },
+          {
+            "title": "Desarrollo Ágil",
+            "description": "Enfoque iterativo que garantiza la entrega rápida de características valiosas y la mejora continua."
+          },
+          {
+            "title": "Soporte Continuo",
+            "description": "Mantenimiento y soporte confiables para garantizar que tu solución siga funcionando en su mejor nivel."
           }
         ]
       },
       "stats": {
-        "title": "Resultados Reales para Profesionales Contables",
-        "description": "Nuestra plataforma está diseñada específicamente para ayudar a contadores a gestionar mejor los registros tributarios de sus clientes, reducir la carga administrativa y aumentar la satisfacción.",
-        "items": [
-          "Registros tributarios procesados",
-          "Firmas contables activas",
-          "Tiempo ahorrado en cumplimiento",
-          "Satisfacción del cliente"
+        "title": "Nuestro Proceso",
+        "description": "Seguimos una metodología probada para entregar proyectos exitosos",
+        "process": [
+          {
+            "title": "Descubrimiento",
+            "description": "Comenzamos por entender tus necesidades comerciales, público objetivo y objetivos para establecer una hoja de ruta clara para el proyecto."
+          },
+          {
+            "title": "Diseño",
+            "description": "Nuestro equipo creativo crea interfaces intuitivas y experiencias de usuario que se alinean con la identidad y los objetivos de tu marca."
+          },
+          {
+            "title": "Desarrollo",
+            "description": "Utilizando metodología ágil, construimos tu solución de forma iterativa, asegurando la calidad en cada etapa del proceso de desarrollo."
+          },
+          {
+            "title": "Pruebas",
+            "description": "Pruebas exhaustivas garantizan que tu solución funcione perfectamente en todos los dispositivos y escenarios."
+          },
+          {
+            "title": "Implementación",
+            "description": "Lanzamos cuidadosamente tu proyecto y proporcionamos capacitación para asegurar una transición e adopción sin problemas."
+          },
+          {
+            "title": "Soporte",
+            "description": "Nuestra relación continúa con mantenimiento, actualizaciones y mejoras continuas para mantener tu solución funcionando de manera óptima."
+          }
         ]
       },
       "testimonials": {
-        "title": "Escucha a los Contadores Profesionales que Usan SOPY",
+        "title": "Lo que Dicen Nuestros Clientes",
+        "description": "Lo que nuestros clientes opinan sobre nuestro trabajo y colaboración",
         "items": [
           {
-            "title": "Revolucionó mi práctica contable",
-            "description": "SOPY ha transformado la forma en que gestiono los registros tributarios de mis clientes. La plataforma es intuitiva, potente y me ahorra horas cada semana en tareas administrativas.",
+            "title": "Un cambio radical para mi negocio",
+            "description": "Trabajar con este equipo ha transformado completamente nuestra presencia digital. Su atención al detalle y experiencia técnica hicieron que todo el proceso fuera fluido y efectivo.",
             "author": {
               "name": "María Rodríguez",
               "image": "https://github.com/haydenbleasel.png"
             }
           },
           {
-            "title": "Mis clientes la adoran",
-            "description": "SOPY no solo facilita mi trabajo, sino que mis clientes aprecian la transparencia y claridad que aporta a su situación fiscal. Es beneficioso para todos.",
+            "title": "Superó todas las expectativas",
+            "description": "No solo entregaron el proyecto a tiempo, sino que añadieron valor en cada paso con sugerencias perspicaces que mejoraron significativamente nuestro concepto original.",
             "author": {
-              "name": "Juan Pérez",
+              "name": "Juan Dávila",
               "image": "https://github.com/haydenbleasel.png"
             }
           }
         ]
       },
       "faq": {
-        "title": "Preguntas Frecuentes sobre SOPY",
-        "description": "Obtén respuestas rápidas a tus preguntas más urgentes sobre nuestra plataforma de gestión tributaria. Hemos recopilado todo lo que los contadores necesitan saber sobre la transformación de la gestión de registros tributarios de sus clientes.",
-        "cta": "¿Tienes preguntas? Contáctanos",
+        "title": "Preguntas Frecuentes",
+        "description": "Obtén respuestas rápidas a tus preguntas más urgentes sobre nuestros servicios de desarrollo de software en AppWise Innovation.",
+        "cta": "¿Aún tienes preguntas? Contáctanos",
+        "needMore": "¿Necesitas más información?",
+        "contactDescription": "Si no encontraste la respuesta a tu pregunta, nuestro equipo de desarrollo está listo para ayudarte a transformar tu idea en realidad.",
         "items": [
           {
-            "question": "¿Qué es SOPY?",
-            "answer": "SOPY es una plataforma SaaS especializada que ayuda a los contadores a gestionar los registros tributarios de sus clientes de manera eficiente y precisa, garantizando el cumplimiento y reduciendo la carga administrativa."
+            "question": "¿Qué servicios ofrece AppWise Innovation?",
+            "answer": "AppWise Innovation proporciona servicios completos de desarrollo de software, incluyendo desarrollo de aplicaciones web y móviles, diseño UI/UX, soluciones de software personalizadas, y servicios continuos de mantenimiento y soporte."
           },
           {
-            "question": "¿Cómo ayuda SOPY a mi práctica contable?",
-            "answer": "SOPY agiliza la gestión de registros tributarios, automatiza tareas rutinarias de cumplimiento, proporciona actualizaciones en tiempo real sobre las normativas y ofrece interfaces amigables para el cliente, permitiéndote centrarte en proporcionar servicios de valor añadido."
+            "question": "¿Cómo funciona su proceso de desarrollo?",
+            "answer": "Nuestro proceso de desarrollo sigue la metodología ágil con ciclos iterativos. Comenzamos con una fase de descubrimiento para entender tus necesidades, pasamos a las fases de diseño y desarrollo, realizamos pruebas exhaustivas y finalmente implementamos tu solución con soporte continuo."
           },
           {
-            "question": "¿Pueden mis clientes acceder a sus propios datos?",
-            "answer": "Sí, SOPY proporciona un portal seguro para clientes donde pueden ver sus registros tributarios, seguir su estado de cumplimiento y comunicarse directamente contigo sobre sus asuntos fiscales."
+            "question": "¿Cuánto tiempo toma normalmente desarrollar una solución de software?",
+            "answer": "Los tiempos de desarrollo varían según la complejidad del proyecto. Las aplicaciones simples pueden tomar unas pocas semanas, mientras que soluciones empresariales más completas pueden llevar varios meses. Proporcionamos cronogramas detallados durante nuestra consulta inicial."
           },
           {
-            "question": "¿Es SOPY seguro y cumple con las normativas?",
-            "answer": "Absolutamente. SOPY está construido con protocolos de seguridad líderes en la industria y cumple completamente con las regulaciones de protección de datos, asegurando que la información fiscal sensible de tus clientes esté siempre protegida."
+            "question": "¿Proporcionan soporte después del lanzamiento?",
+            "answer": "¡Absolutamente! Ofrecemos paquetes completos de mantenimiento y soporte para garantizar que tu software siga funcionando de manera óptima después del lanzamiento. Nuestro equipo se encarga de actualizaciones, correcciones de errores y mejoras de funcionalidades para mantener tu solución funcionando sin problemas."
           }
         ]
       },
       "cta": {
-        "title": "Transforma tu Práctica Contable Hoy",
-        "description": "Únete a cientos de contadores visionarios que ya han modernizado sus procesos de gestión tributaria. SOPY ofrece las herramientas, el apoyo y la eficiencia que necesitas para destacar en la prestación de servicios fiscales a tus clientes. Comienza en minutos."
+        "title": "Transforma tu Idea en Realidad Hoy",
+        "description": "Únete a cientos de emprendedores y empresas que ya han transformado sus ideas en productos digitales exitosos. AppWise ofrece las herramientas, el apoyo y la tecnología que necesitas para destacar en el mercado digital. Comienza en minutos.",
+        "calendly": {
+          "title": "Agenda una llamada",
+          "subtitle": "30 minutos · Gratis",
+          "benefits": [
+            "Conoce nuestro proceso",
+            "Resuelve tus dudas",
+            "Define el alcance de tu proyecto"
+          ]
+        }
+      },
+      "newsletter": {
+        "title": "Mantente Actualizado",
+        "description": "Suscríbete para recibir las últimas noticias sobre desarrollo de productos digitales y MVPs",
+        "placeholder": "Tu dirección de email",
+        "subscribe": "Suscribirse",
+        "subscribing": "Suscribiendo...",
+        "success": "¡Gracias por suscribirte! Recibirás nuestra próxima actualización.",
+        "error": "Algo salió mal. Por favor, inténtalo de nuevo.",
+        "validation": "Por favor, introduce una dirección de email válida.",
+        "privacy": "Prometemos no enviar spam, solo contenido relevante"
       }
     },
     "pricing": {
@@ -179,31 +245,34 @@
     },
     "contact": {
       "meta": {
-        "title": "Hablemos sobre tu Práctica Contable",
-        "description": "Contacta con nuestro equipo para discutir cómo SOPY puede ayudar a simplificar la gestión tributaria para tus clientes y hacer crecer tu práctica."
+        "title": "Contáctanos",
+        "description": "Contacta con nuestro equipo para discutir cómo AppWise puede ayudar a transformar tus ideas en soluciones digitales exitosas y hacer crecer tu negocio."
       },
       "hero": {
+        "title": "Estamos aquí para ayudarte",
+        "description": "Nuestro equipo está disponible para ayudarte en cada paso del camino con tu proyecto de desarrollo.",
+        "cta": "Enviar mensaje",
         "benefits": [
           {
-            "title": "Consulta Personalizada",
-            "description": "Obtén soluciones personalizadas y asesoramiento experto específico para las necesidades de tu práctica contable."
+            "title": "Respuesta rápida",
+            "description": "Nuestros expertos te ayudarán a llevar tu idea al siguiente nivel con soluciones digitales personalizadas."
           },
           {
-            "title": "Soporte Completo",
-            "description": "Nuestro equipo está disponible para ayudarte en cada paso del camino con tu experiencia en SOPY."
+            "title": "Soporte continuo",
+            "description": "Ofrecemos asistencia técnica y mejoras continuas para mantener tu aplicación funcionando perfectamente."
           },
           {
-            "title": "Soporte de Implementación",
-            "description": "Nuestros expertos te ayudarán a hacer la transición a SOPY sin problemas y con mínima interrupción para tu práctica."
+            "title": "Soluciones personalizadas",
+            "description": "Cada proyecto es único, por eso desarrollamos soluciones a medida que se adaptan a tus necesidades específicas."
           }
         ],
         "form": {
-          "title": "Contacta con nosotros",
-          "date": "Fecha",
+          "title": "Hablemos sobre tu proyecto",
           "firstName": "Nombre",
           "lastName": "Apellido",
-          "resume": "Detalles de tu práctica",
-          "cta": "Enviar consulta"
+          "date": "Fecha preferida",
+          "resume": "Adjunta archivos relevantes",
+          "cta": "Enviar"
         }
       }
     }

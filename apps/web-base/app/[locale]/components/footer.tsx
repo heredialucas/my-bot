@@ -1,76 +1,193 @@
-import { env } from '@/env';
-import { Status } from '@repo/observability/status';
-import Link from 'next/link';
-import { FileSpreadsheet, Mail, Phone } from 'lucide-react';
+'use client';
 
-const LegalLinks = () => {
-  const links = [
-    { _slug: 'privacy', _title: 'Política de Privacidad' },
-    { _slug: 'terms', _title: 'Términos y Condiciones' }
-  ];
-
-  return (
-    <div className="flex gap-4">
-      {links.map((link) => (
-        <Link
-          key={link._slug}
-          href={`/legal/${link._slug}`}
-          className="text-sm font-bold hover:underline var(--font-nunito) text-[#FFB800]"
-        >
-          {link._title}
-        </Link>
-      ))}
-    </div>
-  );
-};
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { Facebook, Github, Instagram, Linkedin, Mail, Phone } from 'lucide-react';
+import logo from '@/public/logo.png';
+import appwiseFullText from '@/public/appwise-full-text.png';
 
 export const Footer = () => (
-  <footer className="border-t py-10 bg-gray-50">
-    <div className="container mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <FileSpreadsheet className="h-8 w-8 text-[#FFB800]" />
-            <h3 className="text-2xl font-black var(--font-nunito) bg-gradient-to-r from-[#FFB800] via-purple-500 to-blue-600 inline-block text-transparent bg-clip-text">
-              SOPY
-            </h3>
-          </div>
-          <p className="text-sm text-muted-foreground var(--font-nunito)">
-            Simplificando la gestión tributaria para contadores y sus clientes desde 2024.
+  <footer className="relative mt-24 border-t border-white/10 overflow-hidden">
+    {/* Elementos decorativos */}
+    <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+      <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-blue-400/10 rounded-full blur-2xl"></div>
+      <div className="absolute top-0 left-1/2 w-2 h-2 bg-white/30 rounded-full animate-ping"></div>
+    </div>
+
+    <div className="container mx-auto px-4">
+      {/* Grid Principal */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 py-16">
+        {/* Logo y descripción - centrado en móvil */}
+        <div className="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex gap-6 justify-center items-center"
+          >
+            <Image
+              src={logo}
+              alt="AppWise Innovations - Consultora de Desarrollo de Software y MVPs"
+              width={140}
+              height={45}
+              className="mb-6"
+            />
+            <Image
+              src={appwiseFullText}
+              alt="AppWise Innovations - Consultora de Desarrollo de Software y MVPs"
+              width={140}
+              height={45}
+              className="mb-6"
+            />
+          </motion.div>
+
+          <p className="leading-relaxed max-w-sm">
+            We transform innovative ideas into successful digital products.
+            Specialized in MVP development and custom technological
+            solutions.
           </p>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <h4 className="text-lg font-black var(--font-nunito)">Enlaces rápidos</h4>
-          <div className="flex flex-col space-y-2">
-            <Link href="/" className="text-sm var(--font-nunito) hover:text-[#FFB800]">Inicio</Link>
-            <Link href="/pricing" className="text-sm var(--font-nunito) hover:text-[#FFB800]">Precios</Link>
-            <Link href="/contact" className="text-sm var(--font-nunito) hover:text-[#FFB800]">Contacto</Link>
+          <div className="flex gap-4 mt-6">
+            <a
+              href="https://www.facebook.com/profile.php?id=61558007701780"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-300 transition-colors"
+            >
+              <Facebook />
+            </a>
+            <a
+              href="https://github.com/AppWiseInnovations"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-300 transition-colors"
+            >
+              <Github />
+            </a>
+            <a
+              href="https://www.linkedin.com/company/appwise-innovations"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="/60 hover:text-blue-300 transition-colors"
+            >
+              <Linkedin />
+            </a>
+            <a
+              href="https://www.instagram.com/consultora_software_appwise?igsh=ajBqeHlqNmp3aWM0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-300 transition-colors"
+            >
+              <Instagram />
+            </a>
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <h4 className="text-lg font-black var(--font-nunito)">Contacto</h4>
-          <div className="flex flex-col space-y-2">
-            <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-[#7dd3c8]" />
-              <span className="text-sm var(--font-nunito)">info@sopy.com</span>
+        {/* Enlaces rápidos - centrado en móvil */}
+        <div className="md:col-span-2 flex flex-col items-center md:items-start">
+          <h3 className=" font-semibold mb-4 text-center md:text-left">
+            Services
+          </h3>
+          <ul className="space-y-3 text-center md:text-left">
+            <li>
+              <a
+                href="https://wa.me/5493541286481"
+                className="hover:text-blue-300 transition-colors"
+              >
+                MVP Development
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://wa.me/5493541286481"
+                className="hover:text-blue-300 transition-colors"
+              >
+                IA Development
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://wa.me/5493541286481"
+                className="hover:text-blue-300 transition-colors"
+              >
+                Consulting
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://wa.me/5493541286481"
+                className="hover:text-blue-300 transition-colors"
+              >
+                UX/UI Design
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        {/* Contacto - centrado en móvil */}
+        <div className="md:col-span-3 flex flex-col items-center md:items-start">
+          <h3 className=" font-semibold mb-4 text-center md:text-left">
+            Contact
+          </h3>
+          <ul className="space-y-3">
+            <li className="flex items-center gap-3 justify-center md:justify-start">
+              <Mail />
+              <a
+                href="mailto:appwise.innovations@gmail.com"
+                className="hover:text-blue-300 transition-colors"
+              >
+                appwise.innovations@gmail.com
+              </a>
+            </li>
+            <li className="flex items-center gap-3 justify-center md:justify-start">
+              <Phone />
+              <a
+                href="tel:+1234567890"
+                className="hover:text-blue-300 transition-colors"
+              >
+                +54 9 3541 28-6481
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        {/* Newsletter - centrado en móvil */}
+        <div className="md:col-span-3 flex flex-col items-center md:items-start">
+          <h3 className=" font-semibold mb-4 text-center md:text-left">
+            Newsletter
+          </h3>
+          <form className="space-y-3 w-full max-w-sm">
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="Your email address"
+                className="w-full px-4 py-2.5 rounded-lg bg-white border border-white/10 placeholder-black/40 focus:border-blue-400/50 focus:outline-none transition-colors"
+              />
             </div>
-            <div className="flex items-center gap-2">
-              <Phone className="h-4 w-4 text-[#7dd3c8]" />
-              <span className="text-sm var(--font-nunito)">+56 2 2123 4567</span>
-            </div>
-          </div>
+            <button className="w-full px-4 py-2.5 bg-white/10 hover:bg-white/20  rounded-lg transition-colors">
+              Subscribe
+            </button>
+          </form>
         </div>
       </div>
 
-      <div className="mt-8 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
-        <p className="text-xs text-muted-foreground var(--font-nunito) mb-4 md:mb-0">
-          © {new Date().getFullYear()} SOPY. Todos los derechos reservados.
-        </p>
-        <div className="flex items-center gap-6">
-          <Status />
-          <LegalLinks />
+      {/* Separador */}
+      <div className="border-t border-white/10"></div>
+
+      {/* Footer inferior - mejor espaciado en móvil */}
+      <div className="py-6 flex flex-col md:flex-row justify-between items-center gap-6 text-sm /60">
+        <div className="text-center">
+          © {new Date().getFullYear()} AppWise Innovations. All rights
+          reserved.
+        </div>
+        <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+          <motion.a
+            href="/privacidad"
+            className="hover:text-blue-300 transition-colors"
+            whileHover={{ scale: 1.05 }}
+          >
+            Privacy Policy
+          </motion.a>
         </div>
       </div>
     </div>
