@@ -3,11 +3,46 @@
     "admin": {
       "title": "Panel de Administración",
       "navigation": {
-        "dashboard": "Tablero",
+        "dashboard": "Inicio",
         "users": "Usuarios",
         "settings": "Configuración",
         "logout": "Cerrar Sesión",
         "loggingOut": "Cerrando sesión..."
+      },
+      "products": {
+        "title": "Panel de Productos",
+        "newProduct": "Nuevo Producto",
+        "noProducts": "No se encontraron productos. ¡Crea tu primer producto!",
+        "technologies": "Tecnologías",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "deleteConfirmation": "¿Estás seguro de que deseas eliminar este producto?",
+        "status": {
+          "published": "Publicado",
+          "draft": "Borrador",
+          "archived": "Archivado"
+        },
+        "form": {
+          "editTitle": "Editar Producto",
+          "createTitle": "Crear Nuevo Producto",
+          "productTitle": "Título",
+          "status": "Estado",
+          "size": "Tamaño",
+          "statusDescription": "Descripción del Estado",
+          "description": "Descripción",
+          "detailedDescription": "Descripción Detallada",
+          "productImages": "Imágenes del Producto",
+          "addImages": "Haz clic para añadir más imágenes",
+          "imageRequirements": "PNG, JPG, GIF hasta 5MB",
+          "features": "Características",
+          "addFeature": "Añadir Característica",
+          "technologies": "Tecnologías", 
+          "addTechnology": "Añadir Tecnología",
+          "cancel": "Cancelar",
+          "create": "Crear",
+          "update": "Actualizar",
+          "saving": "Guardando..."
+        }
       }
     },
     "client": {

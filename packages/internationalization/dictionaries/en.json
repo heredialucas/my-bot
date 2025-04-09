@@ -8,6 +8,41 @@
         "settings": "Settings",
         "logout": "Logout",
         "loggingOut": "Logging out..."
+      },
+      "products": {
+        "title": "Product Dashboard",
+        "newProduct": "New Product",
+        "noProducts": "No products found. Create your first product!",
+        "technologies": "Technologies",
+        "edit": "Edit",
+        "delete": "Delete",
+        "deleteConfirmation": "Are you sure you want to delete this product?",
+        "status": {
+          "published": "Published",
+          "draft": "Draft",
+          "archived": "Archived"
+        },
+        "form": {
+          "editTitle": "Edit Product",
+          "createTitle": "Create New Product",
+          "productTitle": "Title",
+          "status": "Status",
+          "size": "Size",
+          "statusDescription": "Status Description",
+          "description": "Description",
+          "detailedDescription": "Detailed Description",
+          "productImages": "Product Images",
+          "addImages": "Click to add more images",
+          "imageRequirements": "PNG, JPG, GIF up to 5MB",
+          "features": "Features",
+          "addFeature": "Add Feature",
+          "technologies": "Technologies", 
+          "addTechnology": "Add Technology",
+          "cancel": "Cancel",
+          "create": "Create",
+          "update": "Update",
+          "saving": "Saving..."
+        }
       }
     },
     "client": {

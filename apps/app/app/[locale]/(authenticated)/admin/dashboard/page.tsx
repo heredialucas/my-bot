@@ -1,26 +1,40 @@
-export default function AdminDashboard() {
+import { getAllProducts, getProductById } from '@repo/data-services';
+import ProductsClient from './components/ProductsClient';
+import { Suspense } from 'react';
+import { getDictionary } from '@repo/internationalization';
+
+export default async function AdminDashboard({
+    params,
+    searchParams
+}: {
+    params: Promise<{ locale: string }>;
+    searchParams: Promise<{
+        modal?: string;
+        productId?: string;
+    }>
+}) {
+    // Obtener productos desde la base de datos
+    const products = await getAllProducts();
+    const searchParamsData = await searchParams;
+    const paramsData = await params;
+    const dictionary = await getDictionary(paramsData.locale);
+
+    // Determinar si debemos mostrar un modal y qué producto editar
+    let editingProduct = null;
+    if (searchParamsData.modal === 'edit' && searchParamsData.productId) {
+        editingProduct = await getProductById(searchParamsData.productId);
+    }
+
+    const showModal = searchParamsData.modal === 'create' || searchParamsData.modal === 'edit';
+
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <h1 className="text-2xl font-bold tracking-tight">Medical Dashboard</h1>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-sm">
-                    <h2 className="text-lg font-medium mb-2">Doctors</h2>
-                    <p className="text-gray-500 dark:text-gray-400">Doctor management will be implemented in future versions.</p>
-                </div>
-
-                <div className="p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-sm">
-                    <h2 className="text-lg font-medium mb-2">Patients</h2>
-                    <p className="text-gray-500 dark:text-gray-400">Patient management will be implemented in future versions.</p>
-                </div>
-
-                <div className="p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-sm">
-                    <h2 className="text-lg font-medium mb-2">Prescriptions</h2>
-                    <p className="text-gray-500 dark:text-gray-400">Prescription management will be implemented in future versions.</p>
-                </div>
-            </div>
-        </div>
+        <Suspense fallback={<div>Loading...</div>}>
+            <ProductsClient
+                initialProducts={products}
+                showModal={showModal}
+                editingProduct={editingProduct}
+                dictionary={dictionary}
+            />
+        </Suspense>
     );
 }
