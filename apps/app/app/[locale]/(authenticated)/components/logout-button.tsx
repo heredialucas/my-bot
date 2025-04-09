@@ -55,7 +55,10 @@ export function LogoutButton({ userName, dictionary }: LogoutButtonProps) {
         dictionary?.app?.client?.navigation?.logout ||
         dictionary?.app?.pharmacy?.navigation?.logout ||
         'Cerrar sesión';
-    const loggingOutText = 'Cerrando sesión...';
+    const loggingOutText = dictionary?.app?.admin?.navigation?.loggingOut ||
+        dictionary?.app?.client?.navigation?.loggingOut ||
+        dictionary?.app?.pharmacy?.navigation?.loggingOut ||
+        'Cerrando sesión...';
 
     return (
         <DropdownMenu>
@@ -80,7 +83,7 @@ export function LogoutButton({ userName, dictionary }: LogoutButtonProps) {
                 <DropdownMenuItem
                     onClick={handleLogout}
                     disabled={isLoggingOut}
-                    className="text-destructive focus:text-destructive"
+                    className="text-destructive dark:text-red-400 focus:text-destructive dark:focus:text-red-300"
                 >
                     <LogOut className="mr-2 h-4 w-4" />
                     {isLoggingOut ? loggingOutText : logoutText}

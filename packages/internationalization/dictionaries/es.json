@@ -6,7 +6,8 @@
         "dashboard": "Tablero",
         "users": "Usuarios",
         "settings": "Configuración",
-        "logout": "Cerrar Sesión"
+        "logout": "Cerrar Sesión",
+        "loggingOut": "Cerrando sesión..."
       }
     },
     "client": {
@@ -16,7 +17,8 @@
         "profile": "Perfil",
         "orders": "Pedidos",
         "settings": "Configuración",
-        "logout": "Cerrar Sesión"
+        "logout": "Cerrar Sesión",
+        "loggingOut": "Cerrando sesión..."
       }
     },
     "pharmacy": {
@@ -27,7 +29,42 @@
         "inventory": "Inventario",
         "orders": "Pedidos",
         "settings": "Configuración",
-        "logout": "Cerrar Sesión"
+        "logout": "Cerrar Sesión",
+        "loggingOut": "Cerrando sesión..."
+      }
+    },
+    "auth": {
+      "signIn": {
+        "title": "Iniciar sesión",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "button": "Iniciar sesión",
+        "signing": "Iniciando sesión...",
+        "errors": {
+          "emptyFields": "Por favor complete todos los campos",
+          "invalidCredentials": "Error al iniciar sesión",
+          "generic": "Ha ocurrido un error al iniciar sesión"
+        }
+      },
+      "signUp": {
+        "title": "Crear cuenta",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "confirmPassword": "Confirmar contraseña",
+        "button": "Crear cuenta",
+        "creating": "Creando cuenta...",
+        "errors": {
+          "emptyFields": "Por favor complete todos los campos",
+          "passwordsDoNotMatch": "Las contraseñas no coinciden",
+          "accountCreation": "Error al crear la cuenta",
+          "generic": "Ha ocurrido un error al crear la cuenta"
+        }
+      },
+      "layout": {
+        "title": "Herramientas internas para AppWise",
+        "description": "Herramientas internas para AppWise que te ayudarán a gestionar nuestros productos y servicios."
       }
     }
   },

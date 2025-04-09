@@ -6,7 +6,8 @@
         "dashboard": "Dashboard",
         "users": "Users",
         "settings": "Settings",
-        "logout": "Logout"
+        "logout": "Logout",
+        "loggingOut": "Logging out..."
       }
     },
     "client": {
@@ -16,7 +17,8 @@
         "profile": "Profile",
         "orders": "Orders",
         "settings": "Settings",
-        "logout": "Logout"
+        "logout": "Logout",
+        "loggingOut": "Logging out..."
       }
     },
     "pharmacy": {
@@ -27,7 +29,42 @@
         "inventory": "Inventory",
         "orders": "Orders",
         "settings": "Settings",
-        "logout": "Logout"
+        "logout": "Logout",
+        "loggingOut": "Logging out..."
+      }
+    },
+    "auth": {
+      "signIn": {
+        "title": "Sign in",
+        "email": "Email",
+        "password": "Password",
+        "button": "Sign in",
+        "signing": "Signing in...",
+        "errors": {
+          "emptyFields": "Please complete all fields",
+          "invalidCredentials": "Error signing in",
+          "generic": "An error occurred while signing in"
+        }
+      },
+      "signUp": {
+        "title": "Create account",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "button": "Create account",
+        "creating": "Creating account...",
+        "errors": {
+          "emptyFields": "Please complete all fields",
+          "passwordsDoNotMatch": "Passwords do not match",
+          "accountCreation": "Error creating account",
+          "generic": "An error occurred while creating the account"
+        }
+      },
+      "layout": {
+        "title": "Internal tools for AppWise",
+        "description": "Internal tools for AppWise to help you manage our products and services."
       }
     }
   },

@@ -45,7 +45,7 @@ const Home = async ({ params }: HomeProps) => {
       <Testimonials dictionary={dictionary} />
       <CTA dictionary={dictionary} />
       <FAQ dictionary={dictionary} />
-      <Newsletter dictionary={dictionary} />
+      {/* <Newsletter dictionary={dictionary} /> */}
     </>
   );
 };

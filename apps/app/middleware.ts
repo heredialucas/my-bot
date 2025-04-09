@@ -9,7 +9,6 @@ import { internationalizationMiddleware } from '@repo/internationalization/middl
 // Dynamic role system - easily extendable
 const ROLES = {
   ADMIN: 'admin',
-  ACCOUNTANT: 'accountant',
   USER: 'user',
   // Add more roles as needed
 } as const;
@@ -28,10 +27,6 @@ const ROLE_CONFIGURATION: Record<Role, RoleConfig> = {
   [ROLES.ADMIN]: {
     defaultRedirect: '/admin/dashboard',
     allowedRoutes: ['/admin']
-  },
-  [ROLES.ACCOUNTANT]: {
-    defaultRedirect: '/accountant/dashboard',
-    allowedRoutes: ['/accountant']
   },
   [ROLES.USER]: {
     defaultRedirect: '/client/dashboard',
@@ -92,11 +87,6 @@ const getUserRole = (role?: string): Role => {
   // Check for admin role
   if (roleStr === ROLES.ADMIN) {
     return ROLES.ADMIN;
-  }
-
-  // Check for accountant role
-  if (roleStr === ROLES.ACCOUNTANT) {
-    return ROLES.ACCOUNTANT;
   }
 
   // Add more role checks as needed
@@ -167,9 +157,6 @@ export function middleware(req: NextRequest) {
       }
 
       // Handle specific route access permissions
-      if (pathnameWithoutLocale.startsWith('/accountant') && userRole !== ROLES.ACCOUNTANT) {
-        return NextResponse.redirect(new URL(`/${locale}/access-denied`, req.url));
-      }
 
       if (pathnameWithoutLocale.startsWith('/admin')) {
         return NextResponse.redirect(new URL(`/${locale}/access-denied`, req.url));

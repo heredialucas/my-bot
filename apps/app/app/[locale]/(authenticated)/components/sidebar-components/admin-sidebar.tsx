@@ -37,11 +37,6 @@ export function AdminSidebar({ dictionary }: AdminSidebarProps) {
             icon: LayoutDashboard,
             href: '/admin/dashboard',
         },
-        {
-            title: dictionary?.app.admin.navigation.users || 'Users',
-            icon: UsersIcon,
-            href: '/admin/users',
-        },
     ];
 
     const isActivePath = (path: string) => pathname.startsWith(path);

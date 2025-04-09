@@ -6,7 +6,8 @@
         "dashboard": "Dashboard",
         "users": "Benutzer",
         "settings": "Einstellungen",
-        "logout": "Abmelden"
+        "logout": "Abmelden",
+        "loggingOut": "Abmelden..."
       }
     },
     "client": {
@@ -16,7 +17,8 @@
         "profile": "Profil",
         "orders": "Bestellungen",
         "settings": "Einstellungen",
-        "logout": "Abmelden"
+        "logout": "Abmelden",
+        "loggingOut": "Abmelden..."
       }
     },
     "pharmacy": {
@@ -27,7 +29,42 @@
         "inventory": "Bestand",
         "orders": "Bestellungen",
         "settings": "Einstellungen",
-        "logout": "Abmelden"
+        "logout": "Abmelden",
+        "loggingOut": "Abmelden..."
+      }
+    },
+    "auth": {
+      "signIn": {
+        "title": "Anmelden",
+        "email": "E-Mail",
+        "password": "Passwort",
+        "button": "Anmelden",
+        "signing": "Anmeldung läuft...",
+        "errors": {
+          "emptyFields": "Bitte füllen Sie alle Felder aus",
+          "invalidCredentials": "Fehler bei der Anmeldung",
+          "generic": "Bei der Anmeldung ist ein Fehler aufgetreten"
+        }
+      },
+      "signUp": {
+        "title": "Konto erstellen",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "email": "E-Mail",
+        "password": "Passwort",
+        "confirmPassword": "Passwort bestätigen",
+        "button": "Konto erstellen",
+        "creating": "Konto wird erstellt...",
+        "errors": {
+          "emptyFields": "Bitte füllen Sie alle Felder aus",
+          "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+          "accountCreation": "Fehler beim Erstellen des Kontos",
+          "generic": "Beim Erstellen des Kontos ist ein Fehler aufgetreten"
+        }
+      },
+      "layout": {
+        "title": "Interne Tools für AppWise",
+        "description": "Interne Tools für AppWise, die Ihnen bei der Verwaltung unserer Produkte und Dienstleistungen helfen."
       }
     }
   },

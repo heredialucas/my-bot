@@ -3,11 +3,16 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from '@repo/data-services/src/services/authService';
+import { Dictionary } from '@repo/internationalization';
 
 // Clerk component (commented out)
 // import { SignIn as ClerkSignIn } from '@clerk/nextjs';
 
-export const SignIn = () => {
+interface SignInProps {
+    dictionary?: Dictionary;
+}
+
+export const SignIn = ({ dictionary }: SignInProps) => {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,7 +24,7 @@ export const SignIn = () => {
         const password = formData.get('password') as string;
 
         if (!email || !password) {
-            setError('Please complete all fields');
+            setError(dictionary?.app?.auth?.signIn?.errors?.emptyFields || 'Please complete all fields');
             return;
         }
 
@@ -32,10 +37,10 @@ export const SignIn = () => {
             if (result.success) {
                 router.push('/');
             } else {
-                setError(result.message || 'Error signing in');
+                setError(result.message || dictionary?.app?.auth?.signIn?.errors?.invalidCredentials || 'Error signing in');
             }
         } catch (err) {
-            setError('An error occurred while signing in');
+            setError(dictionary?.app?.auth?.signIn?.errors?.generic || 'An error occurred while signing in');
             console.error(err);
         } finally {
             setLoading(false);
@@ -50,7 +55,7 @@ export const SignIn = () => {
             <form action={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                     <label htmlFor="email" className="text-sm font-medium">
-                        Email
+                        {dictionary?.app?.auth?.signIn?.email || 'Email'}
                     </label>
                     <input
                         name="email"
@@ -65,7 +70,7 @@ export const SignIn = () => {
 
                 <div className="space-y-2">
                     <label htmlFor="password" className="text-sm font-medium">
-                        Password
+                        {dictionary?.app?.auth?.signIn?.password || 'Password'}
                     </label>
                     <input
                         name="password"
@@ -85,7 +90,9 @@ export const SignIn = () => {
                     className="w-full py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                     disabled={loading}
                 >
-                    {loading ? 'Signing in...' : 'Sign in'}
+                    {loading ?
+                        (dictionary?.app?.auth?.signIn?.signing || 'Signing in...') :
+                        (dictionary?.app?.auth?.signIn?.button || 'Sign in')}
                 </button>
             </form>
         </div>

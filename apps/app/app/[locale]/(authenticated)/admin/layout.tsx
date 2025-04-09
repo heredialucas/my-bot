@@ -1,8 +1,9 @@
-import { Leaf } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { getDictionary } from '@repo/internationalization';
 import { AdminSidebar } from '../components/sidebar-components/admin-sidebar';
-import { UserHeader } from '../components/user-header';
+import { UserHeaderClient } from '../components/user-header/userHeaderClient';
+import Image from 'next/image';
+import logo from '@/app/public/logo.png';
 
 type AdminLayoutProps = {
     readonly children: ReactNode;
@@ -17,8 +18,8 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
 
     return (
         <div className="flex w-full min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
-            <UserHeader
-                logo={<Leaf className="h-5 w-5 text-green-500" />}
+            <UserHeaderClient
+                logo={<Image src={logo} alt="AppWise" width={32} height={32} />}
                 title={dictionary.app.admin?.title || "AppWise Innovation"}
                 dictionary={dictionary}
             />

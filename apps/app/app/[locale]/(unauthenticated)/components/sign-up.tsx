@@ -3,11 +3,16 @@
 import { useState } from 'react';
 import { signUp } from '@repo/data-services/src/services/authService';
 import { redirect } from 'next/navigation';
+import { Dictionary } from '@repo/internationalization';
 
 // Clerk component (commented out)
 // import { SignUp as ClerkSignUp } from '@clerk/nextjs';
 
-export const SignUp = () => {
+interface SignUpProps {
+    dictionary?: Dictionary;
+}
+
+export const SignUp = ({ dictionary }: SignUpProps) => {
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -24,12 +29,12 @@ export const SignUp = () => {
         const confirmPassword = formData.get('confirmPassword') as string;
 
         if (!name || !lastName || !email || !password || !confirmPassword) {
-            setError('Please complete all fields');
+            setError(dictionary?.app?.auth?.signUp?.errors?.emptyFields || 'Please complete all fields');
             return;
         }
 
         if (password !== confirmPassword) {
-            setError('Passwords do not match');
+            setError(dictionary?.app?.auth?.signUp?.errors?.passwordsDoNotMatch || 'Passwords do not match');
             return;
         }
 
@@ -47,11 +52,11 @@ export const SignUp = () => {
             if (result.success) {
                 redirect('/sign-in');
             } else {
-                setError(result.message || 'Error creating account');
+                setError(result.message || dictionary?.app?.auth?.signUp?.errors?.accountCreation || 'Error creating account');
             }
 
         } catch (err) {
-            setError('An error occurred while creating the account');
+            setError(dictionary?.app?.auth?.signUp?.errors?.generic || 'An error occurred while creating the account');
             console.error(err);
         } finally {
             setLoading(false);
@@ -66,7 +71,7 @@ export const SignUp = () => {
             <form action={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                     <label htmlFor="name" className="text-sm font-medium">
-                        First Name
+                        {dictionary?.app?.auth?.signUp?.firstName || 'First Name'}
                     </label>
                     <input
                         name="name"
@@ -74,14 +79,14 @@ export const SignUp = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-green-500 focus:border-green-500"
-                        placeholder="First Name"
+                        placeholder={dictionary?.app?.auth?.signUp?.firstName || 'First Name'}
                         required
                     />
                 </div>
 
                 <div className="space-y-2">
                     <label htmlFor="lastName" className="text-sm font-medium">
-                        Last Name
+                        {dictionary?.app?.auth?.signUp?.lastName || 'Last Name'}
                     </label>
                     <input
                         name="lastName"
@@ -89,14 +94,14 @@ export const SignUp = () => {
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         className="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-green-500 focus:border-green-500"
-                        placeholder="Last Name"
+                        placeholder={dictionary?.app?.auth?.signUp?.lastName || 'Last Name'}
                         required
                     />
                 </div>
 
                 <div className="space-y-2">
                     <label htmlFor="email" className="text-sm font-medium">
-                        Email
+                        {dictionary?.app?.auth?.signUp?.email || 'Email'}
                     </label>
                     <input
                         name="email"
@@ -111,7 +116,7 @@ export const SignUp = () => {
 
                 <div className="space-y-2">
                     <label htmlFor="password" className="text-sm font-medium">
-                        Password
+                        {dictionary?.app?.auth?.signUp?.password || 'Password'}
                     </label>
                     <input
                         name="password"
@@ -126,7 +131,7 @@ export const SignUp = () => {
 
                 <div className="space-y-2">
                     <label htmlFor="confirmPassword" className="text-sm font-medium">
-                        Confirm Password
+                        {dictionary?.app?.auth?.signUp?.confirmPassword || 'Confirm Password'}
                     </label>
                     <input
                         name="confirmPassword"
@@ -146,7 +151,9 @@ export const SignUp = () => {
                     className="w-full py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                     disabled={loading}
                 >
-                    {loading ? 'Creating account...' : 'Create account'}
+                    {loading ?
+                        (dictionary?.app?.auth?.signUp?.creating || 'Creating account...') :
+                        (dictionary?.app?.auth?.signUp?.button || 'Create account')}
                 </button>
             </form>
         </div>
