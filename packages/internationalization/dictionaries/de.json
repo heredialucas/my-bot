@@ -279,6 +279,7 @@
       "form": {
         "title": "Kontaktiere uns",
         "subtitle": "Wir antworten innerhalb von 24 Stunden",
+        "subtitleInfo": "Transformieren Sie Ideen in digitale Lösungen",
         "name_placeholder": "Vollständiger Name",
         "email_placeholder": "E-Mail-Adresse",
         "message_placeholder": "Erzählen Sie uns von Ihrem Projekt",

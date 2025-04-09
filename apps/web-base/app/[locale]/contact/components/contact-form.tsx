@@ -1,20 +1,10 @@
 'use client';
 
-import { Button } from '@repo/design-system/components/ui/button';
-import { Calendar } from '@repo/design-system/components/ui/calendar';
-import { Input } from '@repo/design-system/components/ui/input';
-import { Label } from '@repo/design-system/components/ui/label';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@repo/design-system/components/ui/popover';
-import { cn } from '@repo/design-system/lib/utils';
 import type { Dictionary } from '@repo/internationalization';
-import { format } from 'date-fns';
-import { CalendarIcon, Check, MoveRight, FileSpreadsheet, Mail } from 'lucide-react';
+import { Check, FileSpreadsheet, Mail } from 'lucide-react';
 import { useState, FormEvent, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
+import { contact } from '../actions/contact';
 
 type ContactFormProps = {
   dictionary: Dictionary;
@@ -32,7 +22,6 @@ interface StatusMessage {
 }
 
 export const ContactForm = ({ dictionary }: ContactFormProps) => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
   const [formData, setFormData] = useState<FormData>({
     nombre: '',
     email: '',
@@ -57,20 +46,17 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
     setSending(true);
 
     try {
-      // Aquí iría la lógica para enviar el formulario - se implementará después
-      // Simulamos el envío exitoso
-      setTimeout(() => {
-        setStatus({
-          type: 'success',
-          message: dictionary.web.contact.form.success_message
-        });
-        setFormData({
-          nombre: '',
-          email: '',
-          mensaje: ''
-        });
-        setSending(false);
-      }, 1500);
+      await contact(formData.nombre, formData.email, formData.mensaje);
+      setStatus({
+        type: 'success',
+        message: dictionary.web.contact.form.success_message
+      });
+      setFormData({
+        nombre: '',
+        email: '',
+        mensaje: ''
+      });
+      setSending(false);
     } catch (error) {
       setStatus({
         type: 'error',
@@ -121,7 +107,7 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
               </div>
               <div>
                 <h3 className="text-xl font-black var(--font-nunito) text-foreground">AppWise</h3>
-                <p className="text-sm text-muted-foreground var(--font-nunito)">Transformando ideas en soluciones digitales</p>
+                <p className="text-sm text-muted-foreground var(--font-nunito)">{dictionary.web.contact.form.subtitleInfo}</p>
               </div>
             </div>
           </div>

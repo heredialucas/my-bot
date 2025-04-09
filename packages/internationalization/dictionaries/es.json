@@ -278,6 +278,7 @@
       "form": {
         "title": "Contáctanos",
         "subtitle": "Respondemos en 24 horas",
+        "subtitleInfo": "Transformando ideas en soluciones digitales",
         "name_placeholder": "Nombre completo",
         "email_placeholder": "Dirección de correo",
         "message_placeholder": "Cuéntanos sobre tu proyecto",

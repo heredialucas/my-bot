@@ -278,6 +278,7 @@
       "form": {
         "title": "Contact us",
         "subtitle": "We respond in 24 hours",
+        "subtitleInfo": "Transforming ideas into digital solutions",
         "name_placeholder": "Full name",
         "email_placeholder": "Email address",
         "message_placeholder": "Tell us about your project",

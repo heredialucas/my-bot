@@ -36,7 +36,7 @@ export const contact = async (
     }
 
     await resend.emails.send({
-      from: env.RESEND_FROM,
+      from: 'Appwise Contacto <onboarding@resend.dev>',
       to: env.RESEND_FROM,
       subject: 'Contact form submission',
       replyTo: email,
