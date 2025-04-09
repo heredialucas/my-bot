@@ -274,6 +274,17 @@
           "resume": "Adjunta archivos relevantes",
           "cta": "Enviar"
         }
+      },
+      "form": {
+        "title": "Contáctanos",
+        "subtitle": "Respondemos en 24 horas",
+        "name_placeholder": "Nombre completo",
+        "email_placeholder": "Dirección de correo",
+        "message_placeholder": "Cuéntanos sobre tu proyecto",
+        "sending": "Enviando...",
+        "send_button": "Enviar mensaje",
+        "success_message": "¡Tu mensaje ha sido enviado con éxito!",
+        "error_message": "Error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde."
       }
     }
   }

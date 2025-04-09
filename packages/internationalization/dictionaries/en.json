@@ -274,6 +274,17 @@
           "resume": "Attach relevant files",
           "cta": "Submit"
         }
+      },
+      "form": {
+        "title": "Contact us",
+        "subtitle": "We respond in 24 hours",
+        "name_placeholder": "Full name",
+        "email_placeholder": "Email address",
+        "message_placeholder": "Tell us about your project",
+        "sending": "Sending...",
+        "send_button": "Send message",
+        "success_message": "Your message has been sent successfully!",
+        "error_message": "Failed to send message. Please try again later."
       }
     }
   }

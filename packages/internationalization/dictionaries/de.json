@@ -275,6 +275,17 @@
           "resume": "Relevante Dateien anhängen",
           "cta": "Senden"
         }
+      },
+      "form": {
+        "title": "Kontaktiere uns",
+        "subtitle": "Wir antworten innerhalb von 24 Stunden",
+        "name_placeholder": "Vollständiger Name",
+        "email_placeholder": "E-Mail-Adresse",
+        "message_placeholder": "Erzählen Sie uns von Ihrem Projekt",
+        "sending": "Senden...",
+        "send_button": "Nachricht senden",
+        "success_message": "Ihre Nachricht wurde erfolgreich gesendet!",
+        "error_message": "Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es später erneut."
       }
     }
   }

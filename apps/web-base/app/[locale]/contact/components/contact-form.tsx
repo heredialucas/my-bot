@@ -62,7 +62,7 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
       setTimeout(() => {
         setStatus({
           type: 'success',
-          message: 'Your message has been sent successfully!'
+          message: dictionary.web.contact.form.success_message
         });
         setFormData({
           nombre: '',
@@ -74,7 +74,7 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
     } catch (error) {
       setStatus({
         type: 'error',
-        message: 'Failed to send message. Please try again later.'
+        message: dictionary.web.contact.form.error_message
       });
       setSending(false);
     }
@@ -142,8 +142,8 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                   <Mail className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-foreground">Contact us</h3>
-                  <p className="text-muted-foreground text-sm">We respond in 24 hours</p>
+                  <h3 className="text-xl font-bold text-foreground">{dictionary.web.contact.form.title}</h3>
+                  <p className="text-muted-foreground text-sm">{dictionary.web.contact.form.subtitle}</p>
                 </div>
               </div>
 
@@ -154,7 +154,7 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                     name="nombre"
                     value={formData.nombre}
                     onChange={handleChange}
-                    placeholder="Full name"
+                    placeholder={dictionary.web.contact.form.name_placeholder}
                     required
                     className="w-full px-4 py-3 bg-background text-foreground placeholder:text-muted-foreground/60 rounded-xl border border-border focus:border-primary/50 focus:outline-none transition-colors"
                   />
@@ -165,7 +165,7 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="Email address"
+                    placeholder={dictionary.web.contact.form.email_placeholder}
                     required
                     className="w-full px-4 py-3 bg-background text-foreground placeholder:text-muted-foreground/60 rounded-xl border border-border focus:border-primary/50 focus:outline-none transition-colors"
                   />
@@ -175,7 +175,7 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                     name="mensaje"
                     value={formData.mensaje}
                     onChange={handleChange}
-                    placeholder="Tell us about your project"
+                    placeholder={dictionary.web.contact.form.message_placeholder}
                     required
                     rows={4}
                     className="w-full px-4 py-3 bg-background text-foreground placeholder:text-muted-foreground/60 rounded-xl border border-border focus:border-primary/50 focus:outline-none transition-colors resize-none"
@@ -207,7 +207,7 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                   className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                   type="submit"
                 >
-                  {sending ? "Sending..." : "Send message"}
+                  {sending ? dictionary.web.contact.form.sending : dictionary.web.contact.form.send_button}
                 </motion.button>
               </form>
             </motion.div>
