@@ -1,40 +1,53 @@
-import { RichText } from 'basehub/react-rich-text';
-import type { ComponentProps } from 'react';
+import React from 'react';
 
-type TableOfContentsProperties = Omit<
-  ComponentProps<typeof RichText>,
-  'children'
-> & {
-  readonly data: ComponentProps<typeof RichText>['children'];
-};
+interface TocItem {
+  id: string;
+  text: string;
+  level: number;
+  items?: TocItem[];
+}
 
-export const TableOfContents = ({
-  data,
-  ...props
-}: TableOfContentsProperties) => (
-  <div>
-    <RichText
-      // @ts-expect-error "idk"
-      components={{
-        ol: ({ children }) => (
-          <ol className="flex list-none flex-col gap-2 text-sm">{children}</ol>
-        ),
-        ul: ({ children }) => (
-          <ul className="flex list-none flex-col gap-2 text-sm">{children}</ul>
-        ),
-        li: ({ children }) => <li className="pl-3">{children}</li>,
-        a: ({ children, href }) => (
-          <a
-            className="line-clamp-3 flex rounded-sm text-foreground text-sm underline decoration-foreground/0 transition-colors hover:decoration-foreground/50"
-            href={`#${href?.split('#').at(1)}`}
-          >
-            {children}
-          </a>
-        ),
-      }}
-      {...props}
-    >
-      {data}
-    </RichText>
-  </div>
-);
+interface TableOfContentsProps {
+  items?: TocItem[];
+  className?: string;
+}
+
+export function TableOfContents({ items, className }: TableOfContentsProps) {
+  if (!items || items.length === 0) return null;
+
+  return (
+    <div className={className}>
+      <nav>
+        <ol className="flex list-none flex-col gap-2 text-sm">
+          {items.map((item) => (
+            <TocItem key={item.id} item={item} />
+          ))}
+        </ol>
+      </nav>
+    </div>
+  );
+}
+
+interface TocItemProps {
+  item: TocItem;
+}
+
+function TocItem({ item }: TocItemProps) {
+  return (
+    <li className="pl-3" style={{ marginLeft: `${(item.level - 1) * 16}px` }}>
+      <a
+        className="line-clamp-3 flex rounded-sm text-foreground text-sm underline decoration-foreground/0 transition-colors hover:decoration-foreground/50"
+        href={`#${item.id}`}
+      >
+        {item.text}
+      </a>
+      {item.items && item.items.length > 0 && (
+        <ol className="flex list-none flex-col gap-2 text-sm mt-2">
+          {item.items.map((subItem) => (
+            <TocItem key={subItem.id} item={subItem} />
+          ))}
+        </ol>
+      )}
+    </li>
+  );
+}

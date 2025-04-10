@@ -1,179 +1,130 @@
-import { basehub as basehubClient, fragmentOn } from 'basehub';
-import { keys } from './keys';
+import path from 'path';
+import fs from 'fs/promises';
 
-const basehub = basehubClient({
-  token: keys().BASEHUB_TOKEN,
-});
+// Types for our CMS content
+export interface Image {
+  url: string;
+  width?: number;
+  height?: number;
+  alt?: string;
+  blurDataURL?: string;
+}
 
-/* -------------------------------------------------------------------------------------------------
- * Common Fragments
- * -----------------------------------------------------------------------------------------------*/
+export interface Author {
+  _title: string;
+  avatar?: Image;
+  xUrl?: string;
+}
 
-const imageFragment = fragmentOn('BlockImage', {
-  url: true,
-  width: true,
-  height: true,
-  alt: true,
-  blurDataURL: true,
-});
+export interface Category {
+  _title: string;
+}
 
-/* -------------------------------------------------------------------------------------------------
- * Blog Fragments & Queries
- * -----------------------------------------------------------------------------------------------*/
+export interface PostMeta {
+  _slug: string;
+  _title: string;
+  authors?: Author[];
+  categories?: Category[];
+  date?: string;
+  description?: string;
+  image?: Image;
+}
 
-const postMetaFragment = fragmentOn('PostsItem', {
-  _slug: true,
-  _title: true,
-  authors: {
-    _title: true,
-    avatar: imageFragment,
-    xUrl: true,
-  },
-  categories: {
-    _title: true,
-  },
-  date: true,
-  description: true,
-  image: imageFragment,
-});
-
-const postFragment = fragmentOn('PostsItem', {
-  ...postMetaFragment,
+export interface Post extends PostMeta {
   body: {
-    plainText: true,
-    json: {
-      content: true,
-      toc: true,
-    },
-    readingTime: true,
-  },
-});
+    plainText?: string;
+    json?: {
+      content?: any;
+      toc?: any;
+    };
+    readingTime?: number;
+  };
+}
 
-export type PostMeta = fragmentOn.infer<typeof postMetaFragment>;
-export type Post = fragmentOn.infer<typeof postFragment>;
+export interface LegalPostMeta {
+  _slug: string;
+  _title: string;
+  description?: string;
+}
 
+export interface LegalPost extends LegalPostMeta {
+  body: {
+    plainText?: string;
+    json?: {
+      content?: any;
+      toc?: any;
+    };
+    readingTime?: number;
+  };
+}
+
+// Helper function to load content from JSON files
+async function loadContent<T>(contentType: string): Promise<T[]> {
+  try {
+    // In a real implementation, this would load from a database or API
+    // For now, we'll simulate it with a file
+    const contentDir = path.join(process.cwd(), 'content', contentType);
+
+    try {
+      await fs.access(contentDir);
+    } catch (error) {
+      // Directory doesn't exist, create it with empty data
+      await fs.mkdir(contentDir, { recursive: true });
+      await fs.writeFile(
+        path.join(contentDir, 'index.json'),
+        JSON.stringify([])
+      );
+      return [];
+    }
+
+    const filePath = path.join(contentDir, 'index.json');
+    const rawData = await fs.readFile(filePath, 'utf-8');
+    return JSON.parse(rawData) as T[];
+  } catch (error) {
+    console.error(`Error loading ${contentType}:`, error);
+    return [];
+  }
+}
+
+// Blog content functions
 export const blog = {
-  postsQuery: fragmentOn('Query', {
-    blog: {
-      posts: {
-        items: postMetaFragment,
-      },
-    },
-  }),
-
-  latestPostQuery: fragmentOn('Query', {
-    blog: {
-      posts: {
-        __args: {
-          orderBy: '_sys_createdAt__DESC',
-        },
-        item: postFragment,
-      },
-    },
-  }),
-
-  postQuery: (slug: string) => ({
-    blog: {
-      posts: {
-        __args: {
-          filter: {
-            _sys_slug: { eq: slug },
-          },
-        },
-        item: postFragment,
-      },
-    },
-  }),
-
   getPosts: async (): Promise<PostMeta[]> => {
-    const data = await basehub.query(blog.postsQuery);
-
-    return data.blog.posts.items;
+    return loadContent<PostMeta>('blog');
   },
 
-  getLatestPost: async () => {
-    const data = await basehub.query(blog.latestPostQuery);
+  getLatestPost: async (): Promise<Post | null> => {
+    const posts = await loadContent<Post>('blog');
+    if (posts.length === 0) return null;
 
-    return data.blog.posts.item;
+    // Sort by date and return the most recent
+    return posts.sort((a, b) => {
+      if (!a.date || !b.date) return 0;
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    })[0];
   },
 
-  getPost: async (slug: string) => {
-    const query = blog.postQuery(slug);
-    const data = await basehub.query(query);
-
-    return data.blog.posts.item;
-  },
+  getPost: async (slug: string): Promise<Post | null> => {
+    const posts = await loadContent<Post>('blog');
+    return posts.find(post => post._slug === slug) || null;
+  }
 };
 
-/* -------------------------------------------------------------------------------------------------
- * Legal Fragments & Queries
- * -----------------------------------------------------------------------------------------------*/
-
-const legalPostMetaFragment = fragmentOn('LegalPagesItem', {
-  _slug: true,
-  _title: true,
-  description: true,
-});
-
-const legalPostFragment = fragmentOn('LegalPagesItem', {
-  ...legalPostMetaFragment,
-  body: {
-    plainText: true,
-    json: {
-      content: true,
-      toc: true,
-    },
-    readingTime: true,
-  },
-});
-
-export type LegalPostMeta = fragmentOn.infer<typeof legalPostMetaFragment>;
-export type LegalPost = fragmentOn.infer<typeof legalPostFragment>;
-
+// Legal content functions
 export const legal = {
-  postsQuery: fragmentOn('Query', {
-    legalPages: {
-      items: legalPostFragment,
-    },
-  }),
-
-  latestPostQuery: fragmentOn('Query', {
-    legalPages: {
-      __args: {
-        orderBy: '_sys_createdAt__DESC',
-      },
-      item: legalPostFragment,
-    },
-  }),
-
-  postQuery: (slug: string) =>
-    fragmentOn('Query', {
-      legalPages: {
-        __args: {
-          filter: {
-            _sys_slug: { eq: slug },
-          },
-        },
-        item: legalPostFragment,
-      },
-    }),
-
   getPosts: async (): Promise<LegalPost[]> => {
-    const data = await basehub.query(legal.postsQuery);
-
-    return data.legalPages.items;
+    return loadContent<LegalPost>('legal');
   },
 
-  getLatestPost: async () => {
-    const data = await basehub.query(legal.latestPostQuery);
+  getLatestPost: async (): Promise<LegalPost | null> => {
+    const posts = await loadContent<LegalPost>('legal');
+    if (posts.length === 0) return null;
 
-    return data.legalPages.item;
+    // Return the first one (in a real system, you'd sort by date)
+    return posts[0];
   },
 
-  getPost: async (slug: string) => {
-    const query = legal.postQuery(slug);
-    const data = await basehub.query(query);
-
-    return data.legalPages.item;
-  },
+  getPost: async (slug: string): Promise<LegalPost | null> => {
+    const posts = await loadContent<LegalPost>('legal');
+    return posts.find(post => post._slug === slug) || null;
+  }
 };
