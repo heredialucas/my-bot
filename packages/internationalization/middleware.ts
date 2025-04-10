@@ -11,10 +11,23 @@ type RequestLike = {
 };
 
 const getLocale = (request: RequestLike) => {
-  const headers = Object.fromEntries(request.headers.entries());
-  const languages = new Negotiator({ headers }).languages();
+  try {
+    // Intenta obtener los headers y lenguajes
+    const headers = Object.fromEntries(request.headers.entries());
+    const languages = new Negotiator({ headers }).languages();
 
-  return match(languages, languine.locale.targets, languine.locale.source);
+    // Si no hay lenguajes o están mal formateados, devolver el idioma por defecto
+    if (!languages || languages.length === 0) {
+      return languine.locale.source;
+    }
+
+    // Intenta hacer match
+    return match(languages, languine.locale.targets, languine.locale.source);
+  } catch (error) {
+    // Si hay cualquier error, devolver el idioma por defecto
+    console.error('Error detecting locale:', error);
+    return languine.locale.source;
+  }
 };
 
 export const internationalizationMiddleware = (request: RequestLike) => {
@@ -27,6 +40,7 @@ export const internationalizationMiddleware = (request: RequestLike) => {
     return;
   }
 
+  // Obtener el locale (con manejo de errores)
   const locale = getLocale(request);
   request.nextUrl.pathname = `/${locale}${pathname}`;
 
