@@ -6,13 +6,7 @@ import type { NextConfig } from 'next';
 
 const otelRegex = /@opentelemetry\/instrumentation/;
 
-// Configuración para producción
-const isProd = process.env.NODE_ENV === 'production';
-
 export const config: NextConfig = {
-  // Añadir output: 'standalone' para Coolify
-  output: isProd ? 'standalone' : undefined,
-
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',
