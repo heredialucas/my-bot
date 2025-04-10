@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 4007 --turbopack",
-    "build": "next build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
+    "build": "next build && node -e \"try { require('fs').cpSync('public', '.next/standalone/public', {recursive:true}); require('fs').cpSync('.next/static', '.next/standalone/.next/static', {recursive:true}); } catch (e) { console.error(e); }\"",
     "start": "node .next/standalone/server.js",
     "analyze": "ANALYZE=true pnpm build",
     "clean": "git clean -xdf .cache .turbo dist node_modules",

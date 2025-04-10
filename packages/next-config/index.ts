@@ -8,9 +8,16 @@ import type { NextConfig } from 'next';
 const otelRegex = /@opentelemetry\/instrumentation/;
 
 export const config: NextConfig = {
-  // Configuración para output standalone
+  // Configuración para Turborepo + Coolify
   output: 'standalone',
-  outputFileTracingRoot: path.join(__dirname, '../../'),
+
+  // Incluir todos los archivos del monorepo
+  outputFileTracingRoot: path.join(process.cwd(), '../..'),
+
+  // Incluir específicamente paquetes de workspace
+  outputFileTracingIncludes: {
+    '/**/*': ['./packages/**/*'],
+  },
 
   experimental: {
     serverActions: {
