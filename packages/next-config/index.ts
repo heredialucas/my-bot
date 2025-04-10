@@ -1,5 +1,4 @@
 import withBundleAnalyzer from '@next/bundle-analyzer';
-import * as path from 'path';
 
 // @ts-expect-error No declaration file
 import { PrismaPlugin } from '@prisma/nextjs-monorepo-workaround-plugin';
@@ -8,17 +7,6 @@ import type { NextConfig } from 'next';
 const otelRegex = /@opentelemetry\/instrumentation/;
 
 export const config: NextConfig = {
-  // Configuración para Turborepo + Coolify
-  output: 'standalone',
-
-  // Incluir todos los archivos del monorepo
-  outputFileTracingRoot: path.join(process.cwd(), '../..'),
-
-  // Incluir específicamente paquetes de workspace
-  outputFileTracingIncludes: {
-    '/**/*': ['./packages/**/*'],
-  },
-
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',
