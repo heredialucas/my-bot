@@ -8,11 +8,12 @@ import { getDictionary } from '@repo/internationalization';
 
 type AuthLayoutProps = {
   readonly children: ReactNode;
-  readonly params: { locale: string };
+  readonly params: Promise<{ locale: string }>;
 };
 
 const AuthLayout = async ({ children, params }: AuthLayoutProps) => {
-  const dictionary = await getDictionary(params.locale);
+  const { locale } = await params;
+  const dictionary = await getDictionary(locale);
   const title = dictionary.app.auth.layout.title;
   const description = dictionary.app.auth.layout.description;
 

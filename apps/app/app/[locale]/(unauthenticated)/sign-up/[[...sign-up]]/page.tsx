@@ -15,8 +15,9 @@ const description = 'Enter your details to start.';
 
 export const metadata: Metadata = createMetadata({ title, description });
 
-const SignUpPage = async ({ params }: { params: { locale: string } }) => {
-  const dictionary = await getDictionary(params.locale);
+const SignUpPage = async ({ params }: { params: Promise<{ locale: string }> }) => {
+  const { locale } = await params;
+  const dictionary = await getDictionary(locale);
 
   return (
     <>
