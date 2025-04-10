@@ -152,9 +152,11 @@ export const Header = ({ dictionary }: HeaderProps) => {
             <ModeToggle />
           </div>
           <Button variant="outline" asChild className="hidden md:inline font-nunito font-bold">
-            <Link href={`${env.NEXT_PUBLIC_APP_URL}/sign-in`}>
-              {dictionary.web.header.signIn}
-            </Link>
+            {env.NEXT_PUBLIC_APP_URL && (
+              <Link href={`${env.NEXT_PUBLIC_APP_URL}/sign-in`}>
+                {dictionary.web.header.signIn}
+              </Link>
+            )}
           </Button>
           <Button className="bg-[#FFB800] hover:bg-[#FFE01B] text-black font-nunito font-bold" asChild>
             <Link href="/contact">

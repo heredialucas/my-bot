@@ -75,9 +75,11 @@ const Pricing = async ({ params }: PricingProps) => {
 
               <div className="p-6 mt-4">
                 <Button variant="outline" className="w-full gap-4 var(--font-nunito) font-bold" asChild>
-                  <Link href={env.NEXT_PUBLIC_APP_URL}>
-                    {dictionary.web.pricing.tryIt} <MoveRight className="h-4 w-4" />
-                  </Link>
+                  {env.NEXT_PUBLIC_APP_URL && (
+                    <Link href={env.NEXT_PUBLIC_APP_URL}>
+                      {dictionary.web.pricing.tryIt} <MoveRight className="h-4 w-4" />
+                    </Link>
+                  )}
                 </Button>
               </div>
             </div>
@@ -119,9 +121,11 @@ const Pricing = async ({ params }: PricingProps) => {
 
               <div className="p-6 mt-4">
                 <Button className="w-full gap-4 bg-[#FFB800] hover:bg-[#FFE01B] text-black var(--font-nunito) font-black" asChild>
-                  <Link href={env.NEXT_PUBLIC_APP_URL}>
-                    {dictionary.web.pricing.tryIt} <MoveRight className="h-4 w-4" />
-                  </Link>
+                  {env.NEXT_PUBLIC_APP_URL && (
+                    <Link href={env.NEXT_PUBLIC_APP_URL}>
+                      {dictionary.web.pricing.tryIt} <MoveRight className="h-4 w-4" />
+                    </Link>
+                  )}
                 </Button>
               </div>
             </div>
