@@ -1,4 +1,5 @@
 import withBundleAnalyzer from '@next/bundle-analyzer';
+import * as path from 'path';
 
 // @ts-expect-error No declaration file
 import { PrismaPlugin } from '@prisma/nextjs-monorepo-workaround-plugin';
@@ -7,6 +8,10 @@ import type { NextConfig } from 'next';
 const otelRegex = /@opentelemetry\/instrumentation/;
 
 export const config: NextConfig = {
+  // Configuración para output standalone
+  output: 'standalone',
+  outputFileTracingRoot: path.join(__dirname, '../../'),
+
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',
