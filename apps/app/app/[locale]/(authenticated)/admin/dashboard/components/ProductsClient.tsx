@@ -109,29 +109,32 @@ export default function ProductsClient({ initialProducts, showModal, editingProd
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {initialProducts.map((product) => (
                         <div key={product.id} className="bg-white dark:bg-zinc-800 rounded-lg shadow overflow-hidden transition-all hover:shadow-md">
-                            <div className="aspect-video w-full overflow-hidden">
-                                <Carousel className="w-full">
-                                    <CarouselContent>
+                            <div className="aspect-video w-full overflow-hidden relative">
+                                <Carousel className="w-full h-full">
+                                    <CarouselContent className="h-full">
                                         {product.images.length > 0 ? (
                                             product.images.map((image, index) => (
-                                                <CarouselItem key={index}>
-                                                    <Image
-                                                        src={image || 'https://via.placeholder.com/600x400?text=No+Image'}
-                                                        alt={`${product.title} - image ${index + 1}`}
-                                                        className="w-full h-full object-cover"
-                                                        width={500}
-                                                        height={500}
-                                                    />
+                                                <CarouselItem key={index} className="h-full">
+                                                    <div className="h-full w-full flex items-center justify-center overflow-hidden">
+                                                        <Image
+                                                            src={image || 'https://via.placeholder.com/600x400?text=No+Image'}
+                                                            alt={`${product.title} - image ${index + 1}`}
+                                                            className="w-full h-full object-cover"
+                                                            width={500}
+                                                            height={300}
+                                                            style={{ objectFit: 'cover' }}
+                                                        />
+                                                    </div>
                                                 </CarouselItem>
                                             ))
                                         ) : (
-                                            <CarouselItem>
+                                            <CarouselItem className="h-full">
                                                 <Skeleton className="w-full h-full" />
                                             </CarouselItem>
                                         )}
                                     </CarouselContent>
-                                    <CarouselPrevious className="left-2" />
-                                    <CarouselNext className="right-2" />
+                                    <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8" />
+                                    <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8" />
                                 </Carousel>
                             </div>
                             <div className="p-5">

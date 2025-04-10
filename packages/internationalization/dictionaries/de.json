@@ -8,6 +8,41 @@
         "settings": "Einstellungen",
         "logout": "Abmelden",
         "loggingOut": "Abmelden..."
+      },
+      "products": {
+        "title": "Produkt-Dashboard",
+        "newProduct": "Neues Produkt",
+        "noProducts": "Keine Produkte gefunden. Erstellen Sie Ihr erstes Produkt!",
+        "technologies": "Technologien",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "deleteConfirmation": "Sind Sie sicher, dass Sie dieses Produkt löschen möchten?",
+        "status": {
+          "published": "Veröffentlicht",
+          "draft": "Entwurf",
+          "archived": "Archiviert"
+        },
+        "form": {
+          "editTitle": "Produkt bearbeiten",
+          "createTitle": "Neues Produkt erstellen",
+          "productTitle": "Titel",
+          "status": "Status",
+          "size": "Größe",
+          "statusDescription": "Statusbeschreibung",
+          "description": "Beschreibung",
+          "detailedDescription": "Detaillierte Beschreibung",
+          "productImages": "Produktbilder",
+          "addImages": "Klicken Sie, um weitere Bilder hinzuzufügen",
+          "imageRequirements": "PNG, JPG, GIF bis zu 5MB",
+          "features": "Funktionen",
+          "addFeature": "Funktion hinzufügen",
+          "technologies": "Technologien",
+          "addTechnology": "Technologie hinzufügen",
+          "cancel": "Abbrechen",
+          "create": "Erstellen",
+          "update": "Aktualisieren",
+          "saving": "Speichern..."
+        }
       }
     },
     "client": {
