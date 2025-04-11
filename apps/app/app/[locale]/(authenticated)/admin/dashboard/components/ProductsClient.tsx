@@ -117,7 +117,7 @@ export default function ProductsClient({ initialProducts, showModal, editingProd
                                                 <CarouselItem key={index} className="h-full">
                                                     <div className="h-full w-full flex items-center justify-center overflow-hidden">
                                                         <Image
-                                                            src={image || 'https://via.placeholder.com/600x400?text=No+Image'}
+                                                            src={image || ''}
                                                             alt={`${product.title} - image ${index + 1}`}
                                                             className="w-full h-full object-cover"
                                                             width={500}

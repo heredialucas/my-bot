@@ -36,7 +36,7 @@ export const ProductCard = ({ project, dictionary, size, onClick }: ProjectCardP
     };
 
     // Use the first image if available, otherwise use a placeholder
-    const imageUrl = project.images.length > 0 ? project.images[0] : 'https://via.placeholder.com/800x600?text=No+Image';
+    const imageUrl = project.images.length > 0 ? project.images[0] : '';
 
     return (
         <div
