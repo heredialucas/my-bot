@@ -75,11 +75,20 @@ export const POST = async (request: Request): Promise<Response> => {
       throw new Error('missing stripe-signature header');
     }
 
-    const event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      env.STRIPE_WEBHOOK_SECRET
-    );
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(
+        body,
+        signature,
+        env.STRIPE_WEBHOOK_SECRET
+      );
+    } catch (error) {
+      console.error('Error constructing webhook event:', error);
+      return NextResponse.json(
+        { message: 'Webhook error', ok: false },
+        { status: 400 }
+      );
+    }
 
     switch (event.type) {
       case 'checkout.session.completed': {
