@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next dev -p 4000 --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000",
     "analyze": "ANALYZE=true pnpm build",
     "test": "NODE_ENV=test vitest run",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
