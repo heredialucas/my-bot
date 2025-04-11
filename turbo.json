@@ -26,10 +26,9 @@
       "persistent": true
     },
     "start": {
+      "dependsOn": ["build"],
       "cache": false,
-      "persistent": true,
-      "dependsOn": ["^build"],
-      "outputs": []
+      "persistent": true
     },
     "translate": {
       "dependsOn": ["^translate"],
