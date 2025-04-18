@@ -2,11 +2,7 @@
 
 import type { Dictionary } from '@repo/internationalization';
 import { motion } from 'framer-motion';
-import { staggerContainer, fadeIn } from '../lib/animations';
-import dynamic from 'next/dynamic';
-import animation_software from '@/public/software.json';
-
-const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
+import { staggerContainer, fadeIn } from '@/animations/animations';
 
 type StatsProps = {
   dictionary: Dictionary;
@@ -92,16 +88,6 @@ export const Stats = ({ dictionary }: StatsProps) => {
             ))}
           </div>
         </div>
-
-        {/* Animation - Moves to the right on desktop */}
-        <motion.div
-          variants={fadeIn}
-          className="w-full lg:w-1/2 order-1 lg:order-2 flex justify-center"
-        >
-          <div className="w-full max-w-md">
-            <Lottie animationData={animation_software} loop={true} />
-          </div>
-        </motion.div>
       </div>
     </motion.section>
   );

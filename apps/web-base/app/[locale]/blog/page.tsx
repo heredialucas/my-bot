@@ -1,6 +1,4 @@
-import { cn } from '@repo/design-system/lib/utils';
 import { getDictionary } from '@repo/internationalization';
-import type { Blog, WithContext } from '@repo/seo/json-ld';
 import { JsonLd } from '@repo/seo/json-ld';
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';

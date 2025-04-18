@@ -4,8 +4,7 @@ import type { Dictionary } from '@repo/internationalization';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import animation_focus from '@/public/focus.json';
-import { staggerContainer, fadeIn, slideIn } from '../lib/animations';
+import { staggerContainer, fadeIn, slideIn } from '@/animations/animations';
 
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
@@ -46,14 +45,6 @@ export const Hero = ({ dictionary }: HeroProps) => {
               {dictionary.web.home.hero.cta}
             </motion.button>
           </Link>
-        </motion.div>
-        <motion.div
-          className="flex justify-center w-full h-full"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-        >
-          <Lottie animationData={animation_focus} loop={true} />
         </motion.div>
       </div>
     </motion.section >

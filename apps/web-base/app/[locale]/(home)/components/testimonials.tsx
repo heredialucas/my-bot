@@ -15,7 +15,7 @@ import type { Dictionary } from '@repo/internationalization';
 import { Star, Quote } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { staggerContainer, fadeIn } from '../lib/animations';
+import { staggerContainer, fadeIn } from '../../../../animations/animations';
 
 type TestimonialsProps = {
   dictionary: Dictionary;

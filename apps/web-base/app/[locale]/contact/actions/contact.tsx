@@ -1,11 +1,11 @@
 'use server';
 
 import { env } from '@/env';
-import { resend } from '@repo/email';
 import { ContactTemplate } from '@repo/email/templates/contact';
 import { parseError } from '@repo/observability/error';
 import { createRateLimiter, slidingWindow } from '@repo/rate-limit';
 import { headers } from 'next/headers';
+import resend from '@repo/email';
 
 export const contact = async (
   name: string,
@@ -35,7 +35,7 @@ export const contact = async (
       throw new Error('RESEND_FROM is not set');
     }
 
-    await resend.emails.send({
+    await resend?.emails.send({
       from: 'Appwise Contacto <onboarding@resend.dev>',
       to: env.RESEND_FROM,
       subject: 'Contact form submission',

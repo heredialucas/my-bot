@@ -2,7 +2,7 @@
 
 import type { Dictionary } from '@repo/internationalization';
 import { motion } from 'framer-motion';
-import { fadeIn } from '../lib/animations';
+import { fadeIn } from '../../../../animations/animations';
 import { Calendar, CheckCircle } from 'lucide-react';
 
 type CTAProps = {

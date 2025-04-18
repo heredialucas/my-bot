@@ -10,7 +10,6 @@ import { Features } from './components/features';
 import { Stats } from './components/stats';
 import { Testimonials } from './components/testimonials';
 import { Newsletter } from './components/newsletter';
-import { getAllProducts } from '@repo/data-services';
 
 type HomeProps = {
   params: Promise<{
@@ -30,7 +29,6 @@ export const generateMetadata = async ({
 const Home = async ({ params }: HomeProps) => {
   const { locale } = await params;
   const dictionary = await getDictionary(locale);
-  const products = await getAllProducts();
   const betaFeature = await showBetaFeature();
 
   return (
@@ -41,13 +39,13 @@ const Home = async ({ params }: HomeProps) => {
         </div>
       )}
       <Hero dictionary={dictionary} />
-      <Cases dictionary={dictionary} projects={products} />
+      <Cases dictionary={dictionary} />
       <Features dictionary={dictionary} />
       <Stats dictionary={dictionary} />
       <Testimonials dictionary={dictionary} />
       <CTA dictionary={dictionary} />
       <FAQ dictionary={dictionary} />
-      {/* <Newsletter dictionary={dictionary} /> */}
+      <Newsletter dictionary={dictionary} />
     </>
   );
 };

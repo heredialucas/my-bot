@@ -3,7 +3,7 @@
 import type { Dictionary } from '@repo/internationalization';
 import { User, FileSpreadsheet, BarChart3, Clock, Database, Code, PenTool, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { staggerContainer, fadeIn } from '../lib/animations';
+import { staggerContainer, fadeIn } from '../../../../animations/animations';
 
 type FeaturesProps = {
   dictionary: Dictionary;

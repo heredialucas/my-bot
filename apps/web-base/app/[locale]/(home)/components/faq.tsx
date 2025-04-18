@@ -11,7 +11,7 @@ import type { Dictionary } from '@repo/internationalization';
 import { MessageCircle, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { fadeIn } from '../lib/animations';
+import { fadeIn } from '../../../../animations/animations';
 
 type FAQProps = {
   dictionary: Dictionary;

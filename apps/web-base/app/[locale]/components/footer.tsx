@@ -3,10 +3,8 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Facebook, Github, Instagram, Linkedin, Mail, Phone } from 'lucide-react';
-import logo from '@/public/logo.png';
-import appwiseFullText from '@/public/appwise-full-text.png';
 
-export const Footer = () => (
+export const Footer = ({ locale }: { locale: string }) => (
   <footer className="relative mt-24 border-t border-white/10 overflow-hidden">
     {/* Elementos decorativos */}
     <div className="absolute inset-0 pointer-events-none">
@@ -27,14 +25,7 @@ export const Footer = () => (
             className="flex gap-6 justify-center items-center"
           >
             <Image
-              src={logo}
-              alt="AppWise Innovations - Consultora de Desarrollo de Software y MVPs"
-              width={140}
-              height={45}
-              className="mb-6"
-            />
-            <Image
-              src={appwiseFullText}
+              src='/logo.png'
               alt="AppWise Innovations - Consultora de Desarrollo de Software y MVPs"
               width={140}
               height={45}
@@ -81,6 +72,7 @@ export const Footer = () => (
               <Instagram />
             </a>
           </div>
+          <div className="flex gap-4 mt-6"></div>
         </div>
 
         {/* Enlaces rápidos - centrado en móvil */}
@@ -182,7 +174,7 @@ export const Footer = () => (
         </div>
         <div className="flex flex-wrap justify-center gap-4 md:gap-6">
           <motion.a
-            href="/privacidad"
+            href={`/${locale}/legal`}
             className="hover:text-blue-300 transition-colors"
             whileHover={{ scale: 1.05 }}
           >

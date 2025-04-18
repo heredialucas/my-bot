@@ -19,11 +19,10 @@ import { usePathname } from 'next/navigation';
 import type { Dictionary } from '@repo/internationalization';
 import Image from 'next/image';
 import { LanguageSwitcher } from './language-switcher';
-import logo from '@/public/logo.png';
-import appwiseFullText from '@/public/appwise-full-text.png';
 
 type HeaderProps = {
   dictionary: Dictionary;
+  locale: string;
 };
 
 // Interfaz para los subitems en caso de que existan
@@ -40,29 +39,29 @@ interface NavigationItem {
   items?: SubItem[];
 }
 
-export const Header = ({ dictionary }: HeaderProps) => {
+export const Header = ({ dictionary, locale }: HeaderProps) => {
   const pathname = usePathname();
   const isContactPage = pathname === "/contact" || pathname.includes("/contact");
 
   const navigationItems: NavigationItem[] = [
     {
       title: dictionary.web.header.projects || 'Projects',
-      href: isContactPage ? "/" : "#projects",
+      href: isContactPage ? `/${locale}` : "#projects",
       description: '',
     },
     {
       title: dictionary.web.header.services || 'Services',
-      href: isContactPage ? "/#servicios" : "#servicios",
+      href: isContactPage ? `/${locale}#servicios` : `/${locale}#servicios`,
       description: dictionary.web.header.servicesDescription || 'Our services for software development',
     },
     {
       title: dictionary.web.header.process || 'Process',
-      href: isContactPage ? "/#process" : "#process",
+      href: isContactPage ? `/${locale}#process` : `/${locale}#process`,
       description: dictionary.web.header.processDescription || 'How we work with our clients',
     },
     {
       title: dictionary.web.header.contact || 'Contact',
-      href: "/contact",
+      href: `/${locale}/contact`,
       description: '',
     }
   ];
@@ -99,7 +98,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                               </p>
                             </div>
                             <Button size="sm" className="mt-10 bg-[#FFB800] hover:bg-[#FFE01B] text-black font-nunito font-bold" asChild>
-                              <Link href="/contact">
+                              <Link href={`/${locale}/contact`}>
                                 {dictionary.web.global.primaryCta}
                               </Link>
                             </Button>
@@ -126,16 +125,9 @@ export const Header = ({ dictionary }: HeaderProps) => {
           </NavigationMenu>
         </div>
         <div className="flex items-center gap-2 lg:justify-center">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href={`/${locale}`} className="flex items-center gap-2">
             <Image
-              src={logo}
-              alt="AppWise Innovations - Consultora de Desarrollo de Software y MVPs"
-              width={120}
-              height={40}
-              className="w-auto h-8"
-            />
-            <Image
-              src={appwiseFullText}
+              src='/logo.png'
               alt="AppWise Innovations - Consultora de Desarrollo de Software y MVPs"
               width={120}
               height={40}
@@ -159,7 +151,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
             )}
           </Button>
           <Button className="bg-[#FFB800] hover:bg-[#FFE01B] text-black font-nunito font-bold" asChild>
-            <Link href="/contact">
+            <Link href={`/${locale}/contact`}>
               {dictionary.web.header.signUp}
             </Link>
           </Button>
