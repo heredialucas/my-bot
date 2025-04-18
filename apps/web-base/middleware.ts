@@ -1,5 +1,4 @@
 import { env } from '@/env';
-import { authMiddleware } from '@repo/auth/middleware';
 import { internationalizationMiddleware } from '@repo/internationalization/middleware';
 import { parseError } from '@repo/observability/error';
 import { secure } from '@repo/security';
@@ -8,7 +7,7 @@ import {
   noseconeOptions,
   noseconeOptionsWithToolbar,
 } from '@repo/security/middleware';
-import type { NextMiddleware } from 'next/server';
+import type { NextMiddleware, NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 export const config = {
@@ -21,7 +20,7 @@ const securityHeaders = env.FLAGS_SECRET
   ? noseconeMiddleware(noseconeOptionsWithToolbar)
   : noseconeMiddleware(noseconeOptions);
 
-const middleware = authMiddleware(async (_auth, request) => {
+const middleware = async (request: NextRequest) => {
   const i18nResponse = internationalizationMiddleware({
     headers: request.headers,
     nextUrl: request.nextUrl
@@ -51,6 +50,7 @@ const middleware = authMiddleware(async (_auth, request) => {
 
     return NextResponse.json({ error: message }, { status: 403 });
   }
-}) as unknown as NextMiddleware;
+};
+
 
 export default middleware;
