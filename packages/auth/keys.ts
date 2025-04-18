@@ -4,26 +4,21 @@ import { z } from 'zod';
 export const keys = () =>
   createEnv({
     server: {
-      CLERK_SECRET_KEY: z.string().min(1).startsWith('sk_').optional(),
-      CLERK_WEBHOOK_SECRET: z.string().min(1).startsWith('whsec_').optional(),
+      JWT_SECRET: z.string().min(1).optional(),
+      SESSION_EXPIRY_DAYS: z.string().transform(Number).optional(),
     },
     client: {
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1).startsWith('pk_').optional(),
-      NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().min(1).startsWith('/').optional(),
-      NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().min(1).startsWith('/').optional(),
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: z.string().min(1).startsWith('/').optional(),
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string().min(1).startsWith('/').optional(),
+      NEXT_PUBLIC_AUTH_SIGN_IN_URL: z.string().min(1).startsWith('/').optional(),
+      NEXT_PUBLIC_AUTH_SIGN_UP_URL: z.string().min(1).startsWith('/').optional(),
+      NEXT_PUBLIC_AUTH_AFTER_SIGN_IN_URL: z.string().min(1).startsWith('/').optional(),
+      NEXT_PUBLIC_AUTH_AFTER_SIGN_UP_URL: z.string().min(1).startsWith('/').optional(),
     },
     runtimeEnv: {
-      CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
-      CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
-        process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-      NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
-      NEXT_PUBLIC_CLERK_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL,
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL:
-        process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL,
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL:
-        process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL,
+      JWT_SECRET: process.env.JWT_SECRET,
+      SESSION_EXPIRY_DAYS: process.env.SESSION_EXPIRY_DAYS,
+      NEXT_PUBLIC_AUTH_SIGN_IN_URL: process.env.NEXT_PUBLIC_AUTH_SIGN_IN_URL,
+      NEXT_PUBLIC_AUTH_SIGN_UP_URL: process.env.NEXT_PUBLIC_AUTH_SIGN_UP_URL,
+      NEXT_PUBLIC_AUTH_AFTER_SIGN_IN_URL: process.env.NEXT_PUBLIC_AUTH_AFTER_SIGN_IN_URL,
+      NEXT_PUBLIC_AUTH_AFTER_SIGN_UP_URL: process.env.NEXT_PUBLIC_AUTH_AFTER_SIGN_UP_URL,
     },
   });

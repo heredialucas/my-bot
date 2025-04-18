@@ -1,14 +1,7 @@
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
-// Import from our custom components folder
 import { SignIn } from '../../components/sign-in';
 import { getDictionary } from '@repo/internationalization';
-
-// Dynamic import from Clerk (commented out as requested)
-// import dynamic from 'next/dynamic';
-// const SignIn = dynamic(() =>
-//   import('@repo/auth/components/sign-in').then((mod) => mod.SignIn)
-// );
 
 const title = 'Log in';
 const description = 'Enter your details to log in.';

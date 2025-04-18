@@ -1,5 +1,5 @@
 import { env } from '@/env';
-import { auth, currentUser } from '@repo/auth/server';
+import { getCurrentUser } from '@repo/auth/server';
 import { getUserById } from '@repo/data-services';
 import { SidebarProvider } from '@repo/design-system/components/ui/sidebar';
 import { showBetaFeature } from '@repo/feature-flags';
@@ -18,7 +18,8 @@ const AppLayout = async ({ children }: AppLayoutProperties) => {
   }
 
   const betaFeature = await showBetaFeature();
-
+  // Obtener usuario actual usando nuestra implementación local
+  // const user = await getCurrentUser();
 
   return (
     // <NotificationsProvider userId={user.id}>

@@ -1,14 +1,7 @@
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
-// Import from our custom components folder
 import { SignUp } from '../../components/sign-up';
 import { getDictionary } from '@repo/internationalization';
-
-// Dynamic import from Clerk (commented out as requested)
-// import dynamic from 'next/dynamic';
-// const SignUp = dynamic(() =>
-//   import('@repo/auth/components/sign-up').then((mod) => mod.SignUp)
-// );
 
 const title = 'Create an account';
 const description = 'Enter your details to start.';

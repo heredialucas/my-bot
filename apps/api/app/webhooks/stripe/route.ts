@@ -1,6 +1,6 @@
 import { env } from '@/env';
 import { analytics } from '@repo/analytics/posthog/server';
-import { clerkClient } from '@repo/auth/server';
+import { database } from '@repo/database';
 import { parseError } from '@repo/observability/error';
 import { log } from '@repo/observability/log';
 import { stripe } from '@repo/payments';
@@ -8,15 +8,34 @@ import type { Stripe } from '@repo/payments';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-const getUserFromCustomerId = async (customerId: string) => {
-  const clerk = await clerkClient();
-  const users = await clerk.users.getUserList();
+// Definición temporal de la interfaz de usuario hasta que se actualice el modelo
+interface UserWithStripe {
+  id: string;
+  email: string;
+  name: string;
+}
 
-  const user = users.data.find(
-    (user) => user.privateMetadata.stripeCustomerId === customerId
-  );
+// Nota: Esta función tendría que modificarse cuando se agregue el campo stripeCustomerId al modelo User
+const getUserFromCustomerId = async (customerId: string): Promise<UserWithStripe | null> => {
+  // Implementación temporal - en el futuro debería buscar por stripeCustomerId
+  // Por ahora simplemente retornamos null, lo que hará que no se procese el evento
+  console.log('Stripe customer ID:', customerId);
+  return null;
 
-  return user;
+  // Implementación futura cuando se actualice el esquema:
+  /*
+  try {
+    const user = await database.user.findFirst({
+      where: {
+        stripeCustomerId: customerId,
+      },
+    });
+    return user;
+  } catch (error) {
+    console.error('Error al buscar usuario por customerId:', error);
+    return null;
+  }
+  */
 };
 
 const handleCheckoutSessionCompleted = async (

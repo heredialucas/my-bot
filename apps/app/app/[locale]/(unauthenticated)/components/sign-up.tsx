@@ -5,9 +5,6 @@ import { signUp } from '@repo/data-services/src/services/authService';
 import { redirect } from 'next/navigation';
 import { Dictionary } from '@repo/internationalization';
 
-// Clerk component (commented out)
-// import { SignUp as ClerkSignUp } from '@clerk/nextjs';
-
 interface SignUpProps {
     dictionary?: Dictionary;
 }
@@ -65,9 +62,6 @@ export const SignUp = ({ dictionary }: SignUpProps) => {
 
     return (
         <div className="grid gap-6">
-            {/* Clerk component (commented out) */}
-            {/* <ClerkSignUp appearance={{ elements: { header: 'hidden' } }} /> */}
-
             <form action={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                     <label htmlFor="name" className="text-sm font-medium">

@@ -1,3 +1,4 @@
 import 'server-only';
 
-export * from '@clerk/nextjs/server';
+// Export our own auth utilities
+export { getCurrentUser } from '@repo/data-services/src/services/authService';
