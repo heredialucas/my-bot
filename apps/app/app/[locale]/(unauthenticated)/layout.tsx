@@ -32,8 +32,8 @@ const AuthLayout = async ({ children, params }: AuthLayoutProps) => {
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <Image src={logo} alt="AppWise" width={32} height={32} />
-              <span className="font-bold text-2xl text-gray-900 dark:text-white">AppWise</span>
+              <Image src={logo} alt="Gangañam" width={32} height={32} />
+              <span className="font-bold text-2xl text-gray-900 dark:text-white">Gangañam</span>
             </Link>
             <div className="flex items-center gap-2">
               <ModeToggle />
@@ -56,8 +56,8 @@ const AuthLayout = async ({ children, params }: AuthLayoutProps) => {
       <div className="flex flex-col justify-center p-8 md:p-12 bg-white dark:bg-zinc-950">
         <div className="lg:hidden flex items-center justify-between mb-10">
           <Link href="/" className="flex items-center gap-2">
-            <Image src={logo} alt="AppWise" width={32} height={32} />
-            <span className="font-bold text-xl text-gray-900 dark:text-white">AppWise</span>
+            <Image src={logo} alt="Gangañam" width={32} height={32} />
+            <span className="font-bold text-xl text-gray-900 dark:text-white">Gangañam</span>
           </Link>
           <div className="flex items-center gap-2">
             <ModeToggle />

@@ -8,6 +8,7 @@ import { getDictionary } from '@repo/internationalization';
 import type { ReactNode } from 'react';
 import { Footer } from './components/footer';
 import { Header } from './components/header';
+import { SnowParticlesWrapper } from './components/snow-particles-wrapper';
 
 type RootLayoutProperties = {
   readonly children: ReactNode;
@@ -28,9 +29,10 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
     >
       <body>
         <DesignSystemProvider>
+          <SnowParticlesWrapper />
           <Header dictionary={dictionary} locale={locale} />
           {children}
-          <Footer locale={locale} />
+          <Footer />
         </DesignSystemProvider>
         <Toolbar />
       </body>

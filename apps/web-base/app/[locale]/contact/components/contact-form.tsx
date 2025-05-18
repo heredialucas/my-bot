@@ -106,7 +106,7 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                 <FileSpreadsheet className="h-8 w-8 text-primary" />
               </div>
               <div>
-                <h3 className="text-xl font-black var(--font-nunito) text-foreground">AppWise</h3>
+                <h3 className="text-xl font-black var(--font-nunito) text-foreground">Gangañam</h3>
                 <p className="text-sm text-muted-foreground var(--font-nunito)">{dictionary.web.contact.form.subtitleInfo}</p>
               </div>
             </div>

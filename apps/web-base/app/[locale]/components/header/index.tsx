@@ -5,196 +5,169 @@ import { ModeToggle } from '@repo/design-system/components/mode-toggle';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from '@repo/design-system/components/ui/navigation-menu';
 import { Menu, MoveRight, X } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 import type { Dictionary } from '@repo/internationalization';
 import Image from 'next/image';
 import { LanguageSwitcher } from './language-switcher';
+import logo from '@/public/logo.png';
 
 type HeaderProps = {
   dictionary: Dictionary;
   locale: string;
 };
 
-// Interfaz para los subitems en caso de que existan
-interface SubItem {
-  title: string;
-  href: string;
-}
-
-// Interfaz para los elementos de navegación
-interface NavigationItem {
-  title: string;
-  href?: string;
-  description: string;
-  items?: SubItem[];
-}
-
 export const Header = ({ dictionary, locale }: HeaderProps) => {
   const pathname = usePathname();
-  const isContactPage = pathname === "/contact" || pathname.includes("/contact");
+  const [rotation, setRotation] = useState(0);
 
-  const navigationItems: NavigationItem[] = [
+  // Logo rotation animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRotation(prev => (prev + 90) % 360);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const navigationItems = [
     {
-      title: dictionary.web.header.projects || 'Projects',
-      href: isContactPage ? `/${locale}` : "#projects",
-      description: '',
+      title: dictionary.web.header.app || 'La app',
+      href: `/${locale}#app`,
     },
     {
-      title: dictionary.web.header.services || 'Services',
-      href: isContactPage ? `/${locale}#servicios` : `/${locale}#servicios`,
-      description: dictionary.web.header.servicesDescription || 'Our services for software development',
+      title: dictionary.web.header.business || 'Soluciones para empresas',
+      href: `/${locale}#business`,
     },
     {
-      title: dictionary.web.header.process || 'Process',
-      href: isContactPage ? `/${locale}#process` : `/${locale}#process`,
-      description: dictionary.web.header.processDescription || 'How we work with our clients',
+      title: dictionary.web.header.about || 'Sobre nosotros',
+      href: `/${locale}#about`,
     },
     {
-      title: dictionary.web.header.contact || 'Contact',
-      href: `/${locale}/contact`,
-      description: '',
+      title: dictionary.web.header.foodWaste || 'Sobre desperdicio alimentario',
+      href: `/${locale}#food-waste`,
     }
   ];
+
+  // Ensure first letter is capitalized for all navigation items
+  const capitalizeFirstLetter = (string: string): string => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  };
 
   const [isOpen, setOpen] = useState(false);
   return (
     <header className="sticky top-0 left-0 z-40 w-full border-b bg-background">
-      <div className="container relative mx-auto flex min-h-20 flex-row items-center gap-4 lg:grid lg:grid-cols-3">
-        <div className="hidden flex-row items-center justify-start gap-4 lg:flex">
-          <NavigationMenu className="flex items-start justify-start">
-            <NavigationMenuList className="flex flex-row justify-start gap-4">
+      <div className="container relative mx-auto flex items-center justify-between min-h-16 px-4">
+        {/* Logo on the left */}
+        <div className="flex items-center">
+          <Link href={`/${locale}`} className="flex items-center">
+            <div className="relative flex items-center">
+              <Image
+                src={logo}
+                alt="Gangañam"
+                width={100}
+                height={40}
+                className="w-auto h-10 transition-transform duration-300 mr-[-5px]"
+                style={{ transform: `rotate(${rotation}deg)` }}
+              />
+              <span className="text-xl font-bold text-[#0d4b3d] dark:text-white">angañam</span>
+            </div>
+          </Link>
+        </div>
+
+        {/* Navigation in the center - desktop only */}
+        <div className="hidden lg:flex items-center justify-center flex-1">
+          <NavigationMenu>
+            <NavigationMenuList className="flex flex-row justify-center gap-2">
               {navigationItems.map((item) => (
                 <NavigationMenuItem key={item.title}>
-                  {item.href ? (
-                    <>
-                      <NavigationMenuLink asChild>
-                        <Button variant="ghost" asChild className="font-nunito font-bold">
-                          <Link href={item.href}>{item.title}</Link>
-                        </Button>
-                      </NavigationMenuLink>
-                    </>
-                  ) : (
-                    <>
-                      <NavigationMenuTrigger className="font-nunito font-bold text-sm">
-                        {item.title}
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent className="!w-[450px] p-4">
-                        <div className="flex grid-cols-2 flex-col gap-4 lg:grid">
-                          <div className="flex h-full flex-col justify-between">
-                            <div className="flex flex-col">
-                              <p className="text-base font-nunito font-bold title-gradient">{item.title}</p>
-                              <p className="text-muted-foreground text-sm font-nunito">
-                                {item.description}
-                              </p>
-                            </div>
-                            <Button size="sm" className="mt-10 bg-[#FFB800] hover:bg-[#FFE01B] text-black font-nunito font-bold" asChild>
-                              <Link href={`/${locale}/contact`}>
-                                {dictionary.web.global.primaryCta}
-                              </Link>
-                            </Button>
-                          </div>
-                          <div className="flex h-full flex-col justify-end text-sm">
-                            {item.items?.map((subItem: SubItem, idx: number) => (
-                              <NavigationMenuLink
-                                href={subItem.href}
-                                key={idx}
-                                className="flex flex-row items-center justify-between rounded px-4 py-2 hover:bg-muted font-nunito"
-                              >
-                                <span>{subItem.title}</span>
-                                <MoveRight className="h-4 w-4 text-muted-foreground" />
-                              </NavigationMenuLink>
-                            ))}
-                          </div>
-                        </div>
-                      </NavigationMenuContent>
-                    </>
-                  )}
+                  <NavigationMenuLink asChild>
+                    <Button variant="ghost" asChild className="font-nunito font-bold hover:bg-gray-100 dark:hover:bg-gray-800 px-2">
+                      <Link href={item.href}>{capitalizeFirstLetter(item.title)}</Link>
+                    </Button>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-        <div className="flex items-center gap-2 lg:justify-center">
-          <Link href={`/${locale}`} className="flex items-center gap-2">
-            <Image
-              src='/logo.png'
-              alt="AppWise Innovations - Consultora de Desarrollo de Software y MVPs"
-              width={120}
-              height={40}
-              className="w-auto h-8"
-            />
-          </Link>
-        </div>
-        <div className="flex w-full justify-end gap-4">
-          <div className="hidden border-r md:inline" />
-          <div className="hidden md:inline">
+
+        {/* Right side buttons */}
+        <div className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2">
             <LanguageSwitcher />
-          </div>
-          <div className="hidden md:inline">
             <ModeToggle />
+            <Button variant="outline" asChild className="hidden md:inline font-nunito font-bold border-[#0d4b3d] text-[#0d4b3d] hover:bg-[#0d4b3d]/10 px-3 py-1 h-9">
+              {env.NEXT_PUBLIC_APP_URL && (
+                <Link href={`${env.NEXT_PUBLIC_APP_URL}/sign-in`}>
+                  {dictionary.web.header.myStore || 'MyStore acceso'}
+                </Link>
+              )}
+            </Button>
           </div>
-          <Button variant="outline" asChild className="hidden md:inline font-nunito font-bold">
-            {env.NEXT_PUBLIC_APP_URL && (
-              <Link href={`${env.NEXT_PUBLIC_APP_URL}/sign-in`}>
-                {dictionary.web.header.signIn}
-              </Link>
-            )}
-          </Button>
-          <Button className="bg-[#FFB800] hover:bg-[#FFE01B] text-black font-nunito font-bold" asChild>
-            <Link href={`/${locale}/contact`}>
-              {dictionary.web.header.signUp}
+          <Button className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white font-nunito font-bold px-3 py-1 h-9" asChild>
+            <Link href={`/${locale}#app`}>
+              {capitalizeFirstLetter(dictionary.web.header.downloadApp || 'Descarga la app')}
             </Link>
           </Button>
-        </div>
-        <div className="flex w-12 shrink items-end justify-end lg:hidden">
-          <Button variant="ghost" onClick={() => setOpen(!isOpen)}>
+          <Button className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white font-nunito font-bold px-3 py-1 h-9 hidden md:inline-flex" asChild>
+            <Link href={`/${locale}#business`}>
+              {capitalizeFirstLetter(dictionary.web.header.registerBusiness || 'Registra tu empresa')}
+            </Link>
+          </Button>
+
+          {/* Mobile menu button */}
+          <Button variant="ghost" onClick={() => setOpen(!isOpen)} className="lg:hidden ml-2 px-2">
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
-          {isOpen && (
-            <div className="container absolute top-20 right-0 flex w-full flex-col gap-8 border-t bg-background py-4 shadow-lg">
-              {navigationItems.map((item) => (
-                <div key={item.title}>
-                  <div className="flex flex-col gap-2">
-                    {item.href ? (
-                      <Link
-                        href={item.href}
-                        className="flex items-center justify-between font-nunito font-bold"
-                        onClick={() => setOpen(false)}
-                      >
-                        <span className="text-lg">{item.title}</span>
-                        <MoveRight className="h-4 w-4 stroke-1 text-muted-foreground" />
-                      </Link>
-                    ) : (
-                      <p className="text-lg font-nunito font-bold">{item.title}</p>
-                    )}
-                    {item.items?.map((subItem: SubItem) => (
-                      <Link
-                        key={subItem.title}
-                        href={subItem.href}
-                        className="flex items-center justify-between font-nunito"
-                      >
-                        <span className="text-muted-foreground">
-                          {subItem.title}
-                        </span>
-                        <MoveRight className="h-4 w-4 stroke-1" />
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
+
+        {/* Mobile navigation menu */}
+        {isOpen && (
+          <div className="lg:hidden container absolute top-16 left-0 right-0 flex w-full flex-col gap-6 border-t bg-background py-4 shadow-lg z-50">
+            {navigationItems.map((item) => (
+              <div key={item.title}>
+                <div className="flex flex-col gap-2">
+                  <Link
+                    href={item.href}
+                    className="flex items-center justify-between font-nunito font-bold px-4"
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="text-lg">{capitalizeFirstLetter(item.title)}</span>
+                    <MoveRight className="h-4 w-4 stroke-1 text-muted-foreground" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+            <div className="px-4">
+              <Link
+                href={`/${locale}#app`}
+                className="flex items-center justify-between font-nunito font-bold text-[#0d4b3d]"
+                onClick={() => setOpen(false)}
+              >
+                <span className="text-lg">{capitalizeFirstLetter(dictionary.web.header.downloadApp || 'Descarga la app')}</span>
+                <MoveRight className="h-4 w-4 stroke-1 text-[#0d4b3d]" />
+              </Link>
+            </div>
+            <div className="px-4">
+              <Link
+                href={`/${locale}#business`}
+                className="flex items-center justify-between font-nunito font-bold text-[#0d4b3d]"
+                onClick={() => setOpen(false)}
+              >
+                <span className="text-lg">{capitalizeFirstLetter(dictionary.web.header.registerBusiness || 'Registra tu empresa')}</span>
+                <MoveRight className="h-4 w-4 stroke-1 text-[#0d4b3d]" />
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -19,8 +19,8 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
     return (
         <div className="flex w-full min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
             <UserHeaderClient
-                logo={<Image src={logo} alt="AppWise" width={32} height={32} />}
-                title={dictionary.app.admin?.title || "AppWise Innovation"}
+                logo={<Image src={logo} alt="Gangañam" width={32} height={32} />}
+                title={dictionary.app.admin?.title || "Gangañam"}
                 dictionary={dictionary}
             />
 

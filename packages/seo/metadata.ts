@@ -7,13 +7,13 @@ type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
   image?: string;
 };
 
-const applicationName = 'NetFull';
+const applicationName = 'Gangañam';
 const author: Metadata['authors'] = {
-  name: 'App Wise Innovations',
-  url: 'https://appwiseinnovations.com/',
+  name: 'Gangañam',
+  url: 'https://ganganam.com/',
 };
-const publisher = 'App Wise Innovations';
-const twitterHandle = '@appwiseinnovations';
+const publisher = 'Gangañam';
+const twitterHandle = '@ganganam';
 
 export const createMetadata = ({
   title,

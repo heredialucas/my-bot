@@ -124,7 +124,14 @@
       "docs": "Dokumente",
       "contact": "Kontakt",
       "signIn": "Anmelden",
-      "signUp": "Loslegen"
+      "signUp": "Loslegen",
+      "app": "DIE APP",
+      "business": "GESCHÄFTSLÖSUNGEN",
+      "about": "ÜBER UNS",
+      "foodWaste": "Über Lebensmittelverschwendung",
+      "downloadApp": "APP HERUNTERLADEN",
+      "registerBusiness": "REGISTRIEREN SIE IHR UNTERNEHMEN",
+      "myStore": "MyStore Zugang"
     },
     "home": {
       "meta": {
@@ -133,9 +140,13 @@
       },
       "hero": {
         "announcement": "Lesen Sie unser neuestes Technologie-Update",
-        "title": "Wir starten Ihre Idee heute, um die Zukunft von morgen zu gestalten.",
-        "subtitle": "Trau dich zu testen, zu iterieren und zu erobern.",
-        "cta": "Lass uns jetzt anfangen!"
+        "title": "RETTE GUTES ESSEN VOR DER VERSCHWENDUNG",
+        "subtitle": "Unsere App ist der größte Marktplatz zum Retten von überschüssigen Lebensmitteln. Wir helfen Nutzern, die Verschwendung von guten Lebensmitteln zu vermeiden und bieten ihnen ein ausgezeichnetes Preis-Leistungs-Verhältnis in lokalen Geschäften, Cafés und Restaurants.",
+        "cta": "Lass uns jetzt anfangen!",
+        "location": "Standort",
+        "date": "Abholdatum",
+        "search": "ÜBERRASCHUNGSPAKETE SUCHEN",
+        "results": "Ergebnisse in der Nähe:"
       },
       "cases": {
         "title": "Vertrauenswürdig für Unternehmen und Unternehmer",
@@ -148,62 +159,54 @@
         }
       },
       "features": {
-        "title": "Warum uns wählen?",
-        "description": "Wir kombinieren modernste Technologie mit agilen Methoden, um außergewöhnliche Lösungen zu liefern",
+        "title": "WARUM GANGAÑAM NUTZEN",
+        "description": "Werde Teil der Gemeinschaft, die Lebensmittelverschwendung bekämpft und gleichzeitig qualitativ hochwertige Lebensmittel zu reduzierten Preisen genießt",
         "items": [
           {
-            "title": "Maßgeschneiderte Entwicklung",
-            "description": "Wir entwickeln maßgeschneiderte Lösungen, die perfekt zu Ihren einzigartigen Geschäftsanforderungen und -zielen passen."
+            "title": "Genieße gutes Essen für die Hälfte des Originalpreises",
+            "description": "Spare Geld und genieße hochwertiges Essen von deinen Lieblingsgeschäften vor Ort."
           },
           {
-            "title": "Web-Anwendungen",
-            "description": "Moderne, responsive Web-Anwendungen, die auf allen Geräten außergewöhnliche Benutzererlebnisse bieten."
+            "title": "Rette Lebensmittel in deiner Nähe",
+            "description": "Entdecke und rette überschüssige Lebensmittel aus Restaurants, Cafés, Bäckereien und Supermärkten in deiner Umgebung."
           },
           {
-            "title": "UI/UX Design",
-            "description": "Intuitive Schnittstellen und ansprechende Benutzererlebnisse, die Ihre Kunden immer wieder zurückkehren lassen."
+            "title": "Hilf der Umwelt",
+            "description": "Reduziere Lebensmittelverschwendung und trage zum Kampf gegen den Klimawandel bei."
           },
           {
-            "title": "Datenintegration",
-            "description": "Nahtlose Integration mit bestehenden Systemen und Drittanbieterdiensten, um das Potenzial Ihrer Daten zu maximieren."
+            "title": "Probiere neue Cafés und Restaurants",
+            "description": "Entdecke neue lokale Geschäfte und leiste gleichzeitig einen Beitrag zu einer guten Sache."
           },
           {
-            "title": "Agile Entwicklung",
-            "description": "Iterativer Ansatz, der die schnelle Bereitstellung wertvoller Funktionen und kontinuierliche Verbesserung gewährleistet."
+            "title": "Schnelle und einfache Abholung",
+            "description": "Hole dein Essen zur festgelegten Zeit ab, indem du einfach deinen Beleg in der App vorweist."
           },
           {
-            "title": "Fortlaufender Support",
-            "description": "Zuverlässige Wartung und Unterstützung, um sicherzustellen, dass Ihre Lösung weiterhin optimal funktioniert."
+            "title": "Überraschungspaket zum guten Preis",
+            "description": "Erhalte eine Überraschungsauswahl an Produkten zu einem deutlich niedrigeren Preis als ihrem Originalwert."
           }
         ]
       },
       "stats": {
-        "title": "Unser Prozess",
-        "description": "Wir folgen einer bewährten Methodik, um erfolgreiche Projekte zu liefern",
+        "title": "WIE MAN DIE APP BENUTZT",
+        "description": "Folge diesen einfachen Schritten, um mit Gangañam Lebensmittel zu retten",
         "process": [
           {
-            "title": "Entdeckung",
-            "description": "Wir beginnen damit, Ihre Geschäftsanforderungen, Zielgruppe und Ziele zu verstehen, um einen klaren Projektfahrplan zu erstellen."
+            "title": "Entdecke Überraschungspakete",
+            "description": "Finde verfügbare Überraschungspakete in Geschäften und Restaurants in deiner Nähe."
           },
           {
-            "title": "Design",
-            "description": "Unser Kreativteam entwirft intuitive Schnittstellen und Benutzererlebnisse, die mit Ihrer Markenidentität und Ihren Zielen übereinstimmen."
+            "title": "Reservieren und bezahlen",
+            "description": "Reserviere dein Essen und bezahle sicher und schnell über die App."
           },
           {
-            "title": "Entwicklung",
-            "description": "Mit agiler Methodik entwickeln wir Ihre Lösung iterativ und gewährleisten Qualität in jeder Phase des Entwicklungsprozesses."
+            "title": "Hole dein Essen ab",
+            "description": "Gehe zum angegebenen Abholzeitpunkt zum Geschäft und zeige deine Quittung in der App vor."
           },
           {
-            "title": "Testen",
-            "description": "Umfassende Tests garantieren, dass Ihre Lösung auf allen Geräten und in allen Szenarien einwandfrei funktioniert."
-          },
-          {
-            "title": "Bereitstellung",
-            "description": "Wir starten Ihr Projekt sorgfältig und bieten Schulungen an, um einen reibungslosen Übergang und eine problemlose Einführung zu gewährleisten."
-          },
-          {
-            "title": "Support",
-            "description": "Unsere Beziehung wird durch kontinuierliche Wartung, Updates und Verbesserungen fortgesetzt, um Ihre Lösung optimal zu halten."
+            "title": "Genieße dein Essen!",
+            "description": "Genieße dein Essen und sei stolz darauf, etwas Gutes für den Planeten getan zu haben."
           }
         ]
       },

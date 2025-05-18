@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { fadeIn } from '../../../../animations/animations';
+import { fadeIn } from '../lib/animations';
 import { Bell, Mail, Lock } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
 

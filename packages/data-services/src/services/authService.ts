@@ -129,6 +129,7 @@ export async function signOut() {
 
 /**
  * Get the current authenticated user
+ * NOTA: Esta función NO modifica cookies cuando se llama desde un Server Component
  */
 export async function getCurrentUser() {
     try {
@@ -140,29 +141,27 @@ export async function getCurrentUser() {
             return null;
         }
 
-        const token = JSON.parse(tokenCookie.value);
-        const user = await getUserById(token.id);
+        try {
+            const token = JSON.parse(tokenCookie.value);
+            const user = await getUserById(token.id);
 
-        if (!user) {
-            const cookieStore = await cookies();
-            cookieStore.delete('auth-token');
+            // Si no hay usuario, simplemente devolvemos null sin intentar modificar cookies
+            if (!user) {
+                return null;
+            }
+
+            return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+            };
+        } catch (parseError) {
+            console.error('Error al analizar el token:', parseError);
             return null;
         }
-
-        return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-        };
     } catch (error) {
         console.error('Error al obtener usuario actual:', error);
-        try {
-            const cookieStore = await cookies();
-            cookieStore.delete('auth-token');
-        } catch (deleteError) {
-            console.error('Error al eliminar cookie después de error:', deleteError);
-        }
         return null;
     }
 } 

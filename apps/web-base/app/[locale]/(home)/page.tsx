@@ -3,13 +3,11 @@ import { getDictionary } from '@repo/internationalization';
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
 import { Hero } from './components/hero';
-import { Cases } from './components/cases';
 import { CTA } from './components/cta';
 import { FAQ } from './components/faq';
 import { Features } from './components/features';
 import { Stats } from './components/stats';
 import { Testimonials } from './components/testimonials';
-import { Newsletter } from './components/newsletter';
 
 type HomeProps = {
   params: Promise<{
@@ -34,18 +32,16 @@ const Home = async ({ params }: HomeProps) => {
   return (
     <>
       {betaFeature && (
-        <div className="w-full bg-black py-2 text-center text-white">
-          Beta feature now available
+        <div className="w-full bg-[#0d4b3d] py-2 text-center text-white">
+          ¡SALVA BUENA COMIDA DEL DESPERDICIO!
         </div>
       )}
       <Hero dictionary={dictionary} />
-      <Cases dictionary={dictionary} />
       <Features dictionary={dictionary} />
       <Stats dictionary={dictionary} />
       <Testimonials dictionary={dictionary} />
-      <CTA dictionary={dictionary} />
-      <FAQ dictionary={dictionary} />
-      <Newsletter dictionary={dictionary} />
+      <CTA dictionary={dictionary} locale={locale} />
+      <FAQ dictionary={dictionary} locale={locale} />
     </>
   );
 };
