@@ -9,39 +9,70 @@
         "logout": "Logout",
         "loggingOut": "Logging out..."
       },
-      "products": {
-        "title": "Product Dashboard",
-        "newProduct": "New Product",
-        "noProducts": "No products found. Create your first product!",
-        "technologies": "Technologies",
-        "edit": "Edit",
-        "delete": "Delete",
-        "deleteConfirmation": "Are you sure you want to delete this product?",
-        "status": {
-          "published": "Published",
-          "draft": "Draft",
-          "archived": "Archived"
+      "menu": {
+        "title": "Menu Management",
+        "categories": {
+          "title": "Categories",
+          "new": "New Category",
+          "noCategories": "No categories found. Create your first category!",
+          "edit": "Edit",
+          "delete": "Delete",
+          "deleteConfirmation": "Are you sure you want to delete this category?",
+          "form": {
+            "editTitle": "Edit Category",
+            "createTitle": "Create New Category",
+            "name": "Name",
+            "description": "Description",
+            "active": "Active",
+            "cancel": "Cancel",
+            "create": "Create",
+            "update": "Update",
+            "saving": "Saving..."
+          }
         },
-        "form": {
-          "editTitle": "Edit Product",
-          "createTitle": "Create New Product",
-          "productTitle": "Title",
-          "status": "Status",
-          "size": "Size",
-          "statusDescription": "Status Description",
-          "description": "Description",
-          "detailedDescription": "Detailed Description",
-          "productImages": "Product Images",
-          "addImages": "Click to add more images",
-          "imageRequirements": "PNG, JPG, GIF up to 5MB",
-          "features": "Features",
-          "addFeature": "Add Feature",
-          "technologies": "Technologies", 
-          "addTechnology": "Add Technology",
-          "cancel": "Cancel",
-          "create": "Create",
-          "update": "Update",
-          "saving": "Saving..."
+        "dishes": {
+          "title": "Dishes",
+          "new": "New Dish",
+          "noDishes": "No dishes found. Create your first dish!",
+          "edit": "Edit",
+          "delete": "Delete",
+          "deleteConfirmation": "Are you sure you want to delete this dish?",
+          "status": {
+            "active": "Active",
+            "inactive": "Inactive"
+          },
+          "form": {
+            "editTitle": "Edit Dish",
+            "createTitle": "Create New Dish",
+            "name": "Name",
+            "description": "Description",
+            "price": "Price",
+            "category": "Category",
+            "status": "Status",
+            "cancel": "Cancel",
+            "create": "Create",
+            "update": "Update",
+            "saving": "Saving..."
+          }
+        },
+        "dailySpecials": {
+          "title": "Daily Specials",
+          "new": "New Daily Special",
+          "noSpecials": "No daily specials found.",
+          "edit": "Edit",
+          "delete": "Delete",
+          "deleteConfirmation": "Are you sure you want to delete this daily special?",
+          "form": {
+            "editTitle": "Edit Daily Special",
+            "createTitle": "Create New Daily Special",
+            "date": "Date",
+            "dish": "Dish",
+            "active": "Active",
+            "cancel": "Cancel",
+            "create": "Create",
+            "update": "Update",
+            "saving": "Saving..."
+          }
         }
       }
     },
@@ -107,6 +138,37 @@
     "global": {
       "primaryCta": "Contact us",
       "secondaryCta": "Get started now"
+    },
+    "menu": {
+      "title": "Our Menu",
+      "todaySpecial": "Today's Special",
+      "featuredDish": "Featured Dish",
+      "specialDescription": "Discover our special dish of the day, prepared with fresh ingredients and the best quality.",
+      "todayOnly": "Today only",
+      "comingSoon": "Coming soon... We're preparing our menu.",
+      "address": "Address",
+      "phone": "Phone",
+      "hours": "Hours",
+      "contact": "Contact",
+      "searchPlaceholder": "Search dishes...",
+      "allCategories": "All categories",
+      "specialsOnly": "Specials only",
+      "filters": "Filters",
+      "noResults": "No dishes found with the applied filters.",
+      "clearFilters": "Clear filters",
+      "currency": "$",
+      "closed": "Closed",
+      "categories": {
+        "noDishes": "No dishes available in this category"
+      },
+      "dish": {
+        "outOfStock": "Out of stock",
+        "available": "Available"
+      },
+      "footer": {
+        "poweredBy": "Digital menu created with",
+        "businessInfo": "Business information"
+      }
     },
     "header": {
       "home": "Home",

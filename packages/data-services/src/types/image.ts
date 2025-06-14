@@ -4,6 +4,6 @@ export type ImageFormData = {
     description: string;
     alt: string;
     url: string;
-    file: Blob;
+    file?: File | Blob;
     folder: string;
 }; 

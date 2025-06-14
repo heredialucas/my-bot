@@ -34,7 +34,11 @@ export const SignIn = ({ dictionary }: SignInProps) => {
             if (result.success) {
                 router.push('/');
             } else {
-                setError(result.message || dictionary?.app?.auth?.signIn?.errors?.invalidCredentials || 'Error signing in');
+                if (result.message?.includes('Credenciales inválidas')) {
+                    setError(dictionary?.app?.auth?.signIn?.errors?.invalidCredentials || 'Invalid credentials');
+                } else {
+                    setError(result.message || dictionary?.app?.auth?.signIn?.errors?.invalidCredentials || 'Error signing in');
+                }
             }
         } catch (err) {
             setError(dictionary?.app?.auth?.signIn?.errors?.generic || 'An error occurred while signing in');
@@ -81,7 +85,10 @@ export const SignIn = ({ dictionary }: SignInProps) => {
 
                 <button
                     type="submit"
-                    className="w-full py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                    className={`w-full py-2 px-4 rounded-md transition-colors ${loading
+                        ? 'bg-gray-400 cursor-not-allowed opacity-60'
+                        : 'bg-green-600 hover:bg-green-700 text-white'
+                        }`}
                     disabled={loading}
                 >
                     {loading ?

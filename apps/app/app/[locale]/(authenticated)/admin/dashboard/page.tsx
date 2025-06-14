@@ -1,38 +1,34 @@
-import { getAllProducts, getProductById } from '@repo/data-services';
-import ProductsClient from './components/ProductsClient';
+import { getAllCategories } from '@repo/data-services/src/services/categoryService';
+import { getAllDishes } from '@repo/data-services/src/services/dishService';
+import { getAllDailySpecials } from '@repo/data-services/src/services/dailySpecialService';
+import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
+import MenuDashboard from './components/MenuDashboard';
 import { Suspense } from 'react';
 import { getDictionary } from '@repo/internationalization';
 
 export default async function AdminDashboard({
-    params,
-    searchParams
+    params
 }: {
     params: Promise<{ locale: string }>;
-    searchParams: Promise<{
-        modal?: string;
-        productId?: string;
-    }>
 }) {
-    // Obtener productos desde la base de datos
-    const products = await getAllProducts();
-    const searchParamsData = await searchParams;
     const paramsData = await params;
     const dictionary = await getDictionary(paramsData.locale);
 
-    // Determinar si debemos mostrar un modal y qué producto editar
-    let editingProduct = null;
-    if (searchParamsData.modal === 'edit' && searchParamsData.productId) {
-        editingProduct = await getProductById(searchParamsData.productId);
-    }
-
-    const showModal = searchParamsData.modal === 'create' || searchParamsData.modal === 'edit';
+    // Obtener datos del menú desde la base de datos
+    const [categories, dishes, dailySpecials, restaurantConfig] = await Promise.all([
+        getAllCategories(),
+        getAllDishes(),
+        getAllDailySpecials(),
+        getRestaurantConfig()
+    ]);
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <ProductsClient
-                initialProducts={products}
-                showModal={showModal}
-                editingProduct={editingProduct}
+            <MenuDashboard
+                categories={categories}
+                dishes={dishes}
+                dailySpecials={dailySpecials}
+                restaurantConfig={restaurantConfig}
                 dictionary={dictionary}
             />
         </Suspense>

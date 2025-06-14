@@ -39,7 +39,7 @@ export async function signIn({ email, password }: { email: string; password: str
         }
 
         // Get user details
-        const user = await getUserById(authResult.userId || '');
+        const user = await getUserById(authResult.user?.id || '');
         if (!user) {
             return { success: false, message: 'Usuario no encontrado' };
         }
@@ -80,13 +80,24 @@ export async function signUp(data: {
 }) {
     try {
         // Create new user
-        const user = await createUser({
+        const result = await createUser({
             name: data.name,
             lastName: data.lastName,
             email: data.email,
             password: data.password,
-            role: 'user', // Asegurar que el rol está en minúsculas
+            role: 'admin', // Asegurar que el rol está en minúsculas
         });
+
+        // Check if user creation failed
+        if (!result.success || !result.user) {
+            return {
+                success: false,
+                message: result.message || 'Error al crear usuario',
+                error: result.error || 'USER_CREATION_FAILED'
+            };
+        }
+
+        const user = result.user;
 
         // Create session token (simple JSON string, no encryption)
         const token = JSON.stringify({
@@ -109,7 +120,11 @@ export async function signUp(data: {
         };
     } catch (error) {
         console.error('Error al crear cuenta:', error);
-        return { success: false, message: 'Error al crear la cuenta' };
+        return {
+            success: false,
+            message: 'Error inesperado al crear la cuenta',
+            error: 'UNEXPECTED_ERROR'
+        };
     }
 }
 
@@ -162,6 +177,27 @@ export async function getCurrentUser() {
         }
     } catch (error) {
         console.error('Error al obtener usuario actual:', error);
+        return null;
+    }
+}
+
+/**
+ * Get only the current user ID from cookies
+ * Useful for CRUD operations that need the creator ID
+ */
+export async function getCurrentUserId(): Promise<string | null> {
+    try {
+        const cookieStore = await cookies();
+        const tokenCookie = cookieStore.get('auth-token');
+
+        if (!tokenCookie) {
+            return null;
+        }
+
+        const token = JSON.parse(tokenCookie.value);
+        return token.id || null;
+    } catch (error) {
+        console.error('Error al obtener ID de usuario actual:', error);
         return null;
     }
 } 

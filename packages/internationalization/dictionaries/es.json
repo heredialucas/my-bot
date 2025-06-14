@@ -9,39 +9,70 @@
         "logout": "Cerrar Sesión",
         "loggingOut": "Cerrando sesión..."
       },
-      "products": {
-        "title": "Panel de Productos",
-        "newProduct": "Nuevo Producto",
-        "noProducts": "No se encontraron productos. ¡Crea tu primer producto!",
-        "technologies": "Tecnologías",
-        "edit": "Editar",
-        "delete": "Eliminar",
-        "deleteConfirmation": "¿Estás seguro de que deseas eliminar este producto?",
-        "status": {
-          "published": "Publicado",
-          "draft": "Borrador",
-          "archived": "Archivado"
+      "menu": {
+        "title": "Gestión de Menú",
+        "categories": {
+          "title": "Categorías",
+          "new": "Nueva Categoría",
+          "noCategories": "No se encontraron categorías. ¡Crea tu primera categoría!",
+          "edit": "Editar",
+          "delete": "Eliminar",
+          "deleteConfirmation": "¿Estás seguro de que deseas eliminar esta categoría?",
+          "form": {
+            "editTitle": "Editar Categoría",
+            "createTitle": "Crear Nueva Categoría",
+            "name": "Nombre",
+            "description": "Descripción",
+            "active": "Activa",
+            "cancel": "Cancelar",
+            "create": "Crear",
+            "update": "Actualizar",
+            "saving": "Guardando..."
+          }
         },
-        "form": {
-          "editTitle": "Editar Producto",
-          "createTitle": "Crear Nuevo Producto",
-          "productTitle": "Título",
-          "status": "Estado",
-          "size": "Tamaño",
-          "statusDescription": "Descripción del Estado",
-          "description": "Descripción",
-          "detailedDescription": "Descripción Detallada",
-          "productImages": "Imágenes del Producto",
-          "addImages": "Haz clic para añadir más imágenes",
-          "imageRequirements": "PNG, JPG, GIF hasta 5MB",
-          "features": "Características",
-          "addFeature": "Añadir Característica",
-          "technologies": "Tecnologías", 
-          "addTechnology": "Añadir Tecnología",
-          "cancel": "Cancelar",
-          "create": "Crear",
-          "update": "Actualizar",
-          "saving": "Guardando..."
+        "dishes": {
+          "title": "Platos",
+          "new": "Nuevo Plato",
+          "noDishes": "No se encontraron platos. ¡Crea tu primer plato!",
+          "edit": "Editar",
+          "delete": "Eliminar",
+          "deleteConfirmation": "¿Estás seguro de que deseas eliminar este plato?",
+          "status": {
+            "active": "Activo",
+            "inactive": "Inactivo"
+          },
+          "form": {
+            "editTitle": "Editar Plato",
+            "createTitle": "Crear Nuevo Plato",
+            "name": "Nombre",
+            "description": "Descripción",
+            "price": "Precio",
+            "category": "Categoría",
+            "status": "Estado",
+            "cancel": "Cancelar",
+            "create": "Crear",
+            "update": "Actualizar",
+            "saving": "Guardando..."
+          }
+        },
+        "dailySpecials": {
+          "title": "Platos del Día",
+          "new": "Nuevo Plato del Día",
+          "noSpecials": "No se encontraron platos del día.",
+          "edit": "Editar",
+          "delete": "Eliminar",
+          "deleteConfirmation": "¿Estás seguro de que deseas eliminar este plato del día?",
+          "form": {
+            "editTitle": "Editar Plato del Día",
+            "createTitle": "Crear Nuevo Plato del Día",
+            "date": "Fecha",
+            "dish": "Plato",
+            "active": "Activo",
+            "cancel": "Cancelar",
+            "create": "Crear",
+            "update": "Actualizar",
+            "saving": "Guardando..."
+          }
         }
       }
     },
@@ -107,6 +138,37 @@
     "global": {
       "primaryCta": "Contáctanos",
       "secondaryCta": "Comenzar ahora"
+    },
+    "menu": {
+      "title": "Nuestro Menú",
+      "todaySpecial": "Plato del Día",
+      "featuredDish": "Plato Destacado",
+      "specialDescription": "Descubre nuestro plato especial del día, preparado con ingredientes frescos y la mejor calidad.",
+      "todayOnly": "Solo por hoy",
+      "comingSoon": "Próximamente... Estamos preparando nuestro menú.",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "hours": "Horarios",
+      "contact": "Contacto",
+      "searchPlaceholder": "Buscar platos...",
+      "allCategories": "Todas las categorías",
+      "specialsOnly": "Solo platos del día",
+      "filters": "Filtros",
+      "noResults": "No se encontraron platos con los filtros aplicados.",
+      "clearFilters": "Limpiar filtros",
+      "currency": "$",
+      "closed": "Cerrado",
+      "categories": {
+        "noDishes": "No hay platos disponibles en esta categoría"
+      },
+      "dish": {
+        "outOfStock": "Agotado",
+        "available": "Disponible"
+      },
+      "footer": {
+        "poweredBy": "Menú digital creado con",
+        "businessInfo": "Información del negocio"
+      }
     },
     "header": {
       "home": "Inicio",

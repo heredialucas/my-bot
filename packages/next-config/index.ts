@@ -26,7 +26,11 @@ export const config: NextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn.prod.website-files.com',
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'pub-f672445d46694a99a9839d7441770b9f.r2.dev',
+      },
     ],
   },
 

@@ -3,11 +3,13 @@
 import { revalidatePath } from 'next/cache';
 import { UserData, UserFormData } from '../types/user';
 import { database } from '@repo/database';
+import { UserRole } from '@repo/database';
+import bcrypt from 'bcryptjs';
 
 /**
  * Crear un nuevo usuario
  */
-export async function createUser(data: UserFormData & { role: string }) {
+export async function createUser(data: UserFormData & { role: UserRole }) {
     try {
         // Verificar si ya existe un usuario con ese email
         const existingUser = await database.user.findUnique({
@@ -15,33 +17,47 @@ export async function createUser(data: UserFormData & { role: string }) {
         });
 
         if (existingUser) {
-            throw new Error('Ya existe un usuario con este email');
+            return {
+                success: false,
+                message: 'Ya existe un usuario con este email',
+                error: 'EMAIL_ALREADY_EXISTS'
+            };
         }
 
-        // Crear el usuario (sin hash de contraseña por simplicidad)
+        // Hash de la contraseña
+        const hashedPassword = await bcrypt.hash(data.password, 12);
+
+        // Crear el usuario con contraseña hasheada
         const user = await database.user.create({
             data: {
                 name: data.name,
                 lastName: data.lastName,
                 email: data.email,
-                password: data.password,
+                password: hashedPassword,
                 role: data.role,
             },
         });
 
         // Retornar usuario sin contraseña
         return {
-            id: user.id,
-            name: user.name,
-            lastName: user.lastName,
-            email: user.email,
-            role: user.role,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
+            success: true,
+            user: {
+                id: user.id,
+                name: user.name,
+                lastName: user.lastName,
+                email: user.email,
+                role: user.role,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            }
         };
     } catch (error) {
         console.error('Error al crear usuario:', error);
-        throw new Error('No se pudo crear el usuario');
+        return {
+            success: false,
+            message: 'Error interno del servidor al crear el usuario',
+            error: 'SERVER_ERROR'
+        };
     }
 }
 
@@ -103,19 +119,25 @@ export async function getAllUsers() {
 /**
  * Actualizar un usuario existente
  */
-export async function updateUser(userId: string, data: UserFormData & { role?: string }) {
+export async function updateUser(userId: string, data: UserFormData & { role?: UserRole }) {
     "use server";
     try {
+        const updateData: any = {
+            name: data.name,
+            lastName: data.lastName,
+            email: data.email,
+            role: data.role,
+        };
+
+        // Solo hashear la contraseña si se proporciona una nueva
+        if (data.password) {
+            updateData.password = await bcrypt.hash(data.password, 12);
+        }
+
         // Actualizar usuario en la base de datos
         const user = await database.user.update({
             where: { id: userId },
-            data: {
-                name: data.name,
-                lastName: data.lastName,
-                email: data.email,
-                role: data.role,
-                ...(data.password ? { password: data.password } : {})
-            },
+            data: updateData,
         });
 
         revalidatePath('/admin/dashboard');
@@ -156,7 +178,7 @@ export async function deleteUser(userId: string) {
 }
 
 /**
- * Verificar credenciales de usuario (comparación simple, sin hash)
+ * Verificar credenciales de usuario con hash
  */
 export async function verifyUserCredentials(email: string, password: string) {
     try {
@@ -170,16 +192,25 @@ export async function verifyUserCredentials(email: string, password: string) {
             return { success: false, message: 'Credenciales inválidas' };
         }
 
-        // Comparación simple de contraseña (sin hash por simplicidad)
-        const passwordMatch = user.password === password;
+        // Comparar contraseña hasheada
+        const passwordMatch = await bcrypt.compare(password, user.password);
 
         // Si las contraseñas no coinciden, retornar fallo
         if (!passwordMatch) {
             return { success: false, message: 'Credenciales inválidas' };
         }
 
-        // Retornar éxito con ID de usuario
-        return { success: true, userId: user.id };
+        // Retornar éxito con datos del usuario
+        return {
+            success: true,
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                lastName: user.lastName,
+                role: user.role
+            }
+        };
     } catch (error) {
         console.error('Error al verificar credenciales:', error);
         throw new Error('No se pudieron verificar las credenciales');

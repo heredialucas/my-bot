@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { signUp } from '@repo/data-services/src/services/authService';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Dictionary } from '@repo/internationalization';
 
 interface SignUpProps {
@@ -10,6 +10,7 @@ interface SignUpProps {
 }
 
 export const SignUp = ({ dictionary }: SignUpProps) => {
+    const router = useRouter();
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -47,9 +48,13 @@ export const SignUp = ({ dictionary }: SignUpProps) => {
             });
 
             if (result.success) {
-                redirect('/sign-in');
+                router.push('/sign-in');
             } else {
-                setError(result.message || dictionary?.app?.auth?.signUp?.errors?.accountCreation || 'Error creating account');
+                if (result.error === 'EMAIL_ALREADY_EXISTS') {
+                    setError(dictionary?.app?.auth?.signUp?.errors?.accountCreation || 'Email already exists');
+                } else {
+                    setError(result.message || dictionary?.app?.auth?.signUp?.errors?.accountCreation || 'Error creating account');
+                }
             }
 
         } catch (err) {
@@ -142,7 +147,10 @@ export const SignUp = ({ dictionary }: SignUpProps) => {
 
                 <button
                     type="submit"
-                    className="w-full py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                    className={`w-full py-2 px-4 rounded-md transition-colors ${loading
+                        ? 'bg-gray-400 cursor-not-allowed opacity-60'
+                        : 'bg-green-600 hover:bg-green-700 text-white'
+                        }`}
                     disabled={loading}
                 >
                     {loading ?
