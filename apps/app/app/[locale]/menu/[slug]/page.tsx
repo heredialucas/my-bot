@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getDictionary } from '@repo/internationalization';
-import { getActiveCategories } from '@repo/data-services/src/services/categoryService';
-import { getTodaySpecial } from '@repo/data-services/src/services/dailySpecialService';
+import { getAllCategoriesWithDishes } from '@repo/data-services/src/services/categoryService';
+import { getAllDailySpecials } from '@repo/data-services/src/services/dailySpecialService';
 import { getRestaurantConfigBySlug } from '@repo/data-services/src/services/restaurantConfigService';
 import MenuLanding from './components/MenuLanding';
 
@@ -16,18 +16,29 @@ export default async function MenuPage({ params }: PageProps) {
     const paramsData = await params;
     const { locale, slug } = paramsData;
 
-    // Obtener datos del menú y traducciones
-    const [dictionary, categoriesWithDishes, todaySpecial, restaurantConfig] = await Promise.all([
-        getDictionary(locale),
-        getActiveCategories(),
-        getTodaySpecial(),
-        getRestaurantConfigBySlug(slug)
-    ]);
+    // Primero obtener la configuración del restaurante para obtener el userId
+    const restaurantConfig = await getRestaurantConfigBySlug(slug);
 
     // Verificar si el restaurante existe
     if (!restaurantConfig) {
         notFound();
     }
+
+    // Obtener datos del menú usando el userId del restaurante
+    const [dictionary, categoriesWithDishes, dailySpecials] = await Promise.all([
+        getDictionary(locale),
+        getAllCategoriesWithDishes(restaurantConfig.createdById),
+        getAllDailySpecials(restaurantConfig.createdById)
+    ]);
+
+    // Encontrar el especial de hoy
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todaySpecial = dailySpecials.find(special => {
+        const specialDate = new Date(special.date);
+        specialDate.setHours(0, 0, 0, 0);
+        return specialDate.getTime() === today.getTime() && special.isActive;
+    }) || null;
 
     return (
         <MenuLanding

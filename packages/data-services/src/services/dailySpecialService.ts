@@ -15,6 +15,8 @@ export interface DailySpecialData {
         price: number;
         promotionalPrice?: number | null;
         imageUrl?: string;
+        status: string;
+        order: number;
         category: {
             name: string;
         };

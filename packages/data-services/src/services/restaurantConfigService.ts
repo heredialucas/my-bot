@@ -16,6 +16,7 @@ export interface RestaurantConfigData {
     slug: string;
     themeColor: string;
     isActive: boolean;
+    createdById: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -63,15 +64,34 @@ export async function getRestaurantConfig(userId?: string): Promise<RestaurantCo
  */
 export async function upsertRestaurantConfig(data: RestaurantConfigFormData, createdById: string) {
     try {
-        // Buscar si ya existe una configuración
+        // Buscar si ya existe una configuración para ESTE usuario específico
         const existingConfig = await database.restaurantConfig.findFirst({
-            where: { isActive: true }
+            where: {
+                isActive: true,
+                createdById: createdById  // ✅ FILTRAR POR USUARIO ESPECÍFICO
+            }
         });
+
+        // Validar que el slug sea único (solo si se está cambiando)
+        const slugToUse = data.slug || (existingConfig?.slug) || 'mi-restaurante';
+        if (slugToUse !== existingConfig?.slug) {
+            const existingSlug = await database.restaurantConfig.findFirst({
+                where: {
+                    slug: slugToUse,
+                    isActive: true,
+                    id: { not: existingConfig?.id } // Excluir la configuración actual si existe
+                }
+            });
+
+            if (existingSlug) {
+                throw new Error('Ya existe un restaurante con este slug. Por favor elige otro.');
+            }
+        }
 
         let config;
 
         if (existingConfig) {
-            // Actualizar configuración existente
+            // Actualizar configuración existente del usuario
             config = await database.restaurantConfig.update({
                 where: { id: existingConfig.id },
                 data: {
@@ -82,12 +102,12 @@ export async function upsertRestaurantConfig(data: RestaurantConfigFormData, cre
                     email: data.email,
                     hours: data.hours,
                     logoUrl: data.logoUrl,
-                    slug: data.slug || existingConfig.slug,
+                    slug: slugToUse,
                     themeColor: data.themeColor || existingConfig.themeColor,
                 }
             });
         } else {
-            // Crear nueva configuración
+            // Crear nueva configuración para el usuario
             config = await database.restaurantConfig.create({
                 data: {
                     name: data.name,
@@ -97,7 +117,7 @@ export async function upsertRestaurantConfig(data: RestaurantConfigFormData, cre
                     email: data.email,
                     hours: data.hours,
                     logoUrl: data.logoUrl,
-                    slug: data.slug || 'mi-restaurante',
+                    slug: slugToUse,
                     themeColor: data.themeColor || 'green',
                     createdById,
                 }
