@@ -8,9 +8,35 @@ const description = 'Enter your details to start.';
 
 export const metadata: Metadata = createMetadata({ title, description });
 
-const SignUpPage = async ({ params }: { params: Promise<{ locale: string }> }) => {
+const SignUpPage = async ({
+  params,
+  searchParams
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ error?: string }>;
+}) => {
   const { locale } = await params;
+  const { error } = await searchParams;
   const dictionary = await getDictionary(locale);
+
+  const getErrorMessage = (error: string) => {
+    switch (error) {
+      case 'empty-fields':
+        return dictionary.app.auth.signUp.errors.emptyFields || 'Please complete all fields';
+      case 'passwords-mismatch':
+        return dictionary.app.auth.signUp.errors.passwordsDoNotMatch || 'Passwords do not match';
+      case 'email-exists':
+        return dictionary.app.auth.signUp.errors.accountCreation || 'Email already exists';
+      case 'creation-failed':
+        return dictionary.app.auth.signUp.errors.accountCreation || 'Error creating account';
+      case 'generic':
+        return dictionary.app.auth.signUp.errors.generic || 'An error occurred while creating the account';
+      default:
+        return null;
+    }
+  };
+
+  const errorMessage = error ? getErrorMessage(error) : null;
 
   return (
     <>
@@ -20,7 +46,14 @@ const SignUpPage = async ({ params }: { params: Promise<{ locale: string }> }) =
         </h1>
         <p className="text-sm">{description}</p>
       </div>
-      <SignUp dictionary={dictionary} />
+
+      {errorMessage && (
+        <div className="mb-6 p-3 rounded-md bg-red-50 border border-red-200">
+          <p className="text-sm text-red-600">{errorMessage}</p>
+        </div>
+      )}
+
+      <SignUp dictionary={dictionary} error={error} />
     </>
   );
 };

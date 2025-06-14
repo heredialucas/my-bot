@@ -30,6 +30,7 @@ export default async function AdminDashboard({
                 dailySpecials={dailySpecials}
                 restaurantConfig={restaurantConfig}
                 dictionary={dictionary}
+                locale={paramsData.locale}
             />
         </Suspense>
     );

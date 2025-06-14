@@ -20,6 +20,7 @@ const SignInPage = async ({ params }: { params: Promise<{ locale: string }> }) =
         </h1>
         <p className="text-sm">{description}</p>
       </div>
+
       <SignIn dictionary={dictionary} />
     </>
   );

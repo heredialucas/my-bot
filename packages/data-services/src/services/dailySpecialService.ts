@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { database } from '@repo/database';
+import { getCurrentUserId } from './authService';
 
 export interface DailySpecialData {
     id: string;
@@ -71,11 +72,18 @@ export async function createDailySpecial(data: DailySpecialFormData, createdById
 }
 
 /**
- * Obtener todos los platos del día (para admin)
+ * Obtener todos los platos del día del usuario actual (para admin)
  */
-export async function getAllDailySpecials() {
+export async function getAllDailySpecials(userId?: string) {
     try {
+        // Si no se proporciona userId, obtener el actual
+        const currentUserId = userId || await getCurrentUserId();
+        if (!currentUserId) {
+            throw new Error('Usuario no autenticado');
+        }
+
         const dailySpecials = await database.dailySpecial.findMany({
+            where: { createdById: currentUserId },
             include: {
                 dish: {
                     include: {

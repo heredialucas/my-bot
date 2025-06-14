@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { database } from '@repo/database';
+import { getCurrentUserId } from './authService';
 
 export interface RestaurantConfigData {
     id: string;
@@ -32,12 +33,21 @@ export interface RestaurantConfigFormData {
 }
 
 /**
- * Obtener la configuración del restaurante (solo debería haber una)
+ * Obtener la configuración del restaurante del usuario actual
  */
-export async function getRestaurantConfig(): Promise<RestaurantConfigData | null> {
+export async function getRestaurantConfig(userId?: string): Promise<RestaurantConfigData | null> {
     try {
+        // Si no se proporciona userId, obtener el actual
+        const currentUserId = userId || await getCurrentUserId();
+        if (!currentUserId) {
+            throw new Error('Usuario no autenticado');
+        }
+
         const config = await database.restaurantConfig.findFirst({
-            where: { isActive: true },
+            where: {
+                isActive: true,
+                createdById: currentUserId
+            },
             orderBy: { createdAt: 'desc' }
         });
 

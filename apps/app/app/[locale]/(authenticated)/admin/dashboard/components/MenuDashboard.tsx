@@ -17,6 +17,7 @@ interface MenuDashboardProps {
     dailySpecials: DailySpecialData[];
     restaurantConfig: RestaurantConfigData | null;
     dictionary: Dictionary;
+    locale: string;
 }
 
 export default function MenuDashboard({
@@ -24,7 +25,8 @@ export default function MenuDashboard({
     dishes,
     dailySpecials,
     restaurantConfig,
-    dictionary
+    dictionary,
+    locale
 }: MenuDashboardProps) {
     const [activeTab, setActiveTab] = useState<'config' | 'categories' | 'dishes' | 'dailySpecials'>('config');
 
@@ -66,6 +68,7 @@ export default function MenuDashboard({
                 <RestaurantConfigSection
                     restaurantConfig={restaurantConfig}
                     dictionary={dictionary}
+                    locale={locale}
                 />
             )}
 

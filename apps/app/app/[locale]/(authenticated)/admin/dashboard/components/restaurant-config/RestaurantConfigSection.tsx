@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { RestaurantConfigData, RestaurantConfigFormData, upsertRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { getCurrentUserId } from '@repo/data-services/src/services/authService';
 import { uploadR2Image } from '@repo/data-services/src/services/uploadR2Image';
@@ -9,11 +9,21 @@ import HoursSelector from './HoursSelector';
 interface RestaurantConfigSectionProps {
     restaurantConfig: RestaurantConfigData | null;
     dictionary: any;
+    locale: string;
+}
+
+// Función auxiliar para generar URL del menú
+function generateMenuUrl(slug: string, locale: string): string {
+    const baseUrl = process.env.NODE_ENV === 'production'
+        ? 'https://ganga-menu-app.vercel.app'
+        : 'http://localhost:4000';
+    return `${baseUrl}/${locale}/menu/${slug}`;
 }
 
 export default function RestaurantConfigSection({
     restaurantConfig,
-    dictionary
+    dictionary,
+    locale
 }: RestaurantConfigSectionProps) {
     const [formData, setFormData] = useState<RestaurantConfigFormData>({
         name: restaurantConfig?.name || '',
@@ -30,12 +40,8 @@ export default function RestaurantConfigSection({
     const [copied, setCopied] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploadingLogo, setUploadingLogo] = useState(false);
-    const [menuUrl, setMenuUrl] = useState('');
 
-    // Construir URL del menú dinámicamente en el cliente
-    useEffect(() => {
-        setMenuUrl(`${window.location.origin}/es/menu/${formData.slug}`);
-    }, [formData.slug]);
+    const menuUrl = generateMenuUrl(formData.slug || 'mi-restaurante', locale);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

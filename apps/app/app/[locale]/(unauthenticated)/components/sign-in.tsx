@@ -1,56 +1,51 @@
-'use client';
-
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { signIn } from '@repo/data-services/src/services/authService';
 import { Dictionary } from '@repo/internationalization';
+import { SignInButton } from './SignInButton';
 
 interface SignInProps {
     dictionary?: Dictionary;
 }
 
+async function handleSignIn(formData: FormData) {
+    'use server';
+
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    console.log('Sign in attempt:', { email });
+
+    if (!email || !password) {
+        console.log('Missing email or password');
+        return;
+    }
+
+    try {
+        console.log('Calling signIn service...');
+        const result = await signIn({ email, password });
+
+        console.log('SignIn result:', result);
+
+        if (result.success) {
+            console.log('Sign in successful, redirecting to dashboard...');
+            redirect('/admin/dashboard');
+        } else {
+            console.log('Sign in failed:', result.message);
+        }
+    } catch (err) {
+        // No capturar NEXT_REDIRECT como error
+        if (err instanceof Error && err.message.includes('NEXT_REDIRECT')) {
+            console.log('Redirect successful');
+            throw err; // Re-throw para que Next.js maneje el redirect
+        }
+        console.error('Real sign in error:', err);
+    }
+}
+
 export const SignIn = ({ dictionary }: SignInProps) => {
-    const router = useRouter();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    const handleSubmit = async (formData: FormData) => {
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
-
-        if (!email || !password) {
-            setError(dictionary?.app?.auth?.signIn?.errors?.emptyFields || 'Please complete all fields');
-            return;
-        }
-
-        try {
-            setLoading(true);
-            setError('');
-
-            const result = await signIn({ email, password });
-
-            if (result.success) {
-                router.push('/');
-            } else {
-                if (result.message?.includes('Credenciales inválidas')) {
-                    setError(dictionary?.app?.auth?.signIn?.errors?.invalidCredentials || 'Invalid credentials');
-                } else {
-                    setError(result.message || dictionary?.app?.auth?.signIn?.errors?.invalidCredentials || 'Error signing in');
-                }
-            }
-        } catch (err) {
-            setError(dictionary?.app?.auth?.signIn?.errors?.generic || 'An error occurred while signing in');
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     return (
         <div className="grid gap-6">
-            <form action={handleSubmit} className="space-y-4">
+            <form action={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
                     <label htmlFor="email" className="text-sm font-medium">
                         {dictionary?.app?.auth?.signIn?.email || 'Email'}
@@ -58,8 +53,6 @@ export const SignIn = ({ dictionary }: SignInProps) => {
                     <input
                         name="email"
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                         className="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-green-500 focus:border-green-500"
                         placeholder="email@example.com"
                         required
@@ -73,28 +66,13 @@ export const SignIn = ({ dictionary }: SignInProps) => {
                     <input
                         name="password"
                         type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
                         className="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-green-500 focus:border-green-500"
                         placeholder="••••••••"
                         required
                     />
                 </div>
 
-                {error && <p className="text-sm text-red-500">{error}</p>}
-
-                <button
-                    type="submit"
-                    className={`w-full py-2 px-4 rounded-md transition-colors ${loading
-                        ? 'bg-gray-400 cursor-not-allowed opacity-60'
-                        : 'bg-green-600 hover:bg-green-700 text-white'
-                        }`}
-                    disabled={loading}
-                >
-                    {loading ?
-                        (dictionary?.app?.auth?.signIn?.signing || 'Signing in...') :
-                        (dictionary?.app?.auth?.signIn?.button || 'Sign in')}
-                </button>
+                <SignInButton dictionary={dictionary} />
             </form>
         </div>
     );

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { database } from '@repo/database';
+import { getCurrentUserId } from './authService';
 
 export interface CategoryData {
     id: string;
@@ -58,11 +59,18 @@ export async function createCategory(data: CategoryFormData, createdById: string
 }
 
 /**
- * Obtener todas las categorías (para admin)
+ * Obtener todas las categorías del usuario actual (para admin)
  */
-export async function getAllCategories() {
+export async function getAllCategories(userId?: string) {
     try {
+        // Si no se proporciona userId, obtener el actual
+        const currentUserId = userId || await getCurrentUserId();
+        if (!currentUserId) {
+            throw new Error('Usuario no autenticado');
+        }
+
         const categories = await database.category.findMany({
+            where: { createdById: currentUserId },
             include: {
                 _count: {
                     select: { dishes: true }
@@ -222,21 +230,25 @@ export async function reorderCategories(categoryOrders: { id: string; order: num
 }
 
 /**
- * Obtener todas las categorías activas con sus platos (para landing page)
+ * Obtener todas las categorías con sus platos del usuario actual (para mostrar en el menú público)
  */
-export async function getAllCategoriesWithDishes() {
+export async function getAllCategoriesWithDishes(userId?: string) {
     try {
+        // Si no se proporciona userId, obtener el actual
+        const currentUserId = userId || await getCurrentUserId();
+        if (!currentUserId) {
+            throw new Error('Usuario no autenticado');
+        }
+
         const categories = await database.category.findMany({
-            where: { isActive: true },
+            where: {
+                isActive: true,
+                createdById: currentUserId
+            },
             include: {
                 dishes: {
                     where: { status: 'ACTIVE' },
-                    orderBy: { order: 'asc' },
-                    include: {
-                        category: {
-                            select: { name: true }
-                        }
-                    }
+                    orderBy: { order: 'asc' }
                 }
             },
             orderBy: { order: 'asc' },

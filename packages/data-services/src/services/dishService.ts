@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { database } from '@repo/database';
 import { deleteR2Image } from './uploadR2Image';
+import { getCurrentUserId } from './authService';
 
 export interface DishData {
     id: string;
@@ -64,11 +65,18 @@ export async function createDish(data: DishFormData, createdById: string) {
 }
 
 /**
- * Obtener todos los platos (para admin)
+ * Obtener todos los platos del usuario actual (para admin)
  */
-export async function getAllDishes() {
+export async function getAllDishes(userId?: string) {
     try {
+        // Si no se proporciona userId, obtener el actual
+        const currentUserId = userId || await getCurrentUserId();
+        if (!currentUserId) {
+            throw new Error('Usuario no autenticado');
+        }
+
         const dishes = await database.dish.findMany({
+            where: { createdById: currentUserId },
             include: {
                 category: {
                     select: { name: true }
