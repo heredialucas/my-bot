@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getDictionary } from '@repo/internationalization';
-import { getAllCategoriesWithDishes } from '@repo/data-services/src/services/categoryService';
+import { getActiveCategories } from '@repo/data-services/src/services/categoryService';
 import { getTodaySpecial } from '@repo/data-services/src/services/dailySpecialService';
 import { getRestaurantConfigBySlug } from '@repo/data-services/src/services/restaurantConfigService';
 import MenuLanding from './components/MenuLanding';
@@ -19,7 +19,7 @@ export default async function MenuPage({ params }: PageProps) {
     // Obtener datos del menú y traducciones
     const [dictionary, categoriesWithDishes, todaySpecial, restaurantConfig] = await Promise.all([
         getDictionary(locale),
-        getAllCategoriesWithDishes(),
+        getActiveCategories(),
         getTodaySpecial(),
         getRestaurantConfigBySlug(slug)
     ]);

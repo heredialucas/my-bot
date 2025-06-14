@@ -106,7 +106,12 @@ export async function getActiveCategories() {
             include: {
                 dishes: {
                     where: { status: 'ACTIVE' },
-                    orderBy: { order: 'asc' }
+                    orderBy: { order: 'asc' },
+                    include: {
+                        category: {
+                            select: { name: true }
+                        }
+                    }
                 }
             },
             orderBy: { order: 'asc' },
