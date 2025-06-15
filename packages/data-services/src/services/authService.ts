@@ -132,14 +132,14 @@ export async function signUp(data: {
  * Sign out the current user
  */
 export async function signOut() {
-    // Eliminar la cookie directamente
     try {
         const cookieStore = await cookies();
         cookieStore.delete('auth-token');
+        return { success: true };
     } catch (error) {
         console.error('Error al eliminar cookie:', error);
+        return { success: false, error: 'Error al cerrar sesión' };
     }
-    return { success: true };
 }
 
 /**
@@ -152,15 +152,19 @@ export async function getCurrentUser() {
         const cookieStore = await cookies();
         const tokenCookie = cookieStore.get('auth-token');
 
-        if (!tokenCookie) {
+        if (!tokenCookie || !tokenCookie.value || tokenCookie.value.trim() === '') {
             return null;
         }
 
         try {
             const token = JSON.parse(tokenCookie.value);
+
+            if (!token || !token.id) {
+                return null;
+            }
+
             const user = await getUserById(token.id);
 
-            // Si no hay usuario, simplemente devolvemos null sin intentar modificar cookies
             if (!user) {
                 return null;
             }
@@ -190,12 +194,17 @@ export async function getCurrentUserId(): Promise<string | null> {
         const cookieStore = await cookies();
         const tokenCookie = cookieStore.get('auth-token');
 
-        if (!tokenCookie) {
+        if (!tokenCookie || !tokenCookie.value || tokenCookie.value.trim() === '') {
             return null;
         }
 
-        const token = JSON.parse(tokenCookie.value);
-        return token.id || null;
+        try {
+            const token = JSON.parse(tokenCookie.value);
+            return token.id || null;
+        } catch (parseError) {
+            console.error('Error al analizar el token:', parseError);
+            return null;
+        }
     } catch (error) {
         console.error('Error al obtener ID de usuario actual:', error);
         return null;

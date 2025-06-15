@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Dictionary } from '@repo/internationalization';
 import { CategoryData } from '@repo/data-services/src/services/categoryService';
 import { DishData } from '@repo/data-services/src/services/dishService';
@@ -28,39 +28,17 @@ export default function MenuDashboard({
     dictionary,
     locale
 }: MenuDashboardProps) {
-    const [activeTab, setActiveTab] = useState<'config' | 'categories' | 'dishes' | 'dailySpecials'>('config');
+    const searchParams = useSearchParams();
+    const router = useRouter();
 
-    const tabs = [
-        { id: 'config', label: '⚙️ Configuración' },
-        { id: 'categories', label: '📂 Categorías' },
-        { id: 'dishes', label: '🍽️ Platos' },
-        { id: 'dailySpecials', label: '⭐ Especiales del Día' }
-    ];
+    const activeTab = searchParams.get('tab') as 'config' | 'categories' | 'dishes' | 'dailySpecials' || 'config';
 
     return (
         <div className="p-6">
             <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                     {dictionary.app.admin.menu.title}
                 </h1>
-            </div>
-
-            {/* Tabs */}
-            <div className="border-b border-gray-200 mb-6">
-                <nav className="-mb-px flex space-x-8">
-                    {tabs.map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id as any)}
-                            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
-                                ? 'border-green-500 text-green-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                }`}
-                        >
-                            {tab.label}
-                        </button>
-                    ))}
-                </nav>
             </div>
 
             {/* Content */}

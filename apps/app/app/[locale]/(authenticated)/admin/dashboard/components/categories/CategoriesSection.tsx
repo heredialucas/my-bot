@@ -32,7 +32,7 @@ export default function CategoriesSection({ categories, dictionary }: Categories
     return (
         <div className="space-y-4">
             <div className="flex justify-between items-center">
-                <h2 className="text-lg font-medium">{dictionary.title}</h2>
+                <h2 className="text-lg font-medium text-gray-900 dark:text-white">{dictionary.title}</h2>
                 <button
                     onClick={handleCreate}
                     className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
@@ -42,7 +42,7 @@ export default function CategoriesSection({ categories, dictionary }: Categories
             </div>
 
             {categories.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">{dictionary.noCategories}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-center py-8">{dictionary.noCategories}</p>
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {categories.map((category) => (

@@ -19,21 +19,23 @@ export default function EmptyState({
     const hasFilters = searchTerm || selectedCategory !== 'all' || showSpecialOnly;
 
     return (
-        <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
-                {hasFilters
-                    ? (dictionary.web?.menu?.noResults || 'No se encontraron platos con los filtros aplicados.')
-                    : (dictionary.web?.menu?.comingSoon || 'Próximamente... Estamos preparando nuestro menú.')
-                }
-            </p>
-            {hasFilters && (
-                <button
-                    onClick={onClearFilters}
-                    className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
-                >
-                    {dictionary.web?.menu?.clearFilters || 'Limpiar filtros'}
-                </button>
-            )}
+        <div className="flex items-center justify-center min-h-[60vh] text-center py-12">
+            <div>
+                <p className="text-gray-500 text-lg">
+                    {hasFilters
+                        ? (dictionary.web?.menu?.noResults || 'No se encontraron platos con los filtros aplicados.')
+                        : (dictionary.web?.menu?.comingSoon || 'Próximamente... Estamos preparando nuestro menú.')
+                    }
+                </p>
+                {hasFilters && (
+                    <button
+                        onClick={onClearFilters}
+                        className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                    >
+                        {dictionary.web?.menu?.clearFilters || 'Limpiar filtros'}
+                    </button>
+                )}
+            </div>
         </div>
     );
 } 

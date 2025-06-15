@@ -15,17 +15,17 @@ export function SignInButton({ dictionary }: SignInButtonProps) {
             type="submit"
             disabled={pending}
             className={`w-full py-2 px-4 rounded-md transition-colors ${pending
-                    ? 'bg-gray-400 cursor-not-allowed opacity-60'
-                    : 'bg-green-600 hover:bg-green-700 text-white'
+                ? 'bg-gray-400 cursor-not-allowed opacity-60'
+                : 'bg-green-600 hover:bg-green-700 text-white'
                 }`}
         >
             {pending ? (
                 <div className="flex items-center justify-center gap-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    {dictionary?.app?.auth?.signIn?.signing || 'Signing in...'}
+                    {dictionary?.app?.auth?.signIn?.signing || 'Iniciando sesión...'}
                 </div>
             ) : (
-                dictionary?.app?.auth?.signIn?.button || 'Sign in'
+                dictionary?.app?.auth?.signIn?.button || 'Iniciar Sesión'
             )}
         </button>
     );

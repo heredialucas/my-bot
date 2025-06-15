@@ -1,7 +1,7 @@
 {
   "app": {
     "admin": {
-      "title": "Panel de Administración",
+      "title": "Ganga-Menú",
       "navigation": {
         "dashboard": "Inicio",
         "users": "Usuarios",
@@ -129,8 +129,8 @@
         }
       },
       "layout": {
-        "title": "Herramientas internas para Gangañam",
-        "description": "Herramientas internas para Gangañam que te ayudarán a gestionar nuestros productos y servicios."
+        "title": "Herramientas internas para Ganga-Menú",
+        "description": "Herramientas internas para Ganga-Menú que te ayudarán a gestionar tus menús digitales."
       }
     }
   },
@@ -196,8 +196,8 @@
     },
     "home": {
       "meta": {
-        "title": "Gangañam - Salva comida y ahorra dinero",
-        "description": "La plataforma que conecta personas con restaurantes y tiendas para salvar excedentes de comida a precios reducidos, combatiendo el desperdicio alimentario."
+        "title": "Ganga-Menú - Menús digitales para restaurantes",
+        "description": "La plataforma que ayuda a restaurantes a crear y gestionar sus menús digitales de forma fácil y profesional."
       },
       "hero": {
         "announcement": "Lee nuestra última actualización tecnológica",

@@ -47,26 +47,26 @@ export const SignIn = ({ dictionary }: SignInProps) => {
         <div className="grid gap-6">
             <form action={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">
-                        {dictionary?.app?.auth?.signIn?.email || 'Email'}
+                    <label htmlFor="email" className="text-sm font-medium text-gray-900 dark:text-white">
+                        {dictionary?.app?.auth?.signIn?.email || 'Correo Electrónico'}
                     </label>
                     <input
                         name="email"
                         type="email"
-                        className="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-green-500 focus:border-green-500"
-                        placeholder="email@example.com"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                        placeholder="correo@ejemplo.com"
                         required
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label htmlFor="password" className="text-sm font-medium">
-                        {dictionary?.app?.auth?.signIn?.password || 'Password'}
+                    <label htmlFor="password" className="text-sm font-medium text-gray-900 dark:text-white">
+                        {dictionary?.app?.auth?.signIn?.password || 'Contraseña'}
                     </label>
                     <input
                         name="password"
                         type="password"
-                        className="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500"
                         placeholder="••••••••"
                         required
                     />

@@ -5,7 +5,10 @@ import {
     LayoutDashboard,
     Search as SearchIcon,
     Users as UsersIcon,
-    Settings
+    Settings,
+    FolderOpen,
+    UtensilsCrossed,
+    Star
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -33,13 +36,34 @@ export function AdminSidebar({ dictionary }: AdminSidebarProps) {
     const pathname = usePathname();
     const menuItems: MenuItemProps[] = [
         {
-            title: dictionary?.app.admin.navigation.dashboard || 'Dashboard',
-            icon: LayoutDashboard,
-            href: '/admin/dashboard',
+            title: 'Configuración',
+            icon: Settings,
+            href: '/admin/dashboard?tab=config',
+        },
+        {
+            title: 'Categorías',
+            icon: FolderOpen,
+            href: '/admin/dashboard?tab=categories',
+        },
+        {
+            title: 'Platos',
+            icon: UtensilsCrossed,
+            href: '/admin/dashboard?tab=dishes',
+        },
+        {
+            title: 'Especiales del Día',
+            icon: Star,
+            href: '/admin/dashboard?tab=dailySpecials',
         },
     ];
 
-    const isActivePath = (path: string) => pathname.startsWith(path);
+    const isActivePath = (path: string) => {
+        if (path.includes('?tab=')) {
+            const [basePath, tab] = path.split('?tab=');
+            return pathname.startsWith(basePath) && window.location.search.includes(`tab=${tab}`);
+        }
+        return pathname.startsWith(path);
+    };
 
     return (
         <>

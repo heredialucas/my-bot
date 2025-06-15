@@ -21,8 +21,8 @@ export default function MenuHeader({ restaurantConfig, themeColors, dictionary }
     return (
         <header className={`${themeColors.bg} ${themeColors.text} shadow-lg`}>
             <div className="max-w-6xl mx-auto px-4 py-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                    <div className="flex items-center space-x-4">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between text-center md:text-left">
+                    <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
                         {restaurantConfig.logoUrl && (
                             <div className="w-16 h-16 relative">
                                 <Image

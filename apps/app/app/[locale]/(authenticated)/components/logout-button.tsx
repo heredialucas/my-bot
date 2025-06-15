@@ -1,6 +1,5 @@
 'use client';
 
-import { signOut } from '@repo/data-services/src/services/authService';
 import { Avatar, AvatarFallback } from '@repo/design-system/components/ui/avatar';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
@@ -10,9 +9,9 @@ import {
     DropdownMenuTrigger
 } from '@repo/design-system/components/ui/dropdown-menu';
 import { LogOut } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useTransition } from 'react';
 import { Dictionary } from '@repo/internationalization';
+import { logoutAction } from '../actions';
 
 interface LogoutButtonProps {
     userName?: string;
@@ -20,25 +19,12 @@ interface LogoutButtonProps {
 }
 
 export function LogoutButton({ userName, dictionary }: LogoutButtonProps) {
-    const router = useRouter();
-    const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const [isPending, startTransition] = useTransition();
 
-    const handleLogout = async () => {
-        if (isLoggingOut) return;
-
-        try {
-            setIsLoggingOut(true);
-            const result = await signOut();
-
-            if (result.success) {
-                router.push('/');
-                router.refresh();
-            }
-        } catch (error) {
-            console.error('Error al cerrar sesión:', error);
-        } finally {
-            setIsLoggingOut(false);
-        }
+    const handleLogout = () => {
+        startTransition(async () => {
+            await logoutAction();
+        });
     };
 
     // Get user initials from name
@@ -82,11 +68,11 @@ export function LogoutButton({ userName, dictionary }: LogoutButtonProps) {
                 )}
                 <DropdownMenuItem
                     onClick={handleLogout}
-                    disabled={isLoggingOut}
+                    disabled={isPending}
                     className="text-destructive dark:text-red-400 focus:text-destructive dark:focus:text-red-300"
                 >
                     <LogOut className="mr-2 h-4 w-4" />
-                    {isLoggingOut ? loggingOutText : logoutText}
+                    {isPending ? loggingOutText : logoutText}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

@@ -22,10 +22,10 @@ export function SignUpButton({ dictionary }: SignUpButtonProps) {
             {pending ? (
                 <div className="flex items-center justify-center gap-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    {dictionary?.app?.auth?.signUp?.creating || 'Creating account...'}
+                    {dictionary?.app?.auth?.signUp?.creating || 'Creando cuenta...'}
                 </div>
             ) : (
-                dictionary?.app?.auth?.signUp?.button || 'Create account'
+                dictionary?.app?.auth?.signUp?.button || 'Crear Cuenta'
             )}
         </button>
     );

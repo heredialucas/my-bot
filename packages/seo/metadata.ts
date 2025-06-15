@@ -7,13 +7,13 @@ type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
   image?: string;
 };
 
-const applicationName = 'Gangañam';
+const applicationName = 'Ganga-Menú';
 const author: Metadata['authors'] = {
-  name: 'Gangañam',
-  url: 'https://ganganam.com/',
+  name: 'Ganga-Menú',
+  url: 'https://ganga-menu.com/',
 };
-const publisher = 'Gangañam';
-const twitterHandle = '@ganganam';
+const publisher = 'Ganga-Menú';
+const twitterHandle = '@ganga-menu';
 
 export const createMetadata = ({
   title,
