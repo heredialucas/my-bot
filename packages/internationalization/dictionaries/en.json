@@ -106,6 +106,7 @@
         "password": "Password",
         "button": "Sign in",
         "signing": "Signing in...",
+        "goToSignUp": "Don't have an account? Sign up",
         "errors": {
           "emptyFields": "Please complete all fields",
           "invalidCredentials": "Error signing in",
@@ -121,6 +122,7 @@
         "confirmPassword": "Confirm Password",
         "button": "Create account",
         "creating": "Creating account...",
+        "goToSignIn": "Already have an account? Sign in",
         "errors": {
           "emptyFields": "Please complete all fields",
           "passwordsDoNotMatch": "Passwords do not match",

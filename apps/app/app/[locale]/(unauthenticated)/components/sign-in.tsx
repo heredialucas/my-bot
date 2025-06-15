@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { signIn } from '@repo/data-services/src/services/authService';
 import { Dictionary } from '@repo/internationalization';
 import { SignInButton } from './SignInButton';
+import Link from 'next/link';
 
 interface SignInProps {
     dictionary?: Dictionary;
@@ -74,6 +75,16 @@ export const SignIn = ({ dictionary }: SignInProps) => {
 
                 <SignInButton dictionary={dictionary} />
             </form>
+
+            {/* Navigation to Sign Up */}
+            <div className="text-center">
+                <Link
+                    href="/sign-up"
+                    className="text-sm text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+                >
+                    {dictionary?.app?.auth?.signIn?.goToSignUp || '¿No tienes cuenta? Crear cuenta'}
+                </Link>
+            </div>
         </div>
     );
 }; 

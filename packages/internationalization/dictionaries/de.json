@@ -75,6 +75,7 @@
         "password": "Passwort",
         "button": "Anmelden",
         "signing": "Anmeldung läuft...",
+        "goToSignUp": "Noch kein Konto? Registrieren",
         "errors": {
           "emptyFields": "Bitte füllen Sie alle Felder aus",
           "invalidCredentials": "Fehler bei der Anmeldung",
@@ -90,6 +91,7 @@
         "confirmPassword": "Passwort bestätigen",
         "button": "Konto erstellen",
         "creating": "Konto wird erstellt...",
+        "goToSignIn": "Bereits ein Konto? Anmelden",
         "errors": {
           "emptyFields": "Bitte füllen Sie alle Felder aus",
           "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
