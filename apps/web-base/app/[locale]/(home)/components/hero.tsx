@@ -10,7 +10,7 @@ import { RecycleIcon, Leaf, Save } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { env } from '@/env';
 import logo from '@/public/logo.png';
-import rubish from '@/public/rubish.png';
+import gangaMenu from '@/public/ganga-menu.png';
 import background from '@/public/background.png';
 import { staggerContainer, fadeIn, slideIn } from '../lib/animations';
 
@@ -138,7 +138,7 @@ export const Hero = ({ dictionary }: HeroProps) => {
               className="relative"
             >
               <Image
-                src={rubish}
+                src={gangaMenu}
                 alt="Digital Menu Display"
                 width={500}
                 height={500}

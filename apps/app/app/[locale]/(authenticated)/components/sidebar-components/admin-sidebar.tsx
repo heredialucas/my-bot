@@ -3,7 +3,6 @@
 import { cn } from '@repo/design-system/lib/utils';
 import {
     LayoutDashboard,
-    Search as SearchIcon,
     Users as UsersIcon,
     Settings,
     FolderOpen,
@@ -19,39 +18,47 @@ import {
     SidebarMenu,
     SidebarMenuItem
 } from '@repo/design-system/components/ui/sidebar';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { Dictionary } from '@repo/internationalization';
 
 type MenuItemProps = {
     title: string;
     icon: any;
     href: string;
+    mobileTitle?: string;
 };
 
-interface AdminSidebarProps {
-    dictionary?: Dictionary;
-}
+type AdminSidebarProps = {
+    dictionary: Dictionary;
+};
 
 export function AdminSidebar({ dictionary }: AdminSidebarProps) {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const activeTab = searchParams.get('tab') || 'config';
+
     const menuItems: MenuItemProps[] = [
         {
-            title: 'Configuración',
+            title: 'Inicio',
+            mobileTitle: 'Inicio',
             icon: Settings,
             href: '/admin/dashboard?tab=config',
         },
         {
             title: 'Categorías',
+            mobileTitle: 'Categorías',
             icon: FolderOpen,
             href: '/admin/dashboard?tab=categories',
         },
         {
             title: 'Platos',
+            mobileTitle: 'Platos',
             icon: UtensilsCrossed,
             href: '/admin/dashboard?tab=dishes',
         },
         {
             title: 'Especiales del Día',
+            mobileTitle: 'Especiales',
             icon: Star,
             href: '/admin/dashboard?tab=dailySpecials',
         },
@@ -60,7 +67,7 @@ export function AdminSidebar({ dictionary }: AdminSidebarProps) {
     const isActivePath = (path: string) => {
         if (path.includes('?tab=')) {
             const [basePath, tab] = path.split('?tab=');
-            return pathname.startsWith(basePath) && window.location.search.includes(`tab=${tab}`);
+            return pathname.startsWith(basePath) && activeTab === tab;
         }
         return pathname.startsWith(path);
     };
@@ -68,18 +75,7 @@ export function AdminSidebar({ dictionary }: AdminSidebarProps) {
     return (
         <>
             {/* Desktop Sidebar */}
-            <Sidebar variant="inset" className="border-r border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 fixed left-0 top-16 bottom-0 w-64 overflow-y-auto">
-                <div className="p-3">
-                    <div className="relative">
-                        <div className="rounded-md border px-3 py-1 flex items-center gap-2">
-                            <SearchIcon className="h-4 w-4 text-gray-500 dark:text-zinc-400" />
-                            <input
-                                className="w-full rounded-md border-0 bg-transparent pl-0 pr-3 py-2 text-sm placeholder:text-gray-500 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500 text-gray-900 dark:text-white"
-                                placeholder="Search..."
-                            />
-                        </div>
-                    </div>
-                </div>
+            <Sidebar variant="inset" className="hidden md:block border-r border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 fixed left-0 top-16 bottom-0 w-64 overflow-y-auto">
                 <SidebarContent>
                     <SidebarMenu>
                         {menuItems.map((item) => (
@@ -100,26 +96,33 @@ export function AdminSidebar({ dictionary }: AdminSidebarProps) {
                 </SidebarContent>
             </Sidebar>
 
-            {/* Mobile Navigation */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-800 flex justify-around py-3 md:hidden z-10">
-                {menuItems.slice(0, 5).map((item) => {
-                    const isActive = isActivePath(item.href);
-                    return (
-                        <Link
-                            key={item.title}
-                            href={item.href}
-                            className={cn(
-                                "flex flex-col items-center p-1 rounded-md",
-                                isActive
-                                    ? "text-green-500"
-                                    : "text-gray-600 dark:text-zinc-400"
-                            )}
-                        >
-                            <item.icon className="h-5 w-5" />
-                            <span className="text-xs mt-1">{item.title.split(' ')[0]}</span>
-                        </Link>
-                    );
-                })}
+            {/* Mobile Bottom Navigation */}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-800 z-50">
+                <div className="flex items-center justify-around px-2 py-2">
+                    {menuItems.map((item) => {
+                        const isActive = isActivePath(item.href);
+                        return (
+                            <Link
+                                key={item.title}
+                                href={item.href}
+                                className={cn(
+                                    "flex flex-col items-center gap-1 px-3 py-2 rounded-lg min-w-0 flex-1 transition-colors",
+                                    isActive
+                                        ? "text-green-600 bg-green-50 dark:bg-green-950 dark:text-green-400"
+                                        : "text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800"
+                                )}
+                            >
+                                <item.icon className={cn("h-5 w-5 shrink-0", isActive && "text-green-600 dark:text-green-400")} />
+                                <span className={cn(
+                                    "text-xs font-medium truncate text-center leading-tight",
+                                    isActive && "text-green-600 dark:text-green-400"
+                                )}>
+                                    {item.mobileTitle || item.title}
+                                </span>
+                            </Link>
+                        );
+                    })}
+                </div>
             </div>
         </>
     );

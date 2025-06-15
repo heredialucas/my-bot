@@ -5,6 +5,7 @@ import { RestaurantConfigData, RestaurantConfigFormData, upsertRestaurantConfig 
 import { getCurrentUserId } from '@repo/data-services/src/services/authService';
 import { uploadR2Image } from '@repo/data-services/src/services/uploadR2Image';
 import HoursSelector from './HoursSelector';
+import MenuShareWidget from '../../../../../../../components/MenuShareWidget';
 
 interface RestaurantConfigSectionProps {
     restaurantConfig: RestaurantConfigData | null;
@@ -12,13 +13,7 @@ interface RestaurantConfigSectionProps {
     locale: string;
 }
 
-// Función auxiliar para generar URL del menú
-function generateMenuUrl(slug: string, locale: string): string {
-    const baseUrl = process.env.NODE_ENV === 'production'
-        ? 'https://ganga-menu-app.vercel.app'
-        : 'http://localhost:4000';
-    return `${baseUrl}/${locale}/menu/${slug}`;
-}
+
 
 export default function RestaurantConfigSection({
     restaurantConfig,
@@ -37,11 +32,8 @@ export default function RestaurantConfigSection({
     });
 
     const [loading, setLoading] = useState(false);
-    const [copied, setCopied] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploadingLogo, setUploadingLogo] = useState(false);
-
-    const menuUrl = generateMenuUrl(formData.slug || 'mi-restaurante', locale);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -118,66 +110,15 @@ export default function RestaurantConfigSection({
         }));
     }, []);
 
-    const copyToClipboard = async () => {
-        try {
-            await navigator.clipboard.writeText(menuUrl);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch (err) {
-            console.error('Error copying to clipboard:', err);
-            // Fallback para navegadores que no soportan clipboard API
-            const textArea = document.createElement('textarea');
-            textArea.value = menuUrl;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        }
-    };
-
     return (
         <div className="space-y-4 sm:space-y-6">
-            {/* Enlace para compartir */}
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 sm:p-6">
-                <h2 className="text-base sm:text-lg font-semibold text-green-800 mb-3 sm:mb-4">
-                    🔗 Enlace de tu Menú
-                </h2>
-                <p className="text-xs sm:text-sm text-green-700 mb-3 sm:mb-4">
-                    Comparte este enlace con tus clientes para que vean tu menú
-                </p>
-
-                {/* Responsive: Stack on mobile, flex on desktop */}
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                    <input
-                        type="text"
-                        value={menuUrl}
-                        readOnly
-                        className="flex-1 px-3 py-2 bg-white border border-green-300 rounded-md text-green-800 font-mono text-xs sm:text-sm overflow-hidden text-ellipsis"
-                    />
-                    <div className="flex gap-2 sm:gap-3">
-                        <button
-                            onClick={copyToClipboard}
-                            className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${copied
-                                ? 'bg-green-600 text-white'
-                                : 'bg-green-100 text-green-700 hover:bg-green-200'
-                                }`}
-                        >
-                            {copied ? '¡Copiado!' : 'Copiar'}
-                        </button>
-                        <a
-                            href={menuUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-center"
-                        >
-                            <span className="sm:hidden">Ver</span>
-                            <span className="hidden sm:inline">👁️ Ver</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            {/* Widget de compartir menú */}
+            <MenuShareWidget
+                slug={formData.slug || 'mi-restaurante'}
+                locale={locale}
+                restaurantName={formData.name}
+                compact={false}
+            />
 
             {/* Formulario de configuración */}
             <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">

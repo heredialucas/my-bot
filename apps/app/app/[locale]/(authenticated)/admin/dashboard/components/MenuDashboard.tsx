@@ -10,6 +10,7 @@ import CategoriesSection from './categories/CategoriesSection';
 import DishesSection from './dishes/DishesSection';
 import DailySpecialsSection from './daily-specials/DailySpecialsSection';
 import RestaurantConfigSection from './restaurant-config/RestaurantConfigSection';
+import MenuShareWidget from '../../../../../../components/MenuShareWidget';
 
 interface MenuDashboardProps {
     categories: CategoryData[];
@@ -33,6 +34,10 @@ export default function MenuDashboard({
 
     const activeTab = searchParams.get('tab') as 'config' | 'categories' | 'dishes' | 'dailySpecials' || 'config';
 
+    // Obtener slug y nombre del restaurante
+    const restaurantSlug = restaurantConfig?.slug || 'mi-restaurante';
+    const restaurantName = restaurantConfig?.name || 'Mi Restaurante';
+
     return (
         <div className="p-3 sm:p-4 md:p-6">
             <div className="mb-4 sm:mb-6">
@@ -40,6 +45,18 @@ export default function MenuDashboard({
                     {dictionary.app.admin.menu.title}
                 </h1>
             </div>
+
+            {/* Widget de compartir menú - compacto para todas las vistas excepto config */}
+            {activeTab !== 'config' && (
+                <div className="mb-4 sm:mb-6">
+                    <MenuShareWidget
+                        slug={restaurantSlug}
+                        locale={locale}
+                        restaurantName={restaurantName}
+                        compact={true}
+                    />
+                </div>
+            )}
 
             {/* Content */}
             {activeTab === 'config' && (
