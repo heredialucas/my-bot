@@ -33,4 +33,10 @@ export interface ThemeColors {
     bg: string;
     text: string;
     accent: string;
+    decorative: {
+        primary: string;
+        secondary: string;
+        tertiary: string;
+        accent: string;
+    };
 } 

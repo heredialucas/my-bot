@@ -12,6 +12,8 @@ import {
     CategorySection,
     EmptyState,
     MenuFooter,
+    DecorativeElements,
+    SnowParticlesWrapper,
     getThemeColors,
     type Category,
     type Dish
@@ -90,70 +92,105 @@ export default function MenuLanding({
     }));
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            {/* Header */}
-            <MenuHeader
-                restaurantConfig={restaurantConfig}
+        <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+            {/* Elementos decorativos de fondo como en web-base */}
+            <DecorativeElements
                 themeColors={themeColors}
-                dictionary={dictionary}
+                variant="background"
+                className="fixed inset-0 z-0"
             />
 
-            {/* Today's Special */}
-            {todaySpecial && (
-                <TodaySpecial
-                    todaySpecial={todaySpecial}
+            {/* Partículas de nieve animadas */}
+            <SnowParticlesWrapper
+                themeColors={themeColors}
+                count={70}
+            />
+
+            {/* Contenido principal */}
+            <div className="relative z-10">
+                {/* Header */}
+                <MenuHeader
+                    restaurantConfig={restaurantConfig}
                     themeColors={themeColors}
                     dictionary={dictionary}
-                    restaurantName={restaurantConfig.name}
-                    restaurantPhone={restaurantConfig.phone}
                 />
-            )}
 
-            {/* Filters */}
-            <MenuFilters
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                showSpecialOnly={showSpecialOnly}
-                setShowSpecialOnly={setShowSpecialOnly}
-                categories={categories}
-                hasSpecial={!!todaySpecial}
-                dictionary={dictionary}
-            />
+                {/* Today's Special */}
+                {todaySpecial && (
+                    <TodaySpecial
+                        todaySpecial={todaySpecial}
+                        themeColors={themeColors}
+                        dictionary={dictionary}
+                        restaurantName={restaurantConfig.name}
+                        restaurantPhone={restaurantConfig.phone}
+                    />
+                )}
 
-            {/* Menu Categories */}
-            <main className="max-w-6xl mx-auto px-4 py-8">
-                {filteredCategories.length === 0 ? (
-                    <EmptyState
+                {/* Filters */}
+                <div className="relative">
+                    <DecorativeElements
+                        themeColors={themeColors}
+                        variant="minimal"
+                    />
+                    <MenuFilters
                         searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
                         selectedCategory={selectedCategory}
+                        setSelectedCategory={setSelectedCategory}
                         showSpecialOnly={showSpecialOnly}
-                        onClearFilters={clearFilters}
+                        setShowSpecialOnly={setShowSpecialOnly}
+                        categories={categories}
+                        hasSpecial={!!todaySpecial}
                         dictionary={dictionary}
                     />
-                ) : (
-                    <div className="space-y-12">
-                        {filteredCategories.map((category) => (
-                            <CategorySection
-                                key={category.id}
-                                category={category}
-                                themeColors={themeColors}
-                                dictionary={dictionary}
-                                restaurantName={restaurantConfig.name}
-                                restaurantPhone={restaurantConfig.phone}
-                                specialDishIds={specialDishIds}
-                            />
-                        ))}
-                    </div>
-                )}
-            </main>
+                </div>
 
-            {/* Footer */}
-            <MenuFooter
-                restaurantConfig={restaurantConfig}
-                dictionary={dictionary}
-            />
+                {/* Menu Categories */}
+                <main className="max-w-6xl mx-auto px-4 py-8 relative">
+                    <DecorativeElements
+                        themeColors={themeColors}
+                        variant="section"
+                    />
+                    {filteredCategories.length === 0 ? (
+                        <EmptyState
+                            searchTerm={searchTerm}
+                            selectedCategory={selectedCategory}
+                            showSpecialOnly={showSpecialOnly}
+                            onClearFilters={clearFilters}
+                            dictionary={dictionary}
+                        />
+                    ) : (
+                        <div className="space-y-12">
+                            {filteredCategories.map((category, index) => (
+                                <div key={category.id} className="relative">
+                                    {/* Elementos decorativos alternados para cada categoría */}
+                                    {index % 2 === 0 && (
+                                        <DecorativeElements
+                                            themeColors={themeColors}
+                                            variant="minimal"
+                                        />
+                                    )}
+                                    <CategorySection
+                                        category={category}
+                                        themeColors={themeColors}
+                                        dictionary={dictionary}
+                                        restaurantName={restaurantConfig.name}
+                                        restaurantPhone={restaurantConfig.phone}
+                                        specialDishIds={specialDishIds}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </main>
+
+                {/* Footer */}
+                <MenuFooter
+                    restaurantConfig={restaurantConfig}
+                    dictionary={dictionary}
+                    themeColors={themeColors}
+                />
+            </div>
         </div>
     );
 } 

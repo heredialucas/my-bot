@@ -6,9 +6,12 @@ export { default as CategorySection } from './CategorySection';
 export { default as DishCard } from './DishCard';
 export { default as EmptyState } from './EmptyState';
 export { default as MenuFooter } from './MenuFooter';
+export { default as DecorativeElements } from './DecorativeElements';
+export { SnowParticles } from './SnowParticles';
+export { SnowParticlesWrapper } from './SnowParticlesWrapper';
 
 // Tipos
 export type { Category, Dish, ThemeColors } from './types';
 
 // Utilidades
-export { getThemeColors } from './utils'; 
+export { getThemeColors, getDecorativeElements } from './utils'; 

@@ -1,8 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
-import { Clock, Star, MessageCircle } from 'lucide-react';
+import { Clock, Star, MessageCircle, Sparkles } from 'lucide-react';
 import { Dictionary } from '@repo/internationalization';
 import { generateWhatsAppLinkForDish } from './utils';
+import DecorativeElements from './DecorativeElements';
 
 interface Dish {
     id: string;
@@ -29,6 +30,12 @@ interface TodaySpecialProps {
         bg: string;
         text: string;
         accent: string;
+        decorative: {
+            primary: string;
+            secondary: string;
+            tertiary: string;
+            accent: string;
+        };
     };
     dictionary: Dictionary;
     restaurantName: string;
@@ -39,11 +46,19 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
     const whatsappLink = restaurantPhone ? generateWhatsAppLinkForDish(restaurantPhone, todaySpecial.dish.name, restaurantName) : '';
 
     return (
-        <section className="relative bg-gradient-to-br from-orange-50 to-red-50 border-b">
+        <section className="relative bg-gradient-to-br from-orange-50 to-red-50 border-b overflow-hidden">
+            {/* Gradiente base */}
             <div className="absolute inset-0 bg-gradient-to-r from-orange-200/20 to-red-200/20"></div>
-            <div className="relative max-w-6xl mx-auto px-4 py-12">
+
+            {/* Elementos decorativos como en web-base */}
+            <DecorativeElements
+                themeColors={themeColors}
+                variant="section"
+            />
+
+            <div className="relative max-w-6xl mx-auto px-4 py-12 z-10">
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-sm font-semibold mb-2">
+                    <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-sm font-semibold mb-2 shadow-lg">
                         <Star className="animate-pulse mr-2 w-4 h-4" />
                         {dictionary.web?.menu?.todaySpecial || 'Plato del Día'}
                         <Star className="animate-pulse ml-2 w-4 h-4" />
@@ -56,8 +71,8 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
                     </p>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-                    <div className="flex flex-col lg:flex-row">
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-white/20 relative">
+                    <div className="flex flex-col lg:flex-row relative z-10">
                         {todaySpecial.dish.imageUrl && (
                             <div className="lg:w-1/2 relative h-80 lg:h-96">
                                 <Image
@@ -69,12 +84,17 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
                                     priority
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+
+                                {/* Sparkle decorativo en la imagen */}
+                                <div className="absolute top-4 right-4 text-yellow-400 animate-pulse">
+                                    <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 drop-shadow-lg" />
+                                </div>
                             </div>
                         )}
                         <div className={`${todaySpecial.dish.imageUrl ? 'lg:w-1/2' : 'w-full'} p-8 lg:p-12 flex flex-col justify-center`}>
                             <div className="mb-4">
                                 {todaySpecial.dish.category && (
-                                    <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${themeColors.bg} ${themeColors.text}`}>
+                                    <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${themeColors.bg} ${themeColors.text} shadow-md`}>
                                         {todaySpecial.dish.category.name}
                                     </span>
                                 )}
@@ -95,7 +115,7 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
                                             <span className="text-4xl font-bold text-red-600">
                                                 ${todaySpecial.dish.promotionalPrice.toFixed(2)}
                                             </span>
-                                            <span className="bg-red-100 text-red-800 text-sm font-semibold px-2 py-1 rounded-full">
+                                            <span className="bg-red-100 text-red-800 text-sm font-semibold px-2 py-1 rounded-full shadow-md animate-pulse">
                                                 ¡OFERTA!
                                             </span>
                                         </>
@@ -117,7 +137,7 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
                                     href={whatsappLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors font-medium"
+                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl hover:scale-105"
                                 >
                                     <MessageCircle className="w-5 h-5" />
                                     Consultar Plato Especial
