@@ -33,7 +33,7 @@ const Pricing = async ({ params }: PricingProps) => {
       <div className="container mx-auto">
         <div className="flex flex-col items-center justify-center gap-8 text-center">
           <div className="flex flex-col gap-2">
-            <h2 className="max-w-xl text-center font-black text-3xl tracking-tighter md:text-5xl var(--font-nunito) bg-gradient-to-r from-[#FFB800] via-purple-500 to-blue-600 inline-block text-transparent bg-clip-text">
+            <h2 className="max-w-xl text-center font-black text-3xl tracking-tighter md:text-5xl var(--font-nunito) bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] inline-block text-transparent bg-clip-text">
               {dictionary.web.pricing.title}
             </h2>
             <p className="max-w-xl text-center text-lg text-muted-foreground leading-relaxed tracking-tight var(--font-nunito)">
@@ -44,12 +44,13 @@ const Pricing = async ({ params }: PricingProps) => {
             {/* Plan 1 */}
             <div className="flex flex-col justify-between bg-white rounded-xl shadow-md border border-[#e0e0e0] overflow-hidden transform transition-all hover:scale-105 hover:shadow-lg">
               <div className="p-6">
-                <p className="text-2xl font-black var(--font-nunito) text-[#FFB800]">{dictionary.web.pricing.plans[0].name}</p>
+                <p className="text-2xl font-black var(--font-nunito) text-[#0d4b3d]">{dictionary.web.pricing.plans[0].name}</p>
                 <p className="text-muted-foreground text-sm mt-2 var(--font-nunito)">
                   {dictionary.web.pricing.plans[0].description}
                 </p>
                 <div className="mt-8 flex items-baseline gap-2">
-                  <span className="text-4xl font-black var(--font-nunito) bg-gradient-to-r from-[#FFB800] via-purple-500 to-blue-600 inline-block text-transparent bg-clip-text">${dictionary.web.pricing.plans[0].price}</span>
+                  <span className="text-sm font-black var(--font-nunito) text-[#0d4b3d] mr-2">GRATIS</span>
+                  <span className="text-4xl font-black var(--font-nunito) bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] inline-block text-transparent bg-clip-text">${dictionary.web.pricing.plans[0].price}</span>
                   <span className="text-muted-foreground text-sm var(--font-nunito)">/ {dictionary.web.pricing.monthly}</span>
                 </div>
 
@@ -68,7 +69,7 @@ const Pricing = async ({ params }: PricingProps) => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Check className="h-5 w-5 text-[#7dd3c8] flex-shrink-0" />
-                    <span className="var(--font-nunito)">{dictionary.web.pricing.features.members.replace('{count}', '5')}</span>
+                    <span className="var(--font-nunito)">Hasta 5 imágenes del menú</span>
                   </div>
                 </div>
               </div>
@@ -85,17 +86,17 @@ const Pricing = async ({ params }: PricingProps) => {
             </div>
 
             {/* Plan 2 - Featured */}
-            <div className="flex flex-col justify-between bg-white rounded-xl shadow-lg border-2 border-[#FFB800] overflow-hidden transform transition-all hover:scale-105 relative">
-              <div className="absolute top-0 right-0 bg-[#FFB800] text-black px-4 py-1 rounded-bl-xl var(--font-nunito) font-bold text-sm">
+            <div className="flex flex-col justify-between bg-white rounded-xl shadow-lg border-2 border-[#0d4b3d] overflow-hidden transform transition-all hover:scale-105 relative">
+              <div className="absolute top-0 right-0 bg-[#0d4b3d] text-white px-4 py-1 rounded-bl-xl var(--font-nunito) font-bold text-sm">
                 {dictionary.web.pricing.popular}
               </div>
               <div className="p-6">
-                <p className="text-2xl font-black var(--font-nunito) text-[#FFB800]">{dictionary.web.pricing.plans[1].name}</p>
+                <p className="text-2xl font-black var(--font-nunito) text-[#0d4b3d]">{dictionary.web.pricing.plans[1].name}</p>
                 <p className="text-muted-foreground text-sm mt-2 var(--font-nunito)">
                   {dictionary.web.pricing.plans[1].description}
                 </p>
                 <div className="mt-8 flex items-baseline gap-2">
-                  <span className="text-4xl font-black var(--font-nunito) bg-gradient-to-r from-[#FFB800] via-purple-500 to-blue-600 inline-block text-transparent bg-clip-text">${dictionary.web.pricing.plans[1].price}</span>
+                  <span className="text-4xl font-black var(--font-nunito) bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] inline-block text-transparent bg-clip-text">${dictionary.web.pricing.plans[1].price}</span>
                   <span className="text-muted-foreground text-sm var(--font-nunito)">/ {dictionary.web.pricing.monthly}</span>
                 </div>
 
@@ -114,13 +115,13 @@ const Pricing = async ({ params }: PricingProps) => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Check className="h-5 w-5 text-[#7dd3c8] flex-shrink-0" />
-                    <span className="var(--font-nunito)">{dictionary.web.pricing.features.members.replace('{count}', '25')}</span>
+                    <span className="var(--font-nunito)">Hasta 25 imágenes del menú</span>
                   </div>
                 </div>
               </div>
 
               <div className="p-6 mt-4">
-                <Button className="w-full gap-4 bg-[#FFB800] hover:bg-[#FFE01B] text-black var(--font-nunito) font-black" asChild>
+                <Button className="w-full gap-4 bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white var(--font-nunito) font-black" asChild>
                   {env.NEXT_PUBLIC_APP_URL && (
                     <Link href={env.NEXT_PUBLIC_APP_URL}>
                       {dictionary.web.pricing.tryIt} <MoveRight className="h-4 w-4" />
@@ -133,12 +134,12 @@ const Pricing = async ({ params }: PricingProps) => {
             {/* Plan 3 */}
             <div className="flex flex-col justify-between bg-white rounded-xl shadow-md border border-[#e0e0e0] overflow-hidden transform transition-all hover:scale-105 hover:shadow-lg">
               <div className="p-6">
-                <p className="text-2xl font-black var(--font-nunito) text-[#FFB800]">{dictionary.web.pricing.plans[2].name}</p>
+                <p className="text-2xl font-black var(--font-nunito) text-[#0d4b3d]">{dictionary.web.pricing.plans[2].name}</p>
                 <p className="text-muted-foreground text-sm mt-2 var(--font-nunito)">
                   {dictionary.web.pricing.plans[2].description}
                 </p>
                 <div className="mt-8 flex items-baseline gap-2">
-                  <span className="text-4xl font-black var(--font-nunito) bg-gradient-to-r from-[#FFB800] via-purple-500 to-blue-600 inline-block text-transparent bg-clip-text">${dictionary.web.pricing.plans[2].price}</span>
+                  <span className="text-4xl font-black var(--font-nunito) bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] inline-block text-transparent bg-clip-text">${dictionary.web.pricing.plans[2].price}</span>
                   <span className="text-muted-foreground text-sm var(--font-nunito)">/ {dictionary.web.pricing.monthly}</span>
                 </div>
 
@@ -157,7 +158,7 @@ const Pricing = async ({ params }: PricingProps) => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Check className="h-5 w-5 text-[#7dd3c8] flex-shrink-0" />
-                    <span className="var(--font-nunito)">{dictionary.web.pricing.features.members.replace('{count}', '100+')}</span>
+                    <span className="var(--font-nunito)">Imágenes ilimitadas del menú</span>
                   </div>
                 </div>
               </div>

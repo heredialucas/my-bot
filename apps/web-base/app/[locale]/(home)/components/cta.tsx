@@ -14,7 +14,7 @@ type CTAProps = {
 export const CTA = ({ dictionary, locale = 'es' }: CTAProps) => {
   // Create WhatsApp message for food-saving app
   const getWhatsAppMessage = () => {
-    return "¡Hola! Quiero saber más sobre cómo unir mi negocio a Gangañam para reducir el desperdicio de comida";
+    return "¡Hola! Quiero saber más sobre cómo usar Ganga-Menú para crear el menú digital de mi restaurante";
   };
 
   return (
@@ -56,26 +56,26 @@ export const CTA = ({ dictionary, locale = 'es' }: CTAProps) => {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
-                    {dictionary.web.global.primaryCta || "Registrá tu local"}
+                    {dictionary.web.global.primaryCta || "Registra tu restaurante"}
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300">Proceso 100% digital y gratuito</p>
                 </div>
               </div>
 
-              <p className="mb-8 text-gray-600 dark:text-gray-300">Registrate en nuestra plataforma y comenzá a publicar tus packs sorpresa con excedentes de comida. Generá ingresos extra, reducí el desperdicio y atraé nuevos clientes a tu negocio.</p>
+              <p className="mb-8 text-gray-600 dark:text-gray-300">Registra tu restaurante en nuestra plataforma y comienza a crear menús digitales profesionales. Atrae más clientes y mejora la experiencia gastronómica de tu negocio.</p>
 
               <div className="space-y-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#0d4b3d]/20 dark:bg-[#0d4b3d]/50 flex items-center justify-center text-[#0d4b3d] dark:text-white font-bold">1</div>
-                  <p className="flex-1 text-gray-800 dark:text-gray-200">Registrá tu negocio en nuestra plataforma</p>
+                  <p className="flex-1 text-gray-800 dark:text-gray-200">Registra tu restaurante en nuestra plataforma</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#0d4b3d]/20 dark:bg-[#0d4b3d]/50 flex items-center justify-center text-[#0d4b3d] dark:text-white font-bold">2</div>
-                  <p className="flex-1 text-gray-800 dark:text-gray-200">Creá packs sorpresa con tu excedente de comida</p>
+                  <p className="flex-1 text-gray-800 dark:text-gray-200">Crea tu menú digital con fotos y descripciones</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#0d4b3d]/20 dark:bg-[#0d4b3d]/50 flex items-center justify-center text-[#0d4b3d] dark:text-white font-bold">3</div>
-                  <p className="flex-1 text-gray-800 dark:text-gray-200">Recibí nuevos clientes y generá ingresos extra</p>
+                  <p className="flex-1 text-gray-800 dark:text-gray-200">Comparte tu menú y atrae más clientes</p>
                 </div>
               </div>
 
@@ -84,7 +84,7 @@ export const CTA = ({ dictionary, locale = 'es' }: CTAProps) => {
                 className="w-full mt-8 bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white flex items-center justify-center gap-2 py-4 rounded-lg font-medium transition-all shadow-lg text-center"
               >
                 <ShoppingBag className="w-5 h-5" />
-                <span>{dictionary.web.global.primaryCta || "Registrá tu local"}</span>
+                <span>{dictionary.web.global.primaryCta || "Contactanos"}</span>
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </div>

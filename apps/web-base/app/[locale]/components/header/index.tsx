@@ -16,7 +16,6 @@ import { usePathname } from 'next/navigation';
 
 import type { Dictionary } from '@repo/internationalization';
 import Image from 'next/image';
-import { LanguageSwitcher } from './language-switcher';
 import logo from '@/public/logo.png';
 
 type HeaderProps = {
@@ -39,20 +38,20 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
 
   const navigationItems = [
     {
-      title: dictionary.web.header.app || 'La app',
-      href: `/${locale}#app`,
+      title: dictionary.web.header.features || 'Features',
+      href: `/${locale}#features`,
     },
     {
-      title: dictionary.web.header.business || 'Soluciones para empresas',
-      href: `/${locale}#business`,
+      title: dictionary.web.header.pricing || 'Pricing',
+      href: `/${locale}/pricing`,
     },
     {
-      title: dictionary.web.header.about || 'Sobre nosotros',
-      href: `/${locale}#about`,
+      title: dictionary.web.header.about || 'About',
+      href: `/${locale}#faq`,
     },
     {
-      title: dictionary.web.header.foodWaste || 'Sobre desperdicio alimentario',
-      href: `/${locale}#food-waste`,
+      title: dictionary.web.header.contact || 'Contact',
+      href: `/${locale}/contact`,
     }
   ];
 
@@ -71,13 +70,13 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
             <div className="relative flex items-center">
               <Image
                 src={logo}
-                alt="Gangañam"
+                alt="Ganga-Menú"
                 width={100}
                 height={40}
                 className="w-auto h-10 transition-transform duration-300 mr-[-5px]"
                 style={{ transform: `rotate(${rotation}deg)` }}
               />
-              <span className="text-xl font-bold text-[#0d4b3d] dark:text-white">angañam</span>
+              <span className="text-xl font-bold text-[#0d4b3d] dark:text-white">anga-Menú</span>
             </div>
           </Link>
         </div>
@@ -101,26 +100,12 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
 
         {/* Right side buttons */}
         <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center gap-2">
-            <LanguageSwitcher />
-            <ModeToggle />
-            <Button variant="outline" asChild className="hidden md:inline font-nunito font-bold border-[#0d4b3d] text-[#0d4b3d] hover:bg-[#0d4b3d]/10 px-3 py-1 h-9">
-              {env.NEXT_PUBLIC_APP_URL && (
-                <Link href={`${env.NEXT_PUBLIC_APP_URL}/sign-in`}>
-                  {dictionary.web.header.myStore || 'MyStore acceso'}
-                </Link>
-              )}
-            </Button>
-          </div>
+          <ModeToggle />
           <Button className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white font-nunito font-bold px-3 py-1 h-9" asChild>
-            <Link href={`/${locale}#app`}>
-              {capitalizeFirstLetter(dictionary.web.header.downloadApp || 'Descarga la app')}
+            <Link href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}>
+              {dictionary.web.header.getStarted || 'Get Started'}
             </Link>
-          </Button>
-          <Button className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white font-nunito font-bold px-3 py-1 h-9 hidden md:inline-flex" asChild>
-            <Link href={`/${locale}#business`}>
-              {capitalizeFirstLetter(dictionary.web.header.registerBusiness || 'Registra tu empresa')}
-            </Link>
+
           </Button>
 
           {/* Mobile menu button */}
@@ -147,24 +132,29 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
               </div>
             ))}
             <div className="px-4">
-              <Link
-                href={`/${locale}#app`}
-                className="flex items-center justify-between font-nunito font-bold text-[#0d4b3d]"
-                onClick={() => setOpen(false)}
-              >
-                <span className="text-lg">{capitalizeFirstLetter(dictionary.web.header.downloadApp || 'Descarga la app')}</span>
-                <MoveRight className="h-4 w-4 stroke-1 text-[#0d4b3d]" />
-              </Link>
+              <ModeToggle />
+              {env.NEXT_PUBLIC_APP_URL && (
+                <Link
+                  href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}
+                  className="flex items-center justify-between font-nunito font-bold text-[#0d4b3d]"
+                  onClick={() => setOpen(false)}
+                >
+                  <span className="text-lg">{dictionary.web.header.getStarted || 'Get Started'}</span>
+                  <MoveRight className="h-4 w-4 stroke-1 text-[#0d4b3d]" />
+                </Link>
+              )}
             </div>
             <div className="px-4">
-              <Link
-                href={`/${locale}#business`}
-                className="flex items-center justify-between font-nunito font-bold text-[#0d4b3d]"
-                onClick={() => setOpen(false)}
-              >
-                <span className="text-lg">{capitalizeFirstLetter(dictionary.web.header.registerBusiness || 'Registra tu empresa')}</span>
-                <MoveRight className="h-4 w-4 stroke-1 text-[#0d4b3d]" />
-              </Link>
+              {env.NEXT_PUBLIC_APP_URL && (
+                <Link
+                  href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}
+                  className="flex items-center justify-between font-nunito font-bold text-[#0d4b3d]"
+                  onClick={() => setOpen(false)}
+                >
+                  <span className="text-lg">{dictionary.web.header.logIn || 'Log In'}</span>
+                  <MoveRight className="h-4 w-4 stroke-1 text-[#0d4b3d]" />
+                </Link>
+              )}
             </div>
           </div>
         )}

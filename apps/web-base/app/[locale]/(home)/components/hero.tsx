@@ -7,6 +7,8 @@ import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { RecycleIcon, Leaf, Save } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { env } from '@/env';
 import logo from '@/public/logo.png';
 import rubish from '@/public/rubish.png';
 import background from '@/public/background.png';
@@ -19,6 +21,8 @@ type HeroProps = {
 };
 
 export const Hero = ({ dictionary }: HeroProps) => {
+  const params = useParams();
+  const locale = params.locale as string;
   const [rotation, setRotation] = useState(0);
   const [bounce, setBounce] = useState(0);
 
@@ -73,32 +77,41 @@ export const Hero = ({ dictionary }: HeroProps) => {
               <div className="relative flex items-center">
                 <Image
                   src={logo}
-                  alt="Gangañam"
+                  alt="Ganga-Menú"
                   width={120}
                   height={120}
                   className="w-auto h-24 transition-transform duration-300 mr-[-10px]"
                   style={{ transform: `rotate(${rotation}deg)` }}
                 />
-                <span className="text-4xl font-bold text-[#0d4b3d] dark:text-white">angañam</span>
+                <span className="text-4xl font-bold text-[#0d4b3d] dark:text-white">anga-Menú</span>
               </div>
             </motion.div>
             <motion.h1
               className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-6 text-center md:text-left"
               variants={fadeIn}
             >
-              {dictionary.web.home.hero.title || "¡Rescata alimentos de calidad y ahorra con nosotros!"}
+              {dictionary.web.home.hero.title || "Transform Your Restaurant's Digital Presence"}
             </motion.h1>
             <motion.p className="text-gray-600 dark:text-gray-300 text-lg mb-8 text-center md:text-left" variants={fadeIn}>
-              {dictionary.web.home.hero.subtitle || "Descubre una forma responsable y económica de disfrutar excelente comida. Con Gangañam conectamos personas con establecimientos locales para aprovechar excedentes de alimentos a precios increíbles, cuidando tanto tu bolsillo como el planeta."}
+              {dictionary.web.home.hero.subtitle || "Create stunning digital menus, showcase daily specials, and give your customers an unforgettable dining experience. Ganga-Menú helps local restaurants modernize their menu presentation and boost their business."}
             </motion.p>
-            <div className="flex justify-center md:justify-start">
-              <Link href="#app" id="app">
+            <div className="flex justify-center md:justify-start gap-4">
+              <Link href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}>
                 <motion.button
                   className="bg-[#0d4b3d] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#0d4b3d]/90 transition-all shadow-lg"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {dictionary.web.header.downloadApp || "Descarga la app"}
+                  {dictionary.web.home.hero.getStarted || "Get Started"}
+                </motion.button>
+              </Link>
+              <Link href="#pricing">
+                <motion.button
+                  className="border-2 border-[#0d4b3d] text-[#0d4b3d] px-8 py-3 rounded-lg font-medium hover:bg-[#0d4b3d] hover:text-white transition-all shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {dictionary.web.home.hero.viewPricing || "View Pricing"}
                 </motion.button>
               </Link>
             </div>
@@ -126,7 +139,7 @@ export const Hero = ({ dictionary }: HeroProps) => {
             >
               <Image
                 src={rubish}
-                alt="Comida salvada"
+                alt="Digital Menu Display"
                 width={500}
                 height={500}
                 className="max-w-full h-auto rounded-lg shadow-lg"

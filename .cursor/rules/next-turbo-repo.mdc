@@ -1,0 +1,355 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Reglas de Desarrollo - Ganga Menu Project
+
+## 📋 Principios Fundamentales
+
+### 1. Principios SOLID
+- **Single Responsibility**: Cada función, clase y componente debe tener una sola responsabilidad
+- **Open/Closed**: Abierto para extensión, cerrado para modificación
+- **Liskov Substitution**: Los objetos deben ser reemplazables por instancias de sus subtipos
+- **Interface Segregation**: Interfaces específicas en lugar de interfaces generales
+- **Dependency Inversion**: Depender de abstracciones, no de concreciones
+
+### 2. Mejores Prácticas Next.js
+- **NO usar `useEffect` innecesariamente**: Aprovecha SSR/CSR apropiadamente
+- Usar Server Components por defecto, Client Components solo cuando sea necesario
+- Implementar loading states y error boundaries
+- Usar Next.js Image optimization
+- Implementar SEO correctamente con metadata API
+- Usar App Router en lugar de Pages Router
+
+### 3. Gestión de Datos
+- **NO mockear datos a menos que se solicite explícitamente**
+- Usar datos reales de @packages/database siempre que sea posible
+- Si necesitas datos de prueba, usar @packages/testing/fixtures
+- Validar datos con schemas (Zod o similar)
+
+### 4. Internacionalización y Textos
+- **NUNCA hardcodear textos directamente en los componentes**
+- **SIEMPRE usar @repo/internationalization para todos los textos**
+- Agregar nuevas traducciones al dictionary cuando se necesiten
+- Usar el patrón `dictionary.web.section.key` para organizar textos
+- Proporcionar fallbacks descriptivos pero siempre usar el dictionary
+
+### 5. Modularidad y Reutilización
+- **SIEMPRE revisar si existe un package que solucione el problema**
+- Crear componentes reutilizables en @packages/design-system
+- Separar lógica de negocio en @packages/data-services
+- Usar custom hooks para lógica compartida
+
+## 🏗️ Estructura del Proyecto
+
+### Apps Structure
+```
+apps/
+├── app/                    # Aplicación principal Next.js
+│   ├── app/
+│   │   ├── [locale]/
+│   │   │   ├── (authenticated)/
+│   │   │   ├── (public)/
+│   │   │   └── layout.tsx
+│   │   ├── globals.css
+│   │   └── layout.tsx
+│   ├── components/         # Componentes específicos de la app
+│   ├── lib/               # Utilidades específicas de la app
+│   └── types/             # Tipos específicos de la app
+├── api/                   # API backend
+├── web-base/              # Template base
+├── docs/                  # Documentación
+├── email/                 # Servicio de emails
+├── storybook/             # Documentación de componentes
+└── studio/                # CMS Studio
+```
+
+### Packages Structure
+```
+packages/
+├── design-system/         # Componentes UI reutilizables
+│   ├── components/
+│   ├── hooks/
+│   ├── icons/
+│   └── theme/
+├── database/              # Modelos y configuración DB
+├── auth/                  # Autenticación
+├── data-services/         # Servicios de datos
+├── testing/               # Utilidades de testing
+├── ai/                    # Integraciones IA
+├── analytics/             # Análisis y métricas
+├── cms/                   # Gestión de contenido
+├── internationalization/  # i18n
+├── notifications/         # Sistema de notificaciones
+├── payments/              # Integración de pagos
+├── security/              # Configuraciones de seguridad
+├── seo/                   # SEO optimization
+├── storage/               # Gestión de archivos
+├── webhooks/              # Gestión de webhooks
+├── feature-flags/         # Control de características
+├── observability/         # Monitoreo y logging
+├── rate-limit/            # Control de límites
+└── collaboration/         # Herramientas de colaboración
+```
+
+## 📝 Convenciones de Código
+
+### 1. Nomenclatura
+- **Componentes**: PascalCase (`MenuCard`, `DishModal`)
+- **Archivos de componentes**: PascalCase (`MenuCard.tsx`)
+- **Hooks**: camelCase con prefijo `use` (`useMenuData`)
+- **Utilidades**: camelCase (`formatPrice`, `validateEmail`)
+- **Constantes**: UPPER_SNAKE_CASE (`API_ENDPOINTS`, `DEFAULT_LOCALE`)
+- **Tipos/Interfaces**: PascalCase (`User`, `MenuConfig`)
+
+### 2. Estructura de Archivos
+```
+ComponentName/
+├── index.ts              # Export barrel
+├── ComponentName.tsx     # Componente principal
+├── ComponentName.test.tsx # Tests
+├── ComponentName.stories.tsx # Storybook
+├── hooks/                # Hooks específicos
+├── types.ts              # Tipos específicos
+└── utils.ts              # Utilidades específicas
+```
+
+### 3. Imports y Referencias
+- Usar `@` para referenciar archivos: `@repo/design-system`
+- Imports absolutos para packages: `import { Button } from '@repo/design-system'`
+- Imports relativos solo para archivos locales: `import { utils } from './utils'`
+- Agrupar imports: packages externos, packages internos, relativos
+
+## ⚛️ Reglas de React/Next.js
+
+### 1. Server vs Client Components
+```typescript
+// ✅ Server Component por defecto
+export default function MenuPage() {
+  return <div>Menu content</div>
+}
+
+// ✅ Client Component solo cuando necesario
+'use client'
+export default function InteractiveMenu() {
+  const [selected, setSelected] = useState(null)
+  return <div>Interactive content</div>
+}
+```
+
+### 2. Evitar useEffect Innecesario
+```typescript
+// ❌ Malo - useEffect innecesario
+function MenuList() {
+  const [menus, setMenus] = useState([])
+  
+  useEffect(() => {
+    fetchMenus().then(setMenus)
+  }, [])
+  
+  return <div>{menus.map(...)}</div>
+}
+
+// ✅ Bueno - Server Component
+async function MenuList() {
+  const menus = await fetchMenus()
+  return <div>{menus.map(...)}</div>
+}
+
+// ✅ Bueno - Client Component
+function MenuList() {
+  const { data: menus } = useSWR('/api/menus', fetcher)
+  return <div>{menus?.map(...)}</div>
+}
+```
+
+### 3. Gestión de Estado
+- Usar `useState` para estado local simple
+- `zustand` para estado complejo
+- `Zustand` para estado global (si está en @repo/store)
+
+### 4. Error Handling
+```typescript
+// ✅ Siempre incluir error boundaries
+export default function MenuPage() {
+  return (
+    <ErrorBoundary fallback={<ErrorFallback />}>
+      <MenuContent />
+    </ErrorBoundary>
+  )
+}
+
+// ✅ Manejar errores en async operations
+async function fetchMenuData() {
+  try {
+    const data = await api.getMenus()
+    return { data, error: null }
+  } catch (error) {
+    return { data: null, error }
+  }
+}
+```
+
+## 🔧 Herramientas y Validación
+
+### 1. Linting y Formatting
+- Usar Biome para linting y formatting
+- Configuración en `biome.json`
+- Ejecutar `pnpm lint` antes de commits
+
+### 2. Testing
+- Vitest para unit tests
+- Testing Library para componentes
+- Playwright para E2E (si está configurado)
+- Mínimo 80% de cobertura
+
+### 3. Types
+- TypeScript estricto
+- Definir tipos en `types.ts` de cada módulo
+- Usar `as const` para objetos inmutables
+- Evitar `any`, usar `unknown` si es necesario
+
+## 📦 Gestión de Dependencias
+
+### 1. Evaluación de Packages
+Antes de instalar cualquier package, evaluar:
+1. **¿Existe una solución en nuestros packages?**
+2. **¿Es mantenido activamente?**
+3. **¿Tiene buena documentación?**
+4. **¿Es compatible con Next.js 13+?**
+5. **¿Afecta el bundle size significativamente?**
+
+### 2. Package Management
+- Usar `pnpm` exclusivamente
+- Instalar en el workspace correcto (root, app, o package específico)
+- Mantener package.json ordenado
+- Usar versiones exactas para packages críticos
+
+## 🌐 Internacionalización
+
+### 1. Estructura i18n
+```typescript
+// ✅ Usar @packages/internationalization con dictionary
+import type { Dictionary } from '@packages/internationalization'
+
+function MenuCard({ dish, dictionary }: { dish: Dish, dictionary: Dictionary }) {
+  return (
+    <div>
+      <h3>{dictionary.web.menu.dishName || 'Dish Name'}</h3>
+      <p>{dictionary.web.menu.price || 'Price'}: {dish.price}</p>
+    </div>
+  )
+}
+
+// ❌ Nunca hardcodear textos
+function BadMenuCard({ dish }) {
+  return (
+    <div>
+      <h3>Dish Name</h3> {/* ❌ Texto hardcodeado */}
+      <p>Price: {dish.price}</p> {/* ❌ Texto hardcodeado */}
+    </div>
+  )
+}
+```
+
+### 2. Locale Routing
+- Usar estructura `[locale]` en rutas
+- Configurar redirects en @apps/app/middleware.ts
+- Manejar fallbacks apropiadamente
+
+## 🔒 Seguridad
+
+### 1. Autenticación
+- Usar @packages/auth para toda la autenticación
+- Validar tokens en middleware
+- Implementar RBAC apropiadamente
+
+### 2. Validación de Datos
+```typescript
+// ✅ Siempre validar datos de entrada
+import { z } from 'zod'
+
+const menuSchema = z.object({
+  name: z.string().min(1),
+  price: z.number().positive(),
+  category: z.enum(['appetizer', 'main', 'dessert'])
+})
+
+function createMenu(data: unknown) {
+  const validatedData = menuSchema.parse(data)
+  // Procesar datos validados
+}
+```
+
+## 🚀 Performance
+
+### 1. Optimización de Imágenes
+```typescript
+// ✅ Usar Next.js Image
+import Image from 'next/image'
+
+function DishImage({ dish }) {
+  return (
+    <Image
+      src={dish.image}
+      alt={dish.name}
+      width={300}
+      height={200}
+      placeholder="blur"
+      blurDataURL="data:image/jpeg;base64,..."
+    />
+  )
+}
+```
+
+### 2. Code Splitting
+- Usar `dynamic` para lazy loading
+- Implementar loading states
+- Dividir rutas apropiadamente
+
+### 3. Caching
+- Usar Next.js caching strategies
+- Implementar revalidation apropiada
+- Usar @packages/rate-limit para APIs
+
+## 📋 Checklist de Desarrollo
+
+Antes de crear un PR, verificar:
+
+- [ ] ✅ Código sigue principios SOLID
+- [ ] ✅ No hay `useEffect` innecesario
+- [ ] ✅ Componentes son modulares y reutilizables
+- [ ] ✅ Se revisó si existe package para la funcionalidad
+- [ ] ✅ No se mockearon datos sin necesidad
+- [ ] ✅ Types están definidos correctamente
+- [ ] ✅ Tests están escritos y pasan
+- [ ] ✅ Linting pasa sin errores
+- [ ] ✅ Performance es óptima
+- [ ] ✅ Accesibilidad está implementada
+- [ ] ✅ Internacionalización está considerada
+- [ ] ✅ Error boundaries están implementados
+- [ ] ✅ SEO metadata está configurado
+
+## 🔄 Flujo de Trabajo
+
+### 1. Antes de Empezar
+1. Revisar packages existentes en @packages/
+2. Buscar componentes similares en @packages/design-system
+3. Verificar si la funcionalidad ya existe
+
+### 2. Durante el Desarrollo
+1. Usar Server Components por defecto
+2. Añadir Client Components solo cuando necesario
+3. Implementar error handling
+4. Escribir tests
+
+### 3. Antes de Hacer Commit
+1. Ejecutar `pnpm lint`
+2. Ejecutar `pnpm test`
+3. Verificar que la build pasa
+4. Revisar el checklist de desarrollo
+
+---
+
+**Recuerda**: Siempre prioriza la **modularidad**, **reutilización** y **mantenibilidad** del código. Cuando tengas dudas, consulta los packages existentes antes de crear nuevas soluciones.

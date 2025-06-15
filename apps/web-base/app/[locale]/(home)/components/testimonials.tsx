@@ -24,7 +24,7 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
   const sampleTestimonials = [
     {
       title: "¡Comida deliciosa a mitad de precio!",
-      description: "Uso Gangañam cada semana para descubrir nuevos restaurantes mientras ahorro dinero. Es increíble la calidad de comida que puedes conseguir a precios tan reducidos.",
+      description: "Uso Ganga-Menú en mi restaurante y mis clientes están encantados. Pueden ver todos nuestros platos con fotos hermosas y hacer pedidos más fácilmente.",
       author: {
         name: "María García",
         location: "Madrid"
@@ -40,7 +40,7 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
     },
     {
       title: "Descubrí mis cafeterías favoritas",
-      description: "Gracias a Gangañam he descubierto cafeterías en mi barrio que ni sabía que existían. Ahora son mis favoritas y además ayudo a que no se tire comida. ¡Win-win!",
+      description: "Implementamos Ganga-Menú y ahora actualizar nuestro menú es súper fácil. Los especiales del día se cambian en segundos y los clientes lo ven inmediatamente.",
       author: {
         name: "Laura Martínez",
         location: "Valencia"
@@ -102,7 +102,7 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full mx-auto mb-2"></div>
           <p className="text-muted-foreground text-center max-w-2xl mx-auto text-lg var(--font-nunito)">
-            {dictionary.web.home.testimonials?.description || "Descubre cómo Gangañam está cambiando la forma en que las personas se relacionan con la comida y ayudan al planeta"}
+            {dictionary.web.home.testimonials?.description || "Descubre cómo Ganga-Menú está transformando la experiencia gastronómica de restaurantes y clientes"}
           </p>
         </motion.div>
 

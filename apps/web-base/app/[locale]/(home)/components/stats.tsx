@@ -17,7 +17,7 @@ export const Stats = ({ dictionary }: StatsProps) => {
   const steps = [
     {
       title: dictionary.web.home.stats.process?.[0]?.title || "Descarga la App",
-      description: dictionary.web.home.stats.process?.[0]?.description || "Instala Gangañam en tu móvil y crea tu cuenta en segundos para comenzar a salvar comida."
+      description: dictionary.web.home.stats.process?.[0]?.description || "Registra tu restaurante y configura la información básica en minutos."
     },
     {
       title: dictionary.web.home.stats.process?.[1]?.title || "Encuentra packs",
@@ -52,7 +52,7 @@ export const Stats = ({ dictionary }: StatsProps) => {
         className="text-center mb-16"
       >
         <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 var(--font-nunito)">
-          {dictionary.web.home.stats.title || "Cómo funciona Gangañam"}
+          {dictionary.web.home.stats.title || "Cómo funciona Ganga-Menú"}
         </h2>
         <div className="w-20 h-1 bg-gradient-to-r from-[#0d4b3d]/70 to-[#0d4b3d] rounded-full mx-auto mb-6"></div>
         <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto var(--font-nunito)">
@@ -108,7 +108,7 @@ export const Stats = ({ dictionary }: StatsProps) => {
         >
           <Image
             src={logoWithBg}
-            alt="Gangañam App"
+            alt="Ganga-Menú App"
             width={600}
             height={400}
             className="rounded-lg shadow-xl"

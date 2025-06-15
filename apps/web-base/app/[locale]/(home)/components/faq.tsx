@@ -21,35 +21,35 @@ type FAQProps = {
 // Sample FAQ items to use if dictionary doesn't have them
 const sampleFaqItems = [
   {
-    question: "¿Cómo funciona Gangañam?",
-    answer: "Gangañam conecta a usuarios con restaurantes, cafeterías y tiendas que tienen excedentes de comida. Estos establecimientos crean packs sorpresa con sus productos sobrantes del día, que puedes reservar a través de la app a un precio reducido y recoger en el horario indicado."
+    question: "¿Cómo funciona Ganga-Menú?",
+    answer: "Ganga-Menú es una plataforma que permite a los restaurantes crear menús digitales interactivos. Subes fotos de tus platos, agregas descripciones y precios, y obtienes un enlace único para compartir con tus clientes. Es fácil, rápido y totalmente personalizable."
   },
   {
-    question: "¿Qué tipo de comida puedo encontrar?",
-    answer: "Puedes encontrar todo tipo de alimentos: desde platos preparados de restaurantes, sándwiches y ensaladas de cafeterías, productos de panadería, hasta frutas, verduras y otros productos de supermercados. El contenido es sorpresa, pero siempre de calidad."
+    question: "¿Qué tipo de restaurantes pueden usar Ganga-Menú?",
+    answer: "Cualquier tipo de establecimiento gastronómico: restaurantes, cafeterías, bares, pizzerías, panaderías, food trucks, etc. Nuestra plataforma se adapta a cualquier tipo de menú, desde comida rápida hasta alta cocina."
   },
   {
-    question: "¿Cómo sé que la comida está en buen estado?",
-    answer: "Todos los establecimientos asociados a Gangañam cumplen con las normativas de seguridad alimentaria. La comida que se ofrece es perfectamente apta para el consumo, simplemente son excedentes que de otra forma se desperdiciarían. No se trata de comida caducada."
+    question: "¿Es difícil actualizar mi menú?",
+    answer: "Para nada. Puedes actualizar precios, agregar especiales del día, cambiar descripciones o subir nuevas fotos en cuestión de segundos desde nuestro panel de administración. Los cambios se reflejan inmediatamente en tu menú digital."
   },
   {
-    question: "¿Puedo elegir lo que viene en mi pack de Gangañam?",
-    answer: "Los packs son sorpresa, lo que forma parte de la experiencia Gangañam. Sin embargo, en la descripción de cada establecimiento puedes ver qué tipo de productos suelen ofrecer para hacerte una idea del contenido."
+    question: "¿Puedo personalizar el diseño de mi menú?",
+    answer: "Sí, puedes personalizar colores, añadir el logo de tu restaurante, organizar las categorías como prefieras y destacar tus platos especiales. Todo se hace de forma visual e intuitiva."
   },
   {
-    question: "¿Cómo pago por mi pedido en Gangañam?",
-    answer: "El pago se realiza directamente a través de la aplicación Gangañam mediante tarjeta de crédito/débito o PayPal de forma segura. Una vez confirmado el pago, recibirás un recibo digital que deberás mostrar al recoger tu pedido."
+    question: "¿Cuánto cuesta usar Ganga-Menú?",
+    answer: "Ofrecemos diferentes planes adaptados a las necesidades de cada restaurante. Tenemos un plan gratuito para empezar, y planes profesionales con características avanzadas. Visita nuestra página de precios para más detalles."
   },
   {
-    question: "¿Qué ocurre si no puedo recoger mi pedido de Gangañam?",
-    answer: "Es importante recoger tu pedido en el horario establecido. Si sabes que no podrás recogerlo, debes cancelarlo con al menos 2 horas de antelación para recibir un reembolso. Si no recoges tu pedido sin previo aviso, no se realizará ningún reembolso."
+    question: "¿Necesito conocimientos técnicos para usar Ganga-Menú?",
+    answer: "No necesitas ningún conocimiento técnico. Nuestra plataforma está diseñada para ser súper intuitiva. Si tienes dudas, nuestro equipo de soporte está siempre disponible para ayudarte."
   }
 ];
 
 export const FAQ = ({ dictionary, locale }: FAQProps) => {
   // Create WhatsApp message 
   const getWhatsAppMessage = () => {
-    return "¡Hola! Tengo preguntas sobre la app de Gangañam para salvar comida. Me interesa saber más sobre cómo funciona y cómo puedo empezar a usarla. ¡Gracias!";
+    return "¡Hola! Tengo preguntas sobre Ganga-Menú para crear mi menú digital. Me interesa saber más sobre cómo funciona y cómo puedo empezar a usarlo. ¡Gracias!";
   };
 
   // Get FAQ items from dictionary if available, otherwise use samples
@@ -72,7 +72,7 @@ export const FAQ = ({ dictionary, locale }: FAQProps) => {
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-[#0d4b3d]/70 to-[#0d4b3d] rounded-full mx-auto mb-4"></div>
           <p className="text-base text-gray-600 dark:text-gray-300">
-            {dictionary.web.home.faq?.description || "Respuestas a las dudas más comunes sobre Gangañam y cómo puedes comenzar a salvar comida"}
+            {dictionary.web.home.faq?.description || "Respuestas a las dudas más comunes sobre Ganga-Menú y cómo crear tu menú digital"}
           </p>
         </motion.div>
 
@@ -91,7 +91,7 @@ export const FAQ = ({ dictionary, locale }: FAQProps) => {
               {dictionary.web.home.faq?.needMore || "¿Necesitas más información?"}
             </h3>
             <p className="text-gray-600 dark:text-gray-300 text-center lg:text-left mb-4">
-              {dictionary.web.home.faq?.contactDescription || "Contáctanos si tienes dudas sobre cómo usar Gangañam o quieres saber más sobre cómo puedes unirte al movimiento contra el desperdicio alimentario"}
+              {dictionary.web.home.faq?.contactDescription || "Contáctanos si tienes dudas sobre cómo usar Ganga-Menú o quieres saber más sobre cómo digitalizar tu menú"}
             </p>
             <Button className="gap-2 bg-[#0d4b3d] hover:bg-[#0d4b3d]/80 text-white shadow-md" asChild>
               <Link href={`/${locale}/contact`}>

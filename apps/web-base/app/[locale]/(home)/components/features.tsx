@@ -1,7 +1,7 @@
 'use client';
 
 import type { Dictionary } from '@repo/internationalization';
-import { ShoppingBag, Leaf, Store, Clock, DollarSign, ShoppingBasket } from 'lucide-react';
+import { MenuIcon, Smartphone, BarChart3, Clock, DollarSign, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { staggerContainer, fadeIn } from '../lib/animations';
 
@@ -10,42 +10,22 @@ type FeaturesProps = {
 };
 
 export const Features = ({ dictionary }: FeaturesProps) => {
-  const features = [
-    {
-      icon: <ShoppingBag className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      title: dictionary.web.home.features.items[0].title || "Ahorra hasta un 70% en comida deliciosa",
-      description: dictionary.web.home.features.items[0].description || "Disfruta de alimentos de calidad a precios reducidos mientras contribuyes a evitar el desperdicio alimentario."
-    },
-    {
-      icon: <Store className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      title: dictionary.web.home.features.items[1].title || "Descubre comercios locales",
-      description: dictionary.web.home.features.items[1].description || "Explora restaurantes, cafeterías, panaderías y supermercados cercanos que se unen a la lucha contra el desperdicio."
-    },
-    {
-      icon: <Leaf className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      title: dictionary.web.home.features.items[2].title || "Reduce tu huella ecológica",
-      description: dictionary.web.home.features.items[2].description || "Cada compra con Gangañam ayuda a reducir las emisiones de CO2 y el uso de recursos naturales asociados al desperdicio."
-    },
-    {
-      icon: <ShoppingBasket className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      title: dictionary.web.home.features.items[3].title || "Packs sorpresa variados",
-      description: dictionary.web.home.features.items[3].description || "Vive la emoción de descubrir qué contiene tu pack sorpresa mientras pruebas nuevos sabores y experiencias."
-    },
-    {
-      icon: <Clock className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      title: dictionary.web.home.features.items[4].title || "Recogida sencilla y rápida",
-      description: dictionary.web.home.features.items[4].description || "Reserva en segundos y recoge tu pack en el horario indicado sin complicaciones ni largas esperas."
-    },
-    {
-      icon: <DollarSign className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      title: dictionary.web.home.features.items[5].title || "Pago seguro integrado",
-      description: dictionary.web.home.features.items[5].description || "Realiza el pago directamente desde la app de forma rápida y segura con múltiples métodos disponibles."
-    }
-  ];
+  const features = dictionary.web.home.features.items.map((item, index) => ({
+    icon: [
+      <MenuIcon className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
+      <Smartphone className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
+      <Clock className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
+      <BarChart3 className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
+      <Users className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
+      <DollarSign className="w-6 h-6 text-[#0d4b3d] dark:text-white" />
+    ][index],
+    title: item.title,
+    description: item.description
+  }));
 
   return (
     <motion.section
-      id="about"
+      id="features"
       initial="initial"
       whileInView="animate"
       viewport={{ once: true }}
@@ -64,11 +44,11 @@ export const Features = ({ dictionary }: FeaturesProps) => {
         {/* Header */}
         <motion.div variants={fadeIn} className="text-center mb-16 relative">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 var(--font-nunito)">
-            {dictionary.web.home.features.title || "Por qué usar Gangañam"}
+            {dictionary.web.home.features.title || "Why Choose Ganga-Menú"}
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-[#0d4b3d]/70 to-[#0d4b3d] rounded-full mx-auto mb-6"></div>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto var(--font-nunito)">
-            {dictionary.web.home.features.description || "Únete a nuestra comunidad de salvadores de comida y disfruta de estos increíbles beneficios mientras haces algo bueno por el planeta"}
+            {dictionary.web.home.features.description || "Transform your restaurant's digital presence with our powerful menu management platform designed specifically for food businesses"}
           </p>
         </motion.div>
 

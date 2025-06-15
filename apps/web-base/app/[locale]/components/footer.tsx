@@ -32,44 +32,25 @@ export const Footer = ({ dictionary }: FooterProps) => {
   const params = useParams();
   const locale = params.locale as string;
 
-  // Determine if we're using English
-  const isEnglish = locale === 'en';
-
-  // Navigation labels
+  // Navigation labels with dictionary fallbacks
   const navLabels = {
-    navigation: isEnglish ? "Navigation" : "Navegación",
-    home: isEnglish ? "Home" : "Inicio",
-    app: isEnglish ? "The App" : "La App",
-    business: isEnglish ? "Business Solutions" : "Soluciones para Empresas",
-    about: isEnglish ? "About Us" : "Sobre Nosotros",
-    foodWaste: isEnglish ? "About Food Waste" : "Sobre desperdicio alimentario"
+    navigation: dictionary?.web.home.footer?.navigation || dictionary?.web.header?.navigation || "Navegación",
+    home: dictionary?.web.header?.home || "Inicio",
+    features: dictionary?.web.home.footer?.features || dictionary?.web.header?.features || "Características",
+    pricing: dictionary?.web.header?.pricing || "Precios",
+    about: dictionary?.web.header?.about || "Acerca de",
+    contact: dictionary?.web.home.footer?.contact || dictionary?.web.header?.contact || "Contacto"
   };
 
-  // Features labels
+  // Features labels with dictionary fallbacks
   const featureLabels = {
-    features: isEnglish ? "Features" : "Características",
-    savings: isEnglish ? "Save money" : "Ahorra dinero",
-    ecofriendly: isEnglish ? "Eco-friendly" : "Ecológico",
-    local: isEnglish ? "Support local businesses" : "Apoya negocios locales"
+    features: dictionary?.web.home.footer?.features || "Características"
   };
 
-  // Contact labels
+  // Contact labels with dictionary fallbacks
   const contactLabels = {
-    contact: isEnglish ? "Contact" : "Contacto",
-    download: isEnglish ? "Download the App" : "Descarga la App"
+    contact: dictionary?.web.home.footer?.contact || "Contacto"
   };
-
-  // Footer labels
-  const footerLabels = {
-    rights: isEnglish ? "All rights reserved" : "Todos los derechos reservados",
-    privacy: isEnglish ? "Privacy Policy" : "Política de Privacidad",
-    terms: isEnglish ? "Terms and Conditions" : "Términos y Condiciones"
-  };
-
-  // Company description
-  const companyDescription = isEnglish
-    ? "We are fighting food waste by making surplus food from shops, restaurants and producers available to users at a lower price."
-    : "Luchamos contra el desperdicio de alimentos haciendo que los excedentes de tiendas, restaurantes y productores estén disponibles para los usuarios a un precio más bajo.";
 
   return (
     <footer className="relative mt-24 border-t border-[#0d4b3d]/10 dark:border-[#0d4b3d]/30 bg-white dark:bg-gray-900 overflow-hidden">
@@ -93,17 +74,17 @@ export const Footer = ({ dictionary }: FooterProps) => {
               <div className="relative flex items-center">
                 <Image
                   src={logo}
-                  alt="Gangañam"
+                  alt="Ganga-Menú"
                   width={60}
                   height={60}
                   className="h-14 w-auto mr-[-7px]"
                 />
-                <span className="text-3xl font-bold text-[#0d4b3d] dark:text-white">angañam</span>
+                <span className="text-3xl font-bold text-[#0d4b3d] dark:text-white">anga-Menú</span>
               </div>
             </motion.div>
 
             <p className="leading-relaxed max-w-sm text-gray-600 dark:text-gray-300">
-              {companyDescription}
+              {dictionary?.web.home.footer?.companyDescription || "Transforma la presencia digital de tu restaurante con menús interactivos hermosos que muestran tus platos y mejoran la experiencia del cliente."}
             </p>
             <div className="flex gap-4 mt-6">
               <a
@@ -149,23 +130,23 @@ export const Footer = ({ dictionary }: FooterProps) => {
               </li>
               <li>
                 <Link
-                  href={`/${locale}#app`}
+                  href={`/${locale}#features`}
                   className="text-gray-600 dark:text-gray-300 hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
                 >
-                  {navLabels.app}
+                  {navLabels.features}
                 </Link>
               </li>
               <li>
                 <Link
-                  href={`/${locale}#business`}
+                  href={`/${locale}/pricing`}
                   className="text-gray-600 dark:text-gray-300 hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
                 >
-                  {navLabels.business}
+                  {navLabels.pricing}
                 </Link>
               </li>
               <li>
                 <Link
-                  href={`/${locale}#about`}
+                  href={`/${locale}#faq`}
                   className="text-gray-600 dark:text-gray-300 hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
                 >
                   {navLabels.about}
@@ -173,10 +154,10 @@ export const Footer = ({ dictionary }: FooterProps) => {
               </li>
               <li>
                 <Link
-                  href={`/${locale}#food-waste`}
+                  href={`/${locale}/contact`}
                   className="text-gray-600 dark:text-gray-300 hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
                 >
-                  {navLabels.foodWaste}
+                  {navLabels.contact}
                 </Link>
               </li>
             </ul>
@@ -190,15 +171,15 @@ export const Footer = ({ dictionary }: FooterProps) => {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
                 <ShoppingBag className="w-4 h-4 text-[#0d4b3d]" />
-                <span>{featureLabels.savings}</span>
+                <span>{dictionary?.web.home.footer?.menuCreation || "Creación de Menús Digitales"}</span>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
                 <Shield className="w-4 h-4 text-[#0d4b3d]" />
-                <span>{featureLabels.ecofriendly}</span>
+                <span>{dictionary?.web.home.footer?.mobileFirst || "Diseño Mobile-First"}</span>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
                 <CheckCircle className="w-4 h-4 text-[#0d4b3d]" />
-                <span>{featureLabels.local}</span>
+                <span>{dictionary?.web.home.footer?.analytics || "Análisis e Insights"}</span>
               </li>
             </ul>
           </div>
@@ -212,10 +193,10 @@ export const Footer = ({ dictionary }: FooterProps) => {
               <li className="flex items-center gap-3 justify-center md:justify-start">
                 <Mail className="w-4 h-4 text-[#0d4b3d]" />
                 <a
-                  href="mailto:info@ganganam.com"
+                  href="mailto:info@ganga-menu.com"
                   className="text-gray-600 dark:text-gray-300 hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
                 >
-                  info@ganganam.com
+                  info@ganga-menu.com
                 </a>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start">
@@ -229,10 +210,10 @@ export const Footer = ({ dictionary }: FooterProps) => {
               </li>
               <li className="mt-4">
                 <Link
-                  href={`/${locale}#app`}
+                  href={`/${locale}/sign-in`}
                   className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white px-4 py-2 rounded-lg transition-colors inline-block"
                 >
-                  {contactLabels.download}
+                  {dictionary?.web.home.footer?.getStarted || "Comenzar"}
                 </Link>
               </li>
             </ul>
@@ -243,7 +224,7 @@ export const Footer = ({ dictionary }: FooterProps) => {
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 border-t border-[#0d4b3d]/10 py-8">
           <a href="#" className="block">
             <Image
-              src="https://toogoodtogo.com/apple-app-store-badge-en.svg"
+              src=""
               alt="Download on App Store"
               width={140}
               height={42}
@@ -252,7 +233,7 @@ export const Footer = ({ dictionary }: FooterProps) => {
           </a>
           <a href="#" className="block">
             <Image
-              src="https://toogoodtogo.com/google-play-badge-en.png"
+              src=""
               alt="Get it on Google Play"
               width={140}
               height={42}
@@ -263,19 +244,19 @@ export const Footer = ({ dictionary }: FooterProps) => {
 
         {/* Copyright and Legal */}
         <div className="border-t border-[#0d4b3d]/10 py-8 text-center md:flex md:justify-between text-sm text-gray-500 dark:text-gray-400">
-          <div>© {new Date().getFullYear()} Gangañam. {footerLabels.rights}</div>
+          <div>© {new Date().getFullYear()} Ganga-Menú. {dictionary?.web.home.footer?.rights || "Todos los derechos reservados"}</div>
           <div className="flex flex-wrap justify-center md:justify-end gap-4 mt-4 md:mt-0">
             <Link
               href={`/${locale}/privacy`}
               className="hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
             >
-              {footerLabels.privacy}
+              {dictionary?.web.home.footer?.privacy || "Política de Privacidad"}
             </Link>
             <Link
               href={`/${locale}/terms`}
               className="hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
             >
-              {footerLabels.terms}
+              {dictionary?.web.home.footer?.terms || "Términos y Condiciones"}
             </Link>
           </div>
         </div>
