@@ -32,12 +32,12 @@ export default function DailySpecialsSection({ dailySpecials, dishes, dictionary
     };
 
     return (
-        <div className="space-y-4">
-            <div className="flex justify-between items-center">
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white">{dictionary.title}</h2>
+        <div className="space-y-4 pb-20 sm:pb-8">
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center sm:gap-0">
+                <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white">{dictionary.title}</h2>
                 <button
                     onClick={handleCreate}
-                    className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
+                    className="bg-green-600 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-green-700 transition-colors text-sm sm:text-base w-full sm:w-auto"
                 >
                     {dictionary.new}
                 </button>

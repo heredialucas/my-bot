@@ -34,9 +34,9 @@ export default function MenuDashboard({
     const activeTab = searchParams.get('tab') as 'config' | 'categories' | 'dishes' | 'dailySpecials' || 'config';
 
     return (
-        <div className="p-6">
-            <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="p-3 sm:p-4 md:p-6">
+            <div className="mb-4 sm:mb-6">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
                     {dictionary.app.admin.menu.title}
                 </h1>
             </div>

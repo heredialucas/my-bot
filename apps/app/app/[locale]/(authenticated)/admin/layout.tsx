@@ -27,7 +27,7 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
             <div className="pt-16 flex w-full h-full">
                 <AdminSidebar dictionary={dictionary} />
 
-                <main className="w-full bg-gray-50 dark:bg-zinc-950 flex-1 p-6 min-h-screen">
+                <main className="w-full bg-gray-50 dark:bg-zinc-950 flex-1 md:p-6 min-h-screen">
                     <div className="container mx-auto px-4">
                         {children}
                     </div>

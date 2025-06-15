@@ -29,7 +29,7 @@ export function UserHeaderClient({ logo, title = 'Ganga-Menú', extraItems, dict
                 <div className="flex items-center gap-2">
                     {logo}
                     {title && (
-                        <div className="font-bold text-xl text-gray-900 dark:text-white">{title}</div>
+                        <div className="font-bold text-base sm:text-xl text-gray-900 dark:text-white">{title}</div>
                     )}
                 </div>
                 <div className="flex items-center gap-3">

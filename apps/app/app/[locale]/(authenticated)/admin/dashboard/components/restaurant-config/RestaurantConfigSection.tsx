@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { RestaurantConfigData, RestaurantConfigFormData, upsertRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { getCurrentUserId } from '@repo/data-services/src/services/authService';
 import { uploadR2Image } from '@repo/data-services/src/services/uploadR2Image';
@@ -111,12 +111,12 @@ export default function RestaurantConfigSection({
         }
     };
 
-    const handleHoursChange = (hours: string) => {
+    const handleHoursChange = useCallback((hours: string) => {
         setFormData(prev => ({
             ...prev,
             hours
         }));
-    };
+    }, []);
 
     const copyToClipboard = async () => {
         try {
@@ -138,53 +138,57 @@ export default function RestaurantConfigSection({
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
             {/* Enlace para compartir */}
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-                <h2 className="text-lg font-semibold text-green-800 mb-4">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 sm:p-6">
+                <h2 className="text-base sm:text-lg font-semibold text-green-800 mb-3 sm:mb-4">
                     🔗 Enlace de tu Menú
                 </h2>
-                <p className="text-sm text-green-700 mb-4">
+                <p className="text-xs sm:text-sm text-green-700 mb-3 sm:mb-4">
                     Comparte este enlace con tus clientes para que vean tu menú
                 </p>
 
-                <div className="flex items-center gap-3">
+                {/* Responsive: Stack on mobile, flex on desktop */}
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <input
                         type="text"
                         value={menuUrl}
                         readOnly
-                        className="flex-1 px-3 py-2 bg-white border border-green-300 rounded-md text-green-800 font-mono text-sm"
+                        className="flex-1 px-3 py-2 bg-white border border-green-300 rounded-md text-green-800 font-mono text-xs sm:text-sm overflow-hidden text-ellipsis"
                     />
-                    <button
-                        onClick={copyToClipboard}
-                        className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${copied
-                            ? 'bg-green-600 text-white'
-                            : 'bg-green-100 text-green-700 hover:bg-green-200'
-                            }`}
-                    >
-                        {copied ? '¡Copiado!' : 'Copiar'}
-                    </button>
-                    <a
-                        href={menuUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 text-sm font-medium bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-                    >
-                        👁️ Ver
-                    </a>
+                    <div className="flex gap-2 sm:gap-3">
+                        <button
+                            onClick={copyToClipboard}
+                            className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${copied
+                                ? 'bg-green-600 text-white'
+                                : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                }`}
+                        >
+                            {copied ? '¡Copiado!' : 'Copiar'}
+                        </button>
+                        <a
+                            href={menuUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-center"
+                        >
+                            <span className="sm:hidden">Ver</span>
+                            <span className="hidden sm:inline">👁️ Ver</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
             {/* Formulario de configuración */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">
                     ⚙️ Configuración del Restaurante
                 </h2>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                                 Nombre del Restaurante *
                             </label>
                             <input
@@ -199,7 +203,7 @@ export default function RestaurantConfigSection({
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                                 Slug de la URL *
                             </label>
                             <input
@@ -218,7 +222,7 @@ export default function RestaurantConfigSection({
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                             Descripción
                         </label>
                         <textarea
@@ -231,9 +235,9 @@ export default function RestaurantConfigSection({
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                                 Dirección
                             </label>
                             <input
@@ -247,7 +251,7 @@ export default function RestaurantConfigSection({
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                                 Teléfono / WhatsApp
                             </label>
                             <input
@@ -264,9 +268,9 @@ export default function RestaurantConfigSection({
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                                 Email
                             </label>
                             <input
@@ -280,7 +284,7 @@ export default function RestaurantConfigSection({
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                                 Color del Tema
                             </label>
                             <select
@@ -299,7 +303,7 @@ export default function RestaurantConfigSection({
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                             Logo del Restaurante
                         </label>
                         <input
@@ -320,7 +324,7 @@ export default function RestaurantConfigSection({
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">
                             Horarios de Atención
                         </label>
                         <HoursSelector
@@ -329,11 +333,11 @@ export default function RestaurantConfigSection({
                         />
                     </div>
 
-                    <div className="flex justify-end">
+                    <div className="flex justify-end pt-2 pb-20 sm:pb-8">
                         <button
                             type="submit"
                             disabled={loading || uploadingLogo}
-                            className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 transition-colors"
+                            className="w-full sm:w-auto px-4 sm:px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 transition-colors text-sm sm:text-base"
                         >
                             {uploadingLogo ? 'Subiendo logo...' :
                                 loading ? 'Guardando...' : 'Guardar Configuración'}

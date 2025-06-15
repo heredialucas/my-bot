@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface TimeRange {
     openTime: string;
@@ -49,6 +49,7 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
         saturday: { isOpen: true, openTime: '09:00', closeTime: '22:00', ranges: [] },
         sunday: { isOpen: true, openTime: '09:00', closeTime: '22:00', ranges: [] }
     });
+    const isInitialMount = useRef(true);
 
     // Parsear el valor inicial
     useEffect(() => {
@@ -87,6 +88,15 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
             }
         }
     }, [value]);
+
+    // Notificar cambios al componente padre
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
+        onChange(generateHoursData(schedule));
+    }, [schedule, onChange]);
 
     // Generar string de horarios para mostrar
     const generateHoursString = (schedule: WeekSchedule): string => {
@@ -137,7 +147,6 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
                     isOpen: !prev[day as keyof WeekSchedule].isOpen
                 }
             };
-            onChange(generateHoursData(updated));
             return updated;
         });
     };
@@ -151,7 +160,6 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
                     [timeType]: value
                 }
             };
-            onChange(generateHoursData(updated));
             return updated;
         });
     };
@@ -172,7 +180,6 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
                     ranges: updatedRanges
                 }
             };
-            onChange(generateHoursData(updated));
             return updated;
         });
     };
@@ -190,7 +197,6 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
                     ]
                 }
             };
-            onChange(generateHoursData(updated));
             return updated;
         });
     };
@@ -208,7 +214,6 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
                     ranges: updatedRanges
                 }
             };
-            onChange(generateHoursData(updated));
             return updated;
         });
     };
@@ -222,7 +227,6 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
                     isOpen
                 };
             });
-            onChange(generateHoursData(updated));
             return updated;
         });
     };
@@ -239,108 +243,111 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
                     };
                 }
             });
-            onChange(generateHoursData(updated));
             return updated;
         });
     };
 
     return (
-        <div className="space-y-4">
-            <div className="flex flex-wrap gap-2 mb-4">
+        <div className="space-y-3 sm:space-y-4">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 mb-3 sm:mb-4">
                 <button
                     type="button"
                     onClick={() => setAllDays(true)}
-                    className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200"
+                    className="px-2 sm:px-3 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
                 >
                     Abrir todos
                 </button>
                 <button
                     type="button"
                     onClick={() => setAllDays(false)}
-                    className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200"
+                    className="px-2 sm:px-3 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                 >
                     Cerrar todos
                 </button>
                 <button
                     type="button"
                     onClick={() => setCommonHours('09:00', '22:00')}
-                    className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                    className="px-2 sm:px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
                 >
                     9:00 - 22:00
                 </button>
                 <button
                     type="button"
                     onClick={() => setCommonHours('08:00', '23:00')}
-                    className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                    className="px-2 sm:px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
                 >
                     8:00 - 23:00
                 </button>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
                 {DAYS.map(({ key, label }) => {
                     const day = schedule[key as keyof WeekSchedule];
                     return (
-                        <div key={key} className="p-3 border border-gray-200 rounded-lg">
+                        <div key={key} className="p-2 sm:p-3 border border-gray-200 rounded-lg">
                             {/* Día y toggle principal */}
-                            <div className="flex items-center gap-4 mb-3">
-                                <div className="flex items-center gap-2 min-w-[100px]">
+                            <div className="flex items-center gap-3 sm:gap-4 mb-2 sm:mb-3">
+                                <div className="flex items-center gap-2 min-w-[80px] sm:min-w-[100px]">
                                     <input
                                         type="checkbox"
                                         checked={day.isOpen}
                                         onChange={() => handleDayToggle(key)}
                                         className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                                     />
-                                    <label className="text-sm font-medium text-gray-700">
+                                    <label className="text-xs sm:text-sm font-medium text-gray-700">
                                         {label}
                                     </label>
                                 </div>
                             </div>
 
                             {day.isOpen && (
-                                <div className="space-y-2 ml-6">
+                                <div className="space-y-2 ml-4 sm:ml-6">
                                     {/* Horario principal */}
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-xs text-gray-500 min-w-[60px]">Horario 1:</span>
-                                        <input
-                                            type="time"
-                                            value={day.openTime}
-                                            onChange={(e) => handleTimeChange(key, 'openTime', e.target.value)}
-                                            className="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                                        />
-                                        <span className="text-gray-500">-</span>
-                                        <input
-                                            type="time"
-                                            value={day.closeTime}
-                                            onChange={(e) => handleTimeChange(key, 'closeTime', e.target.value)}
-                                            className="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                                        />
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                                        <span className="text-xs text-gray-500 min-w-[60px] sm:min-w-[70px]">Horario 1:</span>
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="time"
+                                                value={day.openTime}
+                                                onChange={(e) => handleTimeChange(key, 'openTime', e.target.value)}
+                                                className="px-2 py-1 text-xs sm:text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 flex-1 sm:flex-none"
+                                            />
+                                            <span className="text-gray-500 text-xs sm:text-sm">-</span>
+                                            <input
+                                                type="time"
+                                                value={day.closeTime}
+                                                onChange={(e) => handleTimeChange(key, 'closeTime', e.target.value)}
+                                                className="px-2 py-1 text-xs sm:text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 flex-1 sm:flex-none"
+                                            />
+                                        </div>
                                     </div>
 
                                     {/* Horarios adicionales */}
                                     {day.ranges && day.ranges.map((range, index) => (
-                                        <div key={index} className="flex items-center gap-2">
-                                            <span className="text-xs text-gray-500 min-w-[60px]">Horario {index + 2}:</span>
-                                            <input
-                                                type="time"
-                                                value={range.openTime}
-                                                onChange={(e) => handleRangeTimeChange(key, index, 'openTime', e.target.value)}
-                                                className="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                                            />
-                                            <span className="text-gray-500">-</span>
-                                            <input
-                                                type="time"
-                                                value={range.closeTime}
-                                                onChange={(e) => handleRangeTimeChange(key, index, 'closeTime', e.target.value)}
-                                                className="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeTimeRange(key, index)}
-                                                className="px-2 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200"
-                                            >
-                                                ✕
-                                            </button>
+                                        <div key={index} className="flex flex-col sm:flex-row sm:items-center gap-2">
+                                            <span className="text-xs text-gray-500 min-w-[60px] sm:min-w-[70px]">Horario {index + 2}:</span>
+                                            <div className="flex items-center gap-2 flex-1">
+                                                <input
+                                                    type="time"
+                                                    value={range.openTime}
+                                                    onChange={(e) => handleRangeTimeChange(key, index, 'openTime', e.target.value)}
+                                                    className="px-2 py-1 text-xs sm:text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 flex-1 sm:flex-none"
+                                                />
+                                                <span className="text-gray-500 text-xs sm:text-sm">-</span>
+                                                <input
+                                                    type="time"
+                                                    value={range.closeTime}
+                                                    onChange={(e) => handleRangeTimeChange(key, index, 'closeTime', e.target.value)}
+                                                    className="px-2 py-1 text-xs sm:text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 flex-1 sm:flex-none"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeTimeRange(key, index)}
+                                                    className="px-2 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors flex-shrink-0"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
                                         </div>
                                     ))}
 
@@ -348,7 +355,7 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
                                     <button
                                         type="button"
                                         onClick={() => addTimeRange(key)}
-                                        className="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded hover:bg-blue-200"
+                                        className="w-full sm:w-auto px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors"
                                     >
                                         + Agregar horario
                                     </button>
@@ -356,8 +363,8 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
                             )}
 
                             {!day.isOpen && (
-                                <div className="ml-6">
-                                    <span className="text-gray-400 text-sm">Cerrado</span>
+                                <div className="ml-4 sm:ml-6">
+                                    <span className="text-gray-400 text-xs sm:text-sm">Cerrado</span>
                                 </div>
                             )}
                         </div>
@@ -366,9 +373,9 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
             </div>
 
             {/* Preview */}
-            <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Vista previa:</h4>
-                <div className="text-sm text-gray-600 whitespace-pre-line">
+            <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-gray-50 rounded-lg">
+                <h4 className="text-xs sm:text-sm font-medium text-gray-700 mb-2">Vista previa:</h4>
+                <div className="text-xs sm:text-sm text-gray-600 whitespace-pre-line">
                     {generateHoursString(schedule)}
                 </div>
             </div>
