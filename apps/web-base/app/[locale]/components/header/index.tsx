@@ -41,10 +41,10 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
       title: dictionary.web.header.features || 'Features',
       href: `/${locale}#features`,
     },
-    {
-      title: dictionary.web.header.pricing || 'Pricing',
-      href: `/${locale}/pricing`,
-    },
+    // {
+    //   title: dictionary.web.header.pricing || 'Pricing',
+    //   href: `/${locale}/pricing`,
+    // },
     {
       title: dictionary.web.header.about || 'About',
       href: `/${locale}#faq`,

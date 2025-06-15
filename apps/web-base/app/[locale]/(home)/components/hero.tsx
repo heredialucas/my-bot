@@ -105,7 +105,7 @@ export const Hero = ({ dictionary }: HeroProps) => {
                   {dictionary.web.home.hero.getStarted || "Get Started"}
                 </motion.button>
               </Link>
-              <Link href="#pricing">
+              {/* <Link href="#pricing">
                 <motion.button
                   className="border-2 border-[#0d4b3d] text-[#0d4b3d] px-8 py-3 rounded-lg font-medium hover:bg-[#0d4b3d] hover:text-white transition-all shadow-lg"
                   whileHover={{ scale: 1.05 }}
@@ -113,7 +113,7 @@ export const Hero = ({ dictionary }: HeroProps) => {
                 >
                   {dictionary.web.home.hero.viewPricing || "View Pricing"}
                 </motion.button>
-              </Link>
+              </Link> */}
             </div>
           </motion.div>
           <motion.div

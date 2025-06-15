@@ -58,7 +58,7 @@ export const FAQ = ({ dictionary, locale }: FAQProps) => {
     : sampleFaqItems;
 
   return (
-    <div className="w-full py-20 lg:py-40" id="food-waste">
+    <div className="w-full py-20 lg:py-40" id="faq">
       <div className="container mx-auto">
         <motion.div
           variants={fadeIn}
