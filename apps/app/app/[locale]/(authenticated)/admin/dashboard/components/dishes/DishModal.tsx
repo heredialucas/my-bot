@@ -193,10 +193,9 @@ export default function DishModal({ dish, categories, dictionary, onClose }: Dis
                             name="categoryId"
                             value={formData.categoryId}
                             onChange={handleChange}
-                            required
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         >
-                            <option value="">Seleccionar categoría</option>
+                            <option value="">Sin categoría</option>
                             {categories.filter(cat => cat.isActive).map(category => (
                                 <option key={category.id} value={category.id}>
                                     {category.name}

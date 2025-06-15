@@ -15,10 +15,12 @@ interface DishCardProps {
     dictionary: Dictionary;
     restaurantName: string;
     restaurantPhone?: string | null;
+    specialDishIds: Set<string>;
 }
 
-export default function DishCard({ dish, themeColors, dictionary, restaurantName, restaurantPhone }: DishCardProps) {
+export default function DishCard({ dish, themeColors, dictionary, restaurantName, restaurantPhone, specialDishIds }: DishCardProps) {
     const whatsappLink = restaurantPhone ? generateWhatsAppLinkForDish(restaurantPhone, dish.name, restaurantName) : '';
+    const isSpecialDish = specialDishIds.has(dish.id);
 
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -37,7 +39,7 @@ export default function DishCard({ dish, themeColors, dictionary, restaurantName
                 <div className="flex justify-between items-start mb-2 gap-2">
                     <h3 className="text-lg font-semibold text-gray-800 flex-1">{dish.name}</h3>
                     <div className="flex flex-col items-end text-right shrink-0">
-                        {dish.promotionalPrice && dish.promotionalPrice > 0 ? (
+                        {isSpecialDish && dish.promotionalPrice && dish.promotionalPrice > 0 ? (
                             <>
                                 <span className="text-sm text-gray-400 line-through whitespace-nowrap">
                                     ${dish.price.toFixed(2)}

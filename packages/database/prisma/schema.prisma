@@ -69,9 +69,9 @@ model Dish {
   updatedAt        DateTime   @updatedAt
 
   // Relaciones
-  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId  String
-  createdBy   User     @relation("CreatedBy", fields: [createdById], references: [id])
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId  String?
+  createdBy   User      @relation("CreatedBy", fields: [createdById], references: [id])
   createdById String
 
   // Platos del día
@@ -94,7 +94,6 @@ model DailySpecial {
   createdBy   User   @relation("DailySpecialCreatedBy", fields: [createdById], references: [id])
   createdById String
 
-  @@unique([date]) // Solo puede haber un plato del día por fecha
   @@index([date])
   @@index([isActive])
 }

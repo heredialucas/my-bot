@@ -1,6 +1,6 @@
 'use client';
 
-import { DailySpecialData, deleteDailySpecial } from '@repo/data-services/src/services/dailySpecialService';
+import { DailySpecialData, deleteDailySpecial, duplicateDailySpecialToFutureDates } from '@repo/data-services/src/services/dailySpecialService';
 
 interface DailySpecialCardProps {
     special: DailySpecialData;
@@ -16,6 +16,18 @@ export default function DailySpecialCard({ special, dictionary, onEdit }: DailyS
             } catch (error) {
                 console.error('Error deleting special:', error);
                 // TODO: Show error message to user
+            }
+        }
+    };
+
+    const handleDuplicate = async () => {
+        if (confirm('¿Duplicar este plato especial para los próximos 6 meses?')) {
+            try {
+                const result = await duplicateDailySpecialToFutureDates(special.id, 6);
+                alert(`Se crearon ${result.created} platos especiales duplicados`);
+            } catch (error) {
+                console.error('Error duplicating special:', error);
+                alert('Error al duplicar el plato especial');
             }
         }
     };
@@ -43,9 +55,11 @@ export default function DailySpecialCard({ special, dictionary, onEdit }: DailyS
                         <span className="text-lg font-bold text-green-600">
                             ${special.dish.price.toFixed(2)}
                         </span>
-                        <span className="text-xs text-gray-500">
-                            {special.dish.category.name}
-                        </span>
+                        {special.dish.category && (
+                            <span className="text-xs text-gray-500">
+                                {special.dish.category.name}
+                            </span>
+                        )}
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -54,6 +68,12 @@ export default function DailySpecialCard({ special, dictionary, onEdit }: DailyS
                         className="text-blue-600 hover:text-blue-800 text-sm transition-colors"
                     >
                         {dictionary.edit}
+                    </button>
+                    <button
+                        onClick={handleDuplicate}
+                        className="text-green-600 hover:text-green-800 text-sm transition-colors"
+                    >
+                        Repetir 6 meses
                     </button>
                     <button
                         onClick={handleDelete}

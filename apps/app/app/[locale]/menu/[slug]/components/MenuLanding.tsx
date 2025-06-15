@@ -30,6 +30,7 @@ interface MenuLandingProps {
     restaurantConfig: RestaurantConfigData;
     categories: Category[];
     todaySpecial: TodaySpecialType | null;
+    todaySpecials: TodaySpecialType[];
     dictionary: Dictionary;
 }
 
@@ -39,6 +40,7 @@ export default function MenuLanding({
     restaurantConfig,
     categories,
     todaySpecial,
+    todaySpecials,
     dictionary
 }: MenuLandingProps) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -46,6 +48,9 @@ export default function MenuLanding({
     const [showSpecialOnly, setShowSpecialOnly] = useState(false);
 
     const themeColors = getThemeColors(restaurantConfig.themeColor);
+
+    // Crear Set de IDs de platos especiales para identificar cuáles mostrar con precio promocional
+    const specialDishIds = new Set(todaySpecials.map(special => special.dish.id));
 
     // Función para limpiar filtros
     const clearFilters = () => {
@@ -137,6 +142,7 @@ export default function MenuLanding({
                                 dictionary={dictionary}
                                 restaurantName={restaurantConfig.name}
                                 restaurantPhone={restaurantConfig.phone}
+                                specialDishIds={specialDishIds}
                             />
                         ))}
                     </div>

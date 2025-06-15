@@ -17,9 +17,9 @@ export interface DailySpecialData {
         imageUrl?: string;
         status: string;
         order: number;
-        category: {
+        category?: {
             name: string;
-        };
+        } | null;
     };
     createdAt: Date;
     updatedAt: Date;
@@ -36,14 +36,7 @@ export interface DailySpecialFormData {
  */
 export async function createDailySpecial(data: DailySpecialFormData, createdById: string) {
     try {
-        // Verificar si ya existe un plato del día para esa fecha
-        const existingSpecial = await database.dailySpecial.findUnique({
-            where: { date: data.date },
-        });
-
-        if (existingSpecial) {
-            throw new Error('Ya existe un plato del día para esta fecha');
-        }
+        // Ya no verificamos si existe un plato para esa fecha, permitimos múltiples
 
         // Crear el plato del día
         const dailySpecial = await database.dailySpecial.create({
@@ -106,16 +99,16 @@ export async function getAllDailySpecials(userId?: string) {
 }
 
 /**
- * Obtener el plato del día actual (para público)
+ * Obtener los platos especiales del día actual (para público) - ahora puede devolver múltiples
  */
-export async function getTodaySpecial() {
+export async function getTodaySpecials() {
     try {
         // Usar UTC para evitar problemas de zona horaria
         const nowUTC = new Date();
         const todayUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate()));
 
-        // Buscar plato especial para hoy
-        const todaySpecial = await database.dailySpecial.findFirst({
+        // Buscar platos especiales para hoy
+        const todaySpecials = await database.dailySpecial.findMany({
             where: {
                 date: todayUTC,
                 isActive: true
@@ -131,22 +124,35 @@ export async function getTodaySpecial() {
             }
         });
 
-        return todaySpecial;
+        return todaySpecials;
     } catch (error) {
-        console.error("Error al obtener plato del día actual:", error);
-        throw new Error("No se pudo obtener el plato del día");
+        console.error("Error al obtener platos especiales del día actual:", error);
+        throw new Error("No se pudieron obtener los platos especiales del día");
     }
 }
 
 /**
- * Obtener plato del día por fecha específica
+ * Obtener el primer plato especial del día actual (para compatibilidad)
  */
-export async function getDailySpecialByDate(date: Date) {
+export async function getTodaySpecial() {
+    try {
+        const specials = await getTodaySpecials();
+        return specials.length > 0 ? specials[0] : null;
+    } catch (error) {
+        console.error("Error al obtener plato especial del día actual:", error);
+        throw new Error("No se pudo obtener el plato especial del día");
+    }
+}
+
+/**
+ * Obtener platos especiales por fecha específica
+ */
+export async function getDailySpecialsByDate(date: Date) {
     try {
         const dateOnly = new Date(date);
         dateOnly.setHours(0, 0, 0, 0); // Normalizar a inicio del día
 
-        const dailySpecial = await database.dailySpecial.findUnique({
+        const dailySpecials = await database.dailySpecial.findMany({
             where: { date: dateOnly },
             include: {
                 dish: {
@@ -159,10 +165,23 @@ export async function getDailySpecialByDate(date: Date) {
             }
         });
 
-        return dailySpecial;
+        return dailySpecials;
     } catch (error) {
-        console.error('Error al obtener plato del día por fecha:', error);
-        throw new Error('No se pudo obtener el plato del día');
+        console.error('Error al obtener platos especiales por fecha:', error);
+        throw new Error('No se pudieron obtener los platos especiales');
+    }
+}
+
+/**
+ * Obtener el primer plato especial por fecha específica (para compatibilidad)
+ */
+export async function getDailySpecialByDate(date: Date) {
+    try {
+        const specials = await getDailySpecialsByDate(date);
+        return specials.length > 0 ? specials[0] : null;
+    } catch (error) {
+        console.error('Error al obtener plato especial por fecha:', error);
+        throw new Error('No se pudo obtener el plato especial');
     }
 }
 
@@ -171,19 +190,7 @@ export async function getDailySpecialByDate(date: Date) {
  */
 export async function updateDailySpecial(specialId: string, data: DailySpecialFormData) {
     try {
-        // Verificar si ya existe otro plato del día para esa fecha (excluyendo el actual)
-        if (data.date) {
-            const existingSpecial = await database.dailySpecial.findFirst({
-                where: {
-                    date: data.date,
-                    id: { not: specialId }
-                },
-            });
-
-            if (existingSpecial) {
-                throw new Error('Ya existe un plato del día para esta fecha');
-            }
-        }
+        // Ya no verificamos fechas únicas, permitimos múltiples platos por día
 
         // Actualizar plato del día en la base de datos
         const dailySpecial = await database.dailySpecial.update({
@@ -266,5 +273,74 @@ export async function getUpcomingDailySpecials(days: number = 7) {
     } catch (error) {
         console.error("Error al obtener próximos platos del día:", error);
         throw new Error("No se pudieron obtener los próximos platos del día");
+    }
+}
+
+/**
+ * Duplicar un plato especial para múltiples fechas futuras (hasta 36 meses)
+ */
+export async function duplicateDailySpecialToFutureDates(specialId: string, monthsAhead: number = 36) {
+    try {
+        // Obtener el plato especial original
+        const originalSpecial = await database.dailySpecial.findUnique({
+            where: { id: specialId },
+            include: {
+                dish: true
+            }
+        });
+
+        if (!originalSpecial) {
+            throw new Error('Plato especial no encontrado');
+        }
+
+        const originalDate = new Date(originalSpecial.date);
+        const createdSpecials = [];
+
+        // Crear platos especiales para los próximos meses
+        for (let i = 1; i <= monthsAhead; i++) {
+            const futureDate = new Date(originalDate);
+            futureDate.setMonth(futureDate.getMonth() + i);
+
+            // Verificar si ya existe un plato especial para esta fecha y plato
+            const existingSpecial = await database.dailySpecial.findFirst({
+                where: {
+                    date: futureDate,
+                    dishId: originalSpecial.dishId,
+                    createdById: originalSpecial.createdById
+                }
+            });
+
+            // Solo crear si no existe ya
+            if (!existingSpecial) {
+                const newSpecial = await database.dailySpecial.create({
+                    data: {
+                        date: futureDate,
+                        dishId: originalSpecial.dishId,
+                        isActive: originalSpecial.isActive,
+                        createdById: originalSpecial.createdById,
+                    },
+                    include: {
+                        dish: {
+                            include: {
+                                category: {
+                                    select: { name: true }
+                                }
+                            }
+                        }
+                    }
+                });
+                createdSpecials.push(newSpecial);
+            }
+        }
+
+        revalidatePath('/admin/dashboard');
+        return {
+            success: true,
+            created: createdSpecials.length,
+            specials: createdSpecials
+        };
+    } catch (error) {
+        console.error('Error al duplicar plato especial:', error);
+        throw new Error('No se pudo duplicar el plato especial');
     }
 } 

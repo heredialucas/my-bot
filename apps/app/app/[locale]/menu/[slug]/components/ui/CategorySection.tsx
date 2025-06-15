@@ -12,9 +12,9 @@ interface Dish {
     imageUrl?: string | null;
     status: string;
     order: number;
-    category: {
+    category?: {
         name: string;
-    };
+    } | null;
 }
 
 interface CategorySectionProps {
@@ -27,9 +27,10 @@ interface CategorySectionProps {
     dictionary: Dictionary;
     restaurantName: string;
     restaurantPhone?: string | null;
+    specialDishIds: Set<string>;
 }
 
-export default function CategorySection({ category, themeColors, dictionary, restaurantName, restaurantPhone }: CategorySectionProps) {
+export default function CategorySection({ category, themeColors, dictionary, restaurantName, restaurantPhone, specialDishIds }: CategorySectionProps) {
     if (category.dishes.length === 0) return null;
 
     return (
@@ -69,6 +70,7 @@ export default function CategorySection({ category, themeColors, dictionary, res
                                 dictionary={dictionary}
                                 restaurantName={restaurantName}
                                 restaurantPhone={restaurantPhone}
+                                specialDishIds={specialDishIds}
                             />
                         ))}
                     </div>

@@ -269,4 +269,74 @@ export async function getAllCategoriesWithDishes(userId?: string) {
         console.error("Error al obtener categorías con platos:", error);
         throw new Error("No se pudieron obtener las categorías con platos");
     }
+}
+
+/**
+ * Obtener todas las categorías con platos Y platos sin categoría (para menú público completo)
+ */
+export async function getAllCategoriesWithDishesAndUncategorized(userId?: string) {
+    try {
+        // Si no se proporciona userId, obtener el actual
+        const currentUserId = userId || await getCurrentUserId();
+        if (!currentUserId) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Obtener categorías con platos
+        const categories = await database.category.findMany({
+            where: {
+                isActive: true,
+                createdById: currentUserId
+            },
+            include: {
+                dishes: {
+                    where: { status: 'ACTIVE' },
+                    orderBy: { order: 'asc' },
+                    include: {
+                        category: {
+                            select: { name: true }
+                        }
+                    }
+                }
+            },
+            orderBy: { order: 'asc' },
+        });
+
+        // Obtener platos sin categoría
+        const uncategorizedDishes = await database.dish.findMany({
+            where: {
+                categoryId: null,
+                status: 'ACTIVE',
+                createdById: currentUserId
+            },
+            orderBy: { order: 'asc' },
+            include: {
+                category: {
+                    select: { name: true }
+                }
+            }
+        });
+
+        // Si hay platos sin categoría, crear una categoría virtual
+        const result = [...categories];
+        if (uncategorizedDishes.length > 0) {
+            result.push({
+                id: 'uncategorized',
+                name: 'Otros platos',
+                description: null,
+                imageUrl: null,
+                order: 999, // Al final
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                createdById: currentUserId,
+                dishes: uncategorizedDishes
+            });
+        }
+
+        return result;
+    } catch (error) {
+        console.error("Error al obtener categorías con platos y sin categoría:", error);
+        throw new Error("No se pudieron obtener las categorías con platos");
+    }
 } 

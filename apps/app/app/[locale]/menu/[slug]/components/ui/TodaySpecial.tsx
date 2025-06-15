@@ -11,9 +11,9 @@ interface Dish {
     price: number;
     promotionalPrice?: number | null;
     imageUrl?: string | null;
-    category: {
+    category?: {
         name: string;
-    };
+    } | null;
 }
 
 interface TodaySpecialData {
@@ -73,9 +73,11 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
                         )}
                         <div className={`${todaySpecial.dish.imageUrl ? 'lg:w-1/2' : 'w-full'} p-8 lg:p-12 flex flex-col justify-center`}>
                             <div className="mb-4">
-                                <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${themeColors.bg} ${themeColors.text}`}>
-                                    {todaySpecial.dish.category.name}
-                                </span>
+                                {todaySpecial.dish.category && (
+                                    <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${themeColors.bg} ${themeColors.text}`}>
+                                        {todaySpecial.dish.category.name}
+                                    </span>
+                                )}
                             </div>
                             <h3 className="text-3xl font-bold text-gray-900 mb-4">
                                 {todaySpecial.dish.name}

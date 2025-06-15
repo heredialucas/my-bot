@@ -17,9 +17,9 @@ export interface Dish {
     imageUrl?: string | null;
     status: string;
     order: number;
-    category: {
+    category?: {
         name: string;
-    };
+    } | null;
 }
 
 export interface TodaySpecial {

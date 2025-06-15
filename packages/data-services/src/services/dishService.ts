@@ -14,7 +14,7 @@ export interface DishData {
     imageUrl?: string;
     status: 'ACTIVE' | 'INACTIVE';
     order: number;
-    categoryId: string;
+    categoryId?: string;
     categoryName?: string;
     createdAt: Date;
     updatedAt: Date;
@@ -28,7 +28,7 @@ export interface DishFormData {
     imageUrl?: string;
     status?: 'ACTIVE' | 'INACTIVE';
     order?: number;
-    categoryId: string;
+    categoryId?: string;
 }
 
 /**
@@ -46,7 +46,7 @@ export async function createDish(data: DishFormData, createdById: string) {
                 imageUrl: data.imageUrl,
                 status: data.status || 'ACTIVE',
                 order: data.order || 0,
-                categoryId: data.categoryId,
+                categoryId: data.categoryId || null,
                 createdById,
             },
             include: {
@@ -98,7 +98,7 @@ export async function getAllDishes(userId?: string) {
             status: dish.status,
             order: dish.order,
             categoryId: dish.categoryId,
-            categoryName: dish.category.name,
+            categoryName: dish.category?.name,
             createdAt: dish.createdAt,
             updatedAt: dish.updatedAt,
         })) as DishData[];
@@ -165,7 +165,7 @@ export async function updateDish(dishId: string, data: DishFormData) {
                 imageUrl: data.imageUrl,
                 status: data.status,
                 order: data.order,
-                categoryId: data.categoryId,
+                categoryId: data.categoryId || null,
             },
             include: {
                 category: {
