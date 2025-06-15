@@ -30,6 +30,16 @@ interface TodaySpecialProps {
         bg: string;
         text: string;
         accent: string;
+        priceColor: string;
+        promotionalPriceColor: string;
+        offerBadge: string;
+        gradients: {
+            header: string;
+            category: string;
+            special: string;
+            overlay: string;
+            badge: string;
+        };
         decorative: {
             primary: string;
             secondary: string;
@@ -46,9 +56,9 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
     const whatsappLink = restaurantPhone ? generateWhatsAppLinkForDish(restaurantPhone, todaySpecial.dish.name, restaurantName) : '';
 
     return (
-        <section className="relative bg-gradient-to-br from-orange-50 to-red-50 border-b overflow-hidden">
-            {/* Gradiente base */}
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-200/20 to-red-200/20"></div>
+        <section className={`relative ${themeColors.gradients.special} border-b overflow-hidden`}>
+            {/* Gradiente base temático */}
+            <div className={`absolute inset-0 ${themeColors.gradients.overlay}`}></div>
 
             {/* Elementos decorativos como en web-base */}
             <DecorativeElements
@@ -58,7 +68,7 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
 
             <div className="relative max-w-6xl mx-auto px-4 py-12 z-10">
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-sm font-semibold mb-2 shadow-lg">
+                    <div className={`inline-flex items-center px-4 py-2 ${themeColors.gradients.badge} text-white rounded-full text-sm font-semibold mb-2 shadow-lg`}>
                         <Star className="animate-pulse mr-2 w-4 h-4" />
                         {dictionary.web?.menu?.todaySpecial || 'Plato del Día'}
                         <Star className="animate-pulse ml-2 w-4 h-4" />
@@ -112,15 +122,15 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
                                             <span className="text-2xl font-medium text-gray-400 line-through">
                                                 ${todaySpecial.dish.price.toFixed(2)}
                                             </span>
-                                            <span className="text-4xl font-bold text-red-600">
+                                            <span className={`text-4xl font-bold ${themeColors.promotionalPriceColor}`}>
                                                 ${todaySpecial.dish.promotionalPrice.toFixed(2)}
                                             </span>
-                                            <span className="bg-red-100 text-red-800 text-sm font-semibold px-2 py-1 rounded-full shadow-md animate-pulse">
+                                            <span className={`${themeColors.offerBadge} text-sm font-semibold px-2 py-1 rounded-full shadow-md animate-pulse`}>
                                                 ¡OFERTA!
                                             </span>
                                         </>
                                     ) : (
-                                        <span className="text-4xl font-bold text-orange-600">
+                                        <span className={`text-4xl font-bold ${themeColors.priceColor}`}>
                                             ${todaySpecial.dish.price.toFixed(2)}
                                         </span>
                                     )}
@@ -131,13 +141,13 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
                                 </div>
                             </div>
 
-                            {/* Botón de WhatsApp */}
+                            {/* Botón de WhatsApp con color temático */}
                             {whatsappLink && (
                                 <a
                                     href={whatsappLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl hover:scale-105"
+                                    className={`inline-flex items-center justify-center gap-2 px-6 py-3 ${themeColors.bg} hover:opacity-90 ${themeColors.text} rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl hover:scale-105`}
                                 >
                                     <MessageCircle className="w-5 h-5" />
                                     Consultar Plato Especial

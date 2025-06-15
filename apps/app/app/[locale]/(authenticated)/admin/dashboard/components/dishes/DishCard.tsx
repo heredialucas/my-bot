@@ -35,10 +35,10 @@ export default function DishCard({ dish, dictionary, onEdit }: DishCardProps) {
             <h3 className="font-medium text-gray-900">{dish.name}</h3>
             <p className="text-sm text-gray-600 mt-1">{dish.description}</p>
             <div className="flex justify-between items-center mt-3">
-                <span className="text-lg font-bold text-green-600">
+                <span className="text-lg font-bold text-blue-600">
                     ${dish.price.toFixed(2)}
                 </span>
-                <span className={`text-xs px-2 py-1 rounded-full ${dish.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                <span className={`text-xs px-2 py-1 rounded-full ${dish.status === 'ACTIVE' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
                     }`}>
                     {dish.status === 'ACTIVE' ? dictionary.status.active : dictionary.status.inactive}
                 </span>

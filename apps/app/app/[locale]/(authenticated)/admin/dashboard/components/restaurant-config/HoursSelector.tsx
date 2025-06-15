@@ -49,11 +49,11 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
         saturday: { isOpen: true, openTime: '09:00', closeTime: '22:00', ranges: [] },
         sunday: { isOpen: true, openTime: '09:00', closeTime: '22:00', ranges: [] }
     });
-    const isInitialMount = useRef(true);
+    const [isInitialized, setIsInitialized] = useState(false);
 
-    // Parsear el valor inicial
+    // Parsear el valor inicial y establecer como inicializado
     useEffect(() => {
-        if (value) {
+        if (value && value.trim() !== '') {
             try {
                 const parsed = JSON.parse(value);
                 if (parsed && typeof parsed === 'object') {
@@ -81,22 +81,24 @@ export default function HoursSelector({ value, onChange }: HoursSelectorProps) {
                         }
                     });
                     setSchedule(convertedSchedule);
+                    setIsInitialized(true);
                     return;
                 }
             } catch (error) {
                 console.warn('Error parsing hours JSON:', error);
             }
         }
+
+        // Si no hay valor válido, usar valores por defecto y marcar como inicializado
+        setIsInitialized(true);
     }, [value]);
 
-    // Notificar cambios al componente padre
+    // Notificar cambios al componente padre - siempre después de la inicialización
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-            return;
+        if (isInitialized) {
+            onChange(generateHoursData(schedule));
         }
-        onChange(generateHoursData(schedule));
-    }, [schedule, onChange]);
+    }, [schedule, onChange, isInitialized]);
 
     // Generar string de horarios para mostrar
     const generateHoursString = (schedule: WeekSchedule): string => {

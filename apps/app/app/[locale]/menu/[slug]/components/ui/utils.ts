@@ -5,6 +5,16 @@ export function getThemeColors(theme: string) {
             bg: 'bg-green-600',
             text: 'text-white',
             accent: 'text-green-600',
+            priceColor: 'text-green-600',
+            promotionalPriceColor: 'text-green-700',
+            offerBadge: 'bg-green-100 text-green-800',
+            gradients: {
+                header: 'bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700',
+                category: 'bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600',
+                special: 'bg-gradient-to-br from-emerald-50 to-green-50',
+                overlay: 'bg-gradient-to-r from-emerald-200/20 to-green-200/20',
+                badge: 'bg-gradient-to-r from-emerald-500 to-green-500'
+            },
             decorative: {
                 primary: 'bg-green-600/20',
                 secondary: 'bg-green-400/10',
@@ -16,6 +26,16 @@ export function getThemeColors(theme: string) {
             bg: 'bg-red-600',
             text: 'text-white',
             accent: 'text-red-600',
+            priceColor: 'text-red-600',
+            promotionalPriceColor: 'text-red-700',
+            offerBadge: 'bg-red-100 text-red-800',
+            gradients: {
+                header: 'bg-gradient-to-br from-red-600 via-rose-600 to-pink-700',
+                category: 'bg-gradient-to-br from-red-500 via-rose-500 to-pink-600',
+                special: 'bg-gradient-to-br from-red-50 to-rose-50',
+                overlay: 'bg-gradient-to-r from-red-200/20 to-rose-200/20',
+                badge: 'bg-gradient-to-r from-red-500 to-rose-500'
+            },
             decorative: {
                 primary: 'bg-red-600/20',
                 secondary: 'bg-red-400/10',
@@ -27,6 +47,16 @@ export function getThemeColors(theme: string) {
             bg: 'bg-blue-600',
             text: 'text-white',
             accent: 'text-blue-600',
+            priceColor: 'text-blue-600',
+            promotionalPriceColor: 'text-blue-700',
+            offerBadge: 'bg-blue-100 text-blue-800',
+            gradients: {
+                header: 'bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700',
+                category: 'bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600',
+                special: 'bg-gradient-to-br from-blue-50 to-indigo-50',
+                overlay: 'bg-gradient-to-r from-blue-200/20 to-indigo-200/20',
+                badge: 'bg-gradient-to-r from-blue-500 to-indigo-500'
+            },
             decorative: {
                 primary: 'bg-blue-600/20',
                 secondary: 'bg-blue-400/10',
@@ -38,6 +68,16 @@ export function getThemeColors(theme: string) {
             bg: 'bg-yellow-600',
             text: 'text-white',
             accent: 'text-yellow-600',
+            priceColor: 'text-yellow-600',
+            promotionalPriceColor: 'text-yellow-700',
+            offerBadge: 'bg-yellow-100 text-yellow-800',
+            gradients: {
+                header: 'bg-gradient-to-br from-yellow-500 via-orange-500 to-red-600',
+                category: 'bg-gradient-to-br from-yellow-400 via-orange-400 to-red-500',
+                special: 'bg-gradient-to-br from-yellow-50 to-orange-50',
+                overlay: 'bg-gradient-to-r from-yellow-200/20 to-orange-200/20',
+                badge: 'bg-gradient-to-r from-yellow-500 to-orange-500'
+            },
             decorative: {
                 primary: 'bg-yellow-600/20',
                 secondary: 'bg-yellow-400/10',
@@ -49,6 +89,16 @@ export function getThemeColors(theme: string) {
             bg: 'bg-amber-700',
             text: 'text-white',
             accent: 'text-amber-700',
+            priceColor: 'text-amber-700',
+            promotionalPriceColor: 'text-amber-800',
+            offerBadge: 'bg-amber-100 text-amber-800',
+            gradients: {
+                header: 'bg-gradient-to-br from-amber-700 via-orange-700 to-red-800',
+                category: 'bg-gradient-to-br from-amber-600 via-orange-600 to-red-700',
+                special: 'bg-gradient-to-br from-amber-50 to-orange-50',
+                overlay: 'bg-gradient-to-r from-amber-200/20 to-orange-200/20',
+                badge: 'bg-gradient-to-r from-amber-600 to-orange-600'
+            },
             decorative: {
                 primary: 'bg-amber-700/20',
                 secondary: 'bg-amber-600/10',

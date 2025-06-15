@@ -23,6 +23,22 @@ interface CategorySectionProps {
         bg: string;
         text: string;
         accent: string;
+        priceColor: string;
+        promotionalPriceColor: string;
+        offerBadge: string;
+        gradients: {
+            header: string;
+            category: string;
+            special: string;
+            overlay: string;
+            badge: string;
+        };
+        decorative: {
+            primary: string;
+            secondary: string;
+            tertiary: string;
+            accent: string;
+        };
     };
     dictionary: Dictionary;
     restaurantName: string;
@@ -34,25 +50,38 @@ export default function CategorySection({ category, themeColors, dictionary, res
     if (category.dishes.length === 0) return null;
 
     return (
-        <section className="bg-white rounded-lg shadow-md overflow-hidden">
-            {/* Category Header */}
-            <div className={`${themeColors.bg} ${themeColors.text} p-6`}>
-                <div className="flex items-center gap-4">
+        <section className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-white/20 relative">
+            {/* Category Header con gradientes temáticos */}
+            <div className={`${themeColors.gradients.category} ${themeColors.text} p-6 relative overflow-hidden`}>
+                {/* Gradientes animados de fondo */}
+                <div className="absolute inset-0">
+                    {/* Gradiente base con movimiento */}
+                    <div className={`absolute inset-0 ${themeColors.gradients.overlay} animate-pulse`}></div>
+
+                    {/* Gradientes animados múltiples */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+                    <div className="absolute inset-0 bg-gradient-to-l from-transparent via-white/5 to-transparent animate-shimmer" style={{ animationDelay: '1s', animationDuration: '3s' }}></div>
+
+                    {/* Gradiente de brillo superior */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/15 via-transparent to-black/10"></div>
+                </div>
+
+                <div className="flex items-center gap-4 relative z-10">
                     {category.imageUrl && (
-                        <div className="w-16 h-16 relative">
+                        <div className="w-16 h-16 relative rounded-xl overflow-hidden shadow-lg ring-2 ring-white/30">
                             <Image
                                 src={category.imageUrl}
                                 alt={category.name}
                                 fill
-                                className="object-cover rounded-lg"
+                                className="object-cover"
                                 sizes="64px"
                             />
                         </div>
                     )}
                     <div>
-                        <h3 className="text-2xl font-bold">{category.name}</h3>
+                        <h3 className="text-2xl font-bold drop-shadow-lg">{category.name}</h3>
                         {category.description && (
-                            <p className="text-lg opacity-90">{category.description}</p>
+                            <p className="text-lg opacity-90 drop-shadow-md">{category.description}</p>
                         )}
                     </div>
                 </div>
