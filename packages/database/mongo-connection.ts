@@ -26,8 +26,6 @@ export async function connectToMongoDB(): Promise<Db> {
             throw new Error('MONGODB_URL is not configured');
         }
 
-        console.log('Connecting to MongoDB...');
-
         client = new MongoClient(mongoUrl);
         await client.connect();
 
@@ -35,7 +33,6 @@ export async function connectToMongoDB(): Promise<Db> {
         const dbName = mongoUrl.split('/').pop()?.split('?')[0] || 'barfer';
         db = client.db(dbName);
 
-        console.log(`Connected to MongoDB database: ${dbName}`);
         return db;
     } catch (error) {
         console.error('Failed to connect to MongoDB:', error);

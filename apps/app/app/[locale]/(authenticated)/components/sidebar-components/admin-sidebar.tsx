@@ -2,7 +2,6 @@
 
 import { cn } from '@repo/design-system/lib/utils';
 import {
-    LayoutDashboard,
     User,
     Users,
     BarChart3,
@@ -34,12 +33,6 @@ export function AdminSidebar({ dictionary }: AdminSidebarProps) {
     const activeTab = searchParams.get('tab') || 'config';
 
     const menuItems: MenuItemProps[] = [
-        {
-            title: 'Inicio',
-            mobileTitle: 'Inicio',
-            icon: LayoutDashboard,
-            href: '/admin/dashboard',
-        },
         {
             title: 'Mi Cuenta',
             mobileTitle: 'Cuenta',
