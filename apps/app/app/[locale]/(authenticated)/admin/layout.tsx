@@ -20,7 +20,7 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
         <div className="flex w-full min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
             <UserHeaderClient
                 logo={<Image src={logo} alt="Ganga-Menu" width={32} height={32} />}
-                title="Ganga-Menú"
+                title="Barfer"
                 dictionary={dictionary}
             />
 

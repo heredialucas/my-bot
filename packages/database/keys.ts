@@ -5,8 +5,10 @@ export const keys = () =>
   createEnv({
     server: {
       DATABASE_URL: z.string().url().optional(),
+      MONGODB_URL: z.string().url().optional(),
     },
     runtimeEnv: {
       DATABASE_URL: process.env.DATABASE_URL,
+      MONGODB_URL: process.env.MONGODB_URL,
     },
   });

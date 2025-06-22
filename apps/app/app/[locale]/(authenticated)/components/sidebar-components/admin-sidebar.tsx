@@ -3,18 +3,11 @@
 import { cn } from '@repo/design-system/lib/utils';
 import {
     LayoutDashboard,
-    Users as UsersIcon,
-    Settings,
-    FolderOpen,
-    UtensilsCrossed,
-    Star
 } from 'lucide-react';
 import Link from 'next/link';
 import {
     Sidebar,
     SidebarContent,
-    SidebarGroup,
-    SidebarGroupLabel,
     SidebarMenu,
     SidebarMenuItem
 } from '@repo/design-system/components/ui/sidebar';
@@ -41,27 +34,9 @@ export function AdminSidebar({ dictionary }: AdminSidebarProps) {
         {
             title: 'Inicio',
             mobileTitle: 'Inicio',
-            icon: Settings,
-            href: '/admin/dashboard?tab=config',
-        },
-        {
-            title: 'Categorías',
-            mobileTitle: 'Categorías',
-            icon: FolderOpen,
-            href: '/admin/dashboard?tab=categories',
-        },
-        {
-            title: 'Platos',
-            mobileTitle: 'Platos',
-            icon: UtensilsCrossed,
-            href: '/admin/dashboard?tab=dishes',
-        },
-        {
-            title: 'Especiales del Día',
-            mobileTitle: 'Especiales',
-            icon: Star,
-            href: '/admin/dashboard?tab=dailySpecials',
-        },
+            icon: LayoutDashboard,
+            href: '/admin/dashboard',
+        }
     ];
 
     const isActivePath = (path: string) => {

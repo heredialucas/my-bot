@@ -1,6 +1,5 @@
 import { env } from '@/env';
 import { getCurrentUser } from '@repo/auth/server';
-import { getUserById } from '@repo/data-services';
 import { SidebarProvider } from '@repo/design-system/components/ui/sidebar';
 import { showBetaFeature } from '@repo/feature-flags';
 import { NotificationsProvider } from '@repo/notifications/components/provider';

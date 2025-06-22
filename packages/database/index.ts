@@ -29,3 +29,4 @@ if (process.env.NODE_ENV !== 'production' && isDatabaseConfigured) {
 }
 
 export * from './generated/client';
+export * from './mongo-connection';

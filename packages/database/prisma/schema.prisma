@@ -16,106 +16,13 @@ enum UserRole {
   user
 }
 
-enum DishStatus {
-  ACTIVE
-  INACTIVE
-}
-
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
   name      String
   lastName  String
   role      UserRole @default(user)
-  password  String // Este será hasheado en el servicio
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // Relaciones
-  createdDishes     Dish[]             @relation("CreatedBy")
-  createdCategories Category[]         @relation("CategoryCreatedBy")
-  dailySpecials     DailySpecial[]     @relation("DailySpecialCreatedBy")
-  restaurantConfigs RestaurantConfig[] @relation("RestaurantConfigCreatedBy")
-}
-
-model Category {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  imageUrl    String?
-  order       Int      @default(0) // Para ordenar las categorías
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relaciones
-  dishes      Dish[]
-  createdBy   User   @relation("CategoryCreatedBy", fields: [createdById], references: [id])
-  createdById String
-
-  @@unique([name])
-}
-
-model Dish {
-  id               String     @id @default(uuid())
-  name             String
-  description      String
-  price            Float
-  promotionalPrice Float? // Precio promocional opcional
-  imageUrl         String?
-  status           DishStatus @default(ACTIVE)
-  order            Int        @default(0) // Para ordenar los platos dentro de la categoría
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-
-  // Relaciones
-  category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId  String?
-  createdBy   User      @relation("CreatedBy", fields: [createdById], references: [id])
-  createdById String
-
-  // Platos del día
-  dailySpecials DailySpecial[]
-
-  @@index([categoryId])
-  @@index([status])
-}
-
-model DailySpecial {
-  id        String   @id @default(uuid())
-  date      DateTime @db.Date // Solo la fecha, sin hora
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relaciones
-  dish        Dish   @relation(fields: [dishId], references: [id], onDelete: Cascade)
-  dishId      String
-  createdBy   User   @relation("DailySpecialCreatedBy", fields: [createdById], references: [id])
-  createdById String
-
-  @@index([date])
-  @@index([isActive])
-}
-
-model RestaurantConfig {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  address     String?
-  phone       String?
-  email       String?
-  hours       String?
-  logoUrl     String?
-  slug        String   @unique @default("mi-restaurante") // slug único para la URL
-  themeColor  String   @default("green") // green, red, blue, yellow, brown
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relaciones
-  createdBy   User   @relation("RestaurantConfigCreatedBy", fields: [createdById], references: [id])
-  createdById String
-
-  @@index([slug])
 }
