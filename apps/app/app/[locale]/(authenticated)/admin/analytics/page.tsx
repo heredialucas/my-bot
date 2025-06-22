@@ -10,7 +10,7 @@ export default function AnalyticsPage() {
     return (
         <div className="space-y-6 p-4 md:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <h1 className="text-2xl md:text-3xl font-bold">Estadísticas y KPIs</h1>
+                <h1 className="text-2xl md:text-3xl font-bold">Estadísticas</h1>
                 <div className="text-sm text-muted-foreground">
                     Análisis detallado del negocio
                 </div>

@@ -131,8 +131,8 @@
         }
       },
       "layout": {
-        "title": "Internal tools for Ganga-Menú",
-        "description": "Internal tools for Ganga-Menú to help you manage your digital menus."
+        "title": "Barfer Administration Panel",
+        "description": "Access Barfer's administrative tools to manage your business efficiently."
       }
     }
   },
@@ -184,8 +184,8 @@
     },
     "home": {
       "meta": {
-        "title": "Ganga-Menú - Digital menus for restaurants",
-        "description": "The platform that helps restaurants create and manage their digital menus easily and professionally."
+        "title": "Barfer - Business Management System",
+        "description": "The comprehensive business administration platform. Efficient management, advanced analytics and total control of your company."
       },
       "hero": {
         "title": "Transform Your Restaurant's Digital Presence",
@@ -204,7 +204,7 @@
         }
       },
       "features": {
-        "title": "Why Choose Ganga-Menú",
+        "title": "Why Choose Barfer",
         "description": "Transform your restaurant's digital presence with our powerful menu management platform designed specifically for food businesses",
         "items": [
           {
@@ -234,7 +234,7 @@
         ]
       },
       "stats": {
-        "title": "HOW GANGA-MENÚ WORKS",
+        "title": "HOW BARFER WORKS",
         "description": "Follow these simple steps to create your digital menu and start sharing it with your customers",
         "process": [
           {
@@ -257,7 +257,7 @@
       },
       "testimonials": {
         "title": "What Our Restaurants Say",
-        "description": "Experiences from restaurants that use Ganga-Menú to modernize their menus",
+        "description": "Experiences from businesses that use Barfer to optimize their operations",
         "items": [
           {
             "title": "Our customers now navigate our menu with ease",
@@ -279,7 +279,7 @@
       },
       "faq": {
         "title": "Frequently Asked Questions",
-        "description": "Answers to common questions about Ganga-Menú and how to create your digital menu",
+        "description": "Answers to common questions about Barfer and how to implement the management system",
         "cta": "Still have questions? Contact us",
         "needMore": "Need more information?",
         "contactDescription": "If you couldn't find the answer to your question, our team is ready to help you digitize your menu.",
@@ -380,7 +380,7 @@
     "contact": {
       "meta": {
         "title": "Contact Us",
-        "description": "Contact our team to learn more about how Ganga-Menú can help you digitize your restaurant's menu."
+        "description": "Contact our team to learn more about how Barfer can help you optimize your business management."
       },
       "hero": {
         "title": "We're here to help",

@@ -76,7 +76,7 @@ export const SignUp = ({ dictionary, error }: SignUpProps) => {
                     <input
                         name="name"
                         type="text"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                         placeholder={dictionary?.app?.auth?.signUp?.firstName || 'Nombre'}
                         required
                     />
@@ -89,7 +89,7 @@ export const SignUp = ({ dictionary, error }: SignUpProps) => {
                     <input
                         name="lastName"
                         type="text"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                         placeholder={dictionary?.app?.auth?.signUp?.lastName || 'Apellido'}
                         required
                     />
@@ -102,7 +102,7 @@ export const SignUp = ({ dictionary, error }: SignUpProps) => {
                     <input
                         name="email"
                         type="email"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="correo@ejemplo.com"
                         required
                     />
@@ -115,7 +115,7 @@ export const SignUp = ({ dictionary, error }: SignUpProps) => {
                     <input
                         name="password"
                         type="password"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="••••••••"
                         required
                     />
@@ -128,7 +128,7 @@ export const SignUp = ({ dictionary, error }: SignUpProps) => {
                     <input
                         name="confirmPassword"
                         type="password"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="••••••••"
                         required
                     />
@@ -141,7 +141,7 @@ export const SignUp = ({ dictionary, error }: SignUpProps) => {
             <div className="text-center">
                 <Link
                     href="/sign-in"
-                    className="text-sm text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+                    className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                 >
                     {dictionary?.app?.auth?.signUp?.goToSignIn || '¿Ya tienes cuenta? Inicia sesión'}
                 </Link>

@@ -1,7 +1,7 @@
 {
   "app": {
     "admin": {
-      "title": "Ganga-Menú",
+      "title": "Barfer - Panel de Administración",
       "navigation": {
         "dashboard": "Inicio",
         "users": "Usuarios",
@@ -131,8 +131,8 @@
         }
       },
       "layout": {
-        "title": "Herramientas internas para Ganga-Menú",
-        "description": "Herramientas internas para Ganga-Menú que te ayudarán a gestionar tus menús digitales."
+        "title": "Panel de Administración Barfer",
+        "description": "Accede a las herramientas administrativas de Barfer para gestionar tu negocio de manera eficiente."
       }
     }
   },
@@ -184,12 +184,12 @@
     },
     "home": {
       "meta": {
-        "title": "Ganga-Menú - Menús digitales para restaurantes",
-        "description": "La plataforma que ayuda a restaurantes a crear y gestionar sus menús digitales de forma fácil y profesional."
+        "title": "Barfer - Sistema de Gestión Empresarial",
+        "description": "La plataforma integral de administración para negocios. Gestión eficiente, análisis avanzados y control total de tu empresa."
       },
       "hero": {
-        "title": "Transforma la Presencia Digital de tu Restaurante",
-        "subtitle": "Crea menús digitales impresionantes, muestra especiales del día y brinda a tus clientes una experiencia gastronómica inolvidable. Ganga-Menú ayuda a restaurantes locales a modernizar la presentación de sus menús y potenciar su negocio.",
+        "title": "Potencia la Gestión de tu Negocio",
+        "subtitle": "Sistema integral de administración empresarial que optimiza procesos, mejora la eficiencia operativa y brinda herramientas avanzadas para el crecimiento de tu empresa. Barfer transforma la manera en que administras tu negocio.",
         "getStarted": "Comenzar",
         "viewPricing": "Ver Precios"
       },
@@ -204,8 +204,8 @@
         }
       },
       "features": {
-        "title": "Por Qué Elegir Ganga-Menú",
-        "description": "Transforma la presencia digital de tu restaurante con nuestra poderosa plataforma de gestión de menús diseñada específicamente para negocios gastronómicos",
+        "title": "Por Qué Elegir Barfer",
+        "description": "Optimiza la gestión de tu empresa con nuestra plataforma integral diseñada específicamente para maximizar la eficiencia operativa y el crecimiento del negocio",
         "items": [
           {
             "title": "Creación de Menús Digitales",
@@ -234,8 +234,8 @@
         ]
       },
       "stats": {
-        "title": "CÓMO FUNCIONA GANGA-MENÚ",
-        "description": "Sigue estos sencillos pasos para crear tu menú digital y comenzar a compartirlo con tus clientes",
+        "title": "CÓMO FUNCIONA BARFER",
+        "description": "Sigue estos sencillos pasos para implementar el sistema de gestión y comenzar a optimizar tu negocio",
         "process": [
           {
             "title": "Crea tu cuenta",
@@ -257,7 +257,7 @@
       },
       "testimonials": {
         "title": "Lo que Dicen Nuestros Restaurantes",
-        "description": "Experiencias de restaurantes que utilizan Ganga-Menú para modernizar sus menús",
+        "description": "Experiencias de empresas que utilizan Barfer para optimizar sus operaciones de negocio",
         "items": [
           {
             "title": "Nuestros clientes ahora navegan nuestro menú con facilidad",
@@ -279,7 +279,7 @@
       },
       "faq": {
         "title": "Preguntas Frecuentes",
-        "description": "Respuestas a las dudas más comunes sobre Ganga-Menú y cómo crear tu menú digital",
+        "description": "Respuestas a las dudas más comunes sobre Barfer y cómo implementar el sistema de gestión",
         "cta": "¿Aún tienes preguntas? Contáctanos",
         "needMore": "¿Necesitas más información?",
         "contactDescription": "Si no encontraste la respuesta a tu pregunta, nuestro equipo está listo para ayudarte a digitalizar tu menú.",
@@ -380,7 +380,7 @@
     "contact": {
       "meta": {
         "title": "Contáctanos",
-        "description": "Contacta con nuestro equipo para saber más sobre cómo Ganga-Menú puede ayudarte a digitalizar el menú de tu restaurante."
+        "description": "Contacta con nuestro equipo para saber más sobre cómo Barfer puede ayudarte a optimizar la gestión de tu empresa."
       },
       "hero": {
         "title": "Estamos aquí para ayudarte",

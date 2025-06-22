@@ -24,16 +24,16 @@ const AuthLayout = async ({ children, params }: AuthLayoutProps) => {
         <div className="absolute w-full h-full left-0 top-0 bg-gradient-to-br from-gray-100 via-gray-100 to-gray-200 dark:from-zinc-900 dark:via-zinc-900 dark:to-black z-0" />
 
         {/* Decorative circles */}
-        <div className="absolute -left-20 -top-20 w-64 h-64 bg-green-400/10 rounded-full filter blur-3xl opacity-30" />
-        <div className="absolute right-32 top-1/3 w-96 h-96 bg-green-400/10 rounded-full filter blur-3xl opacity-20" />
-        <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-green-400/10 rounded-full filter blur-3xl opacity-30" />
+        <div className="absolute -left-20 -top-20 w-64 h-64 bg-blue-400/10 rounded-full filter blur-3xl opacity-30" />
+        <div className="absolute right-32 top-1/3 w-96 h-96 bg-blue-400/10 rounded-full filter blur-3xl opacity-20" />
+        <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-blue-400/10 rounded-full filter blur-3xl opacity-30" />
 
         {/* Logo */}
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <Image src={logo} alt="Ganga-Menú" width={32} height={32} />
-              <span className="font-bold text-2xl text-gray-900 dark:text-white">Ganga-Menú</span>
+              <Image src={logo} alt="Barfer" width={32} height={32} />
+              <span className="font-bold text-2xl text-gray-900 dark:text-white">Barfer</span>
             </Link>
             <div className="flex items-center gap-2">
               <ModeToggle />
@@ -56,8 +56,8 @@ const AuthLayout = async ({ children, params }: AuthLayoutProps) => {
       <div className="flex flex-col justify-center p-8 md:p-12 bg-white dark:bg-zinc-950">
         <div className="lg:hidden flex items-center justify-between mb-10">
           <Link href="/" className="flex items-center gap-2">
-            <Image src={logo} alt="Ganga-Menú" width={32} height={32} />
-            <span className="font-bold text-xl text-gray-900 dark:text-white">Ganga-Menú</span>
+            <Image src={logo} alt="Barfer" width={32} height={32} />
+            <span className="font-bold text-xl text-gray-900 dark:text-white">Barfer</span>
           </Link>
           <div className="flex items-center gap-2">
             <ModeToggle />

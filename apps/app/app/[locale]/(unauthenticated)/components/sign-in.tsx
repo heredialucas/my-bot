@@ -28,8 +28,8 @@ async function handleSignIn(formData: FormData) {
         console.log('SignIn result:', result);
 
         if (result.success) {
-            console.log('Sign in successful, redirecting to dashboard...');
-            redirect('/admin/dashboard');
+            console.log('Sign in successful, redirecting to analytics...');
+            redirect('/admin/analytics');
         } else {
             console.log('Sign in failed:', result.message);
         }
@@ -54,7 +54,7 @@ export const SignIn = ({ dictionary }: SignInProps) => {
                     <input
                         name="email"
                         type="email"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="correo@ejemplo.com"
                         required
                     />
@@ -67,7 +67,7 @@ export const SignIn = ({ dictionary }: SignInProps) => {
                     <input
                         name="password"
                         type="password"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="••••••••"
                         required
                     />
@@ -80,7 +80,7 @@ export const SignIn = ({ dictionary }: SignInProps) => {
             <div className="text-center">
                 <Link
                     href="/sign-up"
-                    className="text-sm text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+                    className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                 >
                     {dictionary?.app?.auth?.signIn?.goToSignUp || '¿No tienes cuenta? Crear cuenta'}
                 </Link>
