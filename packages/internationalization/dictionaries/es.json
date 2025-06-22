@@ -74,6 +74,99 @@
             "saving": "Guardando..."
           }
         }
+      },
+      "clients": {
+        "title": "Gestión de Clientes",
+        "subtitle": "Análisis de Comportamiento de Clientes",
+        "description": "Visualiza y gestiona las categorías de clientes basadas en su comportamiento de compra",
+        "categories": {
+          "title": "Categorías de Clientes",
+          "behaviorTitle": "Por Comportamiento de Compra",
+          "spendingTitle": "Por Nivel de Gasto",
+          "new": "Cliente Nuevo",
+          "newDescription": "Solo una compra realizada",
+          "possibleActive": "Posible Activo",
+          "possibleActiveDescription": "Volvió a comprar al mes de su primera compra",
+          "possibleInactive": "Posible Inactivo",
+          "possibleInactiveDescription": "No volvió a comprar al mes de su primera compra",
+          "active": "Cliente Activo",
+          "activeDescription": "+2 compras en los últimos 2 meses",
+          "inactive": "Cliente Inactivo",
+          "inactiveDescription": "No compra hace más de 2 meses",
+          "recovered": "Cliente Recuperado",
+          "recoveredDescription": "Inactivo por más de 2 meses y volvió a comprar",
+          "lost": "Cliente Perdido",
+          "lostDescription": "Más de 6 meses sin comprar",
+          "tracking": "En Seguimiento",
+          "trackingDescription": "Entre 1 semana y 1 mes desde su primera compra",
+          "premium": "Premium (A)",
+          "premiumDescription": "Más de $63,000 mensuales (>10kg)",
+          "standard": "Estándar (B)",
+          "standardDescription": "$39,000 - $63,000 mensuales (5-10kg)",
+          "basic": "Básico (C)",
+          "basicDescription": "Hasta $39,000 mensuales (hasta 5kg)"
+        },
+        "stats": {
+          "totalClients": "Total de Clientes",
+          "averageSpending": "Gasto Promedio",
+          "repeatRate": "Tasa de Repetición",
+          "averageOrders": "Pedidos Promedio"
+        },
+        "actions": {
+          "sendWhatsApp": "Enviar WhatsApp",
+          "viewProfile": "Ver Perfil",
+          "viewOrders": "Ver Pedidos"
+        },
+        "empty": {
+          "title": "No hay clientes",
+          "description": "Aún no tienes clientes registrados con pedidos"
+        }
+      },
+      "users": {
+        "title": "Gestión de Usuarios",
+        "subtitle": "Usuarios del Sistema",
+        "description": "Gestiona los usuarios y sus permisos",
+        "newUser": "Nuevo Usuario",
+        "noUsers": "No hay usuarios registrados",
+        "status": {
+          "active": "Activo",
+          "inactive": "Inactivo"
+        },
+        "roles": {
+          "admin": "Administrador",
+          "user": "Usuario"
+        },
+        "actions": {
+          "edit": "Editar",
+          "delete": "Eliminar",
+          "confirmDelete": "¿Estás seguro de que deseas eliminar este usuario?"
+        },
+        "form": {
+          "createTitle": "Crear Nuevo Usuario",
+          "editTitle": "Editar Usuario",
+          "name": "Nombre",
+          "lastName": "Apellido",
+          "email": "Email",
+          "password": "Contraseña",
+          "role": "Rol",
+          "cancel": "Cancelar",
+          "create": "Crear Usuario",
+          "update": "Actualizar Usuario",
+          "creating": "Creando...",
+          "updating": "Actualizando...",
+          "errors": {
+            "emptyFields": "Todos los campos son requeridos",
+            "invalidEmail": "Email inválido",
+            "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+            "emailExists": "Ya existe un usuario con este email",
+            "createFailed": "Error al crear el usuario",
+            "updateFailed": "Error al actualizar el usuario"
+          },
+          "success": {
+            "userCreated": "Usuario creado exitosamente",
+            "userUpdated": "Usuario actualizado exitosamente"
+          }
+        }
       }
     },
     "client": {
@@ -165,6 +258,53 @@
           },
           "success": {
             "passwordUpdated": "Contraseña actualizada exitosamente"
+          }
+        },
+        "clients": {
+          "title": "Gestión de Clientes",
+          "subtitle": "Análisis de Comportamiento de Clientes",
+          "description": "Visualiza y gestiona las categorías de clientes basadas en su comportamiento de compra",
+          "categories": {
+            "title": "Categorías de Clientes",
+            "behaviorTitle": "Por Comportamiento de Compra",
+            "spendingTitle": "Por Nivel de Gasto",
+            "new": "Cliente Nuevo",
+            "newDescription": "Solo una compra realizada",
+            "possibleActive": "Posible Activo",
+            "possibleActiveDescription": "Volvió a comprar al mes de su primera compra",
+            "possibleInactive": "Posible Inactivo",
+            "possibleInactiveDescription": "No volvió a comprar al mes de su primera compra",
+            "active": "Cliente Activo",
+            "activeDescription": "+2 compras en los últimos 2 meses",
+            "inactive": "Cliente Inactivo",
+            "inactiveDescription": "No compra hace más de 2 meses",
+            "recovered": "Cliente Recuperado",
+            "recoveredDescription": "Inactivo por más de 2 meses y volvió a comprar",
+            "lost": "Cliente Perdido",
+            "lostDescription": "Más de 6 meses sin comprar",
+            "tracking": "En Seguimiento",
+            "trackingDescription": "Entre 1 semana y 1 mes desde su primera compra",
+            "premium": "Premium (A)",
+            "premiumDescription": "Más de $63,000 mensuales (>10kg)",
+            "standard": "Estándar (B)",
+            "standardDescription": "$39,000 - $63,000 mensuales (5-10kg)",
+            "basic": "Básico (C)",
+            "basicDescription": "Hasta $39,000 mensuales (hasta 5kg)"
+          },
+          "stats": {
+            "totalClients": "Total de Clientes",
+            "averageSpending": "Gasto Promedio",
+            "repeatRate": "Tasa de Repetición",
+            "averageOrders": "Pedidos Promedio"
+          },
+          "actions": {
+            "sendWhatsApp": "Enviar WhatsApp",
+            "viewProfile": "Ver Perfil",
+            "viewOrders": "Ver Pedidos"
+          },
+          "empty": {
+            "title": "No hay clientes",
+            "description": "Aún no tienes clientes registrados con pedidos"
           }
         },
         "users": {

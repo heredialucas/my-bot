@@ -22,5 +22,8 @@ export {
     getCustomerInsights,
     getProductSales,
     getPaymentMethodStats,
-    getOrdersByMonth
+    getOrdersByMonth,
+    getCategorySales,
+    // Client Management (desde barfer/analytics/)
+    getClientCategorization
 } from './barfer';

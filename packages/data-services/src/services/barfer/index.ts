@@ -9,4 +9,7 @@ export { getCustomerInsights } from './analytics/getCustomerInsights';
 export { getProductSales } from './analytics/getProductSales';
 export { getPaymentMethodStats } from './analytics/getPaymentMethodStats';
 export { getOrdersByMonth } from './analytics/getOrdersByMonth';
-export { getCategorySales } from './analytics/getCategorySales'; 
+export { getCategorySales } from './analytics/getCategorySales';
+
+// ===== CLIENT MANAGEMENT =====
+export { getClientCategorization } from './analytics/getClientCategorization'; 

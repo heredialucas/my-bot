@@ -23,6 +23,10 @@ export const config: Config = {
         '2xl': '1400px',
       },
     },
+    screens: {
+      'xs': '475px',
+      ...defaultTheme.screens,
+    },
     extend: {
       colors: {
         border: 'hsl(var(--border) / <alpha-value>)',

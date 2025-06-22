@@ -172,4 +172,53 @@ export interface DashboardStats {
     completedOrders: number;
     topProducts: Product[];
     recentOrders: Order[];
+}
+
+// Tipos para categorización de clientes
+export type ClientBehaviorCategory =
+    | 'new'              // Solo una compra
+    | 'possible-active'   // Volvió a comprar al mes de su primera compra
+    | 'possible-inactive' // No volvió a comprar al mes de su primera compra
+    | 'active'           // +2 compras en los últimos 2 meses
+    | 'inactive'         // No compra hace más de 2 meses
+    | 'recovered'        // Inactivo y volvió a comprar
+    | 'lost'             // Más de 6 meses sin comprar
+    | 'tracking';        // Entre 1 semana y 1 mes desde primera compra
+
+export type ClientSpendingCategory = 'premium' | 'standard' | 'basic';
+
+export interface ClientCategorization {
+    _id: string; // Email del usuario (ya que user._id no existe en las órdenes)
+    user: User;
+    behaviorCategory: ClientBehaviorCategory;
+    spendingCategory: ClientSpendingCategory;
+    totalOrders: number;
+    totalSpent: number;
+    monthlySpending: number;
+    firstOrderDate: string;
+    lastOrderDate: string;
+    daysSinceFirstOrder: number;
+    daysSinceLastOrder: number;
+    averageOrderValue: number;
+}
+
+export interface ClientCategoryStats {
+    category: ClientBehaviorCategory | ClientSpendingCategory;
+    count: number;
+    totalSpent: number;
+    averageSpending: number;
+    percentage: number;
+}
+
+export interface ClientAnalytics {
+    totalClients: number;
+    behaviorCategories: ClientCategoryStats[];
+    spendingCategories: ClientCategoryStats[];
+    clients: ClientCategorization[];
+    summary: {
+        averageOrderValue: number;
+        repeatCustomerRate: number;
+        averageOrdersPerCustomer: number;
+        averageMonthlySpending: number;
+    };
 } 
