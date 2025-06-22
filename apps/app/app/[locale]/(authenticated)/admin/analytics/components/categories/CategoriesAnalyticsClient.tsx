@@ -7,6 +7,7 @@ import { Button } from '@repo/design-system/components/ui/button';
 import { Separator } from '@repo/design-system/components/ui/separator';
 import { Tag, Filter } from 'lucide-react';
 import { useInitStore } from '../../../../../../../store/initStore';
+import { CategoriesChart } from '../charts/CategoriesChart';
 
 interface CategorySale {
     categoryName: string;
@@ -446,6 +447,16 @@ export function CategoriesAnalyticsClient({
                     </CardContent>
                 </Card>
             )}
+
+            {/* Gráficos */}
+            <CategoriesChart
+                currentCategories={currentCategories}
+                compareCategories={compareCategories}
+                isComparing={isComparing}
+                statusFilter={statusFilter}
+                dateFilter={dateFilter}
+                compareFilter={compareFilter}
+            />
         </div>
     );
 } 

@@ -6,6 +6,7 @@ import { Badge } from '@repo/design-system/components/ui/badge';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Separator } from '@repo/design-system/components/ui/separator';
 import { Package, Filter } from 'lucide-react';
+import { ProductsChart } from '../charts/ProductsChart';
 
 interface ProductSale {
     productId: string;
@@ -379,6 +380,16 @@ export function ProductsAnalyticsClient({
                     </CardContent>
                 </Card>
             )}
+
+            {/* Gráficos */}
+            <ProductsChart
+                currentProducts={currentProducts}
+                compareProducts={compareProducts}
+                isComparing={isComparing}
+                statusFilter={statusFilter}
+                dateFilter={dateFilter}
+                compareFilter={compareFilter}
+            />
         </div>
     );
 } 

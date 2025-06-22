@@ -62,9 +62,64 @@ export function FrequencyAnalyticsClient({
 
     return (
         <div className="space-y-4 md:space-y-6">
+            {/* Métricas principales */}
+            <div className="grid gap-4 grid-cols-1 xl:grid-cols-2">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <DollarSign className="h-5 w-5 text-green-600" />
+                            Gasto Promedio por Compra {isComparing ? `(${newerLabel})` : ''}
+                        </CardTitle>
+                        <CardDescription>
+                            {dateFilter && `${formatDateRange(dateFilter.from, dateFilter.to)} • `}
+                            Monto promedio de cada compra realizada
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600 mb-2 break-words overflow-hidden">
+                            ${customerInsights.averageOrderValue.toLocaleString()}
+                        </div>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
+                            Basado en {customerInsights.totalOrders.toLocaleString()} órdenes totales
+                        </p>
+                        <div className="mt-3 p-2 sm:p-3 bg-green-50 rounded-lg border border-green-200">
+                            <p className="text-xs text-green-700">
+                                <strong>Valor promedio:</strong> Calculado como Revenue Total ÷ Total de Órdenes
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <RefreshCw className="h-5 w-5 text-purple-600" />
+                            Frecuencia Promedio de Compra {isComparing ? `(${newerLabel})` : ''}
+                        </CardTitle>
+                        <CardDescription>
+                            {dateFilter && `${formatDateRange(dateFilter.from, dateFilter.to)} • `}
+                            Número promedio de órdenes por cliente
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-600 mb-2 break-words overflow-hidden">
+                            {customerInsights.averageOrdersPerCustomer} órdenes
+                        </div>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
+                            Por cliente activo
+                        </p>
+                        <div className="mt-3 p-2 sm:p-3 bg-purple-50 rounded-lg border border-purple-200">
+                            <p className="text-xs text-purple-700">
+                                <strong>Frecuencia promedio:</strong> Total de Órdenes ÷ Clientes Únicos
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
             {/* Resumen de comparación */}
             {isComparing && compareCustomerInsights && (
-                <div className="grid gap-4 md:grid-cols-3">
+                <div className="grid gap-4 lg:grid-cols-3">
                     <Card>
                         <CardHeader className="pb-2">
                             <CardTitle className="text-base">Resumen - Valor Promedio Orden</CardTitle>
@@ -117,11 +172,11 @@ export function FrequencyAnalyticsClient({
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center">
                                     <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
-                                    <span className="font-medium">{(isPrimaryNewer ? compareCustomerInsights.averageOrdersPerCustomer : customerInsights.averageOrdersPerCustomer).toFixed(1)}</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? compareCustomerInsights.averageOrdersPerCustomer : customerInsights.averageOrdersPerCustomer)} órdenes</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
-                                    <span className="font-medium">{(isPrimaryNewer ? customerInsights.averageOrdersPerCustomer : compareCustomerInsights.averageOrdersPerCustomer).toFixed(1)}</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? customerInsights.averageOrdersPerCustomer : compareCustomerInsights.averageOrdersPerCustomer)} órdenes</span>
                                 </div>
                                 <Separator />
                                 <div className="flex justify-between items-center">
@@ -153,11 +208,11 @@ export function FrequencyAnalyticsClient({
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center">
                                     <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
-                                    <span className="font-medium">{(isPrimaryNewer ? compareCustomerInsights.repeatCustomerRate : customerInsights.repeatCustomerRate).toFixed(1)}%</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? compareCustomerInsights.repeatCustomerRate : customerInsights.repeatCustomerRate)}%</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
-                                    <span className="font-medium">{(isPrimaryNewer ? customerInsights.repeatCustomerRate : compareCustomerInsights.repeatCustomerRate).toFixed(1)}%</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? customerInsights.repeatCustomerRate : compareCustomerInsights.repeatCustomerRate)}%</span>
                                 </div>
                                 <Separator />
                                 <div className="flex justify-between items-center">
@@ -175,62 +230,9 @@ export function FrequencyAnalyticsClient({
                 </div>
             )}
 
-            {/* Métricas principales solicitadas */}
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <DollarSign className="h-5 w-5 text-green-600" />
-                            Gasto Promedio por Compra {isComparing ? `(${newerLabel})` : ''}
-                        </CardTitle>
-                        <CardDescription>
-                            Compra promedio de todas las órdenes
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600 mb-2 break-words overflow-hidden">
-                            ${customerInsights.averageOrderValue.toLocaleString()}
-                        </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                            Basado en {customerInsights.totalOrders.toLocaleString()} órdenes totales
-                        </p>
-                        <div className="mt-3 p-2 sm:p-3 bg-green-50 rounded-lg border border-green-200">
-                            <p className="text-xs text-green-700">
-                                <strong>Cálculo:</strong> Suma total de revenue ÷ cantidad de órdenes totales
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <RefreshCw className="h-5 w-5 text-blue-600" />
-                            Frecuencia Promedio de Compra {isComparing ? `(${newerLabel})` : ''}
-                        </CardTitle>
-                        <CardDescription>
-                            Órdenes promedio por cliente
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-600 mb-2 break-words overflow-hidden">
-                            {customerInsights.averageOrdersPerCustomer} órdenes
-                        </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                            Por cliente activo
-                        </p>
-                        <div className="mt-3 p-2 sm:p-3 bg-blue-50 rounded-lg border border-blue-200">
-                            <p className="text-xs text-blue-700">
-                                <strong>Cálculo:</strong> Total de órdenes ÷ cantidad de clientes únicos
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-
             {/* Métricas principales del período de comparación */}
             {isComparing && compareCustomerInsights && (
-                <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+                <div className="grid gap-4 grid-cols-1 xl:grid-cols-2">
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">

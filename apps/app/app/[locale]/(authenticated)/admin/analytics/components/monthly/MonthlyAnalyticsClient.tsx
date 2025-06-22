@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { ShoppingCart, DollarSign, Users, AlertCircle } from 'lucide-react';
 import { Separator } from '@repo/design-system/components/ui/separator';
+import { MonthlyChart } from '../charts/MonthlyChart';
 
 interface MonthlyData {
     month: string;
@@ -355,6 +356,15 @@ export function MonthlyAnalyticsClient({
                     </Card>
                 </div>
             )}
+
+            {/* Gráficos */}
+            <MonthlyChart
+                allOrdersData={allOrdersData}
+                compareAllOrdersData={compareAllOrdersData}
+                isComparing={isComparing}
+                dateFilter={dateFilter}
+                compareFilter={compareFilter}
+            />
         </div>
     );
 } 

@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { ShoppingCart, DollarSign, AlertCircle } from 'lucide-react';
 import { Separator } from '@repo/design-system/components/ui/separator';
+import { DailyChart } from '../charts/DailyChart';
 
 interface DailyData {
     date: string;
@@ -99,10 +100,10 @@ export function DailyAnalyticsClient({
     const olderLabel = isPrimaryNewer ? 'Comparación' : 'Principal';
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 md:space-y-6">
             {/* Resumen de comparación */}
             {isComparing && (
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 xl:grid-cols-2">
                     <Card>
                         <CardHeader className="pb-2">
                             <CardTitle className="text-base">Resumen - Todos los Pedidos</CardTitle>
@@ -227,7 +228,7 @@ export function DailyAnalyticsClient({
                 </div>
             )}
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 xl:grid-cols-2">
                 {/* Tabla 1: Todos los pedidos */}
                 <Card>
                     <CardHeader>
@@ -307,7 +308,7 @@ export function DailyAnalyticsClient({
 
             {/* Datos de comparación */}
             {isComparing && (sortedCompareAllOrders.length > 0 || sortedCompareConfirmedOrders.length > 0) && (
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 xl:grid-cols-2">
                     {/* Tabla 3: Todos los pedidos - Período de comparación */}
                     <Card>
                         <CardHeader>
@@ -371,6 +372,17 @@ export function DailyAnalyticsClient({
                     </Card>
                 </div>
             )}
+
+            {/* Gráficos */}
+            <DailyChart
+                allOrdersData={allOrdersData}
+                confirmedOrdersData={confirmedOrdersData}
+                compareAllOrdersData={compareAllOrdersData}
+                compareConfirmedOrdersData={compareConfirmedOrdersData}
+                isComparing={isComparing}
+                dateFilter={dateFilter}
+                compareFilter={compareFilter}
+            />
         </div>
     );
 } 

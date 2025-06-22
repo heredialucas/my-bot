@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Separator } from '@repo/design-system/components/ui/separator';
 import { CreditCard, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
+import { PaymentsChart } from '../charts/PaymentsChart';
 
 interface PaymentMethod {
     paymentMethod: string;
@@ -353,6 +354,36 @@ export function PaymentsAnalyticsClient({
                     </CardContent>
                 </Card>
             )}
+
+            {/* Gráficos */}
+            <PaymentsChart
+                currentPayments={paymentMethods.map(method => ({
+                    paymentMethod: method.paymentMethod,
+                    totalOrders: method.totalCount,
+                    totalRevenue: method.totalRevenue,
+                    confirmedOrders: method.confirmedCount,
+                    confirmedRevenue: method.confirmedRevenue,
+                    pendingOrders: method.pendingCount,
+                    pendingRevenue: method.pendingRevenue,
+                    averageOrderValue: method.totalCount > 0 ? method.totalRevenue / method.totalCount : 0,
+                    statusFilter: 'all'
+                }))}
+                comparePayments={comparePaymentStats?.paymentMethods?.map(method => ({
+                    paymentMethod: method.paymentMethod,
+                    totalOrders: method.totalCount,
+                    totalRevenue: method.totalRevenue,
+                    confirmedOrders: method.confirmedCount,
+                    confirmedRevenue: method.confirmedRevenue,
+                    pendingOrders: method.pendingCount,
+                    pendingRevenue: method.pendingRevenue,
+                    averageOrderValue: method.totalCount > 0 ? method.totalRevenue / method.totalCount : 0,
+                    statusFilter: 'all'
+                }))}
+                isComparing={isComparing}
+                statusFilter="all"
+                dateFilter={dateFilter}
+                compareFilter={compareFilter}
+            />
         </div>
     );
 } 

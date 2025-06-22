@@ -244,14 +244,16 @@ export function AnalyticsDateFilter({ compact = false, showCompare = true }: Ana
     };
 
     const triggerContent = (
-        <Button variant="outline" className={compact ? "justify-start text-left font-normal" : "w-full justify-start text-left font-normal"}>
-            <Calendar className="mr-2 h-4 w-4" />
-            {formatDateRange(analyticsDateFilter.current)}
-            {analyticsDateFilter.compareEnabled && (
-                <Badge variant="secondary" className="ml-2 text-xs">
-                    vs período 2
-                </Badge>
-            )}
+        <Button variant="outline" className={compact ? "justify-start text-left font-normal" : "w-full justify-start text-left font-normal min-h-[40px] h-auto"}>
+            <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 min-w-0 flex-1">
+                <span className="truncate">{formatDateRange(analyticsDateFilter.current)}</span>
+                {analyticsDateFilter.compareEnabled && (
+                    <Badge variant="secondary" className="text-xs flex-shrink-0 w-fit">
+                        vs período 2
+                    </Badge>
+                )}
+            </div>
         </Button>
     );
 
@@ -264,14 +266,14 @@ export function AnalyticsDateFilter({ compact = false, showCompare = true }: Ana
                 {/* Presets */}
                 <div className="mt-2">
                     <Label className="text-xs text-muted-foreground">Períodos rápidos</Label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-1">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mt-1">
                         {DATE_PRESETS.map((preset) => (
                             <Button
                                 key={preset.value}
                                 variant={tempFilter.current.preset === preset.value ? 'default' : 'outline'}
                                 size="sm"
                                 onClick={() => handlePresetSelect(preset.value)}
-                                className="text-xs h-8"
+                                className="text-xs h-8 px-2"
                             >
                                 {preset.label}
                             </Button>
@@ -311,16 +313,17 @@ export function AnalyticsDateFilter({ compact = false, showCompare = true }: Ana
 
                     {/* Comparación */}
                     <div>
-                        <div className="flex items-center justify-between mb-3">
-                            <div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                            <div className="flex-1 min-w-0">
                                 <Label className="text-sm font-semibold">Comparar Períodos</Label>
-                                <p className="text-xs text-muted-foreground">
+                                <p className="text-xs text-muted-foreground mt-1">
                                     Compara con un segundo período personalizado
                                 </p>
                             </div>
                             <Switch
                                 checked={tempFilter.compareEnabled}
                                 onCheckedChange={handleCompareToggle}
+                                className="flex-shrink-0"
                             />
                         </div>
 
@@ -376,7 +379,7 @@ export function AnalyticsDateFilter({ compact = false, showCompare = true }: Ana
                 <PopoverTrigger asChild>
                     {triggerContent}
                 </PopoverTrigger>
-                <PopoverContent align="start" className="p-0 w-[600px] max-w-[95vw]">
+                <PopoverContent align="start" className="p-0 w-[95vw] sm:w-[600px] max-w-[95vw]">
                     {filterContent}
                 </PopoverContent>
             </Popover>
@@ -399,23 +402,23 @@ export function AnalyticsDateFilter({ compact = false, showCompare = true }: Ana
                     <PopoverTrigger asChild>
                         {triggerContent}
                     </PopoverTrigger>
-                    <PopoverContent align="start" className="p-0 w-[600px] max-w-[95vw]">
+                    <PopoverContent align="start" className="p-0 w-[95vw] sm:w-[600px] max-w-[95vw]">
                         {filterContent}
                     </PopoverContent>
                 </Popover>
 
                 {/* Summary */}
                 <div className="mt-4 space-y-2">
-                    <div className="flex items-center gap-2 text-sm">
-                        <span className="text-muted-foreground">Período Principal:</span>
-                        <Badge variant="outline" className="text-xs">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm">
+                        <span className="text-muted-foreground flex-shrink-0">Período Principal:</span>
+                        <Badge variant="outline" className="text-xs w-fit">
                             {formatDateRange(analyticsDateFilter.current)}
                         </Badge>
                     </div>
                     {analyticsDateFilter.compareEnabled && analyticsDateFilter.previous && (
-                        <div className="flex items-center gap-2 text-sm">
-                            <span className="text-muted-foreground">Período de Comparación:</span>
-                            <Badge variant="secondary" className="text-xs">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm">
+                            <span className="text-muted-foreground flex-shrink-0">Período de Comparación:</span>
+                            <Badge variant="secondary" className="text-xs w-fit">
                                 {formatDateRange(analyticsDateFilter.previous)}
                             </Badge>
                         </div>
