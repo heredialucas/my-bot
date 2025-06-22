@@ -91,6 +91,9 @@ export function DailyAnalyticsClient({
     };
 
     const formatDateRange = (from: Date, to: Date) => {
+        if (!from || !to) {
+            return 'Período no válido';
+        }
         return `${from.toLocaleDateString('es-ES')} - ${to.toLocaleDateString('es-ES')}`;
     };
 

@@ -96,13 +96,15 @@ export function MonthlyChart({
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                    <div className={`grid grid-cols-1 gap-6 ${isComparing ? 'xl:grid-cols-2' : ''}`}>
                         {/* Gráfico Principal */}
                         <div>
-                            <h4 className="text-sm font-medium mb-3">
-                                Período Principal {dateFilter && `(${formatDateRange(dateFilter.from, dateFilter.to)})`}
-                            </h4>
-                            <ResponsiveContainer width="100%" height={320}>
+                            {isComparing && (
+                                <h4 className="text-sm font-medium mb-3">
+                                    Período Principal {dateFilter && `(${formatDateRange(dateFilter.from, dateFilter.to)})`}
+                                </h4>
+                            )}
+                            <ResponsiveContainer width="100%" height={isComparing ? 320 : 400}>
                                 <BarChart data={mainChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis
@@ -195,13 +197,15 @@ export function MonthlyChart({
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                    <div className={`grid grid-cols-1 gap-6 ${isComparing ? 'xl:grid-cols-2' : ''}`}>
                         {/* Gráfico Principal */}
                         <div>
-                            <h4 className="text-sm font-medium mb-3">
-                                Período Principal {dateFilter && `(${formatDateRange(dateFilter.from, dateFilter.to)})`}
-                            </h4>
-                            <ResponsiveContainer width="100%" height={320}>
+                            {isComparing && (
+                                <h4 className="text-sm font-medium mb-3">
+                                    Período Principal {dateFilter && `(${formatDateRange(dateFilter.from, dateFilter.to)})`}
+                                </h4>
+                            )}
+                            <ResponsiveContainer width="100%" height={isComparing ? 320 : 400}>
                                 <LineChart data={mainChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis

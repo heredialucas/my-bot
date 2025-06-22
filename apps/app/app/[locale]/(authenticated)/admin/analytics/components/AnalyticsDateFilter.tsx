@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@repo/design-system/com
 import { Separator } from '@repo/design-system/components/ui/separator';
 import { Switch } from '@repo/design-system/components/ui/switch';
 import { Label } from '@repo/design-system/components/ui/label';
-import { Calendar, Filter, RotateCcw } from 'lucide-react';
+import { Calendar, Filter, RotateCcw, X } from 'lucide-react';
 
 type DateRange = {
     from: Date;
@@ -127,13 +127,20 @@ export function AnalyticsDateFilter({ compact = false, showCompare = true }: Ana
         const compareFrom = searchParams.get('compareFrom');
         const compareTo = searchParams.get('compareTo');
 
-        const current = from && to ? {
+        // Función auxiliar para validar fechas
+        const isValidDate = (dateString: string | null): boolean => {
+            if (!dateString) return false;
+            const date = new Date(dateString);
+            return !isNaN(date.getTime());
+        };
+
+        const current = from && to && isValidDate(from) && isValidDate(to) ? {
             from: new Date(from),
             to: new Date(to),
             preset: preset || undefined
         } : getDateRangeFromPreset('last-30-days');
 
-        const previous = compare && compareFrom && compareTo ? {
+        const previous = compare && compareFrom && compareTo && isValidDate(compareFrom) && isValidDate(compareTo) ? {
             from: new Date(compareFrom),
             to: new Date(compareTo)
         } : undefined;
@@ -143,6 +150,12 @@ export function AnalyticsDateFilter({ compact = false, showCompare = true }: Ana
             compareEnabled: compare,
             previous
         };
+    };
+
+    // Función para detectar si hay filtros activos (diferentes al preset por defecto)
+    const hasActiveFilters = (): boolean => {
+        const hasQueryParams = searchParams.has('from') || searchParams.has('to') || searchParams.has('preset') || searchParams.has('compare');
+        return hasQueryParams;
     };
 
     const analyticsDateFilter = getCurrentFilter();
@@ -209,24 +222,20 @@ export function AnalyticsDateFilter({ compact = false, showCompare = true }: Ana
     };
 
     const handleApply = () => {
-        const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams();
+
+        // Agregar parámetros del período principal
         params.set('from', tempFilter.current.from.toISOString().split('T')[0]);
         params.set('to', tempFilter.current.to.toISOString().split('T')[0]);
-
         if (tempFilter.current.preset) {
             params.set('preset', tempFilter.current.preset);
-        } else {
-            params.delete('preset');
         }
 
+        // Agregar parámetros de comparación si está habilitada
         if (tempFilter.compareEnabled && tempFilter.previous) {
             params.set('compare', 'true');
             params.set('compareFrom', tempFilter.previous.from.toISOString().split('T')[0]);
             params.set('compareTo', tempFilter.previous.to.toISOString().split('T')[0]);
-        } else {
-            params.delete('compare');
-            params.delete('compareFrom');
-            params.delete('compareTo');
         }
 
         router.push(`?${params.toString()}`);
@@ -254,6 +263,19 @@ export function AnalyticsDateFilter({ compact = false, showCompare = true }: Ana
                     </Badge>
                 )}
             </div>
+        </Button>
+    );
+
+    const resetButton = hasActiveFilters() && (
+        <Button
+            onClick={handleReset}
+            variant="outline"
+            size="sm"
+            className="h-10 px-3 text-xs"
+            title="Resetear filtros"
+        >
+            <X className="h-3 w-3 mr-1" />
+            Resetear
         </Button>
     );
 
@@ -375,27 +397,37 @@ export function AnalyticsDateFilter({ compact = false, showCompare = true }: Ana
 
     if (compact) {
         return (
-            <Popover open={isOpen} onOpenChange={setIsOpen}>
-                <PopoverTrigger asChild>
-                    {triggerContent}
-                </PopoverTrigger>
-                <PopoverContent align="start" className="p-0 w-[95vw] sm:w-[600px] max-w-[95vw]">
-                    {filterContent}
-                </PopoverContent>
-            </Popover>
+            <div className="flex gap-2 items-start">
+                <div className="flex-1">
+                    <Popover open={isOpen} onOpenChange={setIsOpen}>
+                        <PopoverTrigger asChild>
+                            {triggerContent}
+                        </PopoverTrigger>
+                        <PopoverContent align="start" className="p-0 w-[95vw] sm:w-[600px] max-w-[95vw]">
+                            {filterContent}
+                        </PopoverContent>
+                    </Popover>
+                </div>
+                {resetButton}
+            </div>
         );
     }
 
     return (
         <Card>
             <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                    <Filter className="h-5 w-5" />
-                    Filtro de Fechas
-                </CardTitle>
-                <CardDescription>
-                    Selecciona el período para analizar los datos
-                </CardDescription>
+                <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                            <Filter className="h-5 w-5" />
+                            Filtro de Fechas
+                        </CardTitle>
+                        <CardDescription>
+                            Selecciona el período para analizar los datos
+                        </CardDescription>
+                    </div>
+                    {resetButton}
+                </div>
             </CardHeader>
             <CardContent className="pt-0">
                 <Popover open={isOpen} onOpenChange={setIsOpen}>
