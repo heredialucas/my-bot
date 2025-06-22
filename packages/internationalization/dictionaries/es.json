@@ -133,6 +133,86 @@
       "layout": {
         "title": "Panel de Administración Barfer",
         "description": "Accede a las herramientas administrativas de Barfer para gestionar tu negocio de manera eficiente."
+      },
+      "account": {
+        "title": "Gestión de Cuenta",
+        "subtitle": "Configuración y usuarios",
+        "profile": {
+          "title": "Mi Perfil",
+          "personalInfo": "Información Personal",
+          "personalInfoDescription": "Actualiza tu información personal y configuración de cuenta",
+          "name": "Nombre",
+          "lastName": "Apellido",
+          "email": "Email",
+          "phone": "Teléfono",
+          "currentRole": "Rol actual",
+          "saveChanges": "Guardar Cambios"
+        },
+        "security": {
+          "title": "Seguridad",
+          "description": "Gestiona tu contraseña y configuración de seguridad",
+          "currentPassword": "Contraseña Actual",
+          "newPassword": "Nueva Contraseña",
+          "confirmPassword": "Confirmar Nueva Contraseña",
+          "updatePassword": "Actualizar Contraseña",
+          "updatingPassword": "Actualizando...",
+          "errors": {
+            "emptyFields": "Todos los campos son requeridos",
+            "passwordsDoNotMatch": "Las contraseñas no coinciden",
+            "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+            "invalidCurrentPassword": "La contraseña actual no es correcta",
+            "updateFailed": "Error al actualizar la contraseña"
+          },
+          "success": {
+            "passwordUpdated": "Contraseña actualizada exitosamente"
+          }
+        },
+        "users": {
+          "title": "Gestión de Usuarios",
+          "subtitle": "Usuarios del Sistema",
+          "description": "Gestiona los usuarios y sus permisos",
+          "newUser": "Nuevo Usuario",
+          "noUsers": "No hay usuarios registrados",
+          "status": {
+            "active": "Activo",
+            "inactive": "Inactivo"
+          },
+          "roles": {
+            "admin": "Administrador",
+            "user": "Usuario"
+          },
+          "actions": {
+            "edit": "Editar",
+            "delete": "Eliminar",
+            "confirmDelete": "¿Estás seguro de que deseas eliminar este usuario?"
+          },
+          "form": {
+            "createTitle": "Crear Nuevo Usuario",
+            "editTitle": "Editar Usuario",
+            "name": "Nombre",
+            "lastName": "Apellido",
+            "email": "Email",
+            "password": "Contraseña",
+            "role": "Rol",
+            "cancel": "Cancelar",
+            "create": "Crear Usuario",
+            "update": "Actualizar Usuario",
+            "creating": "Creando...",
+            "updating": "Actualizando...",
+            "errors": {
+              "emptyFields": "Todos los campos son requeridos",
+              "invalidEmail": "Email inválido",
+              "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+              "emailExists": "Ya existe un usuario con este email",
+              "createFailed": "Error al crear el usuario",
+              "updateFailed": "Error al actualizar el usuario"
+            },
+            "success": {
+              "userCreated": "Usuario creado exitosamente",
+              "userUpdated": "Usuario actualizado exitosamente"
+            }
+          }
+        }
       }
     }
   },

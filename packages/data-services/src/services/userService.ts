@@ -27,6 +27,22 @@ export async function createUser(data: UserFormData & { role: UserRole }) {
         // Hash de la contraseña
         const hashedPassword = await bcrypt.hash(data.password, 12);
 
+        // Definir permisos según el rol
+        let permissions: string[];
+        if (data.role === 'admin') {
+            // Los admins tienen todos los permisos
+            permissions = [
+                'analytics:view', 'analytics:export',
+                'users:view', 'users:create', 'users:edit', 'users:delete',
+                'account:manage_users', 'admin:system_settings',
+                'account:view_own', 'account:edit_own', 'account:change_password',
+                'clients:view'
+            ];
+        } else {
+            // Los usuarios normales tienen permisos básicos por defecto
+            permissions = ['account:view_own'];
+        }
+
         // Crear el usuario con contraseña hasheada
         const user = await database.user.create({
             data: {
@@ -35,6 +51,7 @@ export async function createUser(data: UserFormData & { role: UserRole }) {
                 email: data.email,
                 password: hashedPassword,
                 role: data.role,
+                permissions: permissions,
             },
         });
 
@@ -47,6 +64,7 @@ export async function createUser(data: UserFormData & { role: UserRole }) {
                 lastName: user.lastName,
                 email: user.email,
                 role: user.role,
+                permissions: Array.isArray(user.permissions) ? user.permissions : [],
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
             }
@@ -81,6 +99,7 @@ export async function getUserById(userId: string) {
             lastName: user.lastName,
             email: user.email,
             role: user.role,
+            permissions: Array.isArray(user.permissions) ? user.permissions : [],
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         };
@@ -91,12 +110,15 @@ export async function getUserById(userId: string) {
 }
 
 /**
- * Obtener todos los usuarios
+ * Obtener todos los usuarios excluyendo al usuario actual
  */
-export async function getAllUsers() {
+export async function getAllUsers(excludeUserId?: string) {
     try {
         // Implementación real con la base de datos
         const users = await database.user.findMany({
+            where: excludeUserId ? {
+                id: { not: excludeUserId }
+            } : undefined,
             orderBy: { createdAt: 'desc' },
         });
 
@@ -107,6 +129,7 @@ export async function getAllUsers() {
             lastName: user.lastName,
             email: user.email,
             role: user.role,
+            permissions: Array.isArray(user.permissions) ? user.permissions : [],
             createdAt: user.createdAt,
             updatedAt: user.updatedAt
         })) as UserData[];
@@ -119,7 +142,7 @@ export async function getAllUsers() {
 /**
  * Actualizar un usuario existente
  */
-export async function updateUser(userId: string, data: UserFormData & { role?: UserRole }) {
+export async function updateUser(userId: string, data: UserFormData & { role?: UserRole; permissions?: string[] }) {
     "use server";
     try {
         const updateData: any = {
@@ -128,6 +151,11 @@ export async function updateUser(userId: string, data: UserFormData & { role?: U
             email: data.email,
             role: data.role,
         };
+
+        // Solo incluir permissions si se proporciona
+        if (data.permissions !== undefined) {
+            updateData.permissions = data.permissions;
+        }
 
         // Solo hashear la contraseña si se proporciona una nueva
         if (data.password) {
@@ -140,7 +168,7 @@ export async function updateUser(userId: string, data: UserFormData & { role?: U
             data: updateData,
         });
 
-        revalidatePath('/admin/dashboard');
+        revalidatePath('/admin/account');
 
         // Devolver usuario sin password
         return {
@@ -149,6 +177,7 @@ export async function updateUser(userId: string, data: UserFormData & { role?: U
             lastName: user.lastName,
             email: user.email,
             role: user.role,
+            permissions: Array.isArray(user.permissions) ? user.permissions : [],
             createdAt: user.createdAt,
             updatedAt: user.updatedAt
         } as UserData;
@@ -169,7 +198,7 @@ export async function deleteUser(userId: string) {
             where: { id: userId },
         });
 
-        revalidatePath('/admin/dashboard');
+        revalidatePath('/admin/account');
         return { success: true };
     } catch (error) {
         console.error("Error al eliminar usuario:", error);
@@ -214,5 +243,58 @@ export async function verifyUserCredentials(email: string, password: string) {
     } catch (error) {
         console.error('Error al verificar credenciales:', error);
         throw new Error('No se pudieron verificar las credenciales');
+    }
+}
+
+/**
+ * Cambiar contraseña de un usuario
+ */
+export async function changePassword(userId: string, currentPassword: string, newPassword: string) {
+    try {
+        // Primero obtener el usuario para verificar la contraseña actual
+        const user = await database.user.findUnique({
+            where: { id: userId },
+        });
+
+        if (!user) {
+            return {
+                success: false,
+                message: 'Usuario no encontrado',
+                error: 'USER_NOT_FOUND'
+            };
+        }
+
+        // Verificar que la contraseña actual sea correcta
+        const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+
+        if (!passwordMatch) {
+            return {
+                success: false,
+                message: 'La contraseña actual no es correcta',
+                error: 'INVALID_CURRENT_PASSWORD'
+            };
+        }
+
+        // Hashear la nueva contraseña
+        const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+
+        // Actualizar la contraseña
+        await database.user.update({
+            where: { id: userId },
+            data: { password: hashedNewPassword },
+        });
+
+        return {
+            success: true,
+            message: 'Contraseña actualizada exitosamente'
+        };
+
+    } catch (error) {
+        console.error('Error al cambiar contraseña:', error);
+        return {
+            success: false,
+            message: 'Error interno del servidor',
+            error: 'SERVER_ERROR'
+        };
     }
 } 

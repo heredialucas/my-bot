@@ -20,9 +20,10 @@ interface UserHeaderClientProps {
     extraItems?: ReactNode;
     dictionary?: Dictionary;
     user?: User;
+    locale?: string;
 }
 
-export function UserHeaderClient({ logo, title = 'Barfer', extraItems, dictionary, user }: UserHeaderClientProps) {
+export function UserHeaderClient({ logo, title = 'Barfer', extraItems, dictionary, user, locale }: UserHeaderClientProps) {
     return (
         <header className="fixed top-0 left-0 right-0 bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 z-10 h-16">
             <div className="h-full mx-auto flex items-center justify-between px-4">
@@ -36,7 +37,7 @@ export function UserHeaderClient({ logo, title = 'Barfer', extraItems, dictionar
                     <ModeToggle />
                     {/* <LanguageSwitcher /> */}
                     {extraItems}
-                    <LogoutButton userName={user?.name} dictionary={dictionary} />
+                    <LogoutButton userName={user?.name} dictionary={dictionary} locale={locale} />
                 </div>
             </div>
         </header>

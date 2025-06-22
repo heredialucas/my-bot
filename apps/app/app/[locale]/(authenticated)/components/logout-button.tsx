@@ -16,14 +16,15 @@ import { logoutAction } from '../actions';
 interface LogoutButtonProps {
     userName?: string;
     dictionary?: Dictionary;
+    locale?: string;
 }
 
-export function LogoutButton({ userName, dictionary }: LogoutButtonProps) {
+export function LogoutButton({ userName, dictionary, locale = 'es' }: LogoutButtonProps) {
     const [isPending, startTransition] = useTransition();
 
     const handleLogout = () => {
         startTransition(async () => {
-            await logoutAction();
+            await logoutAction(locale);
         });
     };
 

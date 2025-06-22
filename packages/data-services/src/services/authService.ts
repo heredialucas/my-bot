@@ -44,11 +44,14 @@ export async function signIn({ email, password }: { email: string; password: str
             return { success: false, message: 'Usuario no encontrado' };
         }
 
+
+
         // Create session token (simple JSON string, no encryption)
         const token = JSON.stringify({
             id: user.id,
             email: user.email,
             role: user.role.toLowerCase(), // Asegurar que el rol está en minúsculas
+            permissions: Array.isArray(user.permissions) ? user.permissions : [],
         });
 
         // Establecer cookie
@@ -85,7 +88,7 @@ export async function signUp(data: {
             lastName: data.lastName,
             email: data.email,
             password: data.password,
-            role: 'admin', // Asegurar que el rol está en minúsculas
+            role: 'admin', // Primeros usuarios como admin para setup inicial
         });
 
         // Check if user creation failed
@@ -104,6 +107,7 @@ export async function signUp(data: {
             id: user.id,
             email: user.email,
             role: user.role.toLowerCase(), // Asegurar que el rol está en minúsculas
+            permissions: Array.isArray(user.permissions) ? user.permissions : [],
         });
 
         // Establecer cookie
@@ -172,8 +176,10 @@ export async function getCurrentUser() {
             return {
                 id: user.id,
                 name: user.name,
+                lastName: user.lastName,
                 email: user.email,
                 role: user.role,
+                permissions: Array.isArray(user.permissions) ? user.permissions : [],
             };
         } catch (parseError) {
             console.error('Error al analizar el token:', parseError);

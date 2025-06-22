@@ -1,10 +1,18 @@
 // import { SignOutButton } from '@repo/auth/client';
-import { signOut } from '@repo/data-services/src/services/authService';
+import { signOut, getCurrentUser } from '@repo/data-services/src/services/authService';
 import { Button } from '@repo/design-system/components/ui/button';
-import { Leaf, ShieldAlert } from 'lucide-react';
+import { Leaf, ShieldAlert, Clock } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
-export default function AccessDenied() {
+interface AccessDeniedProps {
+    params: Promise<{
+        locale: string;
+    }>;
+}
+
+export default async function AccessDenied({ params }: AccessDeniedProps) {
+    const currentUser = await getCurrentUser();
+    const { locale } = await params;
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-zinc-900 p-4">
             <div className="max-w-md w-full mx-auto bg-white dark:bg-zinc-800 rounded-lg shadow-md p-8 text-center">
@@ -15,34 +23,34 @@ export default function AccessDenied() {
                 </div>
 
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    Access Denied
+                    Acceso Denegado
                 </h1>
 
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                    You don't have permission to access this area. This section is reserved for authorized Cannamedicus users with the appropriate role.
+                    No tienes permisos para acceder a esta área. Esta sección está reservada para usuarios autorizados de Barfer con el rol apropiado.
                 </p>
 
                 <div className="bg-gray-50 dark:bg-zinc-700/30 p-4 rounded-md text-left mb-6">
                     <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                        Need access?
+                        ¿Necesitas acceso?
                     </h2>
                     <p className="text-gray-600 dark:text-gray-300">
-                        If you need access to this section, please contact a Cannamedicus administrator to request the appropriate authorization for cannabis prescription management.
+                        Si necesitas acceso a esta sección, contacta a un administrador de Barfer para solicitar la autorización apropiada para la gestión del sistema.
                     </p>
                 </div>
 
                 <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-                        <Leaf className="h-5 w-5" />
-                        <span className="font-medium">Cannamedicus</span>
+                    <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                        <ShieldAlert className="h-5 w-5" />
+                        <span className="font-medium">Barfer</span>
                     </div>
                     <form action={async () => {
                         'use server';
                         await signOut();
-                        redirect('/sign-in');
+                        redirect(`/${locale}/sign-in`);
                     }}>
                         <Button variant="outline">
-                            Sign Out
+                            Cerrar Sesión
                         </Button>
                     </form>
                 </div>

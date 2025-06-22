@@ -15,28 +15,46 @@ const ROLES = {
 
 type Role = typeof ROLES[keyof typeof ROLES];
 
+// Permission-based route access
+const ROUTE_PERMISSIONS: Record<string, string[]> = {
+  '/admin/analytics': ['analytics:view'],
+  '/admin/clients': ['clients:view'],
+  '/admin/account': ['account:view_own'], // Todos pueden ver su cuenta
+};
+
 // Role configuration with route permissions
 interface RoleConfig {
   defaultRedirect: string;
   allowedRoutes: string[];
 }
 
+// Función para determinar la redirección por defecto basada en permisos
+const getDefaultRedirect = (userRole: Role, userPermissions: string[]): string => {
+  if (userRole === ROLES.ADMIN) {
+    return '/admin/analytics';
+  }
+
+  // Para usuarios normales, redirigir según sus permisos
+  if (userPermissions.includes('analytics:view')) {
+    return '/admin/analytics';
+  } else if (userPermissions.includes('clients:view')) {
+    return '/admin/clients';
+  } else {
+    // Por defecto, siempre pueden ir a su cuenta
+    return '/admin/account';
+  }
+};
+
 // Map roles to their configurations
-// To add a new role, simply add a new entry here
 const ROLE_CONFIGURATION: Record<Role, RoleConfig> = {
   [ROLES.ADMIN]: {
     defaultRedirect: '/admin/analytics',
     allowedRoutes: ['/admin']
   },
   [ROLES.USER]: {
-    defaultRedirect: '/client/analytics',
-    allowedRoutes: ['/client']
+    defaultRedirect: '/admin/account',
+    allowedRoutes: ['/admin']
   }
-  // Example for adding a new role:
-  // [ROLES.PROFESSIONAL]: {
-  //   defaultRedirect: '/professional/dashboard',
-  //   allowedRoutes: ['/professional']
-  // }
 };
 
 // Public routes that don't require authentication
@@ -66,12 +84,26 @@ const isAuthenticatedRoute = (pathname: string): boolean => {
   return !isPublicRoute(pathname);
 };
 
-// Check if user has access to the current route based on their role
-const hasAccessToRoute = (pathname: string, userRole: Role): boolean => {
-  // If user doesn't have a configured role, they don't have access
-  if (!ROLE_CONFIGURATION[userRole]) return false;
+// Check if user has access to the current route based on their permissions
+const hasAccessToRoute = (pathname: string, userRole: Role, userPermissions: string[] = []): boolean => {
+  // Admins always have access
+  if (userRole === ROLES.ADMIN) return true;
 
-  // Check if current route is allowed for user's role
+  // Check if the specific route requires permissions
+  const routePermissions = ROUTE_PERMISSIONS[pathname];
+  if (routePermissions) {
+    // Check if user has at least one of the required permissions
+    return routePermissions.some(permission => userPermissions.includes(permission));
+  }
+
+  // Para rutas /admin/* que NO están en ROUTE_PERMISSIONS, DENEGAR acceso
+  // Solo permitir acceso a rutas específicamente definidas
+  if (pathname.startsWith('/admin')) {
+    return false;
+  }
+
+  // For other routes not in ROUTE_PERMISSIONS, fall back to role-based access
+  if (!ROLE_CONFIGURATION[userRole]) return false;
   return ROLE_CONFIGURATION[userRole].allowedRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
@@ -123,13 +155,21 @@ export function middleware(req: NextRequest) {
   const tokenCookie = req.cookies.get(AUTH_COOKIE_NAME);
   let userId: string | undefined;
   let userRole: Role = ROLES.USER;
+  let userPermissions: string[] = [];
 
-  // Parse token if it exists
+  // Parse token if it exists and verify user authorization
   if (tokenCookie) {
     try {
       const token = JSON.parse(tokenCookie.value);
       userId = token.id;
       userRole = getUserRole(token.role);
+      userPermissions = token.permissions || [];
+
+      // Check if user has any permissions (except for admins who always have permissions)
+      if (userRole !== ROLES.ADMIN && userPermissions.length === 0) {
+        // Usuario sin permisos - redirigir a access-denied
+        return NextResponse.redirect(new URL(`/${locale}/access-denied`, req.url));
+      }
     } catch (error) {
       console.error('Error parsing auth token:', error);
     }
@@ -142,30 +182,24 @@ export function middleware(req: NextRequest) {
 
   // User is authenticated
   if (userId) {
-    // Root path redirect to role-specific dashboard
+    // Root path redirect to permission-based dashboard
     if (pathnameWithoutLocale === '/' || pathnameWithoutLocale === '') {
-      const redirectUrl = ROLE_CONFIGURATION[userRole]?.defaultRedirect ||
-        ROLE_CONFIGURATION[ROLES.USER].defaultRedirect;
+      const redirectUrl = getDefaultRedirect(userRole, userPermissions);
       return NextResponse.redirect(new URL(`/${locale}${redirectUrl}`, req.url));
     }
 
-    // Check if user has access to the requested route
-    if (!hasAccessToRoute(pathnameWithoutLocale, userRole)) {
-      // Admin can access any route
-      if (userRole === ROLES.ADMIN) {
-        return securityHeaders();
-      }
-
-      // Handle specific route access permissions
-
-      if (pathnameWithoutLocale.startsWith('/admin')) {
+    // Check permissions for /admin routes
+    if (pathnameWithoutLocale.startsWith('/admin')) {
+      // Check specific route permissions first
+      if (!hasAccessToRoute(pathnameWithoutLocale, userRole, userPermissions)) {
         return NextResponse.redirect(new URL(`/${locale}/access-denied`, req.url));
       }
+      return securityHeaders();
+    }
 
-      // Otherwise redirect to their default route
-      const redirectUrl = ROLE_CONFIGURATION[userRole]?.defaultRedirect ||
-        ROLE_CONFIGURATION[ROLES.USER].defaultRedirect;
-      return NextResponse.redirect(new URL(`/${locale}${redirectUrl}`, req.url));
+    // If trying to access other routes, check permissions
+    if (!hasAccessToRoute(pathnameWithoutLocale, userRole, userPermissions)) {
+      return NextResponse.redirect(new URL(`/${locale}/access-denied`, req.url));
     }
   }
 

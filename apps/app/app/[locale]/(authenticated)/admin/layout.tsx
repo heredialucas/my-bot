@@ -22,6 +22,7 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
                 logo={<Image src={logo} alt="Barfer" width={32} height={32} />}
                 title="Barfer"
                 dictionary={dictionary}
+                locale={locale}
             />
 
             <div className="pt-16 flex w-full h-full">

@@ -18,20 +18,15 @@ async function handleSignUp(formData: FormData) {
     const password = formData.get('password') as string;
     const confirmPassword = formData.get('confirmPassword') as string;
 
-    console.log('Sign up attempt:', { name, lastName, email });
-
     if (!name || !lastName || !email || !password || !confirmPassword) {
-        console.log('Missing fields');
         redirect('/sign-up?error=empty-fields');
     }
 
     if (password !== confirmPassword) {
-        console.log('Passwords do not match');
         redirect('/sign-up?error=passwords-mismatch');
     }
 
     try {
-        console.log('Calling signUp service...');
         const result = await signUp({
             name,
             lastName,
@@ -39,22 +34,17 @@ async function handleSignUp(formData: FormData) {
             password
         });
 
-        console.log('SignUp result:', result);
-
         if (result.success) {
-            console.log('Account created successfully, redirecting to sign-in...');
-            redirect('/sign-in');
+            redirect('/'); // Dejar que el middleware determine la redirección
         } else {
-            console.log('SignUp failed:', result.error);
             redirect('/sign-up?error=creation-failed');
         }
     } catch (err) {
         // No capturar NEXT_REDIRECT como error
         if (err instanceof Error && err.message.includes('NEXT_REDIRECT')) {
-            console.log('Redirect successful');
             throw err; // Re-throw para que Next.js maneje el redirect
         }
-        console.error('Real sign up error:', err);
+        console.error('Sign up error:', err);
         redirect('/sign-up?error=generic');
     }
 }

@@ -7,6 +7,7 @@ export interface UserData {
     lastName: string;
     email: string;
     role: string;
+    permissions: string[]; // Array de permisos específicos
     createdAt: Date;
     updatedAt: Date;
 }

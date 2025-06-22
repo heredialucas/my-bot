@@ -1,4 +1,4 @@
-import { Leaf } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 
@@ -12,8 +12,8 @@ export default function AccessDeniedLayout({ children }: AccessDeniedLayoutProps
             <header className="p-4 border-b border-gray-200 dark:border-zinc-800">
                 <div className="container mx-auto">
                     <Link href="/" className="flex items-center gap-2">
-                        <Leaf className="h-5 w-5 text-green-500" />
-                        <span className="font-bold text-lg">Cannamedicus</span>
+                        <ShieldAlert className="h-5 w-5 text-blue-500" />
+                        <span className="font-bold text-lg">Barfer</span>
                     </Link>
                 </div>
             </header>

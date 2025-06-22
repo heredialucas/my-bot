@@ -14,32 +14,22 @@ async function handleSignIn(formData: FormData) {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
-    console.log('Sign in attempt:', { email });
-
     if (!email || !password) {
-        console.log('Missing email or password');
         return;
     }
 
     try {
-        console.log('Calling signIn service...');
         const result = await signIn({ email, password });
 
-        console.log('SignIn result:', result);
-
         if (result.success) {
-            console.log('Sign in successful, redirecting to analytics...');
-            redirect('/admin/analytics');
-        } else {
-            console.log('Sign in failed:', result.message);
+            redirect('/'); // Dejar que el middleware determine la redirección
         }
     } catch (err) {
         // No capturar NEXT_REDIRECT como error
         if (err instanceof Error && err.message.includes('NEXT_REDIRECT')) {
-            console.log('Redirect successful');
             throw err; // Re-throw para que Next.js maneje el redirect
         }
-        console.error('Real sign in error:', err);
+        console.error('Sign in error:', err);
     }
 }
 
