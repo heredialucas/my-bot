@@ -34,5 +34,14 @@ export {
     getBankInfo,
     getEvents,
     getActiveEvents,
-    getDashboardStats
+    getDashboardStats,
+    // Analytics functions
+    getOrdersByDay,
+    getRevenueByDay,
+    getAverageOrderValue,
+    getCustomerFrequency,
+    getOrdersByMonth,
+    getProductSales,
+    getCategorySales,
+    getPaymentMethodStats
 } from './barferService';

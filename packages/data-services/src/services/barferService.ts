@@ -281,4 +281,283 @@ export async function getDashboardStats(): Promise<DashboardStats> {
         console.error('Error fetching dashboard stats:', error);
         throw error;
     }
+}
+
+// ANALYTICS FUNCTIONS
+export async function getOrdersByDay(startDate?: Date, endDate?: Date) {
+    try {
+        const collection = await getCollection('orders');
+        const pipeline: any[] = [];
+
+        const matchCondition: any = {};
+        if (startDate || endDate) {
+            matchCondition.createdAt = {};
+            if (startDate) matchCondition.createdAt.$gte = startDate;
+            if (endDate) matchCondition.createdAt.$lte = endDate;
+        }
+
+        if (Object.keys(matchCondition).length > 0) {
+            pipeline.push({ $match: matchCondition });
+        }
+
+        pipeline.push(
+            {
+                $group: {
+                    _id: {
+                        year: { $year: '$createdAt' },
+                        month: { $month: '$createdAt' },
+                        day: { $dayOfMonth: '$createdAt' }
+                    },
+                    count: { $sum: 1 },
+                    totalAmount: { $sum: '$total' }
+                }
+            },
+            { $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } }
+        );
+
+        const result = await collection.aggregate(pipeline).toArray();
+
+        return result.map((item: any) => ({
+            date: `${item._id.year}-${String(item._id.month).padStart(2, '0')}-${String(item._id.day).padStart(2, '0')}`,
+            orders: item.count,
+            revenue: item.totalAmount
+        }));
+    } catch (error) {
+        console.error('Error fetching orders by day:', error);
+        throw error;
+    }
+}
+
+export async function getRevenueByDay(startDate?: Date, endDate?: Date) {
+    try {
+        const collection = await getCollection('orders');
+        const pipeline: any[] = [];
+
+        const matchCondition: any = { status: 'delivered' };
+        if (startDate || endDate) {
+            matchCondition.createdAt = {};
+            if (startDate) matchCondition.createdAt.$gte = startDate;
+            if (endDate) matchCondition.createdAt.$lte = endDate;
+        }
+
+        pipeline.push({ $match: matchCondition });
+
+        pipeline.push(
+            {
+                $group: {
+                    _id: {
+                        year: { $year: '$createdAt' },
+                        month: { $month: '$createdAt' },
+                        day: { $dayOfMonth: '$createdAt' }
+                    },
+                    revenue: { $sum: '$total' },
+                    orders: { $sum: 1 }
+                }
+            },
+            { $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } }
+        );
+
+        const result = await collection.aggregate(pipeline).toArray();
+
+        return result.map((item: any) => ({
+            date: `${item._id.year}-${String(item._id.month).padStart(2, '0')}-${String(item._id.day).padStart(2, '0')}`,
+            revenue: item.revenue,
+            orders: item.orders
+        }));
+    } catch (error) {
+        console.error('Error fetching revenue by day:', error);
+        throw error;
+    }
+}
+
+export async function getAverageOrderValue(): Promise<{
+    averageValue: number;
+    totalOrders: number;
+    totalRevenue: number;
+}> {
+    try {
+        const collection = await getCollection('orders');
+        const result = await collection.aggregate([
+            { $match: { status: 'delivered' } },
+            {
+                $group: {
+                    _id: null,
+                    averageValue: { $avg: '$total' },
+                    totalOrders: { $sum: 1 },
+                    totalRevenue: { $sum: '$total' }
+                }
+            }
+        ]).toArray();
+
+        return (result[0] as any) || { averageValue: 0, totalOrders: 0, totalRevenue: 0 };
+    } catch (error) {
+        console.error('Error fetching average order value:', error);
+        throw error;
+    }
+}
+
+export async function getCustomerFrequency(): Promise<{
+    averageOrdersPerCustomer: number;
+    totalCustomers: number;
+    averageSpentPerCustomer: number;
+}> {
+    try {
+        const collection = await getCollection('orders');
+        const result = await collection.aggregate([
+            { $match: { status: 'delivered' } },
+            {
+                $group: {
+                    _id: { $ifNull: ['$user.email', '$user._id'] }, // Usar email o ID como fallback
+                    orderCount: { $sum: 1 },
+                    totalSpent: { $sum: '$total' },
+                    firstOrder: { $min: '$createdAt' },
+                    lastOrder: { $max: '$createdAt' }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    averageOrdersPerCustomer: { $avg: '$orderCount' },
+                    totalCustomers: { $sum: 1 },
+                    averageSpentPerCustomer: { $avg: '$totalSpent' }
+                }
+            }
+        ]).toArray();
+
+        return (result[0] as any) || { averageOrdersPerCustomer: 0, totalCustomers: 0, averageSpentPerCustomer: 0 };
+    } catch (error) {
+        console.error('Error fetching customer frequency:', error);
+        throw error;
+    }
+}
+
+export async function getOrdersByMonth() {
+    try {
+        const collection = await getCollection('orders');
+        const result = await collection.aggregate([
+            {
+                $group: {
+                    _id: {
+                        year: { $year: '$createdAt' },
+                        month: { $month: '$createdAt' }
+                    },
+                    totalOrders: { $sum: 1 },
+                    uniqueCustomers: { $addToSet: { $ifNull: ['$user.email', '$user._id'] } },
+                    revenue: { $sum: '$total' }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    totalOrders: 1,
+                    uniqueCustomers: { $size: '$uniqueCustomers' },
+                    revenue: 1
+                }
+            },
+            { $sort: { '_id.year': 1, '_id.month': 1 } }
+        ]).toArray();
+
+        return result.map((item: any) => ({
+            month: `${item._id.year}-${String(item._id.month).padStart(2, '0')}`,
+            totalOrders: item.totalOrders,
+            uniqueCustomers: item.uniqueCustomers,
+            revenue: item.revenue
+        }));
+    } catch (error) {
+        console.error('Error fetching orders by month:', error);
+        throw error;
+    }
+}
+
+export async function getProductSales() {
+    try {
+        const collection = await getCollection('orders');
+        const result = await collection.aggregate([
+            { $match: { status: 'delivered' } },
+            { $unwind: '$items' },
+            {
+                $group: {
+                    _id: '$items.id',
+                    productName: { $first: '$items.name' },
+                    totalSold: { $sum: 1 }, // Cada item cuenta como 1 unidad vendida
+                    totalRevenue: { $sum: '$items.price' }
+                }
+            },
+            { $sort: { totalSold: -1 } }
+        ]).toArray();
+
+        return result.map((item: any) => ({
+            productId: item._id,
+            productName: item.productName,
+            totalSold: item.totalSold,
+            totalRevenue: item.totalRevenue
+        }));
+    } catch (error) {
+        console.error('Error fetching product sales:', error);
+        throw error;
+    }
+}
+
+export async function getCategorySales() {
+    try {
+        const collection = await getCollection('orders');
+        const result = await collection.aggregate([
+            { $match: { status: 'delivered' } },
+            { $unwind: '$items' },
+            {
+                $group: {
+                    _id: 'General', // Por ahora usamos una categoría general ya que no tenemos categoría en OrderItem
+                    totalSold: { $sum: 1 },
+                    totalRevenue: { $sum: '$items.price' },
+                    uniqueProducts: { $addToSet: '$items.id' }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    totalSold: 1,
+                    totalRevenue: 1,
+                    uniqueProducts: { $size: '$uniqueProducts' }
+                }
+            },
+            { $sort: { totalRevenue: -1 } }
+        ]).toArray();
+
+        return result.map((item: any) => ({
+            category: item._id,
+            totalSold: item.totalSold,
+            totalRevenue: item.totalRevenue,
+            uniqueProducts: item.uniqueProducts
+        }));
+    } catch (error) {
+        console.error('Error fetching category sales:', error);
+        throw error;
+    }
+}
+
+export async function getPaymentMethodStats() {
+    try {
+        const collection = await getCollection('orders');
+        const result = await collection.aggregate([
+            { $match: { status: 'delivered' } },
+            {
+                $group: {
+                    _id: '$paymentMethod',
+                    count: { $sum: 1 },
+                    totalAmount: { $sum: '$total' }
+                }
+            },
+            { $sort: { count: -1 } }
+        ]).toArray();
+
+        return result.map(item => ({
+            paymentMethod: item._id,
+            count: item.count,
+            totalAmount: item.totalAmount,
+            percentage: 0 // Se calculará en el frontend
+        }));
+    } catch (error) {
+        console.error('Error fetching payment method stats:', error);
+        throw error;
+    }
 } 

@@ -3,6 +3,9 @@
 import { cn } from '@repo/design-system/lib/utils';
 import {
     LayoutDashboard,
+    User,
+    Users,
+    BarChart3,
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -36,6 +39,24 @@ export function AdminSidebar({ dictionary }: AdminSidebarProps) {
             mobileTitle: 'Inicio',
             icon: LayoutDashboard,
             href: '/admin/dashboard',
+        },
+        {
+            title: 'Mi Cuenta',
+            mobileTitle: 'Cuenta',
+            icon: User,
+            href: '/admin/account',
+        },
+        {
+            title: 'Estadísticas',
+            mobileTitle: 'KPIs',
+            icon: BarChart3,
+            href: '/admin/analytics',
+        },
+        {
+            title: 'Clientes',
+            mobileTitle: 'Clientes',
+            icon: Users,
+            href: '/admin/clients',
         }
     ];
 
