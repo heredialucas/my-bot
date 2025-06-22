@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Button } from '@repo/design-system/components/ui/button';
+import { Separator } from '@repo/design-system/components/ui/separator';
 import { Tag, Filter } from 'lucide-react';
+import { useInitStore } from '../../../../../../../store/initStore';
 
 interface CategorySale {
     categoryName: string;
@@ -20,9 +22,25 @@ interface CategoriesAnalyticsClientProps {
     allCategories: CategorySale[];
     pendingCategories: CategorySale[];
     confirmedCategories: CategorySale[];
+    compareAllCategories?: CategorySale[];
+    comparePendingCategories?: CategorySale[];
+    compareConfirmedCategories?: CategorySale[];
+    isComparing?: boolean;
+    dateFilter?: { from: Date; to: Date };
+    compareFilter?: { from: Date; to: Date };
 }
 
-export function CategoriesAnalyticsClient({ allCategories, pendingCategories, confirmedCategories }: CategoriesAnalyticsClientProps) {
+export function CategoriesAnalyticsClient({
+    allCategories,
+    pendingCategories,
+    confirmedCategories,
+    compareAllCategories,
+    comparePendingCategories,
+    compareConfirmedCategories,
+    isComparing = false,
+    dateFilter,
+    compareFilter
+}: CategoriesAnalyticsClientProps) {
     const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'confirmed'>('all');
 
     // Seleccionar los datos correctos basado en el filtro
@@ -39,7 +57,70 @@ export function CategoriesAnalyticsClient({ allCategories, pendingCategories, co
         return [...categories].sort((a, b) => b.quantity - a.quantity);
     };
 
+    const getCompareCategories = () => {
+        if (!isComparing) return [];
+
+        let categories;
+        switch (statusFilter) {
+            case 'all': categories = compareAllCategories || []; break;
+            case 'pending': categories = comparePendingCategories || []; break;
+            case 'confirmed': categories = compareConfirmedCategories || []; break;
+            default: categories = compareAllCategories || []; break;
+        }
+
+        return [...categories].sort((a, b) => b.quantity - a.quantity);
+    };
+
     const currentCategories = getCurrentCategories();
+    const compareCategories = getCompareCategories();
+
+    // Calcular totales para comparación
+    const totals = useMemo(() => {
+        const currentTotal = currentCategories.reduce((acc, c) => ({
+            quantity: acc.quantity + c.quantity,
+            revenue: acc.revenue + c.revenue,
+            orders: acc.orders + c.orders,
+            uniqueProducts: acc.uniqueProducts + c.uniqueProducts
+        }), { quantity: 0, revenue: 0, orders: 0, uniqueProducts: 0 });
+
+        const compareTotal = compareCategories.reduce((acc, c) => ({
+            quantity: acc.quantity + c.quantity,
+            revenue: acc.revenue + c.revenue,
+            orders: acc.orders + c.orders,
+            uniqueProducts: acc.uniqueProducts + c.uniqueProducts
+        }), { quantity: 0, revenue: 0, orders: 0, uniqueProducts: 0 });
+
+        return { current: currentTotal, compare: compareTotal };
+    }, [currentCategories, compareCategories]);
+
+    // Función para calcular porcentaje de cambio (de fecha antigua a reciente)
+    const calculateChange = (primaryValue: number, compareValue: number, primaryDate: Date, compareDate: Date) => {
+        // Determinar cuál es el período anterior y cuál el actual basándose en fechas
+        const isPrimaryNewer = primaryDate > compareDate;
+        const oldValue = isPrimaryNewer ? compareValue : primaryValue;
+        const newValue = isPrimaryNewer ? primaryValue : compareValue;
+
+        if (oldValue === 0) return newValue > 0 ? 100 : 0;
+        return ((newValue - oldValue) / oldValue) * 100;
+    };
+
+    const formatChange = (change: number) => {
+        const isPositive = change >= 0;
+        return (
+            <span className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                {isPositive ? '+' : ''}{change.toFixed(1)}%
+            </span>
+        );
+    };
+
+    const formatDateRange = (from: Date, to: Date) => {
+        return `${from.toLocaleDateString('es-ES')} - ${to.toLocaleDateString('es-ES')}`;
+    };
+
+    // Determinar cuál período es más reciente para las etiquetas
+    const isPrimaryNewer = dateFilter && compareFilter ? dateFilter.from > compareFilter.from : true;
+    const newerLabel = isPrimaryNewer ? 'Principal' : 'Comparación';
+    const olderLabel = isPrimaryNewer ? 'Comparación' : 'Principal';
 
     // Obtener estadísticas del filtro actual
     const getFilterStats = () => {
@@ -97,12 +178,110 @@ export function CategoriesAnalyticsClient({ allCategories, pendingCategories, co
 
     return (
         <div className="space-y-4" key={`categories-filter-${statusFilter}`}>
+            {/* Resumen de comparación */}
+            {isComparing && (
+                <div className="grid gap-4 md:grid-cols-3">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Unidades Vendidas</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    {newerLabel}: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />{olderLabel}: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? totals.compare.quantity : totals.current.quantity).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? totals.current.quantity : totals.compare.quantity).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(totals.current.quantity, totals.compare.quantity, dateFilter?.from || new Date(), compareFilter?.from || new Date()))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Ingresos</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    {newerLabel}: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />{olderLabel}: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">${(isPrimaryNewer ? totals.compare.revenue : totals.current.revenue).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">${(isPrimaryNewer ? totals.current.revenue : totals.compare.revenue).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(totals.current.revenue, totals.compare.revenue, dateFilter?.from || new Date(), compareFilter?.from || new Date()))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Órdenes</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    {newerLabel}: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />{olderLabel}: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? totals.compare.orders : totals.current.orders).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? totals.current.orders : totals.compare.orders).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(totals.current.orders, totals.compare.orders, dateFilter?.from || new Date(), compareFilter?.from || new Date()))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
             {/* Filtro de estado */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Filter className="h-5 w-5" />
-                        Filtro por estado
+                        Filtra categorías por estado de órdenes
                     </CardTitle>
                     <CardDescription>
                         Filtra categorías por estado de órdenes
@@ -146,9 +325,10 @@ export function CategoriesAnalyticsClient({ allCategories, pendingCategories, co
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Tag className="h-5 w-5" />
-                        Ventas por categoría
+                        Ventas por categoría {isComparing ? `(${newerLabel})` : ''}
                     </CardTitle>
                     <CardDescription>
+                        {dateFilter && `${formatDateRange(dateFilter.from, dateFilter.to)} • `}
                         Rendimiento por categorías ({getFilterLabel(statusFilter)}) • {currentCategories.length} resultados
                     </CardDescription>
                 </CardHeader>
@@ -179,22 +359,24 @@ export function CategoriesAnalyticsClient({ allCategories, pendingCategories, co
                                         <div className="flex justify-between items-center">
                                             <span className="text-xs sm:text-sm text-muted-foreground">Unidades vendidas</span>
                                             <span className={`font-medium text-sm ${getFilterColor(statusFilter)}`}>
-                                                {category.quantity.toLocaleString()}
+                                                {category.quantity}
                                             </span>
                                         </div>
                                         <div className="flex justify-between items-center">
                                             <span className="text-xs sm:text-sm text-muted-foreground">Órdenes</span>
-                                            <span className="font-medium text-sm">{category.orders.toLocaleString()}</span>
+                                            <span className="font-medium text-sm">{category.orders}</span>
                                         </div>
                                         <div className="flex justify-between items-center">
                                             <span className="text-xs sm:text-sm text-muted-foreground">Ingresos totales</span>
-                                            <span className={`font-bold text-sm ${getFilterColor(statusFilter)}`}>
+                                            <span className="font-bold text-sm text-green-600">
                                                 ${category.revenue.toLocaleString()}
                                             </span>
                                         </div>
                                         <div className="flex justify-between items-center">
                                             <span className="text-xs sm:text-sm text-muted-foreground">Precio promedio</span>
-                                            <span className="text-xs sm:text-sm">${category.avgPrice.toLocaleString()}</span>
+                                            <span className="font-medium text-sm">
+                                                ${category.avgPrice.toLocaleString()}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -203,6 +385,67 @@ export function CategoriesAnalyticsClient({ allCategories, pendingCategories, co
                     )}
                 </CardContent>
             </Card>
+
+            {/* Lista de categorías de comparación */}
+            {isComparing && compareCategories.length > 0 && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Tag className="h-5 w-5" />
+                            Ventas por categoría ({olderLabel})
+                        </CardTitle>
+                        <CardDescription>
+                            {compareFilter && `${formatDateRange(compareFilter.from, compareFilter.to)} • `}
+                            Rendimiento por categorías del período de comparación ({getFilterLabel(statusFilter)}) • {compareCategories.length} resultados
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+                            {compareCategories.map((category, index) => (
+                                <div key={`compare-${statusFilter}-${category.categoryName}`} className="p-4 border rounded-lg">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <span className="text-lg flex-shrink-0">{getCategoryIcon(category.categoryName)}</span>
+                                            <h3 className="font-medium truncate">{category.categoryName}</h3>
+                                        </div>
+                                        <Badge variant="outline" className="text-xs flex-shrink-0">
+                                            #{index + 1}
+                                        </Badge>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-xs sm:text-sm text-muted-foreground">Productos únicos</span>
+                                            <span className="font-medium text-sm">{category.uniqueProducts}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-xs sm:text-sm text-muted-foreground">Unidades vendidas</span>
+                                            <span className="font-medium text-sm text-blue-600">
+                                                {category.quantity}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-xs sm:text-sm text-muted-foreground">Órdenes</span>
+                                            <span className="font-medium text-sm">{category.orders}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-xs sm:text-sm text-muted-foreground">Ingresos totales</span>
+                                            <span className="font-bold text-sm text-blue-600">
+                                                ${category.revenue.toLocaleString()}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-xs sm:text-sm text-muted-foreground">Precio promedio</span>
+                                            <span className="font-medium text-sm">
+                                                ${category.avgPrice.toLocaleString()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 } 

@@ -1,16 +1,41 @@
 import { getPaymentMethodStats } from '@repo/data-services/src/services/barfer';
 import { PaymentsAnalyticsClient } from './PaymentsAnalyticsClient';
 
-export async function PaymentsAnalyticsTab() {
-    try {
-        const paymentStats = await getPaymentMethodStats();
+interface PaymentsAnalyticsTabProps {
+    dateFilter: {
+        from: Date;
+        to: Date;
+    };
+    compareFilter?: {
+        from: Date;
+        to: Date;
+    };
+}
 
-        return <PaymentsAnalyticsClient paymentStats={paymentStats} />;
+export async function PaymentsAnalyticsTab({ dateFilter, compareFilter }: PaymentsAnalyticsTabProps) {
+    try {
+        const paymentStats = await getPaymentMethodStats(dateFilter.from, dateFilter.to);
+
+        // Datos del período de comparación (si está habilitado)
+        let comparePaymentStats;
+        if (compareFilter) {
+            comparePaymentStats = await getPaymentMethodStats(compareFilter.from, compareFilter.to);
+        }
+
+        return (
+            <PaymentsAnalyticsClient
+                paymentStats={paymentStats}
+                comparePaymentStats={comparePaymentStats}
+                isComparing={!!compareFilter}
+                dateFilter={dateFilter}
+                compareFilter={compareFilter}
+            />
+        );
     } catch (error) {
-        console.error('Error loading payment stats:', error);
+        console.error('Error loading payment analytics:', error);
         return (
             <div className="p-4 border rounded-lg">
-                <p className="text-sm text-red-600">Error al cargar datos de métodos de pago</p>
+                <p className="text-sm text-red-600">Error al cargar datos de pagos</p>
             </div>
         );
     }

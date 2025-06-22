@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
-import { Input } from '@repo/design-system/components/ui/input';
-import { Button } from '@repo/design-system/components/ui/button';
-import { ShoppingCart, DollarSign, Calendar, Users, AlertCircle } from 'lucide-react';
+import { ShoppingCart, DollarSign, Users, AlertCircle } from 'lucide-react';
+import { Separator } from '@repo/design-system/components/ui/separator';
 
 interface MonthlyData {
     month: string;
@@ -16,22 +15,72 @@ interface MonthlyData {
 
 interface MonthlyAnalyticsClientProps {
     allOrdersData: MonthlyData[];   // Todos los pedidos (pending + confirmed)
+    compareAllOrdersData?: MonthlyData[];   // Datos de comparación
+    isComparing?: boolean; // Si está en modo comparación
+    dateFilter?: { from: Date; to: Date }; // Fechas del período principal
+    compareFilter?: { from: Date; to: Date }; // Fechas del período de comparación
 }
 
-export function MonthlyAnalyticsClient({ allOrdersData }: MonthlyAnalyticsClientProps) {
-    const [selectedMonth, setSelectedMonth] = useState<string>('');
+export function MonthlyAnalyticsClient({
+    allOrdersData,
+    compareAllOrdersData,
+    isComparing = false,
+    dateFilter,
+    compareFilter
+}: MonthlyAnalyticsClientProps) {
+    // Los datos ya vienen filtrados del servidor, solo necesitamos ordenarlos
+    const { sortedAllOrders, sortedCompareAllOrders } = useMemo(() => {
+        return {
+            sortedAllOrders: [...allOrdersData].sort((a, b) => b.month.localeCompare(a.month)),
+            sortedCompareAllOrders: compareAllOrdersData ? [...compareAllOrdersData].sort((a, b) => b.month.localeCompare(a.month)) : []
+        };
+    }, [allOrdersData, compareAllOrdersData]);
 
-    // Ordenar datos de más reciente a más viejo
-    const sortedAllOrders = [...allOrdersData].sort((a, b) => {
-        return b.month.localeCompare(a.month); // Orden descendente
-    });
+    // Calcular totales para comparación
+    const totals = useMemo(() => {
+        const currentTotal = sortedAllOrders.reduce((acc, month) => ({
+            orders: acc.orders + month.orders,
+            revenue: acc.revenue + month.revenue,
+            uniqueCustomers: acc.uniqueCustomers + month.uniqueCustomers
+        }), { orders: 0, revenue: 0, uniqueCustomers: 0 });
 
-    // Filtrar por mes específico si se selecciona
-    const filteredAllOrders = selectedMonth
-        ? sortedAllOrders.filter(month => month.month === selectedMonth)
-        : sortedAllOrders.slice(0, 12); // Últimos 12 meses por defecto
+        const compareTotal = sortedCompareAllOrders.reduce((acc, month) => ({
+            orders: acc.orders + month.orders,
+            revenue: acc.revenue + month.revenue,
+            uniqueCustomers: acc.uniqueCustomers + month.uniqueCustomers
+        }), { orders: 0, revenue: 0, uniqueCustomers: 0 });
 
-    const clearFilter = () => setSelectedMonth('');
+        return { current: currentTotal, compare: compareTotal };
+    }, [sortedAllOrders, sortedCompareAllOrders]);
+
+    // Función para calcular porcentaje de cambio (de fecha antigua a reciente)
+    const calculateChange = (primaryValue: number, compareValue: number, primaryDate: Date, compareDate: Date) => {
+        // Determinar cuál es el período anterior y cuál el actual basándose en fechas
+        const isPrimaryNewer = primaryDate > compareDate;
+        const oldValue = isPrimaryNewer ? compareValue : primaryValue;
+        const newValue = isPrimaryNewer ? primaryValue : compareValue;
+
+        if (oldValue === 0) return newValue > 0 ? 100 : 0;
+        return ((newValue - oldValue) / oldValue) * 100;
+    };
+
+    const formatChange = (change: number) => {
+        const isPositive = change >= 0;
+        return (
+            <span className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                {isPositive ? '+' : ''}{change.toFixed(1)}%
+            </span>
+        );
+    };
+
+    const formatDateRange = (from: Date, to: Date) => {
+        return `${from.toLocaleDateString('es-ES')} - ${to.toLocaleDateString('es-ES')}`;
+    };
+
+    // Determinar cuál período es más reciente para las etiquetas
+    const isPrimaryNewer = dateFilter && compareFilter ? dateFilter.from > compareFilter.from : true;
+    const newerLabel = isPrimaryNewer ? 'Principal' : 'Comparación';
+    const olderLabel = isPrimaryNewer ? 'Comparación' : 'Principal';
 
     // Formatear nombre del mes para mostrar
     const formatMonthName = (monthStr: string) => {
@@ -45,43 +94,118 @@ export function MonthlyAnalyticsClient({ allOrdersData }: MonthlyAnalyticsClient
 
     return (
         <div className="space-y-4">
-            {/* Filtro de mes */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Calendar className="h-5 w-5" />
-                        Filtro por mes
-                    </CardTitle>
-                    <CardDescription>
-                        Busca un mes específico o deja vacío para ver los últimos 12 meses
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                        <div className="flex-1 sm:max-w-[200px] min-w-[140px]">
-                            <Input
-                                type="month"
-                                value={selectedMonth}
-                                onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="w-full text-sm"
-                            />
-                        </div>
-                        <Button
-                            variant="outline"
-                            onClick={clearFilter}
-                            disabled={!selectedMonth}
-                            className="w-full sm:w-auto whitespace-nowrap text-sm"
-                        >
-                            Limpiar
-                        </Button>
-                    </div>
-                    {selectedMonth && (
-                        <p className="text-sm text-muted-foreground mt-2">
-                            Mostrando datos para: {formatMonthName(selectedMonth)}
-                        </p>
-                    )}
-                </CardContent>
-            </Card>
+            {/* Resumen de comparación */}
+            {isComparing && (
+                <div className="grid gap-4 md:grid-cols-3">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Pedidos</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    Principal: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />Comparación: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">{isPrimaryNewer ? totals.compare.orders : totals.current.orders}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">{isPrimaryNewer ? totals.current.orders : totals.compare.orders}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(
+                                        totals.current.orders,
+                                        totals.compare.orders,
+                                        dateFilter?.from || new Date(),
+                                        compareFilter?.from || new Date()
+                                    ))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Ingresos</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    Principal: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />Comparación: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">${(isPrimaryNewer ? totals.compare.revenue : totals.current.revenue).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">${(isPrimaryNewer ? totals.current.revenue : totals.compare.revenue).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(
+                                        totals.current.revenue,
+                                        totals.compare.revenue,
+                                        dateFilter?.from || new Date(),
+                                        compareFilter?.from || new Date()
+                                    ))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Clientes Únicos</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    Principal: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />Comparación: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">{isPrimaryNewer ? totals.compare.uniqueCustomers : totals.current.uniqueCustomers}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">{isPrimaryNewer ? totals.current.uniqueCustomers : totals.compare.uniqueCustomers}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(
+                                        totals.current.uniqueCustomers,
+                                        totals.compare.uniqueCustomers,
+                                        dateFilter?.from || new Date(),
+                                        compareFilter?.from || new Date()
+                                    ))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
 
             <div className="grid gap-4 md:grid-cols-2">
                 {/* Tabla 1: Pedidos mensuales */}
@@ -89,16 +213,17 @@ export function MonthlyAnalyticsClient({ allOrdersData }: MonthlyAnalyticsClient
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <ShoppingCart className="h-5 w-5" />
-                            Pedidos por mes
+                            Pedidos por mes {isComparing ? `(${newerLabel})` : ''}
                         </CardTitle>
                         <CardDescription>
+                            {dateFilter && `${formatDateRange(dateFilter.from, dateFilter.to)} • `}
                             Todos los pedidos e ingresos mensuales
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-2 max-h-96 overflow-y-auto">
-                            {filteredAllOrders.length > 0 ? (
-                                filteredAllOrders.map((month) => (
+                            {sortedAllOrders.length > 0 ? (
+                                sortedAllOrders.map((month) => (
                                     <div key={month.month} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded gap-2">
                                         <span className="text-sm font-medium">{formatMonthName(month.month)}</span>
                                         <div className="flex items-center gap-2 flex-wrap">
@@ -126,16 +251,17 @@ export function MonthlyAnalyticsClient({ allOrdersData }: MonthlyAnalyticsClient
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Users className="h-5 w-5" />
-                            Clientes por mes
+                            Clientes por mes {isComparing ? `(${newerLabel})` : ''}
                         </CardTitle>
                         <CardDescription>
+                            {dateFilter && `${formatDateRange(dateFilter.from, dateFilter.to)} • `}
                             Total de pedidos vs clientes únicos
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-2 max-h-96 overflow-y-auto">
-                            {filteredAllOrders.length > 0 ? (
-                                filteredAllOrders.map((month) => (
+                            {sortedAllOrders.length > 0 ? (
+                                sortedAllOrders.map((month) => (
                                     <div key={month.month} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded gap-2">
                                         <span className="text-sm font-medium">{formatMonthName(month.month)}</span>
                                         <div className="flex items-center gap-2 flex-wrap">
@@ -160,6 +286,75 @@ export function MonthlyAnalyticsClient({ allOrdersData }: MonthlyAnalyticsClient
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Datos de comparación */}
+            {isComparing && sortedCompareAllOrders.length > 0 && (
+                <div className="grid gap-4 md:grid-cols-2">
+                    {/* Tabla 3: Pedidos mensuales - Comparación */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <ShoppingCart className="h-5 w-5" />
+                                Pedidos por mes ({olderLabel})
+                            </CardTitle>
+                            <CardDescription>
+                                {compareFilter && `${formatDateRange(compareFilter.from, compareFilter.to)} • `}
+                                Todos los pedidos e ingresos del período de comparación
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2 max-h-96 overflow-y-auto">
+                                {sortedCompareAllOrders.map((month) => (
+                                    <div key={month.month} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded gap-2">
+                                        <span className="text-sm font-medium">{formatMonthName(month.month)}</span>
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <Badge variant="outline">
+                                                {month.orders} pedidos
+                                            </Badge>
+                                            <span className="text-sm text-muted-foreground">
+                                                ${month.revenue.toLocaleString()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Tabla 4: Clientes únicos - Comparación */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Users className="h-5 w-5" />
+                                Clientes por mes ({olderLabel})
+                            </CardTitle>
+                            <CardDescription>
+                                {compareFilter && `${formatDateRange(compareFilter.from, compareFilter.to)} • `}
+                                Total de pedidos vs clientes únicos del período de comparación
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2 max-h-96 overflow-y-auto">
+                                {sortedCompareAllOrders.map((month) => (
+                                    <div key={month.month} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded gap-2">
+                                        <span className="text-sm font-medium">{formatMonthName(month.month)}</span>
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <Badge variant="outline" className="flex items-center gap-1">
+                                                <ShoppingCart className="h-3 w-3" />
+                                                {month.orders} pedidos
+                                            </Badge>
+                                            <Badge variant="outline" className="flex items-center gap-1">
+                                                <Users className="h-3 w-3" />
+                                                {month.uniqueCustomers} únicos
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
         </div>
     );
 } 

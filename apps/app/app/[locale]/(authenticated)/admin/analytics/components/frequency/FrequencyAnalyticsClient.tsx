@@ -1,6 +1,8 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
+import { Separator } from '@repo/design-system/components/ui/separator';
 import { ShoppingCart, DollarSign, Users, RefreshCw, TrendingUp, Target } from 'lucide-react';
 
 interface CustomerInsights {
@@ -16,18 +18,170 @@ interface CustomerInsights {
 
 interface FrequencyAnalyticsClientProps {
     customerInsights: CustomerInsights;
+    compareCustomerInsights?: CustomerInsights;
+    isComparing?: boolean;
+    dateFilter?: { from: Date; to: Date };
+    compareFilter?: { from: Date; to: Date };
 }
 
-export function FrequencyAnalyticsClient({ customerInsights }: FrequencyAnalyticsClientProps) {
+export function FrequencyAnalyticsClient({
+    customerInsights,
+    compareCustomerInsights,
+    isComparing = false,
+    dateFilter,
+    compareFilter
+}: FrequencyAnalyticsClientProps) {
+    // Función para calcular porcentaje de cambio (de fecha antigua a reciente)
+    const calculateChange = (primaryValue: number, compareValue: number, primaryDate: Date, compareDate: Date) => {
+        // Determinar cuál es el período anterior y cuál el actual basándose en fechas
+        const isPrimaryNewer = primaryDate > compareDate;
+        const oldValue = isPrimaryNewer ? compareValue : primaryValue;
+        const newValue = isPrimaryNewer ? primaryValue : compareValue;
+
+        if (oldValue === 0) return newValue > 0 ? 100 : 0;
+        return ((newValue - oldValue) / oldValue) * 100;
+    };
+
+    const formatChange = (change: number) => {
+        const isPositive = change >= 0;
+        return (
+            <span className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                {isPositive ? '+' : ''}{change.toFixed(1)}%
+            </span>
+        );
+    };
+
+    const formatDateRange = (from: Date, to: Date) => {
+        return `${from.toLocaleDateString('es-ES')} - ${to.toLocaleDateString('es-ES')}`;
+    };
+
+    // Determinar cuál período es más reciente para las etiquetas
+    const isPrimaryNewer = dateFilter && compareFilter ? dateFilter.from > compareFilter.from : true;
+    const newerLabel = isPrimaryNewer ? 'Principal' : 'Comparación';
+    const olderLabel = isPrimaryNewer ? 'Comparación' : 'Principal';
+
     return (
         <div className="space-y-4 md:space-y-6">
+            {/* Resumen de comparación */}
+            {isComparing && compareCustomerInsights && (
+                <div className="grid gap-4 md:grid-cols-3">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Valor Promedio Orden</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    Principal: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />Comparación: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">${(isPrimaryNewer ? compareCustomerInsights.averageOrderValue : customerInsights.averageOrderValue).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">${(isPrimaryNewer ? customerInsights.averageOrderValue : compareCustomerInsights.averageOrderValue).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(
+                                        customerInsights.averageOrderValue,
+                                        compareCustomerInsights.averageOrderValue,
+                                        dateFilter?.from || new Date(),
+                                        compareFilter?.from || new Date()
+                                    ))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Órdenes por Cliente</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    Principal: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />Comparación: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? compareCustomerInsights.averageOrdersPerCustomer : customerInsights.averageOrdersPerCustomer).toFixed(1)}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? customerInsights.averageOrdersPerCustomer : compareCustomerInsights.averageOrdersPerCustomer).toFixed(1)}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(
+                                        customerInsights.averageOrdersPerCustomer,
+                                        compareCustomerInsights.averageOrdersPerCustomer,
+                                        dateFilter?.from || new Date(),
+                                        compareFilter?.from || new Date()
+                                    ))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Tasa de Repetición</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    Principal: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />Comparación: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? compareCustomerInsights.repeatCustomerRate : customerInsights.repeatCustomerRate).toFixed(1)}%</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? customerInsights.repeatCustomerRate : compareCustomerInsights.repeatCustomerRate).toFixed(1)}%</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(
+                                        customerInsights.repeatCustomerRate,
+                                        compareCustomerInsights.repeatCustomerRate,
+                                        dateFilter?.from || new Date(),
+                                        compareFilter?.from || new Date()
+                                    ))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
             {/* Métricas principales solicitadas */}
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <DollarSign className="h-5 w-5 text-green-600" />
-                            Gasto Promedio por Compra
+                            Gasto Promedio por Compra {isComparing ? `(${newerLabel})` : ''}
                         </CardTitle>
                         <CardDescription>
                             Compra promedio de todas las órdenes
@@ -52,7 +206,7 @@ export function FrequencyAnalyticsClient({ customerInsights }: FrequencyAnalytic
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <RefreshCw className="h-5 w-5 text-blue-600" />
-                            Frecuencia Promedio de Compra
+                            Frecuencia Promedio de Compra {isComparing ? `(${newerLabel})` : ''}
                         </CardTitle>
                         <CardDescription>
                             Órdenes promedio por cliente
@@ -74,12 +228,69 @@ export function FrequencyAnalyticsClient({ customerInsights }: FrequencyAnalytic
                 </Card>
             </div>
 
+            {/* Métricas principales del período de comparación */}
+            {isComparing && compareCustomerInsights && (
+                <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <DollarSign className="h-5 w-5 text-blue-600" />
+                                Gasto Promedio por Compra ({olderLabel})
+                            </CardTitle>
+                            <CardDescription>
+                                {compareFilter && `${formatDateRange(compareFilter.from, compareFilter.to)} • `}
+                                Compra promedio del período de comparación
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-600 mb-2 break-words overflow-hidden">
+                                ${compareCustomerInsights.averageOrderValue.toLocaleString()}
+                            </div>
+                            <p className="text-xs sm:text-sm text-muted-foreground">
+                                Basado en {compareCustomerInsights.totalOrders.toLocaleString()} órdenes totales
+                            </p>
+                            <div className="mt-3 p-2 sm:p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                <p className="text-xs text-blue-700">
+                                    <strong>Período de comparación</strong>
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <RefreshCw className="h-5 w-5 text-blue-600" />
+                                Frecuencia Promedio de Compra ({olderLabel})
+                            </CardTitle>
+                            <CardDescription>
+                                {compareFilter && `${formatDateRange(compareFilter.from, compareFilter.to)} • `}
+                                Órdenes promedio por cliente del período de comparación
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-600 mb-2 break-words overflow-hidden">
+                                {compareCustomerInsights.averageOrdersPerCustomer} órdenes
+                            </div>
+                            <p className="text-xs sm:text-sm text-muted-foreground">
+                                Por cliente activo
+                            </p>
+                            <div className="mt-3 p-2 sm:p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                <p className="text-xs text-blue-700">
+                                    <strong>Período de comparación</strong>
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
             {/* Métricas de contexto adicionales */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <TrendingUp className="h-5 w-5" />
-                        Métricas de Comportamiento de Clientes
+                        Métricas de Comportamiento de Clientes {isComparing ? `(${newerLabel})` : ''}
                     </CardTitle>
                     <CardDescription>
                         Análisis detallado del comportamiento de compra y gastos
@@ -135,6 +346,71 @@ export function FrequencyAnalyticsClient({ customerInsights }: FrequencyAnalytic
                     </div>
                 </CardContent>
             </Card>
+
+            {/* Métricas de contexto del período de comparación */}
+            {isComparing && compareCustomerInsights && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <TrendingUp className="h-5 w-5" />
+                            Métricas de Comportamiento de Clientes ({olderLabel})
+                        </CardTitle>
+                        <CardDescription>
+                            {compareFilter && `${formatDateRange(compareFilter.from, compareFilter.to)} • `}
+                            Análisis del período de comparación
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
+                            <div className="p-3 sm:p-4 border rounded-lg text-center">
+                                <Users className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-blue-500" />
+                                <div className="text-sm sm:text-lg font-bold text-blue-600 mb-1 break-words overflow-hidden">
+                                    {compareCustomerInsights.totalCustomers.toLocaleString()}
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    Clientes únicos
+                                </p>
+                            </div>
+
+                            <div className="p-3 sm:p-4 border rounded-lg text-center">
+                                <Target className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-blue-500" />
+                                <div className="text-sm sm:text-lg font-bold text-blue-600 mb-1 break-words overflow-hidden">
+                                    ${compareCustomerInsights.averageSpentPerCustomer.toLocaleString()}
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    Gasto promedio por cliente
+                                </p>
+                                <p className="text-xs text-gray-500 mt-1 hidden sm:block">
+                                    (Revenue total ÷ clientes únicos)
+                                </p>
+                            </div>
+
+                            <div className="p-3 sm:p-4 border rounded-lg text-center">
+                                <RefreshCw className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-blue-500" />
+                                <div className="text-sm sm:text-lg font-bold text-blue-600 mb-1 break-words overflow-hidden">
+                                    {compareCustomerInsights.repeatCustomerRate}%
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    Tasa de repetición
+                                </p>
+                                <p className="text-xs text-gray-500 mt-1 hidden sm:block">
+                                    (Clientes con +1 orden ÷ total clientes)
+                                </p>
+                            </div>
+
+                            <div className="p-3 sm:p-4 border rounded-lg text-center">
+                                <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-blue-500" />
+                                <div className="text-sm sm:text-lg font-bold text-blue-600 mb-1 break-words overflow-hidden">
+                                    ${Math.round(compareCustomerInsights.totalRevenue / 1000000)}M
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    Revenue total
+                                </p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 } 

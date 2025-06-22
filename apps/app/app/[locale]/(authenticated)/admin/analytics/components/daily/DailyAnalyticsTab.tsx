@@ -1,17 +1,43 @@
 import { getOrdersByDay, getRevenueByDay } from '@repo/data-services/src/services/barfer';
 import { DailyAnalyticsClient } from './DailyAnalyticsClient';
 
-export async function DailyAnalyticsTab() {
+interface DailyAnalyticsTabProps {
+    dateFilter: {
+        from: Date;
+        to: Date;
+    };
+    compareFilter?: {
+        from: Date;
+        to: Date;
+    };
+}
+
+export async function DailyAnalyticsTab({ dateFilter, compareFilter }: DailyAnalyticsTabProps) {
     try {
+        // Datos del período principal
         const [allOrdersData, confirmedOrdersData] = await Promise.all([
-            getOrdersByDay(),
-            getRevenueByDay()
+            getOrdersByDay(dateFilter.from, dateFilter.to),
+            getRevenueByDay(dateFilter.from, dateFilter.to)
         ]);
+
+        // Datos del período de comparación (si está habilitado)
+        let compareAllOrdersData, compareConfirmedOrdersData;
+        if (compareFilter) {
+            [compareAllOrdersData, compareConfirmedOrdersData] = await Promise.all([
+                getOrdersByDay(compareFilter.from, compareFilter.to),
+                getRevenueByDay(compareFilter.from, compareFilter.to)
+            ]);
+        }
 
         return (
             <DailyAnalyticsClient
                 allOrdersData={allOrdersData}
                 confirmedOrdersData={confirmedOrdersData}
+                compareAllOrdersData={compareAllOrdersData}
+                compareConfirmedOrdersData={compareConfirmedOrdersData}
+                isComparing={!!compareFilter}
+                dateFilter={dateFilter}
+                compareFilter={compareFilter}
             />
         );
     } catch (error) {

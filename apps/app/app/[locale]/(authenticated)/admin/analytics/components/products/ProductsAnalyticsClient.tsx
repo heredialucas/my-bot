@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Button } from '@repo/design-system/components/ui/button';
+import { Separator } from '@repo/design-system/components/ui/separator';
 import { Package, Filter } from 'lucide-react';
 
 interface ProductSale {
@@ -22,9 +23,25 @@ interface ProductsAnalyticsClientProps {
     allProducts: ProductSale[];
     pendingProducts: ProductSale[];
     confirmedProducts: ProductSale[];
+    compareAllProducts?: ProductSale[];
+    comparePendingProducts?: ProductSale[];
+    compareConfirmedProducts?: ProductSale[];
+    isComparing?: boolean;
+    dateFilter?: { from: Date; to: Date };
+    compareFilter?: { from: Date; to: Date };
 }
 
-export function ProductsAnalyticsClient({ allProducts, pendingProducts, confirmedProducts }: ProductsAnalyticsClientProps) {
+export function ProductsAnalyticsClient({
+    allProducts,
+    pendingProducts,
+    confirmedProducts,
+    compareAllProducts,
+    comparePendingProducts,
+    compareConfirmedProducts,
+    isComparing = false,
+    dateFilter,
+    compareFilter
+}: ProductsAnalyticsClientProps) {
     const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'confirmed'>('all');
 
     // Seleccionar los datos correctos basado en el filtro
@@ -41,7 +58,68 @@ export function ProductsAnalyticsClient({ allProducts, pendingProducts, confirme
         return [...products].sort((a, b) => b.quantity - a.quantity);
     };
 
+    const getCompareProducts = () => {
+        if (!isComparing) return [];
+
+        let products;
+        switch (statusFilter) {
+            case 'all': products = compareAllProducts || []; break;
+            case 'pending': products = comparePendingProducts || []; break;
+            case 'confirmed': products = compareConfirmedProducts || []; break;
+            default: products = compareAllProducts || []; break;
+        }
+
+        return [...products].sort((a, b) => b.quantity - a.quantity);
+    };
+
     const currentProducts = getCurrentProducts();
+    const compareProducts = getCompareProducts();
+
+    // Calcular totales para comparación
+    const totals = useMemo(() => {
+        const currentTotal = currentProducts.reduce((acc, p) => ({
+            quantity: acc.quantity + p.quantity,
+            revenue: acc.revenue + p.revenue,
+            orders: acc.orders + p.orders
+        }), { quantity: 0, revenue: 0, orders: 0 });
+
+        const compareTotal = compareProducts.reduce((acc, p) => ({
+            quantity: acc.quantity + p.quantity,
+            revenue: acc.revenue + p.revenue,
+            orders: acc.orders + p.orders
+        }), { quantity: 0, revenue: 0, orders: 0 });
+
+        return { current: currentTotal, compare: compareTotal };
+    }, [currentProducts, compareProducts]);
+
+    // Función para calcular porcentaje de cambio (de fecha antigua a reciente)
+    const calculateChange = (primaryValue: number, compareValue: number, primaryDate: Date, compareDate: Date) => {
+        // Determinar cuál es el período anterior y cuál el actual basándose en fechas
+        const isPrimaryNewer = primaryDate > compareDate;
+        const oldValue = isPrimaryNewer ? compareValue : primaryValue;
+        const newValue = isPrimaryNewer ? primaryValue : compareValue;
+
+        if (oldValue === 0) return newValue > 0 ? 100 : 0;
+        return ((newValue - oldValue) / oldValue) * 100;
+    };
+
+    const formatChange = (change: number) => {
+        const isPositive = change >= 0;
+        return (
+            <span className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                {isPositive ? '+' : ''}{change.toFixed(1)}%
+            </span>
+        );
+    };
+
+    const formatDateRange = (from: Date, to: Date) => {
+        return `${from.toLocaleDateString('es-ES')} - ${to.toLocaleDateString('es-ES')}`;
+    };
+
+    // Determinar cuál período es más reciente para las etiquetas
+    const isPrimaryNewer = dateFilter && compareFilter ? dateFilter.from > compareFilter.from : true;
+    const newerLabel = isPrimaryNewer ? 'Principal' : 'Comparación';
+    const olderLabel = isPrimaryNewer ? 'Comparación' : 'Principal';
 
     // Obtener estadísticas del filtro actual
     const getFilterStats = () => {
@@ -73,12 +151,110 @@ export function ProductsAnalyticsClient({ allProducts, pendingProducts, confirme
 
     return (
         <div className="space-y-4" key={`products-filter-${statusFilter}`}>
+            {/* Resumen de comparación */}
+            {isComparing && (
+                <div className="grid gap-4 md:grid-cols-3">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Unidades Vendidas</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    Principal: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />Comparación: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? totals.compare.quantity : totals.current.quantity).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? totals.current.quantity : totals.compare.quantity).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(totals.current.quantity, totals.compare.quantity, dateFilter?.from || new Date(), compareFilter?.from || new Date()))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Ingresos</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    Principal: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />Comparación: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">${(isPrimaryNewer ? totals.compare.revenue : totals.current.revenue).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">${(isPrimaryNewer ? totals.current.revenue : totals.compare.revenue).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(totals.current.revenue, totals.compare.revenue, dateFilter?.from || new Date(), compareFilter?.from || new Date()))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Órdenes</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    Principal: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />Comparación: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? totals.compare.orders : totals.current.orders).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? totals.current.orders : totals.compare.orders).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(totals.current.orders, totals.compare.orders, dateFilter?.from || new Date(), compareFilter?.from || new Date()))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
             {/* Filtro de estado */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Filter className="h-5 w-5" />
-                        Filtro por estado
+                        Filtra productos por estado de órdenes
                     </CardTitle>
                     <CardDescription>
                         Filtra productos por estado de órdenes
@@ -119,9 +295,10 @@ export function ProductsAnalyticsClient({ allProducts, pendingProducts, confirme
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Package className="h-5 w-5" />
-                        Ventas por producto
+                        Ventas por producto {isComparing ? `(${newerLabel})` : ''}
                     </CardTitle>
                     <CardDescription>
+                        {dateFilter && `${formatDateRange(dateFilter.from, dateFilter.to)} • `}
                         Ranking de productos más vendidos ({getFilterLabel(statusFilter)}) • {currentProducts.length} resultados
                     </CardDescription>
                 </CardHeader>
@@ -159,6 +336,49 @@ export function ProductsAnalyticsClient({ allProducts, pendingProducts, confirme
                     </div>
                 </CardContent>
             </Card>
+
+            {/* Lista de productos de comparación */}
+            {isComparing && compareProducts.length > 0 && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Package className="h-5 w-5" />
+                            Ventas por producto ({olderLabel})
+                        </CardTitle>
+                        <CardDescription>
+                            {compareFilter && `${formatDateRange(compareFilter.from, compareFilter.to)} • `}
+                            Ranking de productos más vendidos del período de comparación ({getFilterLabel(statusFilter)}) • {compareProducts.length} resultados
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-3 max-h-96 overflow-y-auto">
+                            {compareProducts.slice(0, 20).map((product, index) => (
+                                <div key={`compare-${statusFilter}-${product.productId}-${product.optionName}-${product.quantity}`} className="flex items-center justify-between p-3 border rounded-lg">
+                                    <div className="flex items-center gap-3">
+                                        <Badge variant="outline" className="text-xs">
+                                            #{index + 1}
+                                        </Badge>
+                                        <div>
+                                            <p className="font-medium text-sm">{product.productName} {product.optionName}</p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {product.orders} órdenes • ${product.avgPrice.toLocaleString()} promedio
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="font-bold text-sm text-blue-600">
+                                            {product.quantity} unidades
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            ${product.revenue.toLocaleString()}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 } 

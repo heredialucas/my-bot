@@ -31,7 +31,7 @@ import { getCollection } from '@repo/database';
  *   "statusFilter": "all"
  * }
  */
-export async function getProductSales(statusFilter?: 'pending' | 'confirmed' | 'all', limit: number = 50) {
+export async function getProductSales(statusFilter?: 'pending' | 'confirmed' | 'all', limit: number = 50, startDate?: Date, endDate?: Date) {
     try {
         const collection = await getCollection('orders');
 
@@ -39,6 +39,13 @@ export async function getProductSales(statusFilter?: 'pending' | 'confirmed' | '
         const matchCondition: any = {};
         if (statusFilter && statusFilter !== 'all') {
             matchCondition.status = statusFilter;
+        }
+
+        // Agregar filtro de fechas si se proporciona
+        if (startDate || endDate) {
+            matchCondition.createdAt = {};
+            if (startDate) matchCondition.createdAt.$gte = startDate;
+            if (endDate) matchCondition.createdAt.$lte = endDate;
         }
 
         const pipeline: any[] = [];

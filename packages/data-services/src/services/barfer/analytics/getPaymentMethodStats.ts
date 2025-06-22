@@ -4,12 +4,23 @@ import { getCollection } from '@repo/database';
 /**
  * Obtiene estadísticas de métodos de pago basado en órdenes confirmadas
  */
-export async function getPaymentMethodStats() {
+export async function getPaymentMethodStats(startDate?: Date, endDate?: Date) {
     try {
         const collection = await getCollection('orders');
 
         // Pipeline para TODOS los métodos de pago (sin filtro de status)
-        const pipeline = [
+        const pipeline: any[] = [];
+
+        // Agregar filtro de fechas si se proporciona
+        if (startDate || endDate) {
+            const matchCondition: any = {};
+            matchCondition.createdAt = {};
+            if (startDate) matchCondition.createdAt.$gte = startDate;
+            if (endDate) matchCondition.createdAt.$lte = endDate;
+            pipeline.push({ $match: matchCondition });
+        }
+
+        pipeline.push(
             {
                 $group: {
                     _id: '$paymentMethod',
@@ -30,16 +41,16 @@ export async function getPaymentMethodStats() {
                 }
             },
             { $sort: { totalCount: -1 } }
-        ];
+        );
 
         const result = await collection.aggregate(pipeline).toArray();
-
-
 
         const total = result.reduce((sum, item) => sum + item.totalCount, 0);
         const totalRevenue = result.reduce((sum, item) => sum + item.totalRevenue, 0);
         const totalConfirmed = result.reduce((sum, item) => sum + item.confirmedCount, 0);
         const totalConfirmedRevenue = result.reduce((sum, item) => sum + item.confirmedRevenue, 0);
+        const totalPending = result.reduce((sum, item) => sum + item.pendingCount, 0);
+        const totalPendingRevenue = result.reduce((sum, item) => sum + item.pendingRevenue, 0);
 
         const formattedResult = result.map((item: any) => ({
             paymentMethod: item._id,
@@ -54,6 +65,7 @@ export async function getPaymentMethodStats() {
             // Solo pending
             pendingCount: item.pendingCount,
             pendingRevenue: item.pendingRevenue,
+            pendingPercentage: totalPending > 0 ? (item.pendingCount / totalPending) * 100 : 0,
             // Para compatibilidad con el componente existente
             count: item.totalCount,
             percentage: total > 0 ? (item.totalCount / total) * 100 : 0,
@@ -65,7 +77,9 @@ export async function getPaymentMethodStats() {
             totalOrders: total,
             totalRevenue,
             totalConfirmedOrders: totalConfirmed,
-            totalConfirmedRevenue
+            totalConfirmedRevenue,
+            totalPendingOrders: totalPending,
+            totalPendingRevenue
         };
     } catch (error) {
         console.error('Error fetching payment method stats:', error);

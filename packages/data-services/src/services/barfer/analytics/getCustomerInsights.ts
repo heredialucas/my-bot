@@ -5,13 +5,23 @@ import { getCollection } from '@repo/database';
  * Obtiene insights completos de clientes: gasto promedio por compra y frecuencia promedio
  * Basado en TODAS las órdenes (pending + confirmed)
  */
-export async function getCustomerInsights() {
+export async function getCustomerInsights(startDate?: Date, endDate?: Date) {
     try {
         const collection = await getCollection('orders');
 
         // Pipeline para calcular todas las métricas en una sola consulta
-        // SIN filtro de status - incluye TODAS las órdenes
-        const pipeline = [
+        const pipeline: any[] = [];
+
+        // Agregar filtro de fechas si se proporciona
+        if (startDate || endDate) {
+            const matchCondition: any = {};
+            matchCondition.createdAt = {};
+            if (startDate) matchCondition.createdAt.$gte = startDate;
+            if (endDate) matchCondition.createdAt.$lte = endDate;
+            pipeline.push({ $match: matchCondition });
+        }
+
+        pipeline.push(
             {
                 $group: {
                     _id: '$user',
@@ -38,7 +48,7 @@ export async function getCustomerInsights() {
                     }
                 }
             }
-        ];
+        );
 
         const result = await collection.aggregate(pipeline).toArray();
 

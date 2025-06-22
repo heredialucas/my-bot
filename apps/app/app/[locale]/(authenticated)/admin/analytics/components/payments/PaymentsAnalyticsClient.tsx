@@ -1,23 +1,23 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
-import { CreditCard } from 'lucide-react';
+import { Separator } from '@repo/design-system/components/ui/separator';
+import { CreditCard, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
 
 interface PaymentMethod {
     paymentMethod: string;
-    count: number;
-    percentage: number;
-    totalRevenue: number;
-    revenuePercentage: number;
-    // Nuevos campos detallados
     totalCount: number;
+    totalRevenue: number;
     totalPercentage: number;
     confirmedCount: number;
     confirmedRevenue: number;
     confirmedPercentage: number;
     pendingCount: number;
     pendingRevenue: number;
+    pendingPercentage: number;
+    revenuePercentage: number;
 }
 
 interface PaymentStats {
@@ -26,122 +26,333 @@ interface PaymentStats {
     totalRevenue: number;
     totalConfirmedOrders: number;
     totalConfirmedRevenue: number;
+    totalPendingOrders: number;
+    totalPendingRevenue: number;
 }
 
 interface PaymentsAnalyticsClientProps {
     paymentStats: PaymentStats;
+    comparePaymentStats?: PaymentStats;
+    isComparing?: boolean;
+    dateFilter?: { from: Date; to: Date };
+    compareFilter?: { from: Date; to: Date };
 }
 
-export function PaymentsAnalyticsClient({ paymentStats }: PaymentsAnalyticsClientProps) {
+export function PaymentsAnalyticsClient({
+    paymentStats,
+    comparePaymentStats,
+    isComparing = false,
+    dateFilter,
+    compareFilter
+}: PaymentsAnalyticsClientProps) {
     const paymentMethods = paymentStats.paymentMethods || [];
 
+    // Función para calcular porcentaje de cambio (de fecha antigua a reciente)
+    const calculateChange = (primaryValue: number, compareValue: number, primaryDate: Date, compareDate: Date) => {
+        // Determinar cuál es el período anterior y cuál el actual basándose en fechas
+        const isPrimaryNewer = primaryDate > compareDate;
+        const oldValue = isPrimaryNewer ? compareValue : primaryValue;
+        const newValue = isPrimaryNewer ? primaryValue : compareValue;
+
+        if (oldValue === 0) return newValue > 0 ? 100 : 0;
+        return ((newValue - oldValue) / oldValue) * 100;
+    };
+
+    const formatChange = (change: number) => {
+        const isPositive = change >= 0;
+        return (
+            <span className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                {isPositive ? '+' : ''}{change.toFixed(1)}%
+            </span>
+        );
+    };
+
+    const formatDateRange = (from: Date, to: Date) => {
+        return `${from.toLocaleDateString('es-ES')} - ${to.toLocaleDateString('es-ES')}`;
+    };
+
+    // Determinar cuál período es más reciente para las etiquetas
+    const isPrimaryNewer = dateFilter && compareFilter ? dateFilter.from > compareFilter.from : true;
+    const newerLabel = isPrimaryNewer ? 'Principal' : 'Comparación';
+    const olderLabel = isPrimaryNewer ? 'Comparación' : 'Principal';
+
     const getPaymentIcon = (method: string) => {
-        switch (method) {
-            case 'mercado-pago': return '💳';
-            case 'cash': return '💵';
-            case 'bank-transfer': return '🏦';
-            default: return '💳';
-        }
-    };
+        const upperMethod = method.toUpperCase();
 
-    const getPaymentName = (method: string) => {
-        switch (method) {
-            case 'mercado-pago': return 'Mercado Pago';
-            case 'cash': return 'Efectivo';
-            case 'bank-transfer': return 'Transferencia';
-            default: return method;
-        }
-    };
+        if (upperMethod.includes('EFECTIVO')) return '💵';
+        if (upperMethod.includes('TRANSFERENCIA')) return '🏦';
+        if (upperMethod.includes('TARJETA')) return '💳';
+        if (upperMethod.includes('DEBITO')) return '🏧';
+        if (upperMethod.includes('CREDITO')) return '💳';
+        if (upperMethod.includes('MERCADO PAGO')) return '💙';
+        if (upperMethod.includes('PAYPAL')) return '🅿️';
 
-    const getPaymentColor = (method: string) => {
-        switch (method) {
-            case 'mercado-pago': return 'text-blue-600';
-            case 'cash': return 'text-green-600';
-            case 'bank-transfer': return 'text-purple-600';
-            default: return 'text-gray-600';
-        }
+        return '💰';
     };
 
     return (
         <div className="space-y-4">
+            {/* Resumen de comparación */}
+            {isComparing && comparePaymentStats && (
+                <div className="grid gap-4 md:grid-cols-3">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Total Órdenes</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    {olderLabel}: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />{newerLabel}: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? comparePaymentStats.totalOrders : paymentStats.totalOrders).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? paymentStats.totalOrders : comparePaymentStats.totalOrders).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(paymentStats.totalOrders, comparePaymentStats.totalOrders, dateFilter?.from || new Date(), compareFilter?.from || new Date()))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Ingresos Totales</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    {olderLabel}: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />{newerLabel}: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">${(isPrimaryNewer ? comparePaymentStats.totalRevenue : paymentStats.totalRevenue).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">${(isPrimaryNewer ? paymentStats.totalRevenue : comparePaymentStats.totalRevenue).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(paymentStats.totalRevenue, comparePaymentStats.totalRevenue, dateFilter?.from || new Date(), compareFilter?.from || new Date()))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Resumen - Órdenes Confirmadas</CardTitle>
+                            {dateFilter && (
+                                <p className="text-xs text-muted-foreground">
+                                    {olderLabel}: {formatDateRange(dateFilter.from, dateFilter.to)}
+                                    {compareFilter && (
+                                        <><br />{newerLabel}: {formatDateRange(compareFilter.from, compareFilter.to)}</>
+                                    )}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{olderLabel} (anterior):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? comparePaymentStats.totalConfirmedOrders : paymentStats.totalConfirmedOrders).toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-muted-foreground">{newerLabel} (más reciente):</span>
+                                    <span className="font-medium">{(isPrimaryNewer ? paymentStats.totalConfirmedOrders : comparePaymentStats.totalConfirmedOrders).toLocaleString()}</span>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium">Cambio:</span>
+                                    {formatChange(calculateChange(paymentStats.totalConfirmedOrders, comparePaymentStats.totalConfirmedOrders, dateFilter?.from || new Date(), compareFilter?.from || new Date()))}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
             {/* Resumen general */}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Total de Órdenes</CardTitle>
+                        <CreditCard className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{paymentStats.totalOrders.toLocaleString()}</div>
+                        <p className="text-xs text-muted-foreground">
+                            {paymentStats.totalConfirmedOrders} confirmadas • {paymentStats.totalPendingOrders} pendientes
+                        </p>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Ingresos Totales</CardTitle>
+                        <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">${paymentStats.totalRevenue.toLocaleString()}</div>
+                        <p className="text-xs text-muted-foreground">
+                            ${paymentStats.totalConfirmedRevenue.toLocaleString()} confirmados
+                        </p>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Tasa de Confirmación</CardTitle>
+                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            {((paymentStats.totalConfirmedOrders / paymentStats.totalOrders) * 100).toFixed(1)}%
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            de órdenes confirmadas
+                        </p>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Métodos de Pago</CardTitle>
+                        <CreditCard className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{paymentMethods.length}</div>
+                        <p className="text-xs text-muted-foreground">
+                            métodos diferentes
+                        </p>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Métodos de pago */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <CreditCard className="h-5 w-5" />
-                        Métodos de Pago
+                        Métodos de Pago {isComparing ? `(${newerLabel})` : ''}
                     </CardTitle>
                     <CardDescription>
-                        Distribución de pagos en órdenes confirmadas • {paymentStats.totalOrders.toLocaleString()} transacciones
+                        {dateFilter && `${formatDateRange(dateFilter.from, dateFilter.to)} • `}
+                        Análisis detallado por método de pago • {paymentMethods.length} métodos
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                        {paymentMethods.map((method) => (
-                            <div key={method.paymentMethod} className="p-4 border rounded-lg">
-                                <div className="flex items-center justify-between mb-3">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-lg">{getPaymentIcon(method.paymentMethod)}</span>
-                                        <h3 className="font-medium">{getPaymentName(method.paymentMethod)}</h3>
+                    <div className="space-y-4">
+                        {paymentMethods.length > 0 ? (
+                            paymentMethods.map((method, index) => (
+                                <div key={method.paymentMethod} className="p-4 border rounded-lg">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg">{getPaymentIcon(method.paymentMethod)}</span>
+                                            <h3 className="font-medium">{method.paymentMethod}</h3>
+                                        </div>
+                                        <Badge variant="outline" className="text-xs">
+                                            #{index + 1}
+                                        </Badge>
                                     </div>
-                                    <Badge variant="outline" className="text-xs">
-                                        {method.percentage.toFixed(1)}%
-                                    </Badge>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-xs sm:text-sm text-muted-foreground">Total órdenes</span>
-                                        <span className={`font-bold text-sm ${getPaymentColor(method.paymentMethod)}`}>
-                                            {method.totalCount.toLocaleString()}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-xs sm:text-sm text-green-600">✅ Confirmadas</span>
-                                        <span className="text-xs sm:text-sm text-green-600 font-medium">
-                                            {method.confirmedCount.toLocaleString()}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-xs sm:text-sm text-orange-600">⏳ Pendientes</span>
-                                        <span className="text-xs sm:text-sm text-orange-600 font-medium">
-                                            {method.pendingCount.toLocaleString()}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-xs sm:text-sm text-muted-foreground">Ingresos totales</span>
-                                        <span className={`font-bold text-sm ${getPaymentColor(method.paymentMethod)}`}>
-                                            ${method.totalRevenue.toLocaleString()}
-                                        </span>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                        <div>
+                                            <div className="text-muted-foreground text-xs">Total Órdenes</div>
+                                            <div className="font-medium">{method.totalCount} ({method.totalPercentage.toFixed(1)}%)</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-muted-foreground text-xs">Confirmadas</div>
+                                            <div className="font-medium text-green-600">{method.confirmedCount} ({method.confirmedPercentage.toFixed(1)}%)</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-muted-foreground text-xs">Pendientes</div>
+                                            <div className="font-medium text-orange-600">{method.pendingCount} ({method.pendingPercentage.toFixed(1)}%)</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-muted-foreground text-xs">Ingresos</div>
+                                            <div className="font-bold">${method.totalRevenue.toLocaleString()}</div>
+                                        </div>
                                     </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div className="text-center py-8 text-muted-foreground">
+                                <AlertCircle className="h-8 w-8 mx-auto mb-2" />
+                                <p>No hay datos de métodos de pago para mostrar</p>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </CardContent>
             </Card>
 
-            {/* Resumen rápido */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="text-lg">Resumen de Pagos</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-2 gap-4 text-center">
-                        <div className="p-3 bg-blue-50 rounded-lg">
-                            <div className="text-2xl font-bold text-blue-600">
-                                ${paymentStats.totalRevenue.toLocaleString()}
-                            </div>
-                            <div className="text-sm text-muted-foreground">Ingresos totales</div>
+            {/* Métodos de pago - Comparación */}
+            {isComparing && comparePaymentStats && comparePaymentStats.paymentMethods.length > 0 && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <CreditCard className="h-5 w-5" />
+                            Métodos de Pago ({olderLabel})
+                        </CardTitle>
+                        <CardDescription>
+                            {compareFilter && `${formatDateRange(compareFilter.from, compareFilter.to)} • `}
+                            Análisis del período de comparación • {comparePaymentStats.paymentMethods.length} métodos
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            {comparePaymentStats.paymentMethods.map((method, index) => (
+                                <div key={method.paymentMethod} className="p-4 border rounded-lg">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg">{getPaymentIcon(method.paymentMethod)}</span>
+                                            <h3 className="font-medium">{method.paymentMethod}</h3>
+                                        </div>
+                                        <Badge variant="outline" className="text-xs">
+                                            #{index + 1}
+                                        </Badge>
+                                    </div>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                        <div>
+                                            <div className="text-muted-foreground text-xs">Total Órdenes</div>
+                                            <div className="font-medium text-blue-600">{method.totalCount} ({method.totalPercentage.toFixed(1)}%)</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-muted-foreground text-xs">Confirmadas</div>
+                                            <div className="font-medium text-blue-600">{method.confirmedCount} ({method.confirmedPercentage.toFixed(1)}%)</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-muted-foreground text-xs">Pendientes</div>
+                                            <div className="font-medium text-blue-600">{method.pendingCount} ({method.pendingPercentage.toFixed(1)}%)</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-muted-foreground text-xs">Ingresos</div>
+                                            <div className="font-bold text-blue-600">${method.totalRevenue.toLocaleString()}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div className="p-3 bg-green-50 rounded-lg">
-                            <div className="text-2xl font-bold text-green-600">
-                                {paymentStats.totalOrders.toLocaleString()}
-                            </div>
-                            <div className="text-sm text-muted-foreground">Órdenes confirmadas</div>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 } 
