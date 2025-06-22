@@ -25,11 +25,11 @@ interface RoleConfig {
 // To add a new role, simply add a new entry here
 const ROLE_CONFIGURATION: Record<Role, RoleConfig> = {
   [ROLES.ADMIN]: {
-    defaultRedirect: '/admin/dashboard',
+    defaultRedirect: '/admin/analytics',
     allowedRoutes: ['/admin']
   },
   [ROLES.USER]: {
-    defaultRedirect: '/client/dashboard',
+    defaultRedirect: '/client/analytics',
     allowedRoutes: ['/client']
   }
   // Example for adding a new role:
