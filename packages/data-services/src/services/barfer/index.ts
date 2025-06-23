@@ -12,4 +12,5 @@ export { getOrdersByMonth } from './analytics/getOrdersByMonth';
 export { getCategorySales } from './analytics/getCategorySales';
 
 // ===== CLIENT MANAGEMENT =====
-export { getClientCategorization } from './analytics/getClientCategorization'; 
+export { getClientCategorization } from './analytics/getClientCategorization';
+export { getClientsByCategory } from './analytics/getClientsByCategory'; 

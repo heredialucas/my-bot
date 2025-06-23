@@ -6,6 +6,7 @@ export * from './dataService';
 export * from './imageService';
 export * from './uploadR2Image';
 export * from './userService';
+export * from './templateService';
 
 // ==========================================
 // SERVICIOS DE BARFER E-COMMERCE (MongoDB)
@@ -25,5 +26,6 @@ export {
     getOrdersByMonth,
     getCategorySales,
     // Client Management (desde barfer/analytics/)
-    getClientCategorization
+    getClientCategorization,
+    getClientsByCategory
 } from './barfer';

@@ -26,4 +26,45 @@ model User {
   permissions Json     @default("[]")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  emailTemplates    EmailTemplate[]
+  whatsappTemplates WhatsAppTemplate[]
+}
+
+model EmailTemplate {
+  id          String  @id @default(uuid())
+  name        String // Nombre del template para identificarlo
+  subject     String // Asunto del email
+  content     String // Contenido del email
+  description String? // Descripción opcional del template
+  isDefault   Boolean @default(false) // Si es un template por defecto del sistema
+
+  // Metadatos
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  user User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@map("email_templates")
+}
+
+model WhatsAppTemplate {
+  id          String  @id @default(uuid())
+  name        String // Nombre del template para identificarlo
+  content     String // Contenido del mensaje de WhatsApp
+  description String? // Descripción opcional del template
+  isDefault   Boolean @default(false) // Si es un template por defecto del sistema
+
+  // Metadatos
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  user User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@map("whatsapp_templates")
 }

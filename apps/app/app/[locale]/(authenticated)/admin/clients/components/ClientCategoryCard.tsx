@@ -2,7 +2,9 @@
 
 import { Card, CardContent, CardDescription, CardHeader } from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
-import { Users, TrendingUp, Clock } from 'lucide-react';
+import { Button } from '@repo/design-system/components/ui/button';
+import { Users, TrendingUp, Clock, Mail, MessageCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import type { ClientCategoryStats, ClientBehaviorCategory, ClientSpendingCategory } from '@repo/data-services';
 import type { Dictionary } from '@repo/internationalization';
 
@@ -101,14 +103,23 @@ export function ClientCategoryCard({
     type,
     dictionary
 }: ClientCategoryCardProps) {
+    const router = useRouter();
     const colorClasses = getCategoryColor(category.category, type);
     const icon = getCategoryIcon(category.category, type);
     const title = getCategoryTitle(category.category, dictionary);
     const description = getCategoryDescription(category.category, dictionary);
 
+    const handleEmailClick = () => {
+        router.push(`/admin/clients/email?category=${category.category}&type=${type}`);
+    };
+
+    const handleWhatsAppClick = () => {
+        router.push(`/admin/clients/whatsapp?category=${category.category}&type=${type}`);
+    };
+
     return (
-        <Card className="h-full hover:shadow-md transition-shadow">
-            <CardHeader className="pb-3 space-y-3">
+        <Card className="h-full min-h-[280px] hover:shadow-md transition-shadow flex flex-col">
+            <CardHeader className="pb-3 space-y-3 flex-shrink-0">
                 <div className="flex items-start justify-between gap-2">
                     <Badge variant="outline" className={`${colorClasses} px-1 sm:px-2 py-1 text-[10px] xs:text-xs font-medium flex-shrink-0 max-w-[120px] xs:max-w-none`}>
                         <div className="flex items-center gap-1 min-w-0">
@@ -128,8 +139,8 @@ export function ClientCategoryCard({
                     {description}
                 </CardDescription>
             </CardHeader>
-            <CardContent className="pt-0">
-                <div className="space-y-2">
+            <CardContent className="pt-0 flex-1 flex flex-col justify-between">
+                <div className="space-y-2 flex-1">
                     <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm gap-2">
                         <span className="text-muted-foreground flex-shrink-0">Total:</span>
                         <span className="font-medium text-right truncate min-w-0">{formatCurrency(category.totalSpent)}</span>
@@ -138,6 +149,28 @@ export function ClientCategoryCard({
                         <span className="text-muted-foreground flex-shrink-0">Promedio:</span>
                         <span className="font-medium text-right truncate min-w-0">{formatCurrency(category.averageSpending)}</span>
                     </div>
+                </div>
+
+                {/* Action buttons - always at bottom */}
+                <div className="flex gap-2 pt-4 border-t border-border mt-auto">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleEmailClick}
+                        className="flex-1 h-8 text-xs"
+                    >
+                        <Mail className="h-3 w-3 mr-1" />
+                        Email
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleWhatsAppClick}
+                        className="flex-1 h-8 text-xs bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                    >
+                        <MessageCircle className="h-3 w-3 mr-1" />
+                        WhatsApp
+                    </Button>
                 </div>
             </CardContent>
         </Card>
