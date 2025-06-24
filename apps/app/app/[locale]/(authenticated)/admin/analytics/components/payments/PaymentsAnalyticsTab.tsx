@@ -1,4 +1,4 @@
-import { getPaymentMethodStats } from '@repo/data-services/src/services/barfer';
+import { getPaymentMethodStats, getPaymentsByTimePeriod } from '@repo/data-services/src/services/barfer';
 import { PaymentsAnalyticsClient } from './PaymentsAnalyticsClient';
 
 interface PaymentsAnalyticsTabProps {
@@ -14,18 +14,40 @@ interface PaymentsAnalyticsTabProps {
 
 export async function PaymentsAnalyticsTab({ dateFilter, compareFilter }: PaymentsAnalyticsTabProps) {
     try {
-        const paymentStats = await getPaymentMethodStats(dateFilter.from, dateFilter.to);
+        // Determinar el tipo de período basado en el rango de fechas
+        const diffTime = Math.abs(dateFilter.to.getTime() - dateFilter.from.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        let periodType: 'daily' | 'weekly' | 'monthly' = 'daily';
+        if (diffDays <= 31) periodType = 'daily';      // Hasta un mes: por días
+        else if (diffDays <= 90) periodType = 'weekly'; // Hasta 3 meses: por semanas
+        else periodType = 'monthly';                     // Más de 3 meses: por meses
+
+        // Obtener datos principales
+        const [paymentStats, rawProgressData] = await Promise.all([
+            getPaymentMethodStats(dateFilter.from, dateFilter.to),
+            getPaymentsByTimePeriod(dateFilter.from, dateFilter.to, periodType)
+        ]);
+        const progressData = rawProgressData.map(d => ({ ...d, otherOrders: 0, otherRevenue: 0 }));
 
         // Datos del período de comparación (si está habilitado)
         let comparePaymentStats;
+        let compareProgressData;
         if (compareFilter) {
-            comparePaymentStats = await getPaymentMethodStats(compareFilter.from, compareFilter.to);
+            const [rawCompareStats, rawCompareProgress] = await Promise.all([
+                getPaymentMethodStats(compareFilter.from, compareFilter.to),
+                getPaymentsByTimePeriod(compareFilter.from, compareFilter.to, periodType)
+            ]);
+            comparePaymentStats = rawCompareStats;
+            compareProgressData = rawCompareProgress.map(d => ({ ...d, otherOrders: 0, otherRevenue: 0 }));
         }
 
         return (
             <PaymentsAnalyticsClient
                 paymentStats={paymentStats}
                 comparePaymentStats={comparePaymentStats}
+                progressData={progressData}
+                compareProgressData={compareProgressData}
                 isComparing={!!compareFilter}
                 dateFilter={dateFilter}
                 compareFilter={compareFilter}

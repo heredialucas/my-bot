@@ -4,7 +4,7 @@ import { getCollection } from '@repo/database';
 /**
  * Obtiene estadísticas de ventas por categoría de producto
  */
-export async function getCategorySales(statusFilter?: 'pending' | 'confirmed' | 'all', limit: number = 50, startDate?: Date, endDate?: Date) {
+export async function getCategorySales(statusFilter?: 'pending' | 'confirmed' | 'all', limit: number = 4, startDate?: Date, endDate?: Date) {
     try {
         const collection = await getCollection('orders');
 
@@ -37,36 +37,6 @@ export async function getCategorySales(statusFilter?: 'pending' | 'confirmed' | 
                     category: {
                         $switch: {
                             branches: [
-                                // Categorías por animal (más específicas)
-                                {
-                                    case: { $regexMatch: { input: '$items.name', regex: /perro.*pollo/i } },
-                                    then: 'PERRO POLLO'
-                                },
-                                {
-                                    case: { $regexMatch: { input: '$items.name', regex: /perro.*vaca/i } },
-                                    then: 'PERRO VACA'
-                                },
-                                {
-                                    case: { $regexMatch: { input: '$items.name', regex: /perro.*cerdo/i } },
-                                    then: 'PERRO CERDO'
-                                },
-                                {
-                                    case: { $regexMatch: { input: '$items.name', regex: /perro.*cordero/i } },
-                                    then: 'PERRO CORDERO'
-                                },
-                                {
-                                    case: { $regexMatch: { input: '$items.name', regex: /gato.*pollo/i } },
-                                    then: 'GATO POLLO'
-                                },
-                                {
-                                    case: { $regexMatch: { input: '$items.name', regex: /gato.*vaca/i } },
-                                    then: 'GATO VACA'
-                                },
-                                {
-                                    case: { $regexMatch: { input: '$items.name', regex: /gato.*cordero/i } },
-                                    then: 'GATO CORDERO'
-                                },
-                                // Productos especiales
                                 {
                                     case: { $regexMatch: { input: '$items.name', regex: /huesos/i } },
                                     then: 'HUESOS CARNOSOS'
@@ -76,22 +46,22 @@ export async function getCategorySales(statusFilter?: 'pending' | 'confirmed' | 
                                     then: 'COMPLEMENTOS'
                                 },
                                 {
-                                    case: { $regexMatch: { input: '$items.name', regex: /big.*dog/i } },
-                                    then: 'BIG DOG'
-                                },
-                                // Fallback para perros y gatos sin proteína específica
-                                {
                                     case: { $regexMatch: { input: '$items.name', regex: /perro/i } },
-                                    then: 'PERRO OTROS'
+                                    then: 'PERRO'
                                 },
                                 {
                                     case: { $regexMatch: { input: '$items.name', regex: /gato/i } },
-                                    then: 'GATO OTROS'
+                                    then: 'GATO'
                                 }
                             ],
                             default: 'OTROS'
                         }
                     }
+                }
+            },
+            {
+                $match: {
+                    category: { $in: ['PERRO', 'GATO', 'HUESOS CARNOSOS', 'COMPLEMENTOS'] }
                 }
             },
             {

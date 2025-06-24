@@ -16,9 +16,15 @@ interface CustomerInsights {
     customersWithMultipleOrders?: number;
 }
 
+interface PurchaseFrequency {
+    avgFrequencyDays: number;
+}
+
 interface FrequencyAnalyticsClientProps {
     customerInsights: CustomerInsights;
+    purchaseFrequency: PurchaseFrequency;
     compareCustomerInsights?: CustomerInsights;
+    comparePurchaseFrequency?: PurchaseFrequency;
     isComparing?: boolean;
     dateFilter?: { from: Date; to: Date };
     compareFilter?: { from: Date; to: Date };
@@ -26,11 +32,19 @@ interface FrequencyAnalyticsClientProps {
 
 export function FrequencyAnalyticsClient({
     customerInsights,
+    purchaseFrequency,
     compareCustomerInsights,
+    comparePurchaseFrequency,
     isComparing = false,
     dateFilter,
     compareFilter
 }: FrequencyAnalyticsClientProps) {
+
+    const formatDateRange = (from: Date, to: Date) => {
+        const fromDate = new Date(from);
+        return `${fromDate.toLocaleDateString('es-ES')} - ${to.toLocaleDateString('es-ES')}`;
+    };
+
     // Función para calcular porcentaje de cambio (de fecha antigua a reciente)
     const calculateChange = (primaryValue: number, compareValue: number, primaryDate: Date, compareDate: Date) => {
         // Determinar cuál es el período anterior y cuál el actual basándose en fechas
@@ -51,10 +65,6 @@ export function FrequencyAnalyticsClient({
         );
     };
 
-    const formatDateRange = (from: Date, to: Date) => {
-        return `${from.toLocaleDateString('es-ES')} - ${to.toLocaleDateString('es-ES')}`;
-    };
-
     // Determinar cuál período es más reciente para las etiquetas
     const isPrimaryNewer = dateFilter && compareFilter ? dateFilter.from > compareFilter.from : true;
     const newerLabel = isPrimaryNewer ? 'Principal' : 'Comparación';
@@ -63,7 +73,7 @@ export function FrequencyAnalyticsClient({
     return (
         <div className="space-y-4 md:space-y-6">
             {/* Métricas principales */}
-            <div className="grid gap-4 grid-cols-1 xl:grid-cols-2">
+            <div className="grid gap-4 grid-cols-1 xl:grid-cols-3">
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
@@ -111,6 +121,32 @@ export function FrequencyAnalyticsClient({
                         <div className="mt-3 p-2 sm:p-3 bg-purple-50 rounded-lg border border-purple-200">
                             <p className="text-xs text-purple-700">
                                 <strong>Frecuencia promedio:</strong> Total de Órdenes ÷ Clientes Únicos
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Users className="h-5 w-5 text-orange-600" />
+                            Frecuencia de Compra (Días) {isComparing ? `(${newerLabel})` : ''}
+                        </CardTitle>
+                        <CardDescription>
+                            {dateFilter && `${formatDateRange(dateFilter.from, dateFilter.to)} • `}
+                            Promedio de días entre pedidos de un cliente
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-600 mb-2 break-words overflow-hidden">
+                            {purchaseFrequency.avgFrequencyDays} días
+                        </div>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
+                            Entre compras recurrentes
+                        </p>
+                        <div className="mt-3 p-2 sm:p-3 bg-orange-50 rounded-lg border border-orange-200">
+                            <p className="text-xs text-orange-700">
+                                <strong>Frecuencia en días:</strong> Promedio de tiempo entre las compras de los clientes que repiten
                             </p>
                         </div>
                     </CardContent>

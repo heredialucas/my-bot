@@ -1,16 +1,19 @@
 // BARFER SERVICES - Solo funciones que se usan actualmente
 
 // ===== ANALYTICS =====
-export { getOrdersByDay } from './analytics/getOrdersByDay';
-export { getRevenueByDay } from './analytics/getRevenueByDay';
 export { getAverageOrderValue } from './analytics/getAverageOrderValue';
+export { getCategorySales } from './analytics/getCategorySales';
+export { getClientCategorization } from './analytics/getClientCategorization';
+export { getClientsByCategory } from './analytics/getClientsByCategory';
 export { getCustomerFrequency } from './analytics/getCustomerFrequency';
 export { getCustomerInsights } from './analytics/getCustomerInsights';
-export { getProductSales } from './analytics/getProductSales';
-export { getPaymentMethodStats } from './analytics/getPaymentMethodStats';
+export { getOrdersByDay } from './analytics/getOrdersByDay';
 export { getOrdersByMonth } from './analytics/getOrdersByMonth';
-export { getCategorySales } from './analytics/getCategorySales';
+export { getPaymentMethodStats } from './analytics/getPaymentMethodStats';
+export { getPaymentsByTimePeriod } from './analytics/getPaymentsByTimePeriod';
+export { getProductSales } from './analytics/getProductSales';
+export { getProductsByTimePeriod } from './analytics/getProductsByTimePeriod';
+export { getPurchaseFrequency } from './analytics/getPurchaseFrequency';
+export { getRevenueByDay } from './analytics/getRevenueByDay';
 
 // ===== CLIENT MANAGEMENT =====
-export { getClientCategorization } from './analytics/getClientCategorization';
-export { getClientsByCategory } from './analytics/getClientsByCategory'; 

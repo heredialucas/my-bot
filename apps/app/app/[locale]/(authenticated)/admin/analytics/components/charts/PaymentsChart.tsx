@@ -268,13 +268,7 @@ export function PaymentsChart({
                                     ]}
                                     labelFormatter={(label, payload) => {
                                         const data = payload?.[0]?.payload;
-                                        return data ? (
-                                            <div>
-                                                <div className="font-medium text-sm">
-                                                    {getPaymentIcon(data.method)} {data.method}
-                                                </div>
-                                            </div>
-                                        ) : label;
+                                        return data ? `${getPaymentIcon(data.method)} ${data.method}` : label;
                                     }}
                                     contentStyle={{
                                         backgroundColor: 'rgba(255, 255, 255, 0.95)',

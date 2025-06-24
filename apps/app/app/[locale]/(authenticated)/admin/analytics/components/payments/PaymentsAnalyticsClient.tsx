@@ -6,6 +6,7 @@ import { Badge } from '@repo/design-system/components/ui/badge';
 import { Separator } from '@repo/design-system/components/ui/separator';
 import { CreditCard, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
 import { PaymentsChart } from '../charts/PaymentsChart';
+import { PaymentsProgressChart } from '../charts/PaymentsProgressChart';
 
 interface PaymentMethod {
     paymentMethod: string;
@@ -31,9 +32,26 @@ interface PaymentStats {
     totalPendingRevenue: number;
 }
 
+interface PaymentProgressData {
+    period: string;
+    date: string;
+    efectivoOrders: number;
+    efectivoRevenue: number;
+    transferenciaOrders: number;
+    transferenciaRevenue: number;
+    tarjetaOrders: number;
+    tarjetaRevenue: number;
+    otherOrders: number;
+    otherRevenue: number;
+    totalOrders: number;
+    totalRevenue: number;
+}
+
 interface PaymentsAnalyticsClientProps {
     paymentStats: PaymentStats;
     comparePaymentStats?: PaymentStats;
+    progressData?: PaymentProgressData[];
+    compareProgressData?: PaymentProgressData[];
     isComparing?: boolean;
     dateFilter?: { from: Date; to: Date };
     compareFilter?: { from: Date; to: Date };
@@ -42,6 +60,8 @@ interface PaymentsAnalyticsClientProps {
 export function PaymentsAnalyticsClient({
     paymentStats,
     comparePaymentStats,
+    progressData,
+    compareProgressData,
     isComparing = false,
     dateFilter,
     compareFilter
@@ -89,6 +109,18 @@ export function PaymentsAnalyticsClient({
         if (upperMethod.includes('PAYPAL')) return '🅿️';
 
         return '💰';
+    };
+
+    // Determinar el tipo de período basado en el rango de fechas
+    const getPeriodType = (): 'daily' | 'weekly' | 'monthly' => {
+        if (!dateFilter) return 'daily';
+
+        const diffTime = Math.abs(dateFilter.to.getTime() - dateFilter.from.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays <= 31) return 'daily';      // Hasta un mes: por días
+        if (diffDays <= 90) return 'weekly';     // Hasta 3 meses: por semanas
+        return 'monthly';                        // Más de 3 meses: por meses
     };
 
     return (
@@ -353,6 +385,18 @@ export function PaymentsAnalyticsClient({
                         </div>
                     </CardContent>
                 </Card>
+            )}
+
+            {/* Gráfico de Progreso Temporal */}
+            {progressData && progressData.length > 0 && (
+                <PaymentsProgressChart
+                    data={progressData}
+                    compareData={compareProgressData}
+                    isComparing={isComparing}
+                    periodType={getPeriodType()}
+                    dateFilter={dateFilter}
+                    compareFilter={compareFilter}
+                />
             )}
 
             {/* Gráficos */}

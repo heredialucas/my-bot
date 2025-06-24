@@ -116,7 +116,8 @@ export function MonthlyChart({
                                     <Tooltip
                                         formatter={(value: number, name: string) => [
                                             value.toLocaleString(),
-                                            name === 'orders' ? 'Pedidos' : 'Clientes Únicos'
+                                            name === 'orders' ? 'Pedidos' :
+                                                name === 'uniqueCustomers' ? 'Clientes Únicos' : name
                                         ]}
                                         labelFormatter={(label) => `Mes: ${formatMonthName(label)}`}
                                     />
@@ -155,7 +156,8 @@ export function MonthlyChart({
                                         <Tooltip
                                             formatter={(value: number, name: string) => [
                                                 value.toLocaleString(),
-                                                name === 'compareOrders' ? 'Pedidos' : 'Clientes Únicos'
+                                                name === 'compareOrders' ? 'Pedidos' :
+                                                    name === 'compareUniqueCustomers' ? 'Clientes Únicos' : name
                                             ]}
                                             labelFormatter={(label) => `Mes: ${formatMonthName(label)}`}
                                         />
@@ -219,8 +221,9 @@ export function MonthlyChart({
                                     />
                                     <Tooltip
                                         formatter={(value: number, name: string) => [
-                                            name === 'revenue' ? formatCurrency(value) : formatCurrency(value),
-                                            name === 'revenue' ? 'Ingresos' : 'Valor Promedio por Pedido'
+                                            formatCurrency(value),
+                                            name === 'revenue' ? 'Ingresos' :
+                                                name === 'averageOrderValue' ? 'Valor Promedio por Pedido' : name
                                         ]}
                                         labelFormatter={(label) => `Mes: ${formatMonthName(label)}`}
                                     />
@@ -265,8 +268,9 @@ export function MonthlyChart({
                                         />
                                         <Tooltip
                                             formatter={(value: number, name: string) => [
-                                                name === 'compareRevenue' ? formatCurrency(value) : formatCurrency(value),
-                                                name === 'compareRevenue' ? 'Ingresos' : 'Valor Promedio por Pedido'
+                                                formatCurrency(value),
+                                                name === 'compareRevenue' ? 'Ingresos' :
+                                                    name === 'compareAverageOrderValue' ? 'Valor Promedio por Pedido' : name
                                             ]}
                                             labelFormatter={(label) => `Mes: ${formatMonthName(label)}`}
                                         />

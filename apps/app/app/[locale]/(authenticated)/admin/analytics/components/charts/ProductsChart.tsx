@@ -173,15 +173,7 @@ export function ProductsChart({
                                     ]}
                                     labelFormatter={(label, payload) => {
                                         const data = payload?.[0]?.payload;
-                                        return data ? (
-                                            <div>
-                                                <div className="font-medium text-sm">{data.fullName}</div>
-                                                <div className="text-xs text-muted-foreground">{data.option}</div>
-                                                <div className="text-xs text-muted-foreground">
-                                                    {data.orders} pedidos • Precio promedio: {formatCurrency(data.avgPrice)}
-                                                </div>
-                                            </div>
-                                        ) : label;
+                                        return data ? `${data.fullName} - ${data.option} | ${data.orders} pedidos | Precio promedio: ${formatCurrency(data.avgPrice)}` : label;
                                     }}
                                     contentStyle={{
                                         backgroundColor: 'rgba(255, 255, 255, 0.95)',
@@ -253,12 +245,7 @@ export function ProductsChart({
                                     ]}
                                     labelFormatter={(label, payload) => {
                                         const data = payload?.[0]?.payload;
-                                        return data ? (
-                                            <div>
-                                                <div className="font-medium text-sm">{data.fullName}</div>
-                                                <div className="text-xs text-muted-foreground">{data.option}</div>
-                                            </div>
-                                        ) : label;
+                                        return data ? `${data.fullName} - ${data.option}` : label;
                                     }}
                                     contentStyle={{
                                         backgroundColor: 'rgba(255, 255, 255, 0.95)',

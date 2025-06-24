@@ -8,6 +8,7 @@ import { Separator } from '@repo/design-system/components/ui/separator';
 import { Tag, Filter } from 'lucide-react';
 import { useInitStore } from '../../../../../../../store/initStore';
 import { CategoriesChart } from '../charts/CategoriesChart';
+import { ProductsProgressChart } from '../charts/ProductsProgressChart';
 
 interface CategorySale {
     categoryName: string;
@@ -19,6 +20,21 @@ interface CategorySale {
     statusFilter: string;
 }
 
+interface ProductProgressData {
+    period: string;
+    date: string;
+    perroQuantity: number;
+    perroRevenue: number;
+    gatoQuantity: number;
+    gatoRevenue: number;
+    huesosQuantity: number;
+    huesosRevenue: number;
+    complementosQuantity: number;
+    complementosRevenue: number;
+    totalQuantity: number;
+    totalRevenue: number;
+}
+
 interface CategoriesAnalyticsClientProps {
     allCategories: CategorySale[];
     pendingCategories: CategorySale[];
@@ -26,6 +42,8 @@ interface CategoriesAnalyticsClientProps {
     compareAllCategories?: CategorySale[];
     comparePendingCategories?: CategorySale[];
     compareConfirmedCategories?: CategorySale[];
+    progressData?: ProductProgressData[];
+    compareProgressData?: ProductProgressData[];
     isComparing?: boolean;
     dateFilter?: { from: Date; to: Date };
     compareFilter?: { from: Date; to: Date };
@@ -38,6 +56,8 @@ export function CategoriesAnalyticsClient({
     compareAllCategories,
     comparePendingCategories,
     compareConfirmedCategories,
+    progressData,
+    compareProgressData,
     isComparing = false,
     dateFilter,
     compareFilter
@@ -175,6 +195,18 @@ export function CategoriesAnalyticsClient({
 
         // Icono por defecto
         return '📋';
+    };
+
+    // Determinar el tipo de período basado en el rango de fechas
+    const getPeriodType = (): 'daily' | 'weekly' | 'monthly' => {
+        if (!dateFilter) return 'daily';
+
+        const diffTime = Math.abs(dateFilter.to.getTime() - dateFilter.from.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays <= 31) return 'daily';      // Hasta un mes: por días
+        if (diffDays <= 90) return 'weekly';     // Hasta 3 meses: por semanas
+        return 'monthly';                        // Más de 3 meses: por meses
     };
 
     return (
@@ -446,6 +478,18 @@ export function CategoriesAnalyticsClient({
                         </div>
                     </CardContent>
                 </Card>
+            )}
+
+            {/* Gráfico de Progreso Temporal */}
+            {progressData && progressData.length > 0 && (
+                <ProductsProgressChart
+                    data={progressData}
+                    compareData={compareProgressData}
+                    isComparing={isComparing}
+                    periodType={getPeriodType()}
+                    dateFilter={dateFilter}
+                    compareFilter={compareFilter}
+                />
             )}
 
             {/* Gráficos */}

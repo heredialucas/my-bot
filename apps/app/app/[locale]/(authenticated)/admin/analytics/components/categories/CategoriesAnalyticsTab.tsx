@@ -1,4 +1,4 @@
-import { getCategorySales } from '@repo/data-services/src/services/barfer';
+import { getCategorySales, getProductsByTimePeriod } from '@repo/data-services/src/services/barfer';
 import { CategoriesAnalyticsClient } from './CategoriesAnalyticsClient';
 
 interface CategoriesAnalyticsTabProps {
@@ -14,19 +14,21 @@ interface CategoriesAnalyticsTabProps {
 
 export async function CategoriesAnalyticsTab({ dateFilter, compareFilter }: CategoriesAnalyticsTabProps) {
     try {
-        const [allCategories, pendingCategories, confirmedCategories] = await Promise.all([
+        const [allCategories, pendingCategories, confirmedCategories, progressData] = await Promise.all([
             getCategorySales('all', 10, dateFilter.from, dateFilter.to),
             getCategorySales('pending', 10, dateFilter.from, dateFilter.to),
-            getCategorySales('confirmed', 10, dateFilter.from, dateFilter.to)
+            getCategorySales('confirmed', 10, dateFilter.from, dateFilter.to),
+            getProductsByTimePeriod(dateFilter.from, dateFilter.to)
         ]);
 
         // Datos del período de comparación (si está habilitado)
-        let compareAllCategories, comparePendingCategories, compareConfirmedCategories;
+        let compareAllCategories, comparePendingCategories, compareConfirmedCategories, compareProgressData;
         if (compareFilter) {
-            [compareAllCategories, comparePendingCategories, compareConfirmedCategories] = await Promise.all([
+            [compareAllCategories, comparePendingCategories, compareConfirmedCategories, compareProgressData] = await Promise.all([
                 getCategorySales('all', 10, compareFilter.from, compareFilter.to),
                 getCategorySales('pending', 10, compareFilter.from, compareFilter.to),
-                getCategorySales('confirmed', 10, compareFilter.from, compareFilter.to)
+                getCategorySales('confirmed', 10, compareFilter.from, compareFilter.to),
+                getProductsByTimePeriod(compareFilter.from, compareFilter.to)
             ]);
         }
 
@@ -38,6 +40,8 @@ export async function CategoriesAnalyticsTab({ dateFilter, compareFilter }: Cate
                 compareAllCategories={compareAllCategories}
                 comparePendingCategories={comparePendingCategories}
                 compareConfirmedCategories={compareConfirmedCategories}
+                progressData={progressData}
+                compareProgressData={compareProgressData}
                 isComparing={!!compareFilter}
                 dateFilter={dateFilter}
                 compareFilter={compareFilter}

@@ -1,4 +1,5 @@
-import { getCustomerInsights } from '@repo/data-services/src/services/barfer';
+import { getCustomerInsights } from '@repo/data-services/src/services/barfer/analytics/getCustomerInsights';
+import { getPurchaseFrequency } from '@repo/data-services/src/services/barfer/analytics/getPurchaseFrequency';
 import { FrequencyAnalyticsClient } from './FrequencyAnalyticsClient';
 
 interface FrequencyAnalyticsTabProps {
@@ -14,18 +15,33 @@ interface FrequencyAnalyticsTabProps {
 
 export async function FrequencyAnalyticsTab({ dateFilter, compareFilter }: FrequencyAnalyticsTabProps) {
     try {
-        const customerInsights = await getCustomerInsights(dateFilter.from, dateFilter.to);
+        const [customerInsights, purchaseFrequency] = await Promise.all([
+            getCustomerInsights(dateFilter.from, dateFilter.to),
+            getPurchaseFrequency(dateFilter.from, dateFilter.to)
+        ]);
+
+        console.log('FrequencyAnalyticsTab - Fetched Data:', { purchaseFrequency });
 
         // Datos del período de comparación (si está habilitado)
         let compareCustomerInsights;
+        let comparePurchaseFrequency;
         if (compareFilter) {
-            compareCustomerInsights = await getCustomerInsights(compareFilter.from, compareFilter.to);
+            const [compInsights, compFrequency] = await Promise.all([
+                getCustomerInsights(compareFilter.from, compareFilter.to),
+                getPurchaseFrequency(compareFilter.from, compareFilter.to)
+            ]);
+            compareCustomerInsights = compInsights;
+            comparePurchaseFrequency = compFrequency;
+
+            console.log('FrequencyAnalyticsTab - Fetched Comparison Data:', { comparePurchaseFrequency });
         }
 
         return (
             <FrequencyAnalyticsClient
                 customerInsights={customerInsights}
+                purchaseFrequency={purchaseFrequency}
                 compareCustomerInsights={compareCustomerInsights}
+                comparePurchaseFrequency={comparePurchaseFrequency}
                 isComparing={!!compareFilter}
                 dateFilter={dateFilter}
                 compareFilter={compareFilter}
