@@ -73,8 +73,8 @@ const getCategoryTitle = (category: ClientBehaviorCategory | ClientSpendingCateg
     return titles[category] || category;
 };
 
-const getCategoryDescription = (category: ClientBehaviorCategory | ClientSpendingCategory, dictionary: Dictionary): string => {
-    const descriptions: Record<string, string> = {
+const getCategoryDescription = (category: ClientBehaviorCategory | ClientSpendingCategory, dictionary: Dictionary, type: 'behavior' | 'spending'): string => {
+    const baseDescriptions: Record<string, string> = {
         'new': dictionary.app.admin.clients.categories.newDescription,
         'possible-active': dictionary.app.admin.clients.categories.possibleActiveDescription,
         'possible-inactive': dictionary.app.admin.clients.categories.possibleInactiveDescription,
@@ -87,7 +87,15 @@ const getCategoryDescription = (category: ClientBehaviorCategory | ClientSpendin
         'standard': dictionary.app.admin.clients.categories.standardDescription,
         'basic': dictionary.app.admin.clients.categories.basicDescription
     };
-    return descriptions[category] || '';
+
+    let description = baseDescriptions[category] || '';
+
+    if (type === 'spending') {
+        const spendingNote = dictionary.app.admin.clients.categories.spendingCalculationNote || "Cálculo por compras del último mes.";
+        description += ` ${spendingNote}`;
+    }
+
+    return description;
 };
 
 const formatCurrency = (amount: number): string => {
@@ -107,7 +115,7 @@ export function ClientCategoryCard({
     const colorClasses = getCategoryColor(category.category, type);
     const icon = getCategoryIcon(category.category, type);
     const title = getCategoryTitle(category.category, dictionary);
-    const description = getCategoryDescription(category.category, dictionary);
+    const description = getCategoryDescription(category.category, dictionary, type);
 
     const handleEmailClick = () => {
         router.push(`/admin/clients/email?category=${category.category}&type=${type}`);

@@ -190,10 +190,13 @@ export type ClientSpendingCategory = 'premium' | 'standard' | 'basic';
 export interface ClientCategorization {
     _id: string; // Email del usuario (ya que user._id no existe en las órdenes)
     user: User;
+    lastAddress?: Address;
     behaviorCategory: ClientBehaviorCategory;
     spendingCategory: ClientSpendingCategory;
     totalOrders: number;
     totalSpent: number;
+    totalWeight: number;
+    monthlyWeight: number;
     monthlySpending: number;
     firstOrderDate: string;
     lastOrderDate: string;

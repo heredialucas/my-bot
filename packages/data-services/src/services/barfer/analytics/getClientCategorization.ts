@@ -18,15 +18,17 @@ export async function getClientCategorization(): Promise<ClientAnalytics> {
         // Pipeline para obtener datos de clientes con sus estadísticas
         const pipeline = [
             { $match: { status: { $in: ['confirmed', 'delivered'] } } },
+            { $sort: { createdAt: 1 } }, // Ordenar por fecha para obtener el último domicilio
             {
                 $group: {
                     _id: { $ifNull: ['$user.id', '$user.email'] }, // Prioritize user.id, fallback to email
                     user: { $first: '$user' },
+                    lastAddress: { $last: '$address' }, // Obtener la dirección del último pedido
                     totalOrders: { $sum: 1 },
                     totalSpent: { $sum: '$total' },
                     firstOrderDate: { $min: '$createdAt' },
                     lastOrderDate: { $max: '$createdAt' },
-                    orders: { $push: { date: '$createdAt', total: '$total' } }
+                    orders: { $push: { items: '$items', date: '$createdAt' } }
                 }
             },
             {
@@ -53,16 +55,27 @@ export async function getClientCategorization(): Promise<ClientAnalytics> {
         // Procesar cada cliente para asignar categorías
         const categorizedClients: ClientCategorization[] = clientsData.map(client => {
             const behaviorCategory = categorizeBehavior(client);
-            const spendingCategory = categorizeSpending(client.totalSpent, client.totalOrders, client.daysSinceFirstOrder);
+            const totalWeight = calculateTotalWeightFromOrders(client.orders);
+
+            // Calcular el peso del último mes
+            const oneMonthAgo = new Date();
+            oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+            const lastMonthOrders = client.orders.filter((order: any) => new Date(order.date) > oneMonthAgo);
+            const monthlyWeight = calculateTotalWeightFromOrders(lastMonthOrders);
+
+            const spendingCategory = categorizeSpending(monthlyWeight);
             const monthlySpending = calculateMonthlySpending(client.totalSpent, client.daysSinceFirstOrder);
 
             return {
                 _id: client._id,
                 user: client.user,
+                lastAddress: client.lastAddress,
                 behaviorCategory,
                 spendingCategory,
                 totalOrders: client.totalOrders,
                 totalSpent: client.totalSpent,
+                totalWeight,
+                monthlyWeight,
                 monthlySpending,
                 firstOrderDate: client.firstOrderDate,
                 lastOrderDate: client.lastOrderDate,
@@ -106,10 +119,22 @@ export async function getClientCategorization(): Promise<ClientAnalytics> {
  * Categoriza el comportamiento de compra del cliente
  */
 function categorizeBehavior(client: any): ClientBehaviorCategory {
-    const { daysSinceLastOrder, orders, totalOrders } = client;
+    const { daysSinceLastOrder, daysSinceFirstOrder, orders, totalOrders } = client;
 
-    // Un cliente es "recuperado" si su última compra fue en los últimos 3 meses,
-    // pero hubo un lapso de más de 4 meses entre la última y la penúltima compra.
+    // 1. Cliente nuevo (solo una compra) y En seguimiento
+    if (totalOrders === 1) {
+        // En seguimiento: desde una semana después de su primer compra hasta un mes.
+        if (daysSinceFirstOrder > 7 && daysSinceFirstOrder <= 30) {
+            return 'tracking';
+        }
+        // Pasado el mes, se evalúa por su inactividad.
+        // Si no, es nuevo (primera semana) o cae en las reglas de inactividad.
+        if (daysSinceFirstOrder <= 7) {
+            return 'new';
+        }
+    }
+
+    // 2. Cliente recuperado (volvió a comprar después de 4 meses)
     if (totalOrders > 1) {
         const sortedOrders = [...orders].sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
         const lastOrderDate = new Date(sortedOrders[0].date);
@@ -122,37 +147,73 @@ function categorizeBehavior(client: any): ClientBehaviorCategory {
         }
     }
 
-    // Perdido: no compra hace mas de 4 meses
+    // 3. Perdido: no compra hace mas de 4 meses
     if (daysSinceLastOrder > 120) {
         return 'lost';
     }
 
-    // Posible Inactivo: no compra hace mas de 3 meses
+    // 4. Posible Inactivo: no compra hace mas de 3 meses
     if (daysSinceLastOrder > 90) {
         return 'possible-inactive';
     }
 
-    // Activo: al menos 1 compra en los ultimos 3 meses
+    // 5. Activo: al menos 1 compra en los ultimos 3 meses
     return 'active';
 }
 
 /**
- * Categoriza el nivel de gasto del cliente
+ * Categoriza el nivel de gasto del cliente basado en el peso total comprado en el último mes
  */
-function categorizeSpending(totalSpent: number, totalOrders: number, daysSinceFirstOrder: number): ClientSpendingCategory {
-    // Calcular gasto mensual real
-    const monthsSinceFirstOrder = Math.max(daysSinceFirstOrder / 30, 1);
-    const monthlySpending = totalSpent / monthsSinceFirstOrder;
+function categorizeSpending(monthlyWeight: number): ClientSpendingCategory {
+    // Premium: >15kg en el último mes
+    if (monthlyWeight > 15) return 'premium';
 
-    // Categorías basadas en gasto mensual real
-    // Premium: >$63,000 mensuales (>10kg, ~$6,300 por kg)
-    if (monthlySpending > 63000) return 'premium';
+    // Standard: >5kg y <=15kg en el último mes
+    if (monthlyWeight > 5) return 'standard';
 
-    // Standard: $39,000-$63,000 mensuales (5-10kg)
-    if (monthlySpending > 39000) return 'standard';
-
-    // Basic: hasta $39,000 mensuales (hasta 5kg)
+    // Basic: <=5kg en el último mes
     return 'basic';
+}
+
+/**
+ * Calcula el peso total de los productos en los pedidos de un cliente
+ */
+function calculateTotalWeightFromOrders(orders: any[]): number {
+    let totalWeight = 0;
+
+    if (!orders) return 0;
+
+    for (const order of orders) {
+        if (!order.items) continue;
+
+        for (const item of order.items) {
+            if (!item.name) continue;
+
+            const itemName = item.name.toLowerCase();
+
+            if (itemName.includes('complemento')) {
+                continue; // Los complementos no suman peso
+            }
+
+            if (itemName.includes('big dog')) {
+                totalWeight += 15;
+                continue; // Se asume 15kg y se pasa al siguiente item
+            }
+
+            if (!item.options) continue;
+
+            for (const option of item.options) {
+                if (option.name) {
+                    const match = option.name.match(/(\d+)\s*KG/i);
+                    if (match && match[1]) {
+                        totalWeight += parseInt(match[1], 10);
+                    }
+                }
+            }
+        }
+    }
+
+    return totalWeight;
 }
 
 /**

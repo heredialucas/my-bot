@@ -44,7 +44,7 @@ export async function getClientsByCategory(
             id: client._id, // Usando email como ID único
             name: client.user.name + (client.user.lastName ? ` ${client.user.lastName}` : ''),
             email: client.user.email,
-            phone: client.user.phoneNumber || 'No disponible', // Usar phoneNumber del usuario
+            phone: client.lastAddress?.phone || 'No disponible', // Usar phoneNumber del usuario
             lastOrder: new Date(client.lastOrderDate).toISOString().split('T')[0], // Formato YYYY-MM-DD
             totalSpent: Math.round(client.totalSpent),
             totalOrders: client.totalOrders,

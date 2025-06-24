@@ -108,11 +108,12 @@
           "tracking": "En Seguimiento",
           "trackingDescription": "Entre 1 semana y 1 mes desde su primera compra",
           "premium": "Premium (A)",
-          "premiumDescription": "Más de $63,000 mensuales (>10kg)",
+          "premiumDescription": "Clientes con un gasto mensual alto, basado en el total de kilos comprados.",
           "standard": "Estándar (B)",
-          "standardDescription": "$39,000 - $63,000 mensuales (5-10kg)",
+          "standardDescription": "Clientes con un gasto mensual moderado, basado en el total de kilos comprados.",
           "basic": "Básico (C)",
-          "basicDescription": "Hasta $39,000 mensuales (hasta 5kg)"
+          "basicDescription": "Clientes con un gasto mensual bajo, basado en el total de kilos comprados.",
+          "spendingCalculationNote": "Cálculo basado en kilos comprados el último mes."
         },
         "stats": {
           "totalClients": "Total de Clientes",
@@ -293,11 +294,12 @@
             "tracking": "En Seguimiento",
             "trackingDescription": "Entre 1 semana y 1 mes desde su primera compra",
             "premium": "Premium (A)",
-            "premiumDescription": "Más de $63,000 mensuales (>10kg)",
+            "premiumDescription": "Clientes con un gasto mensual alto, basado en el total de kilos comprados.",
             "standard": "Estándar (B)",
-            "standardDescription": "$39,000 - $63,000 mensuales (5-10kg)",
+            "standardDescription": "Clientes con un gasto mensual moderado, basado en el total de kilos comprados.",
             "basic": "Básico (C)",
-            "basicDescription": "Hasta $39,000 mensuales (hasta 5kg)"
+            "basicDescription": "Clientes con un gasto mensual bajo, basado en el total de kilos comprados.",
+            "spendingCalculationNote": "Cálculo basado en kilos comprados el último mes."
           },
           "stats": {
             "totalClients": "Total de Clientes",
