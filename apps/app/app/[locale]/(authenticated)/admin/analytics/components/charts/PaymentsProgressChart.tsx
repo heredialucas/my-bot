@@ -142,7 +142,18 @@ export function PaymentsProgressChart({
                                                 name === 'transferenciaOrders' ? '🏦 Transferencia Bancaria' :
                                                     name === 'tarjetaOrders' ? '💳 Mercado Pago' : name
                                         ]}
-                                        labelFormatter={(label) => `${getPeriodLabel()}: ${label}`}
+                                        labelFormatter={(label, payload) => {
+                                            const point = payload?.[0]?.payload;
+                                            if (point && point.date && periodType === 'daily') {
+                                                try {
+                                                    const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
+                                                    return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                } catch (e) {
+                                                    // fallback
+                                                }
+                                            }
+                                            return `${getPeriodLabel()}: ${label}`;
+                                        }}
                                     />
                                     <Legend />
                                     <Line
@@ -197,7 +208,18 @@ export function PaymentsProgressChart({
                                                     name === 'compareTransferenciaOrders' ? '🏦 Transferencia Bancaria' :
                                                         name === 'compareTarjetaOrders' ? '💳 Mercado Pago' : name
                                             ]}
-                                            labelFormatter={(label) => `${getPeriodLabel()}: ${label}`}
+                                            labelFormatter={(label, payload) => {
+                                                const point = payload?.[0]?.payload;
+                                                if (point && point.date && periodType === 'daily') {
+                                                    try {
+                                                        const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
+                                                        return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                    } catch (e) {
+                                                        // fallback
+                                                    }
+                                                }
+                                                return `${getPeriodLabel()}: ${label}`;
+                                            }}
                                         />
                                         <Legend />
                                         <Line
@@ -283,7 +305,18 @@ export function PaymentsProgressChart({
                                                 name === 'transferenciaRevenue' ? '🏦 Transferencia Bancaria' :
                                                     name === 'tarjetaRevenue' ? '💳 Mercado Pago' : name
                                         ]}
-                                        labelFormatter={(label) => `${getPeriodLabel()}: ${label}`}
+                                        labelFormatter={(label, payload) => {
+                                            const point = payload?.[0]?.payload;
+                                            if (point && point.date && periodType === 'daily') {
+                                                try {
+                                                    const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
+                                                    return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                } catch (e) {
+                                                    // fallback
+                                                }
+                                            }
+                                            return `${getPeriodLabel()}: ${label}`;
+                                        }}
                                     />
                                     <Legend />
                                     <Bar
@@ -335,7 +368,18 @@ export function PaymentsProgressChart({
                                                     name === 'compareTransferenciaRevenue' ? '🏦 Transferencia Bancaria' :
                                                         name === 'compareTarjetaRevenue' ? '💳 Mercado Pago' : name
                                             ]}
-                                            labelFormatter={(label) => `${getPeriodLabel()}: ${label}`}
+                                            labelFormatter={(label, payload) => {
+                                                const point = payload?.[0]?.payload;
+                                                if (point && point.date && periodType === 'daily') {
+                                                    try {
+                                                        const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
+                                                        return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                    } catch (e) {
+                                                        // fallback
+                                                    }
+                                                }
+                                                return `${getPeriodLabel()}: ${label}`;
+                                            }}
                                         />
                                         <Legend />
                                         <Bar

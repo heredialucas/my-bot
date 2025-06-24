@@ -1,7 +1,7 @@
 import 'server-only';
 import { getCollection } from '@repo/database';
 
-interface ProductByTimePeriod {
+export interface ProductByTimePeriod {
     period: string;
     date: string;
     perroQuantity: number;

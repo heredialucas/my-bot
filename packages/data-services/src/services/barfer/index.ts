@@ -12,9 +12,10 @@ export { getOrdersByMonth } from './analytics/getOrdersByMonth';
 export { getPaymentMethodStats } from './analytics/getPaymentMethodStats';
 export { getPaymentsByTimePeriod } from './analytics/getPaymentsByTimePeriod';
 export { getProductSales } from './analytics/getProductSales';
-export { getProductsByTimePeriod } from './analytics/getProductsByTimePeriod';
+export * from './analytics/getProductsByTimePeriod';
 export { getPurchaseFrequency } from './analytics/getPurchaseFrequency';
 export { getRevenueByDay } from './analytics/getRevenueByDay';
 export * from './analytics/getDeliveryTypeStatsByMonth';
+export * from './analytics/getProductTimeline';
 
 // ===== CLIENT MANAGEMENT =====

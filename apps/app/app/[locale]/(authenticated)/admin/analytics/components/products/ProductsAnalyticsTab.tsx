@@ -1,4 +1,4 @@
-import { getProductSales, getProductsByTimePeriod } from '@repo/data-services/src/services/barfer';
+import { getProductSales, getProductTimeline } from '@repo/data-services/src/services/barfer';
 import { ProductsAnalyticsClient } from './ProductsAnalyticsClient';
 
 interface ProductsAnalyticsTabProps {
@@ -14,22 +14,30 @@ interface ProductsAnalyticsTabProps {
 
 export async function ProductsAnalyticsTab({ dateFilter, compareFilter }: ProductsAnalyticsTabProps) {
     try {
-        // Obtener datos para cada estado por separado - filtros de fecha aplicados
-        const [allProducts, pendingProducts, confirmedProducts, progressData] = await Promise.all([
-            getProductSales('all', 10, dateFilter.from, dateFilter.to),
-            getProductSales('pending', 10, dateFilter.from, dateFilter.to),
-            getProductSales('confirmed', 10, dateFilter.from, dateFilter.to),
-            getProductsByTimePeriod(dateFilter.from, dateFilter.to)
+        const [
+            allProducts,
+            pendingProducts,
+            confirmedProducts,
+            timelineData
+        ] = await Promise.all([
+            getProductSales('all', 20, dateFilter.from, dateFilter.to),
+            getProductSales('pending', 20, dateFilter.from, dateFilter.to),
+            getProductSales('confirmed', 20, dateFilter.from, dateFilter.to),
+            getProductTimeline(dateFilter.from, dateFilter.to)
         ]);
 
-        // Datos del período de comparación (si está habilitado)
-        let compareAllProducts, comparePendingProducts, compareConfirmedProducts, compareProgressData;
+        let compareAllProducts, comparePendingProducts, compareConfirmedProducts, compareTimelineData;
         if (compareFilter) {
-            [compareAllProducts, comparePendingProducts, compareConfirmedProducts, compareProgressData] = await Promise.all([
-                getProductSales('all', 10, compareFilter.from, compareFilter.to),
-                getProductSales('pending', 10, compareFilter.from, compareFilter.to),
-                getProductSales('confirmed', 10, compareFilter.from, compareFilter.to),
-                getProductsByTimePeriod(compareFilter.from, compareFilter.to)
+            [
+                compareAllProducts,
+                comparePendingProducts,
+                compareConfirmedProducts,
+                compareTimelineData
+            ] = await Promise.all([
+                getProductSales('all', 20, compareFilter.from, compareFilter.to),
+                getProductSales('pending', 20, compareFilter.from, compareFilter.to),
+                getProductSales('confirmed', 20, compareFilter.from, compareFilter.to),
+                compareFilter ? getProductTimeline(compareFilter.from, compareFilter.to) : Promise.resolve(undefined)
             ]);
         }
 
@@ -41,8 +49,8 @@ export async function ProductsAnalyticsTab({ dateFilter, compareFilter }: Produc
                 compareAllProducts={compareAllProducts}
                 comparePendingProducts={comparePendingProducts}
                 compareConfirmedProducts={compareConfirmedProducts}
-                progressData={progressData}
-                compareProgressData={compareProgressData}
+                timelineData={timelineData}
+                compareTimelineData={compareTimelineData}
                 isComparing={!!compareFilter}
                 dateFilter={dateFilter}
                 compareFilter={compareFilter}

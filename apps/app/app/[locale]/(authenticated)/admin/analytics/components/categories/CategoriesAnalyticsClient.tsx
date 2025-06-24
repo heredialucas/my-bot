@@ -8,7 +8,8 @@ import { Separator } from '@repo/design-system/components/ui/separator';
 import { Tag, Filter } from 'lucide-react';
 import { useInitStore } from '../../../../../../../store/initStore';
 import { CategoriesChart } from '../charts/CategoriesChart';
-import { ProductsProgressChart } from '../charts/ProductsProgressChart';
+import { CategoryProgressChart } from '../charts/CategoryProgressChart';
+import type { ProductByTimePeriod } from '@repo/data-services/src/services/barfer';
 
 interface CategorySale {
     categoryName: string;
@@ -42,12 +43,37 @@ interface CategoriesAnalyticsClientProps {
     compareAllCategories?: CategorySale[];
     comparePendingCategories?: CategorySale[];
     compareConfirmedCategories?: CategorySale[];
-    progressData?: ProductProgressData[];
-    compareProgressData?: ProductProgressData[];
-    isComparing?: boolean;
-    dateFilter?: { from: Date; to: Date };
+    progressData: ProductByTimePeriod[];
+    compareProgressData?: ProductByTimePeriod[];
+    isComparing: boolean;
+    dateFilter: { from: Date; to: Date };
     compareFilter?: { from: Date; to: Date };
 }
+
+const CATEGORY_KEYS: { [key: string]: { quantity: string; revenue: string } } = {
+    Perros: { quantity: 'perroQuantity', revenue: 'perroRevenue' },
+    Gatos: { quantity: 'gatoQuantity', revenue: 'gatoRevenue' },
+    Huesos: { quantity: 'huesosQuantity', revenue: 'huesosRevenue' },
+    Complementos: { quantity: 'complementosQuantity', revenue: 'complementosRevenue' }
+};
+
+const filterDataForChart = (data: ProductByTimePeriod[], filter: string) => {
+    if (filter === 'all' || !data) {
+        return data;
+    }
+
+    return data.map(item => {
+        const newItem: { [key: string]: any } = { ...item };
+        for (const categoryName in CATEGORY_KEYS) {
+            const keys = CATEGORY_KEYS[categoryName as keyof typeof CATEGORY_KEYS];
+            if (categoryName.toLowerCase() !== filter.toLowerCase()) {
+                newItem[keys.quantity] = 0;
+                newItem[keys.revenue] = 0;
+            }
+        }
+        return newItem as ProductByTimePeriod;
+    });
+};
 
 export function CategoriesAnalyticsClient({
     allCategories,
@@ -58,11 +84,31 @@ export function CategoriesAnalyticsClient({
     compareConfirmedCategories,
     progressData,
     compareProgressData,
-    isComparing = false,
+    isComparing,
     dateFilter,
     compareFilter
 }: CategoriesAnalyticsClientProps) {
     const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'confirmed'>('all');
+    const [categoryFilter, setCategoryFilter] = useState('all');
+
+    const allCategoryNames = useMemo(() => {
+        if (!progressData || progressData.length === 0) return [];
+        const names = new Set<string>();
+        // Usamos los nombres de CATEGORY_KEYS para asegurar consistencia
+        for (const key in CATEGORY_KEYS) {
+            names.add(key);
+        }
+        return ['all', ...Array.from(names)];
+    }, [progressData]);
+
+    const filteredProgressData = useMemo(() => {
+        return filterDataForChart(progressData, categoryFilter);
+    }, [progressData, categoryFilter]);
+
+    const filteredCompareProgressData = useMemo(() => {
+        if (!compareProgressData) return undefined;
+        return filterDataForChart(compareProgressData, categoryFilter);
+    }, [compareProgressData, categoryFilter]);
 
     // Seleccionar los datos correctos basado en el filtro
     const getCurrentCategories = () => {
@@ -480,18 +526,6 @@ export function CategoriesAnalyticsClient({
                 </Card>
             )}
 
-            {/* Gráfico de Progreso Temporal */}
-            {progressData && progressData.length > 0 && (
-                <ProductsProgressChart
-                    data={progressData}
-                    compareData={compareProgressData}
-                    isComparing={isComparing}
-                    periodType={getPeriodType()}
-                    dateFilter={dateFilter}
-                    compareFilter={compareFilter}
-                />
-            )}
-
             {/* Gráficos */}
             <CategoriesChart
                 currentCategories={currentCategories}
@@ -501,6 +535,74 @@ export function CategoriesAnalyticsClient({
                 dateFilter={dateFilter}
                 compareFilter={compareFilter}
             />
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Análisis de Evolución por Categoría</CardTitle>
+                    <CardDescription>Selecciona una categoría para filtrar los gráficos de evolución.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {allCategoryNames.map(category => (
+                            <Button
+                                key={category}
+                                variant={categoryFilter === category ? 'default' : 'outline'}
+                                onClick={() => setCategoryFilter(category)}
+                                className="capitalize"
+                            >
+                                {category === 'all' ? 'Todas las Categorías' : category}
+                            </Button>
+                        ))}
+                    </div>
+                    {isComparing ? (
+                        <div className="space-y-8">
+                            {filteredCompareProgressData && filteredCompareProgressData.length > 0 && (
+                                <div>
+                                    <div className="mb-4">
+                                        <h3 className="text-xl font-bold">{`Evolución Período de Comparación (${olderLabel})`}</h3>
+                                        <p className="text-muted-foreground">
+                                            {compareFilter && formatDateRange(compareFilter.from, compareFilter.to)}
+                                        </p>
+                                    </div>
+                                    <CategoryProgressChart
+                                        data={filteredCompareProgressData}
+                                        isComparing={false}
+                                        dateFilter={compareFilter}
+                                    />
+                                </div>
+                            )}
+
+                            {filteredCompareProgressData && filteredCompareProgressData.length > 0 && filteredProgressData && filteredProgressData.length > 0 && (
+                                <Separator />
+                            )}
+
+                            {filteredProgressData && filteredProgressData.length > 0 && (
+                                <div>
+                                    <div className="mb-4">
+                                        <h3 className="text-xl font-bold">{`Evolución Período Principal (${newerLabel})`}</h3>
+                                        <p className="text-muted-foreground">
+                                            {dateFilter && formatDateRange(dateFilter.from, dateFilter.to)}
+                                        </p>
+                                    </div>
+                                    <CategoryProgressChart
+                                        data={filteredProgressData}
+                                        isComparing={false}
+                                        dateFilter={dateFilter}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        progressData.length > 0 && (
+                            <CategoryProgressChart
+                                data={filteredProgressData}
+                                isComparing={false}
+                                dateFilter={dateFilter}
+                            />
+                        )
+                    )}
+                </CardContent>
+            </Card>
         </div>
     );
 } 
