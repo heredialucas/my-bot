@@ -20,8 +20,6 @@ export async function FrequencyAnalyticsTab({ dateFilter, compareFilter }: Frequ
             getPurchaseFrequency(dateFilter.from, dateFilter.to)
         ]);
 
-        console.log('FrequencyAnalyticsTab - Fetched Data:', { purchaseFrequency });
-
         // Datos del período de comparación (si está habilitado)
         let compareCustomerInsights;
         let comparePurchaseFrequency;
@@ -32,8 +30,6 @@ export async function FrequencyAnalyticsTab({ dateFilter, compareFilter }: Frequ
             ]);
             compareCustomerInsights = compInsights;
             comparePurchaseFrequency = compFrequency;
-
-            console.log('FrequencyAnalyticsTab - Fetched Comparison Data:', { comparePurchaseFrequency });
         }
 
         return (

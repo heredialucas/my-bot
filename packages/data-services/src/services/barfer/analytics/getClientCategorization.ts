@@ -20,7 +20,7 @@ export async function getClientCategorization(): Promise<ClientAnalytics> {
             { $match: { status: { $in: ['confirmed', 'delivered'] } } },
             {
                 $group: {
-                    _id: '$user.email',  // Agrupado por email ya que user._id no existe
+                    _id: { $ifNull: ['$user.id', '$user.email'] }, // Prioritize user.id, fallback to email
                     user: { $first: '$user' },
                     totalOrders: { $sum: 1 },
                     totalSpent: { $sum: '$total' },
@@ -106,64 +106,34 @@ export async function getClientCategorization(): Promise<ClientAnalytics> {
  * Categoriza el comportamiento de compra del cliente
  */
 function categorizeBehavior(client: any): ClientBehaviorCategory {
-    const { totalOrders, daysSinceFirstOrder, daysSinceLastOrder, orders } = client;
+    const { daysSinceLastOrder, orders, totalOrders } = client;
 
-    // Cliente nuevo (solo una compra)
-    if (totalOrders === 1) {
-        // En seguimiento (entre 1 semana y 1 mes desde primera compra)
-        if (daysSinceFirstOrder >= 7 && daysSinceFirstOrder <= 30) {
-            return 'tracking';
+    // Un cliente es "recuperado" si su última compra fue en los últimos 3 meses,
+    // pero hubo un lapso de más de 4 meses entre la última y la penúltima compra.
+    if (totalOrders > 1) {
+        const sortedOrders = [...orders].sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        const lastOrderDate = new Date(sortedOrders[0].date);
+        const secondLastOrderDate = new Date(sortedOrders[1].date);
+        const diffTime = lastOrderDate.getTime() - secondLastOrderDate.getTime();
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+        if (diffDays > 120 && daysSinceLastOrder <= 90) {
+            return 'recovered';
         }
-        // Posible inactivo (más de 1 mes sin volver a comprar)
-        if (daysSinceFirstOrder > 30) {
-            return 'possible-inactive';
-        }
-        return 'new';
     }
 
-    // Cliente con múltiples compras
-    const twoMonthsAgo = new Date();
-    twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
-
-    const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-
-    // Cliente perdido (más de 6 meses sin comprar)
-    if (daysSinceLastOrder > 180) {
+    // Perdido: no compra hace mas de 4 meses
+    if (daysSinceLastOrder > 120) {
         return 'lost';
     }
 
-    // Cliente inactivo (más de 2 meses sin comprar)
-    if (daysSinceLastOrder > 60) {
-        // Verificar si era inactivo y volvió
-        const wasInactive = orders.some((order: any) => {
-            const orderDate = new Date(order.date);
-            return orderDate < sixMonthsAgo;
-        });
-
-        if (wasInactive) {
-            return 'recovered';
-        }
-        return 'inactive';
+    // Posible Inactivo: no compra hace mas de 3 meses
+    if (daysSinceLastOrder > 90) {
+        return 'possible-inactive';
     }
 
-    // Verificar compras en los últimos 2 meses
-    const recentOrders = orders.filter((order: any) => {
-        const orderDate = new Date(order.date);
-        return orderDate >= twoMonthsAgo;
-    });
-
-    // Cliente activo (2+ compras en los últimos 2 meses)
-    if (recentOrders.length >= 2) {
-        return 'active';
-    }
-
-    // Posible activo (volvió a comprar al mes de su primera compra)
-    if (totalOrders >= 2 && daysSinceFirstOrder <= 60) {
-        return 'possible-active';
-    }
-
-    return 'inactive';
+    // Activo: al menos 1 compra en los ultimos 3 meses
+    return 'active';
 }
 
 /**
