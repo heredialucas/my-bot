@@ -1,17 +1,29 @@
 import 'server-only';
 import { getCollection } from '@repo/database';
 
-interface ProductTimelinePoint {
-    period: string;
+interface ProductEvolution {
+    productId: string;
+    productName: string;
+    optionName: string;
     totalQuantity: number;
     totalRevenue: number;
     confirmedQuantity: number;
     confirmedRevenue: number;
 }
 
+interface ProductTimelinePoint {
+    period: string;
+    totalQuantity: number;
+    totalRevenue: number;
+    confirmedQuantity: number;
+    confirmedRevenue: number;
+    products: ProductEvolution[];
+}
+
 export async function getProductTimeline(
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    productIds?: string[]
 ): Promise<ProductTimelinePoint[]> {
     try {
         const collection = await getCollection('orders');
@@ -24,14 +36,26 @@ export async function getProductTimeline(
         else if (diffDays <= 90) periodFormat = '%Y-%U';
         else periodFormat = '%Y-%m';
 
-        const pipeline = [
-            { $match: { createdAt: { $gte: startDate, $lte: endDate }, status: { $in: ['confirmed', 'pending'] } } },
+        const matchStage: any = {
+            createdAt: { $gte: startDate, $lte: endDate },
+            status: { $in: ['confirmed', 'pending'] }
+        };
+
+        if (productIds && productIds.length > 0) {
+            matchStage['items.id'] = { $in: productIds };
+        }
+
+        const pipeline: any[] = [
+            { $match: matchStage },
             { $unwind: '$items' },
             { $unwind: '$items.options' },
             {
                 $group: {
                     _id: {
                         period: { $dateToString: { format: periodFormat, date: '$createdAt' } },
+                        productId: '$items.id',
+                        productName: '$items.name',
+                        optionName: '$items.options.name'
                     },
                     totalQuantity: { $sum: '$items.options.quantity' },
                     totalRevenue: { $sum: { $multiply: ['$items.options.price', '$items.options.quantity'] } },
@@ -44,9 +68,30 @@ export async function getProductTimeline(
                 }
             },
             {
+                $group: {
+                    _id: '$_id.period',
+                    products: {
+                        $push: {
+                            productId: '$_id.productId',
+                            productName: '$_id.productName',
+                            optionName: '$_id.optionName',
+                            totalQuantity: '$totalQuantity',
+                            totalRevenue: '$totalRevenue',
+                            confirmedQuantity: '$confirmedQuantity',
+                            confirmedRevenue: '$confirmedRevenue'
+                        }
+                    },
+                    totalQuantity: { $sum: '$totalQuantity' },
+                    totalRevenue: { $sum: '$totalRevenue' },
+                    confirmedQuantity: { $sum: '$confirmedQuantity' },
+                    confirmedRevenue: { $sum: '$confirmedRevenue' }
+                }
+            },
+            {
                 $project: {
                     _id: 0,
-                    period: '$_id.period',
+                    period: '$_id',
+                    products: 1,
                     totalQuantity: 1,
                     totalRevenue: 1,
                     confirmedQuantity: 1,
@@ -58,7 +103,6 @@ export async function getProductTimeline(
 
         const result = await collection.aggregate(pipeline).toArray();
         return result as ProductTimelinePoint[];
-
     } catch (error) {
         console.error('Error fetching product timeline:', error);
         throw error;

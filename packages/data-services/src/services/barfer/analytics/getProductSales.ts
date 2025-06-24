@@ -2,6 +2,29 @@ import 'server-only';
 import { getCollection } from '@repo/database';
 
 /**
+ * Extracts weight in kilograms from a product's option name.
+ * Returns null if no weight is found or if the product is a complement.
+ * @param productName - The name of the product.
+ * @param optionName - The option name, e.g., "5KG".
+ * @returns The weight in KG, or null.
+ */
+const getWeightInKg = (productName: string, optionName: string): number | null => {
+    const lowerProductName = productName.toLowerCase();
+
+    if (lowerProductName.includes('big dog')) {
+        return 15;
+    }
+    if (lowerProductName.includes('complemento')) {
+        return null;
+    }
+    const match = optionName.match(/(\d+(\.\d+)?)\s*KG/i);
+    if (match && match[1]) {
+        return parseFloat(match[1]);
+    }
+    return null;
+};
+
+/**
  * Obtiene estadísticas de ventas por producto
  * 
  * Raw MongoDB result:
@@ -78,17 +101,23 @@ export async function getProductSales(statusFilter?: 'pending' | 'confirmed' | '
 
         const result = await collection.aggregate(pipeline).toArray();
 
-        const formattedResult = result.map((item: any) => ({
-            productId: item._id.productId,
-            productName: item._id.productName,
-            optionName: item._id.optionName,
-            quantity: item.totalQuantity,
-            revenue: item.totalRevenue,
-            orders: item.orderCount,
-            avgPrice: Math.round(item.avgPrice),
-            statuses: item.statuses, // Array de estados incluidos
-            statusFilter: statusFilter || 'all'
-        }));
+        const formattedResult = result.map((item: any) => {
+            const weightPerUnit = getWeightInKg(item._id.productName, item._id.optionName);
+            const totalWeight = weightPerUnit !== null ? item.totalQuantity * weightPerUnit : null;
+
+            return {
+                productId: item._id.productId,
+                productName: item._id.productName,
+                optionName: item._id.optionName,
+                quantity: item.totalQuantity,
+                revenue: item.totalRevenue,
+                orders: item.orderCount,
+                avgPrice: Math.round(item.avgPrice),
+                statuses: item.statuses, // Array de estados incluidos
+                statusFilter: statusFilter || 'all',
+                totalWeight,
+            };
+        });
 
         return formattedResult;
 

@@ -18,13 +18,15 @@ export async function ProductsAnalyticsTab({ dateFilter, compareFilter }: Produc
             allProducts,
             pendingProducts,
             confirmedProducts,
-            timelineData
         ] = await Promise.all([
             getProductSales('all', 20, dateFilter.from, dateFilter.to),
             getProductSales('pending', 20, dateFilter.from, dateFilter.to),
             getProductSales('confirmed', 20, dateFilter.from, dateFilter.to),
-            getProductTimeline(dateFilter.from, dateFilter.to)
         ]);
+
+        const productIds = Array.from(new Set(allProducts.map(p => p.productId)));
+
+        const timelineData = await getProductTimeline(dateFilter.from, dateFilter.to, productIds);
 
         let compareAllProducts, comparePendingProducts, compareConfirmedProducts, compareTimelineData;
         if (compareFilter) {
@@ -32,13 +34,13 @@ export async function ProductsAnalyticsTab({ dateFilter, compareFilter }: Produc
                 compareAllProducts,
                 comparePendingProducts,
                 compareConfirmedProducts,
-                compareTimelineData
             ] = await Promise.all([
                 getProductSales('all', 20, compareFilter.from, compareFilter.to),
                 getProductSales('pending', 20, compareFilter.from, compareFilter.to),
                 getProductSales('confirmed', 20, compareFilter.from, compareFilter.to),
-                compareFilter ? getProductTimeline(compareFilter.from, compareFilter.to) : Promise.resolve(undefined)
             ]);
+            const compareProductIds = Array.from(new Set(compareAllProducts.map(p => p.productId)));
+            compareTimelineData = await getProductTimeline(compareFilter.from, compareFilter.to, compareProductIds);
         }
 
         return (

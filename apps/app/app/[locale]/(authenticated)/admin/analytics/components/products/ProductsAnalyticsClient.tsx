@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Button } from '@repo/design-system/components/ui/button';
-import { Filter, Package } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@repo/design-system/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@repo/design-system/components/ui/command';
+import { Filter, Package, ChevronsUpDown } from 'lucide-react';
 import { ProductTimelineChart } from '../charts/ProductTimelineChart';
 
 // Duplicating interfaces to avoid import issues in this context
@@ -15,6 +17,17 @@ interface ProductSale {
     quantity: number;
     revenue: number;
     orders: number;
+    totalWeight?: number | null;
+}
+
+interface ProductEvolution {
+    productId: string;
+    productName: string;
+    optionName: string;
+    totalQuantity: number;
+    totalRevenue: number;
+    confirmedQuantity: number;
+    confirmedRevenue: number;
 }
 
 interface ProductTimelinePoint {
@@ -23,6 +36,7 @@ interface ProductTimelinePoint {
     totalRevenue: number;
     confirmedQuantity: number;
     confirmedRevenue: number;
+    products: ProductEvolution[];
 }
 
 interface ProductsAnalyticsClientProps {
@@ -35,7 +49,7 @@ interface ProductsAnalyticsClientProps {
     timelineData: ProductTimelinePoint[];
     compareTimelineData?: ProductTimelinePoint[];
     isComparing?: boolean;
-    dateFilter?: { from: Date; to: Date };
+    dateFilter: { from: Date; to: Date };
     compareFilter?: { from: Date; to: Date };
 }
 
@@ -51,8 +65,49 @@ export function ProductsAnalyticsClient({
     timelineData,
     compareTimelineData,
     isComparing = false,
+    dateFilter,
+    compareFilter
 }: ProductsAnalyticsClientProps) {
     const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'confirmed'>('all');
+    const [selectedProduct, setSelectedProduct] = useState<string>('all');
+    const [popoverOpen, setPopoverOpen] = useState(false);
+
+    const productOptions = useMemo(() => {
+        const products = allProducts.map(p => ({
+            value: `${p.productId}-${p.optionName}`,
+            label: `${p.productName} (${p.optionName})`,
+        }));
+        return [{ value: 'all', label: 'Todos los productos' }, ...products];
+    }, [allProducts]);
+
+    const filterTimelineData = (data: ProductTimelinePoint[], productFilter: string): any[] => {
+        if (productFilter === 'all' || !data) {
+            return data;
+        }
+
+        return data.map(point => {
+            const product = point.products.find(p => `${p.productId}-${p.optionName}` === productFilter);
+            if (product) {
+                return {
+                    period: point.period,
+                    totalQuantity: product.totalQuantity,
+                    totalRevenue: product.totalRevenue,
+                    confirmedQuantity: product.confirmedQuantity,
+                    confirmedRevenue: product.confirmedRevenue,
+                };
+            }
+            return {
+                period: point.period,
+                totalQuantity: 0,
+                totalRevenue: 0,
+                confirmedQuantity: 0,
+                confirmedRevenue: 0,
+            };
+        });
+    };
+
+    const filteredTimelineData = useMemo(() => filterTimelineData(timelineData, selectedProduct), [timelineData, selectedProduct]);
+    const filteredCompareTimelineData = useMemo(() => compareTimelineData ? filterTimelineData(compareTimelineData, selectedProduct) : undefined, [compareTimelineData, selectedProduct]);
 
     const productsMap = { all: allProducts, pending: pendingProducts, confirmed: confirmedProducts };
     const compareProductsMap = { all: compareAllProducts, pending: comparePendingProducts, confirmed: compareConfirmedProducts };
@@ -60,43 +115,104 @@ export function ProductsAnalyticsClient({
     const currentProducts = productsMap[statusFilter] || [];
     const compareProducts = compareProductsMap[statusFilter] || [];
 
+    const formatDateRange = (from: Date, to: Date) => {
+        return `${from.toLocaleDateString('es-ES')} - ${to.toLocaleDateString('es-ES')}`;
+    };
+
     return (
         <div className="space-y-8">
-            {/* Gráficos de Línea de Tiempo */}
-            <div>
-                <h3 className="text-2xl font-bold tracking-tight mb-4">Evolución General (Período Actual)</h3>
-                <div className="grid gap-4 md:grid-cols-2">
-                    <Card>
-                        <CardHeader><CardTitle>Unidades Vendidas</CardTitle></CardHeader>
-                        <CardContent><ProductTimelineChart data={timelineData} yKey1="totalQuantity" name1="Total" yKey2="confirmedQuantity" name2="Confirmadas" /></CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader><CardTitle>Ingresos</CardTitle></CardHeader>
-                        <CardContent><ProductTimelineChart data={timelineData} yKey1="totalRevenue" name1="Total" yKey2="confirmedRevenue" name2="Confirmados" yAxisFormatter={currencyFormatter} /></CardContent>
-                    </Card>
-                </div>
-            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><Filter className="h-5 w-5" /> Filtro de Evolución</CardTitle>
+                    <CardDescription>Selecciona un producto para ver su evolución específica en los gráficos.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                        <PopoverTrigger asChild>
+                            <Button variant="outline" role="combobox" aria-expanded={popoverOpen} className="w-[300px] justify-between">
+                                {selectedProduct === 'all'
+                                    ? 'Todos los productos'
+                                    : productOptions.find(p => p.value === selectedProduct)?.label || 'Seleccionar producto...'}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[300px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Buscar producto..." />
+                                <CommandList>
+                                    <CommandEmpty>No se encontraron productos.</CommandEmpty>
+                                    <CommandGroup>
+                                        {productOptions.map((option) => (
+                                            <CommandItem
+                                                key={option.value}
+                                                value={option.value}
+                                                onSelect={(currentValue) => {
+                                                    setSelectedProduct(currentValue === selectedProduct ? 'all' : currentValue);
+                                                    setPopoverOpen(false);
+                                                }}
+                                            >
+                                                {option.label}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                </CardContent>
+            </Card>
 
-            {isComparing && compareTimelineData && (
+            {/* Gráficos de Línea de Tiempo */}
+            <div className="space-y-8">
                 <div>
-                    <h3 className="text-2xl font-bold tracking-tight mb-4">Evolución General (Período de Comparación)</h3>
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <h3 className="text-2xl font-bold tracking-tight mb-4">Evolución de Unidades Vendidas</h3>
+                    <div className={`grid gap-4 ${isComparing ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
                         <Card>
-                            <CardHeader><CardTitle>Unidades Vendidas</CardTitle></CardHeader>
-                            <CardContent><ProductTimelineChart data={compareTimelineData} yKey1="totalQuantity" name1="Total" yKey2="confirmedQuantity" name2="Confirmadas" /></CardContent>
+                            <CardHeader>
+                                <CardTitle>Período Actual</CardTitle>
+                                <CardDescription>{formatDateRange(dateFilter.from, dateFilter.to)}</CardDescription>
+                            </CardHeader>
+                            <CardContent><ProductTimelineChart data={filteredTimelineData} yKey1="totalQuantity" name1="Total" yKey2="confirmedQuantity" name2="Confirmadas" /></CardContent>
                         </Card>
-                        <Card>
-                            <CardHeader><CardTitle>Ingresos</CardTitle></CardHeader>
-                            <CardContent><ProductTimelineChart data={compareTimelineData} yKey1="totalRevenue" name1="Total" yKey2="confirmedRevenue" name2="Confirmados" yAxisFormatter={currencyFormatter} /></CardContent>
-                        </Card>
+                        {isComparing && filteredCompareTimelineData && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Período de Comparación</CardTitle>
+                                    <CardDescription>{compareFilter && formatDateRange(compareFilter.from, compareFilter.to)}</CardDescription>
+                                </CardHeader>
+                                <CardContent><ProductTimelineChart data={filteredCompareTimelineData} yKey1="totalQuantity" name1="Total" yKey2="confirmedQuantity" name2="Confirmadas" /></CardContent>
+                            </Card>
+                        )}
                     </div>
                 </div>
-            )}
+
+                <div>
+                    <h3 className="text-2xl font-bold tracking-tight mb-4">Evolución de Ingresos</h3>
+                    <div className={`grid gap-4 ${isComparing ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Período Actual</CardTitle>
+                                <CardDescription>{formatDateRange(dateFilter.from, dateFilter.to)}</CardDescription>
+                            </CardHeader>
+                            <CardContent><ProductTimelineChart data={filteredTimelineData} yKey1="totalRevenue" name1="Total" yKey2="confirmedRevenue" name2="Confirmados" yAxisFormatter={currencyFormatter} /></CardContent>
+                        </Card>
+                        {isComparing && filteredCompareTimelineData && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Período de Comparación</CardTitle>
+                                    <CardDescription>{compareFilter && formatDateRange(compareFilter.from, compareFilter.to)}</CardDescription>
+                                </CardHeader>
+                                <CardContent><ProductTimelineChart data={filteredCompareTimelineData} yKey1="totalRevenue" name1="Total" yKey2="confirmedRevenue" name2="Confirmados" yAxisFormatter={currencyFormatter} /></CardContent>
+                            </Card>
+                        )}
+                    </div>
+                </div>
+            </div>
 
             {/* Filtros y Listas de Productos */}
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Filter className="h-5 w-5" /> Filtro de Productos</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><Filter className="h-5 w-5" /> Filtro de Rankings de Productos</CardTitle>
                     <CardDescription>Filtra los rankings de productos por estado de la orden.</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -113,7 +229,7 @@ export function ProductsAnalyticsClient({
                     <CardHeader><CardTitle className="flex items-center gap-2"><Package className="h-5 w-5" /> Ranking (Período Actual)</CardTitle></CardHeader>
                     <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
                         {currentProducts.map((p, i) => (
-                            <div key={`${p.productId}-${p.optionName}`} className="flex items-center justify-between p-2 border rounded-md"><div className="flex items-center gap-3"><Badge variant="outline">#{i + 1}</Badge><div><p className="font-medium text-sm">{p.productName} ({p.optionName})</p><p className="text-xs text-muted-foreground">{p.orders} órdenes</p></div></div><div className="text-right"><p className="font-bold text-sm">{p.quantity} un.</p><p className="text-xs text-muted-foreground">{currencyFormatter(p.revenue)}</p></div></div>
+                            <div key={`${p.productId}-${p.optionName}`} className="flex items-center justify-between p-2 border rounded-md"><div className="flex items-center gap-3"><Badge variant="outline">#{i + 1}</Badge><div><p className="font-medium text-sm">{p.productName} ({p.optionName})</p><p className="text-xs text-muted-foreground">{p.orders} órdenes</p></div></div><div className="text-right"><p className="font-bold text-sm">{p.quantity} un.</p>{p.totalWeight && <p className="font-bold text-sm text-blue-600">{p.totalWeight.toLocaleString('es-AR')} kg</p>}<p className="text-xs text-muted-foreground">{currencyFormatter(p.revenue)}</p></div></div>
                         ))}
                         {currentProducts.length === 0 && <p className="text-center text-muted-foreground py-4">No hay productos.</p>}
                     </CardContent>
@@ -123,9 +239,9 @@ export function ProductsAnalyticsClient({
                         <CardHeader><CardTitle className="flex items-center gap-2"><Package className="h-5 w-5" /> Ranking (Comparación)</CardTitle></CardHeader>
                         <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
                             {compareProducts.map((p, i) => (
-                                <div key={`comp-${p.productId}-${p.optionName}`} className="flex items-center justify-between p-2 border rounded-md"><div className="flex items-center gap-3"><Badge variant="outline">#{i + 1}</Badge><div><p className="font-medium text-sm">{p.productName} ({p.optionName})</p><p className="text-xs text-muted-foreground">{p.orders} órdenes</p></div></div><div className="text-right"><p className="font-bold text-sm">{p.quantity} un.</p><p className="text-xs text-muted-foreground">{currencyFormatter(p.revenue)}</p></div></div>
+                                <div key={`comp-${p.productId}-${p.optionName}`} className="flex items-center justify-between p-2 border rounded-md"><div className="flex items-center gap-3"><Badge variant="outline">#{i + 1}</Badge><div><p className="font-medium text-sm">{p.productName} ({p.optionName})</p><p className="text-xs text-muted-foreground">{p.orders} órdenes</p></div></div><div className="text-right"><p className="font-bold text-sm">{p.quantity} un.</p>{p.totalWeight && <p className="font-bold text-sm text-blue-600">{p.totalWeight.toLocaleString('es-AR')} kg</p>}<p className="text-xs text-muted-foreground">{currencyFormatter(p.revenue)}</p></div></div>
                             ))}
-                            {compareProducts.length === 0 && <p className="text-center text-muted-foreground py-4">No hay productos.</p>}
+                            {compareProducts.length === 0 && <p className="text-center text-muted-foreground py-4">No hay productos para comparar.</p>}
                         </CardContent>
                     </Card>
                 )}
