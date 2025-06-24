@@ -19,6 +19,7 @@ interface CategorySale {
     uniqueProducts: number;
     avgPrice: number;
     statusFilter: string;
+    totalWeight?: number | null;
 }
 
 interface ProductProgressData {
@@ -451,6 +452,14 @@ export function CategoriesAnalyticsClient({
                                                 ${category.revenue.toLocaleString()}
                                             </span>
                                         </div>
+                                        {category.totalWeight && (
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Peso total</span>
+                                                <span className="font-bold text-sm text-blue-600">
+                                                    {category.totalWeight.toLocaleString()} kg
+                                                </span>
+                                            </div>
+                                        )}
                                         <div className="flex justify-between items-center">
                                             <span className="text-xs sm:text-sm text-muted-foreground">Precio promedio</span>
                                             <span className="font-medium text-sm">
@@ -512,6 +521,14 @@ export function CategoriesAnalyticsClient({
                                                 ${category.revenue.toLocaleString()}
                                             </span>
                                         </div>
+                                        {category.totalWeight && (
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Peso total</span>
+                                                <span className="font-bold text-sm text-blue-600">
+                                                    {category.totalWeight.toLocaleString()} kg
+                                                </span>
+                                            </div>
+                                        )}
                                         <div className="flex justify-between items-center">
                                             <span className="text-xs sm:text-sm text-muted-foreground">Precio promedio</span>
                                             <span className="font-medium text-sm">

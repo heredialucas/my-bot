@@ -23,6 +23,21 @@ const CATEGORY_KEYS = {
     Complementos: { quantity: 'complementosQuantity', revenue: 'complementosRevenue', color: '#f1c40f' }
 };
 
+function parseDateString(dateString: string): Date {
+    if (dateString.includes('/')) {
+        const parts = dateString.split('/'); // DD/MM/YYYY
+        if (parts.length === 3) {
+            return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+        }
+    }
+    const parts = dateString.split('-'); // YYYY-MM-DD
+    if (parts.length === 3) {
+        return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    }
+    // Fallback for unexpected formats, though it might still result in Invalid Date
+    return new Date(dateString);
+}
+
 export function CategoryProgressChart({
     data,
     isComparing,
@@ -31,9 +46,59 @@ export function CategoryProgressChart({
     const diffDays = dateFilter ? Math.ceil(Math.abs(dateFilter.to.getTime() - dateFilter.from.getTime()) / (1000 * 60 * 60 * 24)) : 0;
     const periodType = diffDays <= 31 ? 'daily' : diffDays <= 90 ? 'weekly' : 'monthly';
 
-    const chartData = useMemo(() => data.map(item => ({ ...item, displayDate: periodType === 'monthly' ? item.date : periodType === 'weekly' ? `S${item.period.split('-W')[1]}` : item.date.split('-')[2] })), [data, periodType]);
+    const chartData = useMemo(() => {
+        if (!data) return [];
+        return data.map(item => {
+            let displayDate;
+            if (periodType === 'daily') {
+                const date = parseDateString(item.date);
+                displayDate = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+            } else if (periodType === 'weekly') {
+                displayDate = `S${item.period.split('-W')[1]}`;
+            } else { // monthly
+                const date = parseDateString(item.date);
+                displayDate = date.toLocaleDateString('es-ES', { month: 'short', year: '2-digit' });
+            }
+            return {
+                ...item,
+                displayDate,
+                fullDate: item.date,
+            };
+        }).sort((a, b) => parseDateString(a.fullDate).getTime() - parseDateString(b.fullDate).getTime());
+    }, [data, periodType]);
 
     const formatCurrency = (value: number) => `$${value.toLocaleString()}`;
+
+    const renderTooltip = (label: string, payload: any[] | undefined) => {
+        const point = payload?.[0]?.payload;
+        if (point && point.fullDate) {
+            try {
+                const date = parseDateString(point.fullDate);
+
+                if (!isNaN(date.getTime())) {
+                    if (periodType === 'daily') {
+                        const formattedDate = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                        const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                        return (
+                            <div>
+                                <div>{formattedDate}</div>
+                                <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                            </div>
+                        );
+                    }
+                    if (periodType === 'weekly') {
+                        return `Semana ${point.period.split('-W')[1]}`;
+                    }
+                    if (periodType === 'monthly') {
+                        return date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+                    }
+                }
+            } catch (e) {
+                // fallback to original label
+            }
+        }
+        return label;
+    };
 
     return (
         <div className="space-y-6">
@@ -44,42 +109,19 @@ export function CategoryProgressChart({
                 </CardHeader>
                 <CardContent>
                     <ResponsiveContainer width="100%" height={350}>
-                        <LineChart data={chartData} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+                        <LineChart data={chartData} margin={{ top: 5, right: 20, left: 20, bottom: 50 }}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="displayDate" fontSize={12} />
+                            <XAxis
+                                dataKey="displayDate"
+                                fontSize={12}
+                                angle={periodType === 'daily' ? -45 : 0}
+                                textAnchor={periodType === 'daily' ? 'end' : 'middle'}
+                                height={60}
+                            />
                             <YAxis fontSize={12} />
                             <Tooltip
                                 formatter={(value: number) => `${Number(value).toLocaleString()} un.`}
-                                labelFormatter={(label, payload) => {
-                                    const point = payload?.[0]?.payload;
-                                    if (point && point.date && periodType === 'daily') {
-                                        try {
-                                            const dateString = point.date;
-                                            let date;
-                                            if (dateString.includes('/')) {
-                                                // Asumir formato DD/MM/YYYY
-                                                date = new Date(dateString.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
-                                            } else {
-                                                // Asumir formato YYYY-MM-DD
-                                                date = new Date(`${dateString}T00:00:00`);
-                                            }
-
-                                            if (!isNaN(date.getTime())) {
-                                                const formattedDate = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-                                                const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                                                return (
-                                                    <div>
-                                                        <div>{formattedDate}</div>
-                                                        <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
-                                                    </div>
-                                                );
-                                            }
-                                        } catch (e) {
-                                            // fallback to original label
-                                        }
-                                    }
-                                    return label;
-                                }}
+                                labelFormatter={renderTooltip}
                             />
                             <Legend />
                             {Object.entries(CATEGORY_KEYS).map(([name, keys]) => (<Line key={name} type="monotone" dataKey={keys.quantity} name={name} stroke={keys.color} strokeWidth={2} dot={false} />))}
@@ -95,42 +137,19 @@ export function CategoryProgressChart({
                 </CardHeader>
                 <CardContent>
                     <ResponsiveContainer width="100%" height={350}>
-                        <BarChart data={chartData} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+                        <BarChart data={chartData} margin={{ top: 5, right: 20, left: 20, bottom: 50 }}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="displayDate" fontSize={12} />
+                            <XAxis
+                                dataKey="displayDate"
+                                fontSize={12}
+                                angle={periodType === 'daily' ? -45 : 0}
+                                textAnchor={periodType === 'daily' ? 'end' : 'middle'}
+                                height={60}
+                            />
                             <YAxis tickFormatter={(value) => `$${(Number(value) / 1000).toFixed(0)}k`} fontSize={12} />
                             <Tooltip
                                 formatter={(value: number) => formatCurrency(value)}
-                                labelFormatter={(label, payload) => {
-                                    const point = payload?.[0]?.payload;
-                                    if (point && point.date && periodType === 'daily') {
-                                        try {
-                                            const dateString = point.date;
-                                            let date;
-                                            if (dateString.includes('/')) {
-                                                // Asumir formato DD/MM/YYYY
-                                                date = new Date(dateString.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
-                                            } else {
-                                                // Asumir formato YYYY-MM-DD
-                                                date = new Date(`${dateString}T00:00:00`);
-                                            }
-
-                                            if (!isNaN(date.getTime())) {
-                                                const formattedDate = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-                                                const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                                                return (
-                                                    <div>
-                                                        <div>{formattedDate}</div>
-                                                        <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
-                                                    </div>
-                                                );
-                                            }
-                                        } catch (e) {
-                                            // fallback to original label
-                                        }
-                                    }
-                                    return label;
-                                }}
+                                labelFormatter={renderTooltip}
                             />
                             <Legend />
                             {Object.entries(CATEGORY_KEYS).map(([name, keys]) => (<Bar key={name} dataKey={keys.revenue} name={name} fill={keys.color} />))}
