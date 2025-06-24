@@ -6,6 +6,8 @@ import { Badge } from '@repo/design-system/components/ui/badge';
 import { ShoppingCart, DollarSign, Users, AlertCircle } from 'lucide-react';
 import { Separator } from '@repo/design-system/components/ui/separator';
 import { MonthlyChart } from '../charts/MonthlyChart';
+import { DeliveryOrdersChart } from '../charts/DeliveryOrdersChart';
+import { DeliveryRevenueChart } from '../charts/DeliveryRevenueChart';
 
 interface MonthlyData {
     month: string;
@@ -20,6 +22,8 @@ interface MonthlyAnalyticsClientProps {
     isComparing?: boolean; // Si está en modo comparación
     dateFilter?: { from: Date; to: Date }; // Fechas del período principal
     compareFilter?: { from: Date; to: Date }; // Fechas del período de comparación
+    deliveryStats: any[]; // Se podría definir un tipo más estricto
+    compareDeliveryStats?: any[];
 }
 
 export function MonthlyAnalyticsClient({
@@ -27,7 +31,9 @@ export function MonthlyAnalyticsClient({
     compareAllOrdersData,
     isComparing = false,
     dateFilter,
-    compareFilter
+    compareFilter,
+    deliveryStats,
+    compareDeliveryStats
 }: MonthlyAnalyticsClientProps) {
     // Los datos ya vienen filtrados del servidor, solo necesitamos ordenarlos
     const { sortedAllOrders, sortedCompareAllOrders } = useMemo(() => {
@@ -368,6 +374,50 @@ export function MonthlyAnalyticsClient({
                 dateFilter={dateFilter}
                 compareFilter={compareFilter}
             />
+
+            <h3 className="text-2xl font-bold tracking-tight my-4 col-span-1 md:col-span-2">Análisis de Tipos de Entrega (Período Actual)</h3>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Pedidos por Tipo de Entrega</CardTitle>
+                    <CardDescription>Cantidad de pedidos de envío en el día vs. reparto normal.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <DeliveryOrdersChart data={deliveryStats} />
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Ingresos por Tipo de Entrega</CardTitle>
+                    <CardDescription>Ingresos generados por cada tipo de entrega.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <DeliveryRevenueChart data={deliveryStats} />
+                </CardContent>
+            </Card>
+
+            {isComparing && compareDeliveryStats && (
+                <>
+                    <h3 className="text-2xl font-bold tracking-tight my-4 col-span-1 md:col-span-2">Análisis de Tipos de Entrega (Período de Comparación)</h3>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Pedidos por Tipo de Entrega</CardTitle>
+                            <CardDescription>Comparación de pedidos de envío en el día vs. reparto normal.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <DeliveryOrdersChart data={compareDeliveryStats} />
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Ingresos por Tipo de Entrega</CardTitle>
+                            <CardDescription>Comparación de ingresos por cada tipo de entrega.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <DeliveryRevenueChart data={compareDeliveryStats} />
+                        </CardContent>
+                    </Card>
+                </>
+            )}
         </div>
     );
 } 

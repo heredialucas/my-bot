@@ -122,11 +122,15 @@ export function DailyChart({
                                     />
                                     <YAxis tick={{ fontSize: 10 }} />
                                     <Tooltip
-                                        formatter={(value: number, name: string) => [
-                                            value,
-                                            name === 'allOrders' ? 'Todos los pedidos' : 'Pedidos confirmados'
-                                        ]}
-                                        labelFormatter={(label) => `Fecha: ${label}`}
+                                        formatter={(value: number, name: string) => [value, name]}
+                                        labelFormatter={(label, payload) => {
+                                            const point = payload?.[0]?.payload;
+                                            if (point) {
+                                                const date = new Date(point.fullDate);
+                                                return date.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' });
+                                            }
+                                            return label;
+                                        }}
                                     />
                                     <Legend />
                                     <Line
@@ -167,11 +171,15 @@ export function DailyChart({
                                         />
                                         <YAxis tick={{ fontSize: 10 }} />
                                         <Tooltip
-                                            formatter={(value: number, name: string) => [
-                                                value,
-                                                name === 'compareAllOrders' ? 'Todos los pedidos' : 'Pedidos confirmados'
-                                            ]}
-                                            labelFormatter={(label) => `Fecha: ${label}`}
+                                            formatter={(value: number, name: string) => [value, name]}
+                                            labelFormatter={(label, payload) => {
+                                                const point = payload?.[0]?.payload;
+                                                if (point) {
+                                                    const date = new Date(point.fullDate);
+                                                    return date.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' });
+                                                }
+                                                return label;
+                                            }}
                                         />
                                         <Legend />
                                         <Line
@@ -242,11 +250,15 @@ export function DailyChart({
                                         tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                                     />
                                     <Tooltip
-                                        formatter={(value: number, name: string) => [
-                                            formatCurrency(value),
-                                            name === 'allRevenue' ? 'Ingresos totales' : 'Ingresos confirmados'
-                                        ]}
-                                        labelFormatter={(label) => `Fecha: ${label}`}
+                                        formatter={(value: number, name: string) => [formatCurrency(value), name]}
+                                        labelFormatter={(label, payload) => {
+                                            const point = payload?.[0]?.payload;
+                                            if (point) {
+                                                const date = new Date(point.fullDate);
+                                                return date.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' });
+                                            }
+                                            return label;
+                                        }}
                                     />
                                     <Legend />
                                     <Line
@@ -290,11 +302,15 @@ export function DailyChart({
                                             tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                                         />
                                         <Tooltip
-                                            formatter={(value: number, name: string) => [
-                                                formatCurrency(value),
-                                                name === 'compareAllRevenue' ? 'Ingresos totales' : 'Ingresos confirmados'
-                                            ]}
-                                            labelFormatter={(label) => `Fecha: ${label}`}
+                                            formatter={(value: number, name: string) => [formatCurrency(value), name]}
+                                            labelFormatter={(label, payload) => {
+                                                const point = payload?.[0]?.payload;
+                                                if (point) {
+                                                    const date = new Date(point.fullDate);
+                                                    return date.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' });
+                                                }
+                                                return label;
+                                            }}
                                         />
                                         <Legend />
                                         <Line

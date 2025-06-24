@@ -15,5 +15,6 @@ export { getProductSales } from './analytics/getProductSales';
 export { getProductsByTimePeriod } from './analytics/getProductsByTimePeriod';
 export { getPurchaseFrequency } from './analytics/getPurchaseFrequency';
 export { getRevenueByDay } from './analytics/getRevenueByDay';
+export * from './analytics/getDeliveryTypeStatsByMonth';
 
 // ===== CLIENT MANAGEMENT =====

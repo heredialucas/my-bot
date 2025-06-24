@@ -1,4 +1,4 @@
-import { getOrdersByMonth } from '@repo/data-services/src/services/barfer';
+import { getOrdersByMonth, getDeliveryTypeStatsByMonth } from '@repo/data-services/src/services/barfer';
 import { MonthlyAnalyticsClient } from './MonthlyAnalyticsClient';
 
 interface MonthlyAnalyticsTabProps {
@@ -14,19 +14,26 @@ interface MonthlyAnalyticsTabProps {
 
 export async function MonthlyAnalyticsTab({ dateFilter, compareFilter }: MonthlyAnalyticsTabProps) {
     try {
-        // Datos del período principal
-        const monthlyStats = await getOrdersByMonth(dateFilter.from, dateFilter.to);
+        const [allOrdersData, deliveryStats] = await Promise.all([
+            getOrdersByMonth(dateFilter.from, dateFilter.to),
+            getDeliveryTypeStatsByMonth(dateFilter.from, dateFilter.to)
+        ]);
 
-        // Datos del período de comparación (si está habilitado)
-        let compareMonthlyStats;
+        let compareAllOrdersData;
+        let compareDeliveryStats;
         if (compareFilter) {
-            compareMonthlyStats = await getOrdersByMonth(compareFilter.from, compareFilter.to);
+            [compareAllOrdersData, compareDeliveryStats] = await Promise.all([
+                getOrdersByMonth(compareFilter.from, compareFilter.to),
+                getDeliveryTypeStatsByMonth(compareFilter.from, compareFilter.to)
+            ]);
         }
 
         return (
             <MonthlyAnalyticsClient
-                allOrdersData={monthlyStats}
-                compareAllOrdersData={compareMonthlyStats}
+                allOrdersData={allOrdersData}
+                compareAllOrdersData={compareAllOrdersData}
+                deliveryStats={deliveryStats}
+                compareDeliveryStats={compareDeliveryStats}
                 isComparing={!!compareFilter}
                 dateFilter={dateFilter}
                 compareFilter={compareFilter}
