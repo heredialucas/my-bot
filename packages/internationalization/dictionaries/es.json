@@ -7,7 +7,15 @@
         "users": "Usuarios",
         "settings": "Configuración",
         "logout": "Cerrar Sesión",
-        "loggingOut": "Cerrando sesión..."
+        "loggingOut": "Cerrando sesión...",
+        "account": "Mi Cuenta",
+        "analytics": "Estadísticas",
+        "clients": "Clientes",
+        "table": "Tabla",
+        "accountMobile": "Cuenta",
+        "analyticsMobile": "KPIs",
+        "clientsMobile": "Clientes",
+        "tableMobile": "Tabla"
       },
       "menu": {
         "title": "Gestión de Menú",
@@ -354,32 +362,13 @@
           }
         }
       }
-    }
-  },
-  "web": {
-    "global": {
-      "primaryCta": "Contáctanos",
-      "secondaryCta": "Comenzar ahora"
+    },
+    "tablePage": {
+      "title": "Tabla de Órdenes",
+      "description": "Una lista de todas las órdenes."
     },
     "menu": {
-      "title": "Nuestro Menú",
-      "todaySpecial": "Plato del Día",
-      "featuredDish": "Plato Destacado",
-      "specialDescription": "Descubre nuestro plato especial del día, preparado con ingredientes frescos y la mejor calidad.",
-      "todayOnly": "Solo por hoy",
-      "comingSoon": "Próximamente... Estamos preparando nuestro menú.",
-      "address": "Dirección",
-      "phone": "Teléfono",
-      "hours": "Horarios",
-      "contact": "Contacto",
-      "searchPlaceholder": "Buscar platos...",
-      "allCategories": "Todas las categorías",
-      "specialsOnly": "Solo platos del día",
-      "filters": "Filtros",
-      "noResults": "No se encontraron platos con los filtros aplicados.",
-      "clearFilters": "Limpiar filtros",
-      "currency": "$",
-      "closed": "Cerrado",
+      "title": "Gestión de Menú",
       "categories": {
         "noDishes": "No hay platos disponibles en esta categoría"
       },
@@ -392,254 +381,291 @@
         "businessInfo": "Información del negocio"
       }
     },
-    "header": {
-      "home": "Inicio",
-      "features": "Características",
-      "pricing": "Precios", 
-      "about": "Acerca de",
-      "contact": "Contacto",
-      "logIn": "Iniciar Sesión",
-      "getStarted": "Comenzar",
-      "navigation": "Navegación"
-    },
-    "home": {
-      "meta": {
-        "title": "Barfer - Sistema de Gestión Empresarial",
-        "description": "La plataforma integral de administración para negocios. Gestión eficiente, análisis avanzados y control total de tu empresa."
+    "web": {
+      "global": {
+        "primaryCta": "Contáctanos",
+        "secondaryCta": "Comenzar ahora"
       },
-      "hero": {
-        "title": "Potencia la Gestión de tu Negocio",
-        "subtitle": "Sistema integral de administración empresarial que optimiza procesos, mejora la eficiencia operativa y brinda herramientas avanzadas para el crecimiento de tu empresa. Barfer transforma la manera en que administras tu negocio.",
-        "getStarted": "Comenzar",
-        "viewPricing": "Ver Precios"
-      },
-      "cases": {
-        "title": "Impacto Positivo en el Medioambiente",
-        "subtitle": "Descubre cómo Gangañam está ayudando a reducir el desperdicio alimentario en nuestra comunidad.",
-        "quote": "Cada comida salvada es un paso hacia un mundo más sostenible",
-        "projectsTitle": "Logros",
-        "projectStatus": {
-          "finished": "Completado",
-          "inProgress": "En progreso"
-        }
-      },
-      "features": {
-        "title": "Por Qué Elegir Barfer",
-        "description": "Optimiza la gestión de tu empresa con nuestra plataforma integral diseñada específicamente para maximizar la eficiencia operativa y el crecimiento del negocio",
-        "items": [
-          {
-            "title": "Creación de Menús Digitales",
-            "description": "Crea menús digitales hermosos e interactivos que muestren tus platos con imágenes de alta calidad y descripciones detalladas."
-          },
-          {
-            "title": "Diseño Mobile-First",
-            "description": "Tus menús se ven perfectos en cualquier dispositivo. Los clientes pueden navegar y explorar fácilmente tu oferta desde sus teléfonos."
-          },
-          {
-            "title": "Gestión de Especiales del Día",
-            "description": "Actualiza fácilmente especiales diarios, artículos de temporada y ofertas por tiempo limitado para mantener tu menú fresco y emocionante."
-          },
-          {
-            "title": "Análisis e Insights",
-            "description": "Rastrea qué platos son más vistos y populares, ayudándote a tomar decisiones basadas en datos sobre tu menú."
-          },
-          {
-            "title": "Experiencia de Cliente Mejorada",
-            "description": "Proporciona a los clientes una forma atractiva de explorar tu menú, completa con información de alérgenos y opciones dietéticas."
-          },
-          {
-            "title": "Aumenta los Ingresos",
-            "description": "La presentación profesional y el fácil acceso a tu menú pueden ayudar a aumentar los pedidos y el engagement del cliente."
-          }
-        ]
-      },
-      "stats": {
-        "title": "CÓMO FUNCIONA BARFER",
-        "description": "Sigue estos sencillos pasos para implementar el sistema de gestión y comenzar a optimizar tu negocio",
-        "process": [
-          {
-            "title": "Crea tu cuenta",
-            "description": "Regístrate en la plataforma y configura la información básica de tu restaurante."
-          },
-          {
-            "title": "Configura tus platos",
-            "description": "Agrega tus platos, categorías, precios y especiales del día de forma fácil e intuitiva."
-          },
-          {
-            "title": "Comparte tu menú",
-            "description": "Obtén el enlace único de tu menú digital y compártelo con tus clientes."
-          },
-          {
-            "title": "¡Atrae más clientes!",
-            "description": "Disfruta de un menú profesional que mejora la experiencia de tus clientes y aumenta tus ventas."
-          }
-        ]
-      },
-      "testimonials": {
-        "title": "Lo que Dicen Nuestros Restaurantes",
-        "description": "Experiencias de empresas que utilizan Barfer para optimizar sus operaciones de negocio",
-        "items": [
-          {
-            "title": "Nuestros clientes ahora navegan nuestro menú con facilidad",
-            "description": "Desde que implementamos Ganga-Menú, nuestros clientes pueden ver todos nuestros platos con fotos hermosas y descripciones detalladas. Ha mejorado muchísimo la experiencia en nuestro restaurante y hemos notado un aumento en los pedidos.",
-            "author": {
-              "name": "María Rodríguez",
-              "image": "https://github.com/haydenbleasel.png"
-            }
-          },
-          {
-            "title": "Actualizar especiales del día nunca fue tan fácil",
-            "description": "Con Ganga-Menú podemos cambiar nuestros especiales del día en segundos y nuestros clientes lo ven inmediatamente. La plataforma es súper intuitiva y el soporte técnico es excelente. Totalmente recomendado para cualquier restaurante.",
-            "author": {
-              "name": "Juan Dávila",
-              "image": "https://github.com/haydenbleasel.png"
-            }
-          }
-        ]
-      },
-      "faq": {
-        "title": "Preguntas Frecuentes",
-        "description": "Respuestas a las dudas más comunes sobre Barfer y cómo implementar el sistema de gestión",
-        "cta": "¿Aún tienes preguntas? Contáctanos",
-        "needMore": "¿Necesitas más información?",
-        "contactDescription": "Si no encontraste la respuesta a tu pregunta, nuestro equipo está listo para ayudarte a digitalizar tu menú.",
-        "items": [
-          {
-            "question": "¿Cómo funciona Ganga-Menú?",
-            "answer": "Ganga-Menú es una plataforma que permite a los restaurantes crear menús digitales interactivos. Subes fotos de tus platos, agregas descripciones y precios, y obtienes un enlace único para compartir con tus clientes. Es fácil, rápido y totalmente personalizable."
-          },
-          {
-            "question": "¿Qué tipo de restaurantes pueden usar Ganga-Menú?",
-            "answer": "Cualquier tipo de establecimiento gastronómico: restaurantes, cafeterías, bares, pizzerías, panaderías, food trucks, etc. Nuestra plataforma se adapta a cualquier tipo de menú, desde comida rápida hasta alta cocina."
-          },
-          {
-            "question": "¿Es difícil actualizar mi menú?",
-            "answer": "Para nada. Puedes actualizar precios, agregar especiales del día, cambiar descripciones o subir nuevas fotos en cuestión de segundos desde nuestro panel de administración. Los cambios se reflejan inmediatamente en tu menú digital."
-          },
-          {
-            "question": "¿Puedo personalizar el diseño de mi menú?",
-            "answer": "Sí, puedes personalizar colores, añadir el logo de tu restaurante, organizar las categorías como prefieras y destacar tus platos especiales. Todo se hace de forma visual e intuitiva."
-          }
-        ]
-      },
-      "cta": {
-        "title": "¿Tienes un restaurante?",
-        "description": "Únete a miles de restaurantes que ya digitalizaron sus menús y mejoraron la experiencia de sus clientes",
-        "calendly": {
-          "title": "Agenda una llamada",
-          "subtitle": "30 minutos · Gratis",
-          "benefits": [
-            "Conoce nuestro proceso",
-            "Resuelve tus dudas",
-            "Define el alcance de tu proyecto"
-          ]
-        }
-      },
-      "newsletter": {
-        "title": "Mantente Informado",
-        "description": "Suscríbete para recibir novedades, consejos y ofertas especiales sobre menús digitales para tu restaurante",
-        "placeholder": "Tu dirección de email",
-        "subscribe": "Suscribirse",
-        "subscribing": "Suscribiendo...",
-        "success": "¡Gracias por suscribirte! Recibirás novedades sobre cómo mejorar tu presencia digital.",
-        "error": "Algo salió mal. Por favor, inténtalo de nuevo.",
-        "validation": "Por favor, introduce una dirección de email válida.",
-        "privacy": "Prometemos no enviar spam, solo contenido relevante sobre digitalización gastronómica"
-      },
-      "footer": {
-        "companyDescription": "Transforma la presencia digital de tu restaurante con menús interactivos hermosos que muestran tus platos y mejoran la experiencia del cliente.",
-        "navigation": "Navegación",
-        "features": "Características",
-        "menuCreation": "Creación de Menús Digitales",
-        "mobileFirst": "Diseño Mobile-First", 
-        "analytics": "Análisis e Insights",
+      "menu": {
+        "title": "Nuestro Menú",
+        "todaySpecial": "Plato del Día",
+        "featuredDish": "Plato Destacado",
+        "specialDescription": "Descubre nuestro plato especial del día, preparado con ingredientes frescos y la mejor calidad.",
+        "todayOnly": "Solo por hoy",
+        "comingSoon": "Próximamente... Estamos preparando nuestro menú.",
+        "address": "Dirección",
+        "phone": "Teléfono",
+        "hours": "Horarios",
         "contact": "Contacto",
-        "getStarted": "Comenzar",
-        "rights": "Todos los derechos reservados",
-        "privacy": "Política de Privacidad",
-        "terms": "Términos y Condiciones"
-      }
-    },
-    "pricing": {
-      "title": "Planes para restaurantes",
-      "description": "Elige el plan que mejor se adapte a las necesidades de menú digital de tu restaurante",
-      "monthly": "mes",
-      "popular": "POPULAR",
-      "tryIt": "Comenzar",
-      "contactUs": "Contáctanos",
-      "plans": [
-        {
-          "name": "Inicial",
-          "description": "Perfecto para restaurantes pequeños y cafeterías que inician su viaje digital",
-          "price": "0"
+        "searchPlaceholder": "Buscar platos...",
+        "allCategories": "Todas las categorías",
+        "specialsOnly": "Solo platos del día",
+        "filters": "Filtros",
+        "noResults": "No se encontraron platos con los filtros aplicados.",
+        "clearFilters": "Limpiar filtros",
+        "currency": "$",
+        "closed": "Cerrado",
+        "categories": {
+          "noDishes": "No hay platos disponibles en esta categoría"
         },
-        {
-          "name": "Profesional",
-          "description": "Ideal para restaurantes que quieren características avanzadas y análisis",
-          "price": "29"
+        "dish": {
+          "outOfStock": "Agotado",
+          "available": "Disponible"
         },
-        {
-          "name": "Empresarial",
-          "description": "Solución completa para cadenas de restaurantes con múltiples ubicaciones",
-          "price": "99"
+        "footer": {
+          "poweredBy": "Menú digital creado con",
+          "businessInfo": "Información del negocio"
         }
-      ],
-      "features": {
-        "sso": "Creación de menús digitales",
-        "ai": "Gestión de especiales del día",
-        "version": "Panel de análisis",
-        "members": "Hasta {count} imágenes del menú"
-      }
-    },
-    "blog": {
-      "meta": {
-        "title": "Blog sobre Alimentación Sostenible",
-        "description": "Consejos, recetas y artículos sobre cómo reducir el desperdicio alimentario y promover un consumo más sostenible."
-      }
-    },
-    "contact": {
-      "meta": {
-        "title": "Contáctanos",
-        "description": "Contacta con nuestro equipo para saber más sobre cómo Barfer puede ayudarte a optimizar la gestión de tu empresa."
       },
-      "hero": {
-        "title": "Estamos aquí para ayudarte",
-        "description": "Nuestro equipo está disponible para responder tus dudas y guiarte en el proceso de crear tu menú digital.",
-        "cta": "Enviar mensaje",
-        "benefits": [
+      "header": {
+        "home": "Inicio",
+        "features": "Características",
+        "pricing": "Precios", 
+        "about": "Acerca de",
+        "contact": "Contacto",
+        "logIn": "Iniciar Sesión",
+        "getStarted": "Comenzar",
+        "navigation": "Navegación"
+      },
+      "home": {
+        "meta": {
+          "title": "Barfer - Sistema de Gestión Empresarial",
+          "description": "La plataforma integral de administración para negocios. Gestión eficiente, análisis avanzados y control total de tu empresa."
+        },
+        "hero": {
+          "title": "Potencia la Gestión de tu Negocio",
+          "subtitle": "Sistema integral de administración empresarial que optimiza procesos, mejora la eficiencia operativa y brinda herramientas avanzadas para el crecimiento de tu empresa. Barfer transforma la manera en que administras tu negocio.",
+          "getStarted": "Comenzar",
+          "viewPricing": "Ver Precios"
+        },
+        "cases": {
+          "title": "Impacto Positivo en el Medioambiente",
+          "subtitle": "Descubre cómo Gangañam está ayudando a reducir el desperdicio alimentario en nuestra comunidad.",
+          "quote": "Cada comida salvada es un paso hacia un mundo más sostenible",
+          "projectsTitle": "Logros",
+          "projectStatus": {
+            "finished": "Completado",
+            "inProgress": "En progreso"
+          }
+        },
+        "features": {
+          "title": "Por Qué Elegir Barfer",
+          "description": "Optimiza la gestión de tu empresa con nuestra plataforma integral diseñada específicamente para maximizar la eficiencia operativa y el crecimiento del negocio",
+          "items": [
+            {
+              "title": "Creación de Menús Digitales",
+              "description": "Crea menús digitales hermosos e interactivos que muestren tus platos con imágenes de alta calidad y descripciones detalladas."
+            },
+            {
+              "title": "Diseño Mobile-First",
+              "description": "Tus menús se ven perfectos en cualquier dispositivo. Los clientes pueden navegar y explorar fácilmente tu oferta desde sus teléfonos."
+            },
+            {
+              "title": "Gestión de Especiales del Día",
+              "description": "Actualiza fácilmente especiales diarios, artículos de temporada y ofertas por tiempo limitado para mantener tu menú fresco y emocionante."
+            },
+            {
+              "title": "Análisis e Insights",
+              "description": "Rastrea qué platos son más vistos y populares, ayudándote a tomar decisiones basadas en datos sobre tu menú."
+            },
+            {
+              "title": "Experiencia de Cliente Mejorada",
+              "description": "Proporciona a los clientes una forma atractiva de explorar tu menú, completa con información de alérgenos y opciones dietéticas."
+            },
+            {
+              "title": "Aumenta los Ingresos",
+              "description": "La presentación profesional y el fácil acceso a tu menú pueden ayudar a aumentar los pedidos y el engagement del cliente."
+            }
+          ]
+        },
+        "stats": {
+          "title": "CÓMO FUNCIONA BARFER",
+          "description": "Sigue estos sencillos pasos para implementar el sistema de gestión y comenzar a optimizar tu negocio",
+          "process": [
+            {
+              "title": "Crea tu cuenta",
+              "description": "Regístrate en la plataforma y configura la información básica de tu restaurante."
+            },
+            {
+              "title": "Configura tus platos",
+              "description": "Agrega tus platos, categorías, precios y especiales del día de forma fácil e intuitiva."
+            },
+            {
+              "title": "Comparte tu menú",
+              "description": "Obtén el enlace único de tu menú digital y compártelo con tus clientes."
+            },
+            {
+              "title": "¡Atrae más clientes!",
+              "description": "Disfruta de un menú profesional que mejora la experiencia de tus clientes y aumenta tus ventas."
+            }
+          ]
+        },
+        "testimonials": {
+          "title": "Lo que Dicen Nuestros Restaurantes",
+          "description": "Experiencias de empresas que utilizan Barfer para optimizar sus operaciones de negocio",
+          "items": [
+            {
+              "title": "Nuestros clientes ahora navegan nuestro menú con facilidad",
+              "description": "Desde que implementamos Ganga-Menú, nuestros clientes pueden ver todos nuestros platos con fotos hermosas y descripciones detalladas. Ha mejorado muchísimo la experiencia en nuestro restaurante y hemos notado un aumento en los pedidos.",
+              "author": {
+                "name": "María Rodríguez",
+                "image": "https://github.com/haydenbleasel.png"
+              }
+            },
+            {
+              "title": "Actualizar especiales del día nunca fue tan fácil",
+              "description": "Con Ganga-Menú podemos cambiar nuestros especiales del día en segundos y nuestros clientes lo ven inmediatamente. La plataforma es súper intuitiva y el soporte técnico es excelente. Totalmente recomendado para cualquier restaurante.",
+              "author": {
+                "name": "Juan Dávila",
+                "image": "https://github.com/haydenbleasel.png"
+              }
+            }
+          ]
+        },
+        "faq": {
+          "title": "Preguntas Frecuentes",
+          "description": "Respuestas a las dudas más comunes sobre Barfer y cómo implementar el sistema de gestión",
+          "cta": "¿Aún tienes preguntas? Contáctanos",
+          "needMore": "¿Necesitas más información?",
+          "contactDescription": "Si no encontraste la respuesta a tu pregunta, nuestro equipo está listo para ayudarte a digitalizar tu menú.",
+          "items": [
+            {
+              "question": "¿Cómo funciona Ganga-Menú?",
+              "answer": "Ganga-Menú es una plataforma que permite a los restaurantes crear menús digitales interactivos. Subes fotos de tus platos, agregas descripciones y precios, y obtienes un enlace único para compartir con tus clientes. Es fácil, rápido y totalmente personalizable."
+            },
+            {
+              "question": "¿Qué tipo de restaurantes pueden usar Ganga-Menú?",
+              "answer": "Cualquier tipo de establecimiento gastronómico: restaurantes, cafeterías, bares, pizzerías, panaderías, food trucks, etc. Nuestra plataforma se adapta a cualquier tipo de menú, desde comida rápida hasta alta cocina."
+            },
+            {
+              "question": "¿Es difícil actualizar mi menú?",
+              "answer": "Para nada. Puedes actualizar precios, agregar especiales del día, cambiar descripciones o subir nuevas fotos en cuestión de segundos desde nuestro panel de administración. Los cambios se reflejan inmediatamente en tu menú digital."
+            },
+            {
+              "question": "¿Puedo personalizar el diseño de mi menú?",
+              "answer": "Sí, puedes personalizar colores, añadir el logo de tu restaurante, organizar las categorías como prefieras y destacar tus platos especiales. Todo se hace de forma visual e intuitiva."
+            }
+          ]
+        },
+        "cta": {
+          "title": "¿Tienes un restaurante?",
+          "description": "Únete a miles de restaurantes que ya digitalizaron sus menús y mejoraron la experiencia de sus clientes",
+          "calendly": {
+            "title": "Agenda una llamada",
+            "subtitle": "30 minutos · Gratis",
+            "benefits": [
+              "Conoce nuestro proceso",
+              "Resuelve tus dudas",
+              "Define el alcance de tu proyecto"
+            ]
+          }
+        },
+        "newsletter": {
+          "title": "Mantente Informado",
+          "description": "Suscríbete para recibir novedades, consejos y ofertas especiales sobre menús digitales para tu restaurante",
+          "placeholder": "Tu dirección de email",
+          "subscribe": "Suscribirse",
+          "subscribing": "Suscribiendo...",
+          "success": "¡Gracias por suscribirte! Recibirás novedades sobre cómo mejorar tu presencia digital.",
+          "error": "Algo salió mal. Por favor, inténtalo de nuevo.",
+          "validation": "Por favor, introduce una dirección de email válida.",
+          "privacy": "Prometemos no enviar spam, solo contenido relevante sobre digitalización gastronómica"
+        },
+        "footer": {
+          "companyDescription": "Transforma la presencia digital de tu restaurante con menús interactivos hermosos que muestran tus platos y mejoran la experiencia del cliente.",
+          "navigation": "Navegación",
+          "features": "Características",
+          "menuCreation": "Creación de Menús Digitales",
+          "mobileFirst": "Diseño Mobile-First", 
+          "analytics": "Análisis e Insights",
+          "contact": "Contacto",
+          "getStarted": "Comenzar",
+          "rights": "Todos los derechos reservados",
+          "privacy": "Política de Privacidad",
+          "terms": "Términos y Condiciones"
+        }
+      },
+      "pricing": {
+        "title": "Planes para restaurantes",
+        "description": "Elige el plan que mejor se adapte a las necesidades de menú digital de tu restaurante",
+        "monthly": "mes",
+        "popular": "POPULAR",
+        "tryIt": "Comenzar",
+        "contactUs": "Contáctanos",
+        "plans": [
           {
-            "title": "Respuesta rápida",
-            "description": "Nuestro equipo está listo para ayudarte a entender cómo funciona Ganga-Menú y cómo puedes crear tu menú digital hoy mismo."
+            "name": "Inicial",
+            "description": "Perfecto para restaurantes pequeños y cafeterías que inician su viaje digital",
+            "price": "0"
           },
           {
-            "title": "Soporte para restaurantes",
-            "description": "Si tienes un restaurante, te ofrecemos ayuda personalizada para configurar tu menú digital y optimizar la experiencia de tus clientes."
+            "name": "Profesional",
+            "description": "Ideal para restaurantes que quieren características avanzadas y análisis",
+            "price": "29"
           },
           {
-            "title": "Comunidad gastronómica",
-            "description": "Al unirte a Ganga-Menú, formas parte de una comunidad de restaurantes comprometidos con la excelencia en la presentación digital."
+            "name": "Empresarial",
+            "description": "Solución completa para cadenas de restaurantes con múltiples ubicaciones",
+            "price": "99"
           }
         ],
-        "form": {
-          "title": "Hablemos sobre tu proyecto",
-          "firstName": "Nombre",
-          "lastName": "Apellido",
-          "date": "Fecha preferida",
-          "resume": "Adjunta archivos relevantes",
-          "cta": "Enviar"
+        "features": {
+          "sso": "Creación de menús digitales",
+          "ai": "Gestión de especiales del día",
+          "version": "Panel de análisis",
+          "members": "Hasta {count} imágenes del menú"
         }
       },
-      "form": {
-        "title": "Contáctanos",
-        "subtitle": "Respondemos en 24 horas",
-        "subtitleInfo": "Digitalizando restaurantes juntos",
-        "name_placeholder": "Nombre completo",
-        "email_placeholder": "Dirección de correo",
-        "message_placeholder": "Cuéntanos sobre tu restaurante y cómo podemos ayudarte",
-        "sending": "Enviando...",
-        "send_button": "Enviar mensaje",
-        "success_message": "¡Tu mensaje ha sido enviado con éxito!",
-        "error_message": "Error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde."
+      "blog": {
+        "meta": {
+          "title": "Blog sobre Alimentación Sostenible",
+          "description": "Consejos, recetas y artículos sobre cómo reducir el desperdicio alimentario y promover un consumo más sostenible."
+        }
+      },
+      "contact": {
+        "meta": {
+          "title": "Contáctanos",
+          "description": "Contacta con nuestro equipo para saber más sobre cómo Barfer puede ayudarte a optimizar la gestión de tu empresa."
+        },
+        "hero": {
+          "title": "Estamos aquí para ayudarte",
+          "description": "Nuestro equipo está disponible para responder tus dudas y guiarte en el proceso de crear tu menú digital.",
+          "cta": "Enviar mensaje",
+          "benefits": [
+            {
+              "title": "Respuesta rápida",
+              "description": "Nuestro equipo está listo para ayudarte a entender cómo funciona Ganga-Menú y cómo puedes crear tu menú digital hoy mismo."
+            },
+            {
+              "title": "Soporte para restaurantes",
+              "description": "Si tienes un restaurante, te ofrecemos ayuda personalizada para configurar tu menú digital y optimizar la experiencia de tus clientes."
+            },
+            {
+              "title": "Comunidad gastronómica",
+              "description": "Al unirte a Ganga-Menú, formas parte de una comunidad de restaurantes comprometidos con la excelencia en la presentación digital."
+            }
+          ],
+          "form": {
+            "title": "Hablemos sobre tu proyecto",
+            "firstName": "Nombre",
+            "lastName": "Apellido",
+            "date": "Fecha preferida",
+            "resume": "Adjunta archivos relevantes",
+            "cta": "Enviar"
+          }
+        },
+        "form": {
+          "title": "Contáctanos",
+          "subtitle": "Respondemos en 24 horas",
+          "subtitleInfo": "Digitalizando restaurantes juntos",
+          "name_placeholder": "Nombre completo",
+          "email_placeholder": "Dirección de correo",
+          "message_placeholder": "Cuéntanos sobre tu restaurante y cómo podemos ayudarte",
+          "sending": "Enviando...",
+          "send_button": "Enviar mensaje",
+          "success_message": "¡Tu mensaje ha sido enviado con éxito!",
+          "error_message": "Error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde."
+        }
       }
     }
   }

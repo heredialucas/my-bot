@@ -18,4 +18,7 @@ export { getRevenueByDay } from './analytics/getRevenueByDay';
 export * from './analytics/getDeliveryTypeStatsByMonth';
 export * from './analytics/getProductTimeline';
 
+// ===== ORDERS =====
+export { getOrders } from './getOrders';
+
 // ===== CLIENT MANAGEMENT =====

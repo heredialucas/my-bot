@@ -28,7 +28,12 @@ export type Permission =
     | 'clients:view'
     | 'clients:create'
     | 'clients:edit'
-    | 'clients:delete';
+    | 'clients:delete'
+    // Table
+    | 'table:view'
+    | 'table:export'
+    | 'table:delete'
+    | 'table:edit'
 
 // Permisos por defecto para admins (siempre tienen todos)
 export const ADMIN_PERMISSIONS: Permission[] = [
@@ -48,6 +53,10 @@ export const ADMIN_PERMISSIONS: Permission[] = [
     'clients:create',
     'clients:edit',
     'clients:delete',
+    'table:view',
+    'table:export',
+    'table:delete',
+    'table:edit',
 ];
 
 /**
@@ -154,6 +163,7 @@ export async function requireAdmin(): Promise<void> {
  */
 export interface SidebarItem {
     label: string;
+    mobileLabel: string;
     href: string;
     icon: string;
     requiredPermissions: Permission[];
@@ -162,22 +172,32 @@ export interface SidebarItem {
 
 export const SIDEBAR_CONFIG: SidebarItem[] = [
     {
-        label: 'Mi Cuenta',
+        label: 'account',
+        mobileLabel: 'accountMobile',
         href: '/admin/account',
         icon: 'User',
         requiredPermissions: ['account:view_own'],
     },
     {
-        label: 'Estadísticas',
+        label: 'analytics',
+        mobileLabel: 'analyticsMobile',
         href: '/admin/analytics',
         icon: 'BarChart3',
         requiredPermissions: ['analytics:view'],
     },
     {
-        label: 'Clientes',
+        label: 'clients',
+        mobileLabel: 'clientsMobile',
         href: '/admin/clients',
         icon: 'Users',
         requiredPermissions: ['clients:view'],
+    },
+    {
+        label: 'table',
+        mobileLabel: 'tableMobile',
+        href: '/admin/table',
+        icon: 'Table',
+        requiredPermissions: ['table:view'],
     },
 ];
 

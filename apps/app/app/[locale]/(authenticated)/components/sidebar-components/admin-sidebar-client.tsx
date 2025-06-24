@@ -5,6 +5,7 @@ import {
     User,
     Users,
     BarChart3,
+    Table,
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -22,6 +23,7 @@ const ICON_MAP = {
     User,
     Users,
     BarChart3,
+    Table,
 } as const;
 
 type AdminSidebarClientProps = {
@@ -60,7 +62,7 @@ export function AdminSidebarClient({ items, dictionary }: AdminSidebarClientProp
                                 >
                                     <Link href={item.href} className="flex items-center gap-3 px-3 py-2 rounded-lg w-full hover:bg-gray-100 dark:hover:bg-zinc-800">
                                         {IconComponent && <IconComponent className="h-5 w-5" />}
-                                        <span>{item.label}</span>
+                                        <span>{dictionary.app.admin.navigation[item.label as keyof typeof dictionary.app.admin.navigation] || item.label}</span>
                                     </Link>
                                 </SidebarMenuItem>
                             );
@@ -75,12 +77,7 @@ export function AdminSidebarClient({ items, dictionary }: AdminSidebarClientProp
                     {items.map((item) => {
                         const isActive = isActivePath(item.href);
                         const IconComponent = ICON_MAP[item.icon as keyof typeof ICON_MAP];
-                        const mobileTitle = item.label.includes('Gestión') ? 'Usuarios' :
-                            item.label.includes('Configuración') ? 'Config' :
-                                item.label.includes('Estadísticas') ? 'KPIs' :
-                                    item.label.includes('Cuenta') ? 'Cuenta' :
-                                        item.label.includes('Clientes') ? 'Clientes' :
-                                            item.label;
+                        const mobileTitle = dictionary.app.admin.navigation[item.mobileLabel as keyof typeof dictionary.app.admin.navigation] || item.label;
 
                         return (
                             <Link

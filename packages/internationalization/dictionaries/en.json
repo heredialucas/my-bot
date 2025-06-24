@@ -1,13 +1,21 @@
 {
   "app": {
     "admin": {
-      "title": "Admin Dashboard",
+      "title": "Barfer - Admin Panel",
       "navigation": {
         "dashboard": "Dashboard",
         "users": "Users",
         "settings": "Settings",
         "logout": "Logout",
-        "loggingOut": "Logging out..."
+        "loggingOut": "Logging out...",
+        "account": "My Account",
+        "analytics": "Analytics",
+        "clients": "Clients",
+        "table": "Table",
+        "accountMobile": "Account",
+        "analyticsMobile": "KPIs",
+        "clientsMobile": "Clients",
+        "tableMobile": "Table"
       },
       "menu": {
         "title": "Menu Management",
@@ -181,6 +189,10 @@
         "title": "Barfer Administration Panel",
         "description": "Access Barfer's administrative tools to manage your business efficiently."
       }
+    },
+    "tablePage": {
+      "title": "Orders Table",
+      "description": "A list of all the orders."
     }
   },
   "web": {
