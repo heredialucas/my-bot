@@ -4,19 +4,27 @@ import { getCollection } from '@repo/database';
 /**
  * Obtiene estadísticas de métodos de pago basado en órdenes confirmadas
  */
-export async function getPaymentMethodStats(startDate?: Date, endDate?: Date) {
+export async function getPaymentMethodStats(startDate?: Date, endDate?: Date, paymentMethodFilter?: string) {
     try {
         const collection = await getCollection('orders');
 
-        // Pipeline para TODOS los métodos de pago (sin filtro de status)
         const pipeline: any[] = [];
+        const matchCondition: any = {};
 
         // Agregar filtro de fechas si se proporciona
         if (startDate || endDate) {
-            const matchCondition: any = {};
             matchCondition.createdAt = {};
             if (startDate) matchCondition.createdAt.$gte = startDate;
             if (endDate) matchCondition.createdAt.$lte = endDate;
+        }
+
+        // Agregar filtro de método de pago si se proporciona
+        if (paymentMethodFilter && paymentMethodFilter !== 'all') {
+            // Usamos regex para ser más flexibles con los nombres (ej. "Tarjeta de Crédito", "Tarjeta")
+            matchCondition.paymentMethod = { $regex: new RegExp(paymentMethodFilter, 'i') };
+        }
+
+        if (Object.keys(matchCondition).length > 0) {
             pipeline.push({ $match: matchCondition });
         }
 

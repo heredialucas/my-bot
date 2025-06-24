@@ -23,15 +23,23 @@ interface PaymentsProgressChartProps {
     compareData?: PaymentProgressData[];
     isComparing?: boolean;
     periodType: 'daily' | 'weekly' | 'monthly';
+    filter: 'all' | 'Efectivo' | 'Transferencia' | 'Mercado Pago';
     dateFilter?: { from: Date; to: Date };
     compareFilter?: { from: Date; to: Date };
 }
+
+const PAYMENT_KEYS = {
+    'Efectivo': { orders: 'efectivoOrders', revenue: 'efectivoRevenue', color: '#10b981', icon: '💵' },
+    'Transferencia': { orders: 'transferenciaOrders', revenue: 'transferenciaRevenue', color: '#3b82f6', icon: '🏦' },
+    'Mercado Pago': { orders: 'tarjetaOrders', revenue: 'tarjetaRevenue', color: '#00b1ea', icon: '💙' },
+};
 
 export function PaymentsProgressChart({
     data,
     compareData,
     isComparing = false,
     periodType,
+    filter,
     dateFilter,
     compareFilter
 }: PaymentsProgressChartProps) {
@@ -70,6 +78,13 @@ export function PaymentsProgressChart({
             compareTarjetaRevenue: item.tarjetaRevenue,
         }));
     }, [compareData, isComparing, periodType]);
+
+    const visibleKeys = useMemo(() => {
+        if (filter === 'all') {
+            return Object.keys(PAYMENT_KEYS);
+        }
+        return [filter];
+    }, [filter]);
 
     const formatCurrency = (value: number) => {
         return `$${value.toLocaleString()}`;
@@ -145,48 +160,32 @@ export function PaymentsProgressChart({
                                         labelFormatter={(label, payload) => {
                                             const point = payload?.[0]?.payload;
                                             if (point && point.date && periodType === 'daily') {
-                                                try {
-                                                    const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
-                                                    const dateString = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-                                                    const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                                                    return (
-                                                        <div>
-                                                            <div>{dateString}</div>
-                                                            <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
-                                                        </div>
-                                                    );
-                                                } catch (e) {
-                                                    // fallback
+                                                const parts = point.date.split('/');
+                                                if (parts.length === 3) {
+                                                    const date = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+                                                    if (!isNaN(date.getTime())) {
+                                                        return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                    }
                                                 }
                                             }
                                             return `${getPeriodLabel()}: ${label}`;
                                         }}
                                     />
                                     <Legend />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="efectivoOrders"
-                                        stroke="#10b981"
-                                        strokeWidth={2}
-                                        name="💵 Efectivo"
-                                        dot={{ r: 3 }}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="transferenciaOrders"
-                                        stroke="#3b82f6"
-                                        strokeWidth={2}
-                                        name="🏦 Transferencia Bancaria"
-                                        dot={{ r: 3 }}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="tarjetaOrders"
-                                        stroke="#8b5cf6"
-                                        strokeWidth={2}
-                                        name="💳 Mercado Pago"
-                                        dot={{ r: 3 }}
-                                    />
+                                    {visibleKeys.map(key => {
+                                        const config = PAYMENT_KEYS[key as keyof typeof PAYMENT_KEYS];
+                                        return (
+                                            <Line
+                                                key={key}
+                                                type="monotone"
+                                                dataKey={config.orders}
+                                                stroke={config.color}
+                                                strokeWidth={2}
+                                                name={`${config.icon} ${key}`}
+                                                dot={{ r: 3 }}
+                                            />
+                                        );
+                                    })}
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>
@@ -218,48 +217,32 @@ export function PaymentsProgressChart({
                                             labelFormatter={(label, payload) => {
                                                 const point = payload?.[0]?.payload;
                                                 if (point && point.date && periodType === 'daily') {
-                                                    try {
-                                                        const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
-                                                        const dateString = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-                                                        const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                                                        return (
-                                                            <div>
-                                                                <div>{dateString}</div>
-                                                                <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
-                                                            </div>
-                                                        );
-                                                    } catch (e) {
-                                                        // fallback
+                                                    const parts = point.date.split('/');
+                                                    if (parts.length === 3) {
+                                                        const date = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+                                                        if (!isNaN(date.getTime())) {
+                                                            return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                        }
                                                     }
                                                 }
                                                 return `${getPeriodLabel()}: ${label}`;
                                             }}
                                         />
                                         <Legend />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="compareEfectivoOrders"
-                                            stroke="#ea580c"
-                                            strokeWidth={2}
-                                            name="💵 Efectivo"
-                                            dot={{ r: 3 }}
-                                        />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="compareTransferenciaOrders"
-                                            stroke="#dc2626"
-                                            strokeWidth={2}
-                                            name="🏦 Transferencia Bancaria"
-                                            dot={{ r: 3 }}
-                                        />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="compareTarjetaOrders"
-                                            stroke="#f59e0b"
-                                            strokeWidth={2}
-                                            name="💳 Mercado Pago"
-                                            dot={{ r: 3 }}
-                                        />
+                                        {visibleKeys.map(key => {
+                                            const config = PAYMENT_KEYS[key as keyof typeof PAYMENT_KEYS];
+                                            return (
+                                                <Line
+                                                    key={key}
+                                                    type="monotone"
+                                                    dataKey={config.orders}
+                                                    stroke={config.color}
+                                                    strokeWidth={2}
+                                                    name={`${config.icon} ${key}`}
+                                                    dot={{ r: 3 }}
+                                                />
+                                            );
+                                        })}
                                     </LineChart>
                                 </ResponsiveContainer>
                             </div>
@@ -322,42 +305,30 @@ export function PaymentsProgressChart({
                                         labelFormatter={(label, payload) => {
                                             const point = payload?.[0]?.payload;
                                             if (point && point.date && periodType === 'daily') {
-                                                try {
-                                                    const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
-                                                    const dateString = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-                                                    const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                                                    return (
-                                                        <div>
-                                                            <div>{dateString}</div>
-                                                            <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
-                                                        </div>
-                                                    );
-                                                } catch (e) {
-                                                    // fallback
+                                                const parts = point.date.split('/');
+                                                if (parts.length === 3) {
+                                                    const date = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+                                                    if (!isNaN(date.getTime())) {
+                                                        return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                    }
                                                 }
                                             }
                                             return `${getPeriodLabel()}: ${label}`;
                                         }}
                                     />
                                     <Legend />
-                                    <Bar
-                                        dataKey="efectivoRevenue"
-                                        name="💵 Efectivo"
-                                        fill="#10b981"
-                                        radius={[2, 2, 0, 0]}
-                                    />
-                                    <Bar
-                                        dataKey="transferenciaRevenue"
-                                        name="🏦 Transferencia Bancaria"
-                                        fill="#3b82f6"
-                                        radius={[2, 2, 0, 0]}
-                                    />
-                                    <Bar
-                                        dataKey="tarjetaRevenue"
-                                        name="💳 Mercado Pago"
-                                        fill="#8b5cf6"
-                                        radius={[2, 2, 0, 0]}
-                                    />
+                                    {visibleKeys.map(key => {
+                                        const config = PAYMENT_KEYS[key as keyof typeof PAYMENT_KEYS];
+                                        return (
+                                            <Bar
+                                                key={key}
+                                                dataKey={config.revenue}
+                                                stackId="a"
+                                                fill={config.color}
+                                                name={`${config.icon} ${key}`}
+                                            />
+                                        );
+                                    })}
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
@@ -392,42 +363,30 @@ export function PaymentsProgressChart({
                                             labelFormatter={(label, payload) => {
                                                 const point = payload?.[0]?.payload;
                                                 if (point && point.date && periodType === 'daily') {
-                                                    try {
-                                                        const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
-                                                        const dateString = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-                                                        const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                                                        return (
-                                                            <div>
-                                                                <div>{dateString}</div>
-                                                                <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
-                                                            </div>
-                                                        );
-                                                    } catch (e) {
-                                                        // fallback
+                                                    const parts = point.date.split('/');
+                                                    if (parts.length === 3) {
+                                                        const date = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+                                                        if (!isNaN(date.getTime())) {
+                                                            return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                        }
                                                     }
                                                 }
                                                 return `${getPeriodLabel()}: ${label}`;
                                             }}
                                         />
                                         <Legend />
-                                        <Bar
-                                            dataKey="compareEfectivoRevenue"
-                                            name="💵 Efectivo"
-                                            fill="#ea580c"
-                                            radius={[2, 2, 0, 0]}
-                                        />
-                                        <Bar
-                                            dataKey="compareTransferenciaRevenue"
-                                            name="🏦 Transferencia Bancaria"
-                                            fill="#dc2626"
-                                            radius={[2, 2, 0, 0]}
-                                        />
-                                        <Bar
-                                            dataKey="compareTarjetaRevenue"
-                                            name="💳 Mercado Pago"
-                                            fill="#f59e0b"
-                                            radius={[2, 2, 0, 0]}
-                                        />
+                                        {visibleKeys.map(key => {
+                                            const config = PAYMENT_KEYS[key as keyof typeof PAYMENT_KEYS];
+                                            return (
+                                                <Bar
+                                                    key={key}
+                                                    dataKey={config.revenue}
+                                                    stackId="a"
+                                                    fill={config.color}
+                                                    name={`${config.icon} ${key}`}
+                                                />
+                                            );
+                                        })}
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>

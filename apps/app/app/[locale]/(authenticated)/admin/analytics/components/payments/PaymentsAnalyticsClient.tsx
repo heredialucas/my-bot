@@ -1,10 +1,11 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
+import { Button } from '@repo/design-system/components/ui/button';
 import { Separator } from '@repo/design-system/components/ui/separator';
-import { CreditCard, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
+import { CreditCard, DollarSign, TrendingUp, AlertCircle, Filter } from 'lucide-react';
 import { PaymentsChart } from '../charts/PaymentsChart';
 import { PaymentsProgressChart } from '../charts/PaymentsProgressChart';
 
@@ -57,6 +58,15 @@ interface PaymentsAnalyticsClientProps {
     compareFilter?: { from: Date; to: Date };
 }
 
+const FILTERS = [
+    { id: 'all', label: 'Todos' },
+    { id: 'Efectivo', label: 'Efectivo' },
+    { id: 'Transferencia', label: 'Transferencia' },
+    { id: 'Mercado Pago', label: 'Mercado Pago' },
+] as const;
+
+type PaymentMethodFilter = typeof FILTERS[number]['id'];
+
 export function PaymentsAnalyticsClient({
     paymentStats,
     comparePaymentStats,
@@ -66,6 +76,8 @@ export function PaymentsAnalyticsClient({
     dateFilter,
     compareFilter
 }: PaymentsAnalyticsClientProps) {
+
+    const [paymentMethodFilter, setPaymentMethodFilter] = useState<PaymentMethodFilter>('all');
     const paymentMethods = paymentStats.paymentMethods || [];
 
     // Función para calcular porcentaje de cambio (de fecha antigua a reciente)
@@ -125,7 +137,7 @@ export function PaymentsAnalyticsClient({
 
     return (
         <div className="space-y-4">
-            {/* Resumen de comparación */}
+            {/* Comparison Summary Cards (no changes needed here, they use comparePaymentStats) */}
             {isComparing && comparePaymentStats && (
                 <div className="grid gap-4 md:grid-cols-3">
                     <Card>
@@ -223,7 +235,7 @@ export function PaymentsAnalyticsClient({
                 </div>
             )}
 
-            {/* Resumen general */}
+            {/* Main Summary Cards (no changes needed here, they use paymentStats) */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -280,7 +292,7 @@ export function PaymentsAnalyticsClient({
                 </Card>
             </div>
 
-            {/* Métodos de pago */}
+            {/* Payment Methods Breakdown Card (no changes needed, it uses paymentMethods from paymentStats) */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -336,7 +348,7 @@ export function PaymentsAnalyticsClient({
                 </CardContent>
             </Card>
 
-            {/* Métodos de pago - Comparación */}
+            {/* Comparison Breakdown Card (no changes needed, it uses comparePaymentStats) */}
             {isComparing && comparePaymentStats && comparePaymentStats.paymentMethods.length > 0 && (
                 <Card>
                     <CardHeader>
@@ -387,19 +399,49 @@ export function PaymentsAnalyticsClient({
                 </Card>
             )}
 
-            {/* Gráfico de Progreso Temporal */}
-            {progressData && progressData.length > 0 && (
-                <PaymentsProgressChart
-                    data={progressData}
-                    compareData={compareProgressData}
-                    isComparing={isComparing}
-                    periodType={getPeriodType()}
-                    dateFilter={dateFilter}
-                    compareFilter={compareFilter}
-                />
-            )}
+            <Card>
+                <CardHeader>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <div>
+                            <CardTitle>Evolución de Pagos en el Tiempo</CardTitle>
+                            <CardDescription>
+                                Seguimiento de ingresos y órdenes según el método de pago.
+                            </CardDescription>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                            {FILTERS.map(filter => (
+                                <Button
+                                    key={filter.id}
+                                    variant={paymentMethodFilter === filter.id ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setPaymentMethodFilter(filter.id)}
+                                >
+                                    {filter.label}
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    {progressData && progressData.length > 0 ? (
+                        <PaymentsProgressChart
+                            data={progressData}
+                            compareData={compareProgressData}
+                            isComparing={isComparing}
+                            periodType={getPeriodType()}
+                            filter={paymentMethodFilter}
+                            dateFilter={dateFilter}
+                            compareFilter={compareFilter}
+                        />
+                    ) : (
+                        <div className="flex flex-col items-center justify-center h-40">
+                            <AlertCircle className="w-8 h-8 text-muted-foreground" />
+                            <p className="mt-2 text-sm text-muted-foreground">No hay datos suficientes para mostrar la evolución.</p>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
 
-            {/* Gráficos */}
             <PaymentsChart
                 currentPayments={paymentMethods.map(method => ({
                     paymentMethod: method.paymentMethod,
