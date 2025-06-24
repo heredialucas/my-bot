@@ -147,7 +147,14 @@ export function PaymentsProgressChart({
                                             if (point && point.date && periodType === 'daily') {
                                                 try {
                                                     const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
-                                                    return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                    const dateString = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                                                    const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                                                    return (
+                                                        <div>
+                                                            <div>{dateString}</div>
+                                                            <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                                                        </div>
+                                                    );
                                                 } catch (e) {
                                                     // fallback
                                                 }
@@ -213,7 +220,14 @@ export function PaymentsProgressChart({
                                                 if (point && point.date && periodType === 'daily') {
                                                     try {
                                                         const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
-                                                        return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                        const dateString = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                                                        const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                                                        return (
+                                                            <div>
+                                                                <div>{dateString}</div>
+                                                                <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                                                            </div>
+                                                        );
                                                     } catch (e) {
                                                         // fallback
                                                     }
@@ -310,7 +324,14 @@ export function PaymentsProgressChart({
                                             if (point && point.date && periodType === 'daily') {
                                                 try {
                                                     const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
-                                                    return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                    const dateString = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                                                    const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                                                    return (
+                                                        <div>
+                                                            <div>{dateString}</div>
+                                                            <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                                                        </div>
+                                                    );
                                                 } catch (e) {
                                                     // fallback
                                                 }
@@ -373,7 +394,14 @@ export function PaymentsProgressChart({
                                                 if (point && point.date && periodType === 'daily') {
                                                     try {
                                                         const date = new Date(point.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1T00:00:00'));
-                                                        return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                        const dateString = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                                                        const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                                                        return (
+                                                            <div>
+                                                                <div>{dateString}</div>
+                                                                <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                                                            </div>
+                                                        );
                                                     } catch (e) {
                                                         // fallback
                                                     }

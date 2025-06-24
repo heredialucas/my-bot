@@ -127,7 +127,14 @@ export function DailyChart({
                                             const point = payload?.[0]?.payload;
                                             if (point && point.fullDate) {
                                                 const date = new Date(`${point.fullDate}T00:00:00`);
-                                                return date.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' });
+                                                const dateString = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+                                                const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                                                return (
+                                                    <div>
+                                                        <div>{dateString}</div>
+                                                        <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                                                    </div>
+                                                );
                                             }
                                             return label;
                                         }}
@@ -176,7 +183,14 @@ export function DailyChart({
                                                 const point = payload?.[0]?.payload;
                                                 if (point && point.fullDate) {
                                                     const date = new Date(`${point.fullDate}T00:00:00`);
-                                                    return date.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' });
+                                                    const dateString = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+                                                    const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                                                    return (
+                                                        <div>
+                                                            <div>{dateString}</div>
+                                                            <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                                                        </div>
+                                                    );
                                                 }
                                                 return label;
                                             }}
@@ -255,7 +269,14 @@ export function DailyChart({
                                             const point = payload?.[0]?.payload;
                                             if (point && point.fullDate) {
                                                 const date = new Date(`${point.fullDate}T00:00:00`);
-                                                return date.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' });
+                                                const dateString = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+                                                const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                                                return (
+                                                    <div>
+                                                        <div>{dateString}</div>
+                                                        <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                                                    </div>
+                                                );
                                             }
                                             return label;
                                         }}
@@ -307,7 +328,14 @@ export function DailyChart({
                                                 const point = payload?.[0]?.payload;
                                                 if (point && point.fullDate) {
                                                     const date = new Date(`${point.fullDate}T00:00:00`);
-                                                    return date.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: '2-digit' });
+                                                    const dateString = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+                                                    const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                                                    return (
+                                                        <div>
+                                                            <div>{dateString}</div>
+                                                            <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                                                        </div>
+                                                    );
                                                 }
                                                 return label;
                                             }}

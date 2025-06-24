@@ -65,7 +65,14 @@ export function CategoryProgressChart({
                                             }
 
                                             if (!isNaN(date.getTime())) {
-                                                return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                const formattedDate = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                                                const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                                                return (
+                                                    <div>
+                                                        <div>{formattedDate}</div>
+                                                        <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                                                    </div>
+                                                );
                                             }
                                         } catch (e) {
                                             // fallback to original label
@@ -109,7 +116,14 @@ export function CategoryProgressChart({
                                             }
 
                                             if (!isNaN(date.getTime())) {
-                                                return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                                                const formattedDate = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                                                const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                                                return (
+                                                    <div>
+                                                        <div>{formattedDate}</div>
+                                                        <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
+                                                    </div>
+                                                );
                                             }
                                         } catch (e) {
                                             // fallback to original label
