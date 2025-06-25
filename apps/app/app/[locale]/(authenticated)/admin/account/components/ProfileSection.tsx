@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Input } from '@repo/design-system/components/ui/input';
@@ -9,6 +9,7 @@ import { Badge } from '@repo/design-system/components/ui/badge';
 import { useToast } from '@repo/design-system/hooks/use-toast';
 import { User } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
+import { updateProfile } from '../actions';
 
 interface ProfileSectionProps {
     currentUser: any;
@@ -17,7 +18,7 @@ interface ProfileSectionProps {
 
 export function ProfileSection({ currentUser, dictionary }: ProfileSectionProps) {
     const { toast } = useToast();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isPending, startTransition] = useTransition();
     const [profileForm, setProfileForm] = useState({
         name: currentUser?.name || '',
         lastName: currentUser?.lastName || '',
@@ -30,27 +31,27 @@ export function ProfileSection({ currentUser, dictionary }: ProfileSectionProps)
     const handleProfileUpdate = async () => {
         if (!currentUser) return;
 
-        setIsLoading(true);
-        try {
-            const { updateUser } = await import('@repo/data-services/src/services/userService');
-            await updateUser(currentUser.id, {
-                ...profileForm,
-                password: '', // No actualizar contraseña aquí
-            });
+        startTransition(async () => {
+            const formData = new FormData();
+            formData.append('name', profileForm.name);
+            formData.append('lastName', profileForm.lastName);
+            formData.append('email', profileForm.email);
 
-            toast({
-                title: "Éxito",
-                description: "Perfil actualizado exitosamente",
-            });
-        } catch (error) {
-            toast({
-                title: "Error",
-                description: "Error al actualizar el perfil",
-                variant: "destructive",
-            });
-        } finally {
-            setIsLoading(false);
-        }
+            const result = await updateProfile(currentUser.id, formData);
+
+            if (result.success) {
+                toast({
+                    title: "Éxito",
+                    description: result.message,
+                });
+            } else {
+                toast({
+                    title: "Error",
+                    description: result.message,
+                    variant: "destructive",
+                });
+            }
+        });
     };
 
     return (
@@ -72,7 +73,7 @@ export function ProfileSection({ currentUser, dictionary }: ProfileSectionProps)
                             id="name"
                             value={profileForm.name}
                             onChange={(e) => setProfileForm(prev => ({ ...prev, name: e.target.value }))}
-                            disabled={!canEditProfile}
+                            disabled={!canEditProfile || isPending}
                         />
                     </div>
                     <div className="space-y-2">
@@ -81,7 +82,7 @@ export function ProfileSection({ currentUser, dictionary }: ProfileSectionProps)
                             id="lastName"
                             value={profileForm.lastName}
                             onChange={(e) => setProfileForm(prev => ({ ...prev, lastName: e.target.value }))}
-                            disabled={!canEditProfile}
+                            disabled={!canEditProfile || isPending}
                         />
                     </div>
                     <div className="space-y-2">
@@ -91,7 +92,7 @@ export function ProfileSection({ currentUser, dictionary }: ProfileSectionProps)
                             type="email"
                             value={profileForm.email}
                             onChange={(e) => setProfileForm(prev => ({ ...prev, email: e.target.value }))}
-                            disabled={!canEditProfile}
+                            disabled={!canEditProfile || isPending}
                         />
                     </div>
                 </div>
@@ -112,9 +113,9 @@ export function ProfileSection({ currentUser, dictionary }: ProfileSectionProps)
                         <Button
                             className="w-full sm:w-auto"
                             onClick={handleProfileUpdate}
-                            disabled={isLoading}
+                            disabled={isPending}
                         >
-                            {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+                            {isPending ? 'Guardando...' : 'Guardar Cambios'}
                         </Button>
                     )}
                 </div>

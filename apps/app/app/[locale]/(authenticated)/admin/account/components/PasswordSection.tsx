@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Input } from '@repo/design-system/components/ui/input';
@@ -8,6 +8,7 @@ import { Label } from '@repo/design-system/components/ui/label';
 import { useToast } from '@repo/design-system/hooks/use-toast';
 import { Shield } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
+import { changePassword } from '../actions';
 
 interface PasswordSectionProps {
     currentUser: any;
@@ -16,7 +17,7 @@ interface PasswordSectionProps {
 
 export function PasswordSection({ currentUser, dictionary }: PasswordSectionProps) {
     const { toast } = useToast();
-    const [isPasswordLoading, setIsPasswordLoading] = useState(false);
+    const [isPending, startTransition] = useTransition();
     const [passwordForm, setPasswordForm] = useState({
         currentPassword: '',
         newPassword: '',
@@ -57,42 +58,28 @@ export function PasswordSection({ currentUser, dictionary }: PasswordSectionProp
             return;
         }
 
-        setIsPasswordLoading(true);
+        startTransition(async () => {
+            const formData = new FormData();
+            formData.append('currentPassword', passwordForm.currentPassword);
+            formData.append('newPassword', passwordForm.newPassword);
+            formData.append('confirmPassword', passwordForm.confirmPassword);
 
-        try {
-            const { changePassword } = await import('@repo/data-services/src/services/userService');
-            const result = await changePassword(
-                currentUser.id,
-                passwordForm.currentPassword,
-                passwordForm.newPassword
-            );
+            const result = await changePassword(currentUser.id, formData);
 
             if (result.success) {
                 toast({
                     title: "Éxito",
-                    description: "Contraseña actualizada exitosamente",
+                    description: result.message,
                 });
-                setPasswordForm({
-                    currentPassword: '',
-                    newPassword: '',
-                    confirmPassword: '',
-                });
+                setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
             } else {
                 toast({
                     title: "Error",
-                    description: result.message || "Error al actualizar la contraseña",
+                    description: result.message,
                     variant: "destructive",
                 });
             }
-        } catch (error) {
-            toast({
-                title: "Error",
-                description: "Error al actualizar la contraseña",
-                variant: "destructive",
-            });
-        } finally {
-            setIsPasswordLoading(false);
-        }
+        });
     };
 
     return (
@@ -128,6 +115,7 @@ export function PasswordSection({ currentUser, dictionary }: PasswordSectionProp
                                 type="password"
                                 value={passwordForm.currentPassword}
                                 onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
+                                disabled={isPending}
                             />
                         </div>
                         <div className="space-y-2">
@@ -139,6 +127,7 @@ export function PasswordSection({ currentUser, dictionary }: PasswordSectionProp
                                 type="password"
                                 value={passwordForm.newPassword}
                                 onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
+                                disabled={isPending}
                             />
                         </div>
                         <div className="space-y-2">
@@ -150,14 +139,15 @@ export function PasswordSection({ currentUser, dictionary }: PasswordSectionProp
                                 type="password"
                                 value={passwordForm.confirmPassword}
                                 onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                                disabled={isPending}
                             />
                         </div>
                         <Button
                             className="w-full"
                             onClick={handlePasswordChange}
-                            disabled={isPasswordLoading}
+                            disabled={isPending}
                         >
-                            {isPasswordLoading ? "Actualizando..." : "Actualizar Contraseña"}
+                            {isPending ? "Actualizando..." : "Actualizar Contraseña"}
                         </Button>
                     </>
                 )}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Input } from '@repo/design-system/components/ui/input';
@@ -15,6 +15,7 @@ import { User, Mail, Plus, Edit, Trash2, AlertCircle } from 'lucide-react';
 import type { UserData } from '@repo/data-services/src/types/user';
 import { UserRole } from '@repo/database';
 import type { Dictionary } from '@repo/internationalization';
+import { createUser, updateUser, deleteUser } from '../actions';
 
 interface UsersSectionProps {
     users: UserData[];
@@ -27,7 +28,7 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
     const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<UserData | null>(null);
     const [deleteUserDialog, setDeleteUserDialog] = useState<{ open: boolean; user: UserData | null }>({ open: false, user: null });
-    const [isUserLoading, setIsUserLoading] = useState(false);
+    const [isPending, startTransition] = useTransition();
 
     const [userForm, setUserForm] = useState({
         name: '',
@@ -65,103 +66,66 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
     };
 
     const handleUserSubmit = async () => {
-        // Validations
+        // Validaciones básicas del lado del cliente para UX
         if (!userForm.name || !userForm.lastName || !userForm.email) {
-            toast({
-                title: "Error",
-                description: "Todos los campos son requeridos",
-                variant: "destructive",
-            });
+            toast({ title: "Error", description: "Nombre, apellido y email son requeridos", variant: "destructive" });
             return;
         }
-
         if (!editingUser && !userForm.password) {
-            toast({
-                title: "Error",
-                description: "Todos los campos son requeridos",
-                variant: "destructive",
-            });
+            toast({ title: "Error", description: "La contraseña es requerida para nuevos usuarios", variant: "destructive" });
             return;
         }
-
         if (userForm.password && userForm.password.length < 6) {
-            toast({
-                title: "Error",
-                description: "La contraseña debe tener al menos 6 caracteres",
-                variant: "destructive",
-            });
+            toast({ title: "Error", description: "La contraseña debe tener al menos 6 caracteres", variant: "destructive" });
             return;
         }
 
-        setIsUserLoading(true);
+        startTransition(async () => {
+            const formData = new FormData();
+            formData.append('name', userForm.name);
+            formData.append('lastName', userForm.lastName);
+            formData.append('email', userForm.email);
+            formData.append('password', userForm.password);
+            formData.append('role', userForm.role);
+            formData.append('permissions', JSON.stringify(userForm.permissions));
 
-        try {
-            if (editingUser) {
-                // Update user
-                const { updateUser } = await import('@repo/data-services/src/services/userService');
-                await updateUser(editingUser.id, {
-                    ...userForm,
-                    permissions: userForm.permissions
-                });
+            const result = editingUser
+                ? await updateUser(editingUser.id, formData)
+                : await createUser(formData);
+
+            if (result.success) {
                 toast({
                     title: "Éxito",
-                    description: "Usuario actualizado exitosamente",
+                    description: result.message,
                 });
+                setIsUserDialogOpen(false);
             } else {
-                // Create user
-                const { createUser } = await import('@repo/data-services/src/services/userService');
-                const result = await createUser({
-                    ...userForm,
-                    role: userForm.role,
+                toast({
+                    title: "Error",
+                    description: result.message,
+                    variant: "destructive",
                 });
-
-                if (result.success) {
-                    toast({
-                        title: "Éxito",
-                        description: "Usuario creado exitosamente",
-                    });
-                } else {
-                    toast({
-                        title: "Error",
-                        description: result.message || "Error al crear el usuario",
-                        variant: "destructive",
-                    });
-                    return;
-                }
             }
-
-            setIsUserDialogOpen(false);
-            // La página se recargará automáticamente desde el servidor
-        } catch (error) {
-            toast({
-                title: "Error",
-                description: editingUser ?
-                    "Error al actualizar el usuario" :
-                    "Error al crear el usuario",
-                variant: "destructive",
-            });
-        } finally {
-            setIsUserLoading(false);
-        }
+        });
     };
 
     const handleDeleteUser = async (user: UserData) => {
-        try {
-            const { deleteUser } = await import('@repo/data-services/src/services/userService');
-            await deleteUser(user.id);
-            toast({
-                title: "Éxito",
-                description: "Usuario eliminado exitosamente",
-            });
-            setDeleteUserDialog({ open: false, user: null });
-            // La página se recargará automáticamente desde el servidor
-        } catch (error) {
-            toast({
-                title: "Error",
-                description: "Error al eliminar el usuario",
-                variant: "destructive",
-            });
-        }
+        startTransition(async () => {
+            const result = await deleteUser(user.id);
+            if (result.success) {
+                toast({
+                    title: "Éxito",
+                    description: result.message,
+                });
+                setDeleteUserDialog({ open: false, user: null });
+            } else {
+                toast({
+                    title: "Error",
+                    description: result.message,
+                    variant: "destructive",
+                });
+            }
+        });
     };
 
     return (
@@ -236,6 +200,7 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={() => handleEditUser(user)}
+                                                disabled={isPending}
                                             >
                                                 <Edit className="h-4 w-4" />
                                             </Button>
@@ -243,7 +208,7 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={() => setDeleteUserDialog({ open: true, user })}
-                                                disabled={user.id === currentUser?.id} // No permitir eliminar el usuario actual
+                                                disabled={user.id === currentUser?.id || isPending}
                                             >
                                                 <Trash2 className="h-4 w-4" />
                                             </Button>
@@ -256,9 +221,8 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                 </CardContent>
             </Card>
 
-            {/* User Dialog */}
             <Dialog open={isUserDialogOpen} onOpenChange={setIsUserDialogOpen}>
-                <DialogContent>
+                <DialogContent className="max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>
                             {editingUser ? 'Editar Usuario' : 'Crear Nuevo Usuario'}
@@ -278,6 +242,7 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                                     id="user-name"
                                     value={userForm.name}
                                     onChange={(e) => setUserForm(prev => ({ ...prev, name: e.target.value }))}
+                                    disabled={isPending}
                                 />
                             </div>
                             <div className="space-y-2">
@@ -286,6 +251,7 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                                     id="user-lastName"
                                     value={userForm.lastName}
                                     onChange={(e) => setUserForm(prev => ({ ...prev, lastName: e.target.value }))}
+                                    disabled={isPending}
                                 />
                             </div>
                         </div>
@@ -296,6 +262,7 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                                 type="email"
                                 value={userForm.email}
                                 onChange={(e) => setUserForm(prev => ({ ...prev, email: e.target.value }))}
+                                disabled={isPending}
                             />
                         </div>
                         <div className="space-y-2">
@@ -308,6 +275,7 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                                 type="password"
                                 value={userForm.password}
                                 onChange={(e) => setUserForm(prev => ({ ...prev, password: e.target.value }))}
+                                disabled={isPending}
                             />
                         </div>
                         <div className="space-y-2">
@@ -315,6 +283,7 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                             <Select
                                 value={userForm.role}
                                 onValueChange={(value: UserRole) => setUserForm(prev => ({ ...prev, role: value }))}
+                                disabled={isPending}
                             >
                                 <SelectTrigger>
                                     <SelectValue />
@@ -325,119 +294,130 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="space-y-4">
+                        <div className="space-y-2">
                             <Label>Permisos del Usuario</Label>
-
-                            {/* Permisos de Vista */}
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2">
-                                    <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                                    <Label className="text-sm font-medium text-blue-700 dark:text-blue-400">Permisos de Vista</Label>
-                                </div>
-                                <div className="ml-4 space-y-2">
-                                    <div className="flex items-center space-x-2">
-                                        <Switch
-                                            checked={userForm.permissions.includes('analytics:view')}
-                                            onCheckedChange={(checked) => {
-                                                if (checked) {
-                                                    setUserForm(prev => ({
-                                                        ...prev,
-                                                        permissions: [...prev.permissions, 'analytics:view']
-                                                    }));
-                                                } else {
-                                                    setUserForm(prev => ({
-                                                        ...prev,
-                                                        permissions: prev.permissions.filter(p => p !== 'analytics:view')
-                                                    }));
-                                                }
-                                            }}
-                                        />
-                                        <Label className="text-sm">Ver estadísticas</Label>
+                            <div className="max-h-60 overflow-y-auto space-y-4 p-4 border rounded-lg">
+                                {/* Permisos de Vista */}
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-2">
+                                        <div className="h-2 w-2 rounded-full bg-blue-500"></div>
+                                        <Label className="text-sm font-medium text-blue-700 dark:text-blue-400">Permisos de Vista</Label>
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                        <Switch
-                                            checked={userForm.permissions.includes('clients:view')}
-                                            onCheckedChange={(checked) => {
-                                                if (checked) {
-                                                    setUserForm(prev => ({
-                                                        ...prev,
-                                                        permissions: [...prev.permissions, 'clients:view']
-                                                    }));
-                                                } else {
-                                                    setUserForm(prev => ({
-                                                        ...prev,
-                                                        permissions: prev.permissions.filter(p => p !== 'clients:view')
-                                                    }));
-                                                }
-                                            }}
-                                        />
-                                        <Label className="text-sm">Ver clientes</Label>
+                                    <div className="ml-4 space-y-2">
+                                        <div className="flex items-center space-x-2">
+                                            <Switch
+                                                checked={userForm.permissions.includes('analytics:view')}
+                                                onCheckedChange={(checked) => {
+                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'analytics:view'] }));
+                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'analytics:view') }));
+                                                }}
+                                                disabled={isPending}
+                                            />
+                                            <Label className="text-sm">Ver estadísticas</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <Switch
+                                                checked={userForm.permissions.includes('clients:view')}
+                                                onCheckedChange={(checked) => {
+                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'clients:view'] }));
+                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'clients:view') }));
+                                                }}
+                                                disabled={isPending}
+                                            />
+                                            <Label className="text-sm">Ver clientes</Label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Permisos de Edición */}
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-2">
+                                        <div className="h-2 w-2 rounded-full bg-orange-500"></div>
+                                        <Label className="text-sm font-medium text-orange-700 dark:text-orange-400">Permisos de Edición</Label>
+                                    </div>
+                                    <div className="ml-4 space-y-2">
+                                        <div className="flex items-center space-x-2">
+                                            <Switch
+                                                checked={userForm.permissions.includes('account:edit_own')}
+                                                onCheckedChange={(checked) => {
+                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'account:edit_own'] }));
+                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'account:edit_own') }));
+                                                }}
+                                                disabled={isPending}
+                                            />
+                                            <Label className="text-sm">Editar su propio perfil</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <Switch
+                                                checked={userForm.permissions.includes('account:change_password')}
+                                                onCheckedChange={(checked) => {
+                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'account:change_password'] }));
+                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'account:change_password') }));
+                                                }}
+                                                disabled={isPending}
+                                            />
+                                            <Label className="text-sm">Cambiar su contraseña</Label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Permisos de Órdenes */}
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-2">
+                                        <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                                        <Label className="text-sm font-medium text-green-700 dark:text-green-400">Permisos de Órdenes</Label>
+                                    </div>
+                                    <div className="ml-4 space-y-2">
+                                        <div className="flex items-center space-x-2">
+                                            <Switch
+                                                checked={userForm.permissions.includes('table:view')}
+                                                onCheckedChange={(checked) => {
+                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'table:view'] }));
+                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'table:view') }));
+                                                }}
+                                                disabled={isPending}
+                                            />
+                                            <Label className="text-sm">Ver órdenes</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <Switch
+                                                checked={userForm.permissions.includes('table:edit')}
+                                                onCheckedChange={(checked) => {
+                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'table:edit'] }));
+                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'table:edit') }));
+                                                }}
+                                                disabled={isPending}
+                                            />
+                                            <Label className="text-sm">Editar órdenes</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <Switch
+                                                checked={userForm.permissions.includes('table:notify')}
+                                                onCheckedChange={(checked) => {
+                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'table:notify'] }));
+                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'table:notify') }));
+                                                }}
+                                                disabled={isPending}
+                                            />
+                                            <Label className="text-sm">Notificar clientes (órdenes)</Label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Permisos de Edición */}
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2">
-                                    <div className="h-2 w-2 rounded-full bg-orange-500"></div>
-                                    <Label className="text-sm font-medium text-orange-700 dark:text-orange-400">Permisos de Edición</Label>
-                                </div>
-                                <div className="ml-4 space-y-2">
-                                    <div className="flex items-center space-x-2">
-                                        <Switch
-                                            checked={userForm.permissions.includes('account:edit_own')}
-                                            onCheckedChange={(checked) => {
-                                                if (checked) {
-                                                    setUserForm(prev => ({
-                                                        ...prev,
-                                                        permissions: [...prev.permissions, 'account:edit_own']
-                                                    }));
-                                                } else {
-                                                    setUserForm(prev => ({
-                                                        ...prev,
-                                                        permissions: prev.permissions.filter(p => p !== 'account:edit_own')
-                                                    }));
-                                                }
-                                            }}
-                                        />
-                                        <Label className="text-sm">Editar su propio perfil</Label>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <Switch
-                                            checked={userForm.permissions.includes('account:change_password')}
-                                            onCheckedChange={(checked) => {
-                                                if (checked) {
-                                                    setUserForm(prev => ({
-                                                        ...prev,
-                                                        permissions: [...prev.permissions, 'account:change_password']
-                                                    }));
-                                                } else {
-                                                    setUserForm(prev => ({
-                                                        ...prev,
-                                                        permissions: prev.permissions.filter(p => p !== 'account:change_password')
-                                                    }));
-                                                }
-                                            }}
-                                        />
-                                        <Label className="text-sm">Cambiar su contraseña</Label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <p className="text-sm text-muted-foreground">
-                                Los permisos de <span className="text-blue-600 dark:text-blue-400 font-medium">vista</span> permiten consultar información,
-                                mientras que los de <span className="text-orange-600 dark:text-orange-400 font-medium">edición</span> permiten modificar datos.
+                            <p className="text-sm text-muted-foreground pt-2">
+                                Asigna los permisos específicos para el usuario.
                                 <br />
                                 <span className="text-xs">Nota: Todos los usuarios pueden ver su propia cuenta por defecto.</span>
                             </p>
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsUserDialogOpen(false)}>
+                        <Button variant="outline" onClick={() => setIsUserDialogOpen(false)} disabled={isPending}>
                             Cancelar
                         </Button>
-                        <Button onClick={handleUserSubmit} disabled={isUserLoading}>
-                            {isUserLoading ? (
+                        <Button onClick={handleUserSubmit} disabled={isPending}>
+                            {isPending ? (
                                 editingUser ? 'Actualizando...' : 'Creando...'
                             ) : (
                                 editingUser ? 'Actualizar Usuario' : 'Crear Usuario'
@@ -447,7 +427,6 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                 </DialogContent>
             </Dialog>
 
-            {/* Delete User Dialog */}
             <AlertDialog
                 open={deleteUserDialog.open}
                 onOpenChange={(open) => setDeleteUserDialog(prev => ({ ...prev, open }))}
@@ -467,12 +446,13 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogCancel disabled={isPending}>Cancelar</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={() => deleteUserDialog.user && handleDeleteUser(deleteUserDialog.user)}
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            disabled={isPending}
                         >
-                            Eliminar
+                            {isPending ? 'Eliminando...' : 'Eliminar'}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

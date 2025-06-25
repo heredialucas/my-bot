@@ -9,7 +9,7 @@ import bcrypt from 'bcryptjs';
 /**
  * Crear un nuevo usuario
  */
-export async function createUser(data: UserFormData & { role: UserRole }) {
+export async function createUser(data: UserFormData & { role: UserRole; permissions?: string[] }) {
     try {
         // Verificar si ya existe un usuario con ese email
         const existingUser = await database.user.findUnique({
@@ -27,23 +27,11 @@ export async function createUser(data: UserFormData & { role: UserRole }) {
         // Hash de la contraseña
         const hashedPassword = await bcrypt.hash(data.password, 12);
 
-        // Definir permisos según el rol
-        let permissions: string[];
-        if (data.role === 'admin') {
-            // Los admins tienen todos los permisos
-            permissions = [
-                'analytics:view', 'analytics:export',
-                'users:view', 'users:create', 'users:edit', 'users:delete',
-                'account:manage_users', 'admin:system_settings',
-                'account:view_own', 'account:edit_own', 'account:change_password',
-                'clients:view'
-            ];
-        } else {
-            // Los usuarios normales tienen permisos básicos por defecto
-            permissions = ['account:view_own'];
-        }
+        // Asegurarse de que el permiso 'account:view_own' siempre esté presente
+        const permissionsWithDefault = new Set(data.permissions || []);
+        permissionsWithDefault.add('account:view_own');
 
-        // Crear el usuario con contraseña hasheada
+        // Crear el usuario con contraseña hasheada y los permisos del formulario
         const user = await database.user.create({
             data: {
                 name: data.name,
@@ -51,7 +39,7 @@ export async function createUser(data: UserFormData & { role: UserRole }) {
                 email: data.email,
                 password: hashedPassword,
                 role: data.role,
-                permissions: permissions,
+                permissions: Array.from(permissionsWithDefault),
             },
         });
 

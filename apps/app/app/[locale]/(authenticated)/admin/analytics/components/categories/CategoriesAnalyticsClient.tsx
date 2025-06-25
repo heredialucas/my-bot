@@ -454,7 +454,7 @@ export function CategoriesAnalyticsClient({
                                         </div>
                                         {category.totalWeight && (
                                             <div className="flex justify-between items-center">
-                                                <span className="text-xs sm:text-sm text-muted-foreground">Peso total</span>
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Kilogramos totales</span>
                                                 <span className="font-bold text-sm text-blue-600">
                                                     {category.totalWeight.toLocaleString()} kg
                                                 </span>
@@ -523,7 +523,7 @@ export function CategoriesAnalyticsClient({
                                         </div>
                                         {category.totalWeight && (
                                             <div className="flex justify-between items-center">
-                                                <span className="text-xs sm:text-sm text-muted-foreground">Peso total</span>
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Kilogramos totales</span>
                                                 <span className="font-bold text-sm text-blue-600">
                                                     {category.totalWeight.toLocaleString()} kg
                                                 </span>
