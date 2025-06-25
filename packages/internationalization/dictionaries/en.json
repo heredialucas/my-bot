@@ -104,16 +104,17 @@
           "recovered": "Recovered Client",
           "recoveredDescription": "Was inactive for more than 2 months and purchased again",
           "lost": "Lost Client",
-          "lostDescription": "No purchases for more than 6 months",
+          "lostDescription": "Customers who have not made a purchase in more than 4 months.",
           "tracking": "Tracking",
-          "trackingDescription": "Between 1 week and 1 month since first purchase",
+          "trackingDescription": "Customers with a single purchase, between 1 and 4 weeks old.",
           "premium": "Premium (A)",
-          "premiumDescription": "Clients with high monthly spending, based on total kilos purchased.",
+          "premiumDescription": "Customers with the highest purchase volume.",
           "standard": "Standard (B)",
-          "standardDescription": "Clients with moderate monthly spending, based on total kilos purchased.",
+          "standardDescription": "Customers with regular purchase volume.",
           "basic": "Basic (C)",
-          "basicDescription": "Clients with low monthly spending, based on total kilos purchased.",
-          "spendingCalculationNote": "Calculation based on kilos purchased in the last month."
+          "basicDescription": "Customers with low purchase volume.",
+          "spendingCalculationNote": "Calculation based on purchases in the last month.",
+          "kgRange": "KG Range"
         },
         "stats": {
           "totalClients": "Total Clients",

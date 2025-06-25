@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/design-system/components/ui/tabs';
 import type { Dictionary } from '@repo/internationalization';
-import type { ClientAnalytics } from '@repo/data-services';
+import type { ClientAnalytics, ClientBehaviorCategory, ClientSpendingCategory } from '@repo/data-services';
 import { ClientCategoryCard } from './ClientCategoryCard';
 import { ClientStatsGrid } from './ClientStatsGrid';
 
@@ -17,6 +17,27 @@ export function ClientsManagement({
     dictionary
 }: ClientsManagementProps) {
     const [activeTab, setActiveTab] = useState('behavior');
+
+    const spendingOrder: ClientSpendingCategory[] = ['premium', 'standard', 'basic'];
+
+    const behaviorOrder: ClientBehaviorCategory[] = [
+        'active',
+        'recovered',
+        'possible-active',
+        'new',
+        'tracking',
+        'possible-inactive',
+        'inactive',
+        'lost'
+    ];
+
+    const sortedSpendingCategories = [...analytics.spendingCategories].sort(
+        (a, b) => spendingOrder.indexOf(a.category as ClientSpendingCategory) - spendingOrder.indexOf(b.category as ClientSpendingCategory)
+    );
+
+    const sortedBehaviorCategories = [...analytics.behaviorCategories].sort(
+        (a, b) => behaviorOrder.indexOf(a.category as ClientBehaviorCategory) - behaviorOrder.indexOf(b.category as ClientBehaviorCategory)
+    );
 
     return (
         <div className="space-y-6 p-4 sm:p-6">
@@ -65,7 +86,7 @@ export function ClientsManagement({
 
                 <TabsContent value="behavior" className="mt-6">
                     <div className="grid gap-3 sm:gap-4 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        {analytics.behaviorCategories.map((category) => (
+                        {sortedBehaviorCategories.map((category) => (
                             <ClientCategoryCard
                                 key={category.category}
                                 category={category}
@@ -78,7 +99,7 @@ export function ClientsManagement({
 
                 <TabsContent value="spending" className="mt-6">
                     <div className="grid gap-3 sm:gap-4 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3">
-                        {analytics.spendingCategories.map((category) => (
+                        {sortedSpendingCategories.map((category) => (
                             <ClientCategoryCard
                                 key={category.category}
                                 category={category}

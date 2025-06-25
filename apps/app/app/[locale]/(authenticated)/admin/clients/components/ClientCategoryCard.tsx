@@ -98,6 +98,15 @@ const getCategoryDescription = (category: ClientBehaviorCategory | ClientSpendin
     return description;
 };
 
+const getCategoryKgRange = (category: ClientSpendingCategory): string => {
+    const kgRanges: Record<ClientSpendingCategory, string> = {
+        'premium': '> 15 kg',
+        'standard': '5 - 15 kg',
+        'basic': '<= 5 kg'
+    };
+    return kgRanges[category] ?? '';
+};
+
 const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('es-AR', {
         style: 'currency',
@@ -116,6 +125,7 @@ export function ClientCategoryCard({
     const icon = getCategoryIcon(category.category, type);
     const title = getCategoryTitle(category.category, dictionary);
     const description = getCategoryDescription(category.category, dictionary, type);
+    const kgRange = type === 'spending' ? getCategoryKgRange(category.category as ClientSpendingCategory) : null;
 
     const handleEmailClick = () => {
         router.push(`/admin/clients/email?category=${category.category}&type=${type}`);
@@ -157,6 +167,12 @@ export function ClientCategoryCard({
                         <span className="text-muted-foreground flex-shrink-0">Promedio:</span>
                         <span className="font-medium text-right truncate min-w-0">{formatCurrency(category.averageSpending)}</span>
                     </div>
+                    {type === 'spending' && kgRange && (
+                        <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm gap-2">
+                            <span className="text-muted-foreground flex-shrink-0">{dictionary.app.admin.clients.categories.kgRange ?? 'Rango KG'}:</span>
+                            <span className="font-medium text-right truncate min-w-0">{kgRange}</span>
+                        </div>
+                    )}
                 </div>
 
                 {/* Action buttons - always at bottom */}
