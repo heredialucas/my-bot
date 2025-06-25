@@ -102,17 +102,6 @@ export async function signUp(data: {
 
         const user = result.user;
 
-        // Create session token (simple JSON string, no encryption)
-        const token = JSON.stringify({
-            id: user.id,
-            email: user.email,
-            role: user.role.toLowerCase(), // Asegurar que el rol está en minúsculas
-            permissions: Array.isArray(user.permissions) ? user.permissions : [],
-        });
-
-        // Establecer cookie
-        await setCookie('auth-token', token);
-
         return {
             success: true,
             user: {

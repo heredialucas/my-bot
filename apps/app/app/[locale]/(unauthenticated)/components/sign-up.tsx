@@ -35,7 +35,7 @@ async function handleSignUp(formData: FormData) {
         });
 
         if (result.success) {
-            redirect('/'); // Dejar que el middleware determine la redirección
+            redirect('/sign-in'); // Dejar que el middleware determine la redirección
         } else {
             redirect('/sign-up?error=creation-failed');
         }
