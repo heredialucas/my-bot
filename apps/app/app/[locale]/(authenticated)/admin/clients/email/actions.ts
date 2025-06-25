@@ -1,9 +1,15 @@
 'use server';
 
 import { getCurrentUser } from '@repo/auth/server';
-import resend from '@repo/email';
+import resend, { BulkEmailTemplate } from '@repo/email';
 import { keys } from '@repo/email/keys';
-import { getClientsByCategory } from '@repo/data-services';
+// import { getClientsByCategory } from '@repo/data-services';
+
+interface ClientData {
+    id: string;
+    name: string;
+    email: string;
+}
 
 export async function sendBulkEmailAction(
     subject: string,
@@ -24,10 +30,12 @@ export async function sendBulkEmailAction(
         }
 
         const emailKeys = keys();
-        const fromEmail = emailKeys.RESEND_FROM || 'noreply@gangamenu.com';
+        // Para el plan gratuito de Resend y sin un dominio verificado,
+        // es necesario usar el dominio `resend.dev`.
+        const fromEmail = 'Barfer <onboarding@resend.dev>';
 
         // Obtener datos de clientes (reales o testing)
-        let clientsData;
+        let clientsData: ClientData[];
 
         if (selectedClients.includes('test-email-1') || selectedClients.includes('test-email-2')) {
             // Modo testing - usar emails específicos
@@ -37,9 +45,8 @@ export async function sendBulkEmailAction(
             ];
             clientsData = testClients.filter(client => selectedClients.includes(client.id));
         } else {
-            // Modo normal - obtener clientes reales
-            const allClients = await getClientsByCategory();
-            clientsData = allClients.filter(client => selectedClients.includes(client.id));
+            // MODO DE PRUEBA: Se ha desactivado temporalmente el envío a clientes reales.
+            clientsData = [];
         }
 
         if (clientsData.length === 0) {
@@ -49,34 +56,34 @@ export async function sendBulkEmailAction(
             };
         }
 
-        let successCount = 0;
-        let errorCount = 0;
+        // 1. Construir los payloads para el envío por lotes
+        const emailPayloads = clientsData.map((client) => ({
+            from: fromEmail,
+            to: [client.email],
+            subject: subject,
+            react: BulkEmailTemplate({
+                clientName: client.name,
+                content: content,
+            }),
+        }));
 
-        // Enviar emails usando Resend
-        for (const client of clientsData) {
-            try {
-                const personalizedContent = content.replace(/\{nombre\}/g, client.name);
+        // 2. Enviar el lote de emails con un solo llamado a la API
+        const { data, error } = await resend.batch.send(emailPayloads);
 
-                await resend.emails.send({
-                    from: fromEmail,
-                    to: [client.email],
-                    subject: subject,
-                    html: personalizedContent,
-                });
-
-                successCount++;
-                console.log(`✅ Email enviado a ${client.name} (${client.email})`);
-            } catch (emailError) {
-                errorCount++;
-                console.error(`❌ Error enviando a ${client.name}:`, emailError);
-            }
+        // 3. Manejar la respuesta del lote
+        if (error) {
+            console.error('❌ Error enviando lote de emails:', error);
+            return {
+                success: false,
+                error: `Error al enviar el lote: ${error.message}`,
+            };
         }
+
+        const successCount = data?.data.length ?? 0;
 
         return {
             success: successCount > 0,
-            message: errorCount > 0
-                ? `${successCount} emails enviados, ${errorCount} fallaron`
-                : `${successCount} emails enviados exitosamente`
+            message: `${successCount} emails enviados exitosamente en un lote.`,
         };
 
     } catch (error) {

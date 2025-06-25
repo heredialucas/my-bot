@@ -48,7 +48,7 @@ export function TemplateSelectorClient({
     onDeleteTemplate,
     onTemplateCreated
 }: TemplateSelectorClientProps) {
-    const { emailTemplates, setEmailTemplates, setEmailTemplateSelection } = useInitStore();
+    const { emailTemplates, setEmailTemplates, setEmailTemplateSelection, setEmailCustomContent } = useInitStore();
 
     // Estados para el modal de guardar template
     const [showSaveDialog, setShowSaveDialog] = useState(false);
@@ -65,37 +65,27 @@ export function TemplateSelectorClient({
     }
 
     const handleTemplateChange = (templateId: string) => {
-        setEmailTemplateSelection(templateId);
-
-        if (templateId === 'custom') {
-            onTemplateSelect({
-                subject: emailTemplates.customSubject,
-                content: emailTemplates.customContent
-            });
-            return;
-        }
-
         const template = emailTemplates.templates.find(t => t.id === templateId);
+        setEmailTemplateSelection(templateId, template);
+
         if (template) {
             onTemplateSelect({
                 subject: template.subject,
                 content: template.content
             });
+        } else if (templateId === 'custom') {
+            onTemplateSelect({ subject: '', content: '' });
         }
     };
 
     const handleSubjectChange = (value: string) => {
-        onTemplateSelect({
-            subject: value,
-            content: emailTemplates.customContent
-        });
+        setEmailCustomContent(value, emailTemplates.customContent);
+        onTemplateSelect({ subject: value, content: emailTemplates.customContent });
     };
 
     const handleContentChange = (value: string) => {
-        onTemplateSelect({
-            subject: emailTemplates.customSubject,
-            content: value
-        });
+        setEmailCustomContent(emailTemplates.customSubject, value);
+        onTemplateSelect({ subject: emailTemplates.customSubject, content: value });
     };
 
     const handleSaveTemplate = async () => {
@@ -176,7 +166,7 @@ export function TemplateSelectorClient({
             <CardContent className="space-y-4">
                 <div>
                     <Label htmlFor="template-select">Template</Label>
-                    <Select value={emailTemplates.selectedTemplateId} onValueChange={handleTemplateChange}>
+                    <Select value={emailTemplates.selectedTemplateId || 'custom'} onValueChange={handleTemplateChange}>
                         <SelectTrigger>
                             <SelectValue placeholder="Selecciona un template..." />
                         </SelectTrigger>

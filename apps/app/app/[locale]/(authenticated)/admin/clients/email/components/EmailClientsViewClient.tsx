@@ -167,37 +167,41 @@ export function EmailClientsViewClient({
                         <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                             <div className="flex items-center justify-between">
                                 <div className="flex-1">
-                                    <h4 className="font-medium text-blue-800">🧪 Modo Testing</h4>
+                                    <h4 className="font-medium text-blue-800">🧪 Enviar Email de Prueba</h4>
                                     <p className="text-sm text-blue-700">
-                                        Envío directo a emails de prueba con mensaje predefinido
+                                        Envía el contenido actual a los emails de prueba para verificar cómo se ve.
                                     </p>
                                 </div>
                                 <Button
                                     onClick={async () => {
+                                        if (!emailSubject.trim() || !emailMessage.trim()) {
+                                            alert('Por favor, selecciona un template o escribe un mensaje antes de enviar una prueba.');
+                                            return;
+                                        }
                                         setIsLoading(true);
                                         try {
                                             const result = await sendBulkEmailAction(
-                                                "🧪 TESTING - Prueba desde Ganga Menu",
-                                                "Hola {nombre},<br/><br/>Este es un email de prueba del sistema de envío masivo de Ganga Menu.<br/><br/>Si recibiste este mensaje, significa que el sistema está funcionando correctamente.<br/><br/>Saludos,<br/>Equipo Ganga Menu",
-                                                ['test-email-1', 'test-email-2'] // IDs ficticios
+                                                `🧪 PRUEBA: ${emailSubject.trim()}`,
+                                                emailMessage.trim(),
+                                                ['test-email-1', 'test-email-2'] // IDs de prueba
                                             );
 
                                             if (result.success) {
-                                                alert(`✅ ${result.message}`);
+                                                alert(`✅ Prueba enviada exitosamente. ${result.message || ''}`);
                                             } else {
-                                                alert(`❌ Error: ${result.error}`);
+                                                alert(`❌ Error en la prueba: ${result.error}`);
                                             }
                                         } catch (error) {
-                                            alert('❌ Error en testing');
+                                            alert('❌ Error al enviar la prueba.');
                                             console.error('Testing error:', error);
                                         } finally {
                                             setIsLoading(false);
                                         }
                                     }}
-                                    disabled={isLoading}
+                                    disabled={isLoading || !emailSubject.trim() || !emailMessage.trim()}
                                     className="bg-blue-600 hover:bg-blue-700 text-white"
                                 >
-                                    {isLoading ? 'Enviando...' : '📧 Test Email'}
+                                    {isLoading ? 'Enviando...' : '📧 Enviar Prueba'}
                                 </Button>
                             </div>
                         </div>

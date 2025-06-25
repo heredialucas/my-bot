@@ -19,3 +19,6 @@ const createResendInstance = () => {
 const resend = createResendInstance();
 
 export default resend;
+
+export * from './templates/contact';
+export * from './templates/BulkEmailTemplate';
