@@ -40,8 +40,8 @@ export default async function TablePage({
     const dictionary = await getDictionary(locale);
 
     return (
-        <div className="p-4 sm:p-6 h-full">
-            <div className="mb-4">
+        <div className="h-full w-full">
+            <div className="mb-5 p-5">
                 <h1 className="text-2xl font-bold">
                     {/* TODO: Move to dictionary */}
                     Tabla de Órdenes
@@ -51,14 +51,16 @@ export default async function TablePage({
                     Una lista de todas las órdenes en el sistema.
                 </p>
             </div>
-            <OrdersDataTable
-                columns={columns}
-                data={orders}
-                pageCount={pageCount}
-                total={total}
-                pagination={pagination}
-                sorting={sorting}
-            />
+            <div className="px-5">
+                <OrdersDataTable
+                    columns={columns}
+                    data={orders}
+                    pageCount={pageCount}
+                    total={total}
+                    pagination={pagination}
+                    sorting={sorting}
+                />
+            </div>
         </div>
     );
 } 

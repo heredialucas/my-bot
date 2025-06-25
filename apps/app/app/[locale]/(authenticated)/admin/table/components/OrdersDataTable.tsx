@@ -48,6 +48,18 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
     // Estado local para el valor del input de búsqueda
     const [globalFilter, setGlobalFilter] = React.useState(searchParams.get('search') ?? '');
 
+    // Función para determinar si una fila debe ser roja
+    const shouldHighlightRow = (row: any) => {
+        const status = row.original.status;
+        const paymentMethod = row.original.paymentMethod?.toLowerCase();
+
+        return status === 'pending' && (
+            paymentMethod === 'mercado pago' ||
+            paymentMethod === 'transferencia bancaria' ||
+            paymentMethod === 'bank-transfer'
+        );
+    };
+
     const table = useReactTable({
         data,
         columns,
@@ -105,17 +117,35 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                 />
             </div>
             <div className="rounded-md border">
-                <Table>
+                <Table className="table-fixed w-full border-collapse">
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => (
-                                    <TableHead key={header.id}>
+                                {headerGroup.headers.map((header, index) => (
+                                    <TableHead
+                                        key={header.id}
+                                        className="p-1 text-xs border-r border-border"
+                                        style={{
+                                            width: index === 0 ? '60px' : // Fecha
+                                                index === 1 ? '135px' : // Rango Horario
+                                                    index === 2 ? '110px' : // Notas Cliente
+                                                        index === 3 ? '140px' : // Cliente
+                                                            index === 4 ? '140px' : // Dirección
+                                                                index === 5 ? '100px' : // Teléfono
+                                                                    index === 6 ? '180px' : // Mail
+                                                                        index === 7 ? '160px' : // Items
+                                                                            index === 8 ? '100px' : // Medio de pago
+                                                                                index === 9 ? '95px' : // Estado
+                                                                                    index === 10 ? '100px' : // Total
+                                                                                        '150px' // Notas
+                                        }}
+                                    >
                                         {header.isPlaceholder ? null : (
                                             <Button
                                                 variant="ghost"
                                                 onClick={header.column.getToggleSortingHandler()}
                                                 disabled={!header.column.getCanSort()}
+                                                className="h-6 px-1 text-xs"
                                             >
                                                 {flexRender(header.column.columnDef.header, header.getContext())}
                                                 {{
@@ -132,9 +162,32 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && 'selected'}
+                                    className={shouldHighlightRow(row) ? 'bg-red-100 dark:bg-red-900/40' : ''}
+                                >
+                                    {row.getVisibleCells().map((cell, index) => (
+                                        <TableCell
+                                            key={cell.id}
+                                            className="p-1 border-r border-border"
+                                            style={{
+                                                width: index === 0 ? '60px' : // Fecha
+                                                    index === 1 ? '80px' : // Rango Horario
+                                                        index === 2 ? '80px' : // Notas Cliente
+                                                            index === 3 ? '100px' : // Cliente
+                                                                index === 4 ? '120px' : // Dirección
+                                                                    index === 5 ? '120px' : // Mail
+                                                                        index === 6 ? '80px' : // Teléfono
+                                                                            index === 7 ? '150px' : // Items
+                                                                                index === 8 ? '80px' : // Medio de pago
+                                                                                    index === 9 ? '70px' : // Estado
+                                                                                        index === 10 ? '80px' : // Total
+                                                                                            '100px' // Notas
+                                            }}
+                                        >
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
                                     ))}
                                 </TableRow>
                             ))

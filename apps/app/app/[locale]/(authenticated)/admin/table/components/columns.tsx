@@ -3,6 +3,7 @@
 import { type ColumnDef, type CellContext } from '@tanstack/react-table';
 import type { Order } from '@repo/data-services/src/types/barfer';
 import { Badge } from '@repo/design-system/components/ui/badge';
+import { Input } from '@repo/design-system/components/ui/input';
 
 const statusTranslations: Record<Order['status'], string> = {
     pending: 'Pendiente',
@@ -21,10 +22,22 @@ const paymentMethodTranslations: Record<string, string> = {
 export const columns: ColumnDef<Order>[] = [
     {
         accessorKey: 'createdAt',
-        header: 'Fecha de entrega',
+        header: 'Fecha',
         cell: ({ row }: CellContext<Order, unknown>) => {
             const date = new Date(row.getValue('createdAt') as string);
-            return <div className="text-center">{date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' })}</div>;
+            const day = date.getDay();
+            const dayBg = {
+                1: 'bg-green-100 text-green-900',    // Lunes
+                2: 'bg-yellow-100 text-yellow-900',  // Martes
+                3: 'bg-red-100 text-red-900',        // Miércoles
+                4: 'bg-amber-200 text-amber-900',    // Jueves (marrón suave)
+                6: 'bg-blue-100 text-blue-900',      // Sábado
+            }[day] || '';
+            return (
+                <div className={`min-w-[10px] text-center rounded font-medium ${dayBg}`}>
+                    {date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' })}
+                </div>
+            );
         }
     },
     {
@@ -32,7 +45,34 @@ export const columns: ColumnDef<Order>[] = [
         header: 'Rango Horario',
         cell: ({ row }: CellContext<Order, unknown>) => {
             const deliveryArea = row.original.deliveryArea;
-            return <div className="min-w-[120px]">{deliveryArea ? deliveryArea.schedule : 'N/A'}</div>;
+            if (!deliveryArea?.schedule) return <div className="min-w-[90px] text-sm">N/A</div>;
+
+            // Extraer solo las horas del schedule
+            const schedule = deliveryArea.schedule;
+            // Buscar patrones de horas como "10hs", "17hs", "10:00", etc.
+            const hourMatches = schedule.match(/(\d{1,2})(?::\d{2})?(?:hs?)?/g);
+
+            if (hourMatches && hourMatches.length >= 2) {
+                const startHour = hourMatches[0].replace(/[^\d]/g, '');
+                const endHour = hourMatches[hourMatches.length - 1].replace(/[^\d]/g, '');
+                return <div className="min-w-[90px] text-sm">De {startHour} a {endHour}hs aprox</div>;
+            }
+
+            // Si no se puede extraer, mostrar el schedule original pero más corto
+            return <div className="min-w-[90px] text-sm">{schedule.length > 20 ? schedule.substring(0, 20) + '...' : schedule}</div>;
+        }
+    },
+    {
+        accessorKey: 'notes',
+        header: 'Notas Cliente',
+        cell: ({ row }: CellContext<Order, unknown>) => {
+            return (
+                <Input
+                    placeholder="Nota..."
+                    className="min-w-[100px] h-7 text-xs"
+                    defaultValue=""
+                />
+            );
         }
     },
     {
@@ -40,15 +80,15 @@ export const columns: ColumnDef<Order>[] = [
         header: 'Cliente',
         cell: ({ row }: CellContext<Order, unknown>) => {
             const user = row.original.user as Order['user'];
-            return <div className="min-w-[150px]">{user ? `${user.name} ${user.lastName}` : 'N/A'}</div>;
+            return <div className="min-w-[120px] text-sm">{user ? `${user.name} ${user.lastName}` : 'N/A'}</div>;
         },
     },
     {
-        accessorKey: 'user.email',
-        header: 'Mail',
+        accessorKey: 'address.address',
+        header: 'Dirección',
         cell: ({ row }: CellContext<Order, unknown>) => {
-            const user = row.original.user as Order['user'];
-            return <div>{user ? user.email : 'N/A'}</div>;
+            const address = row.original.address as Order['address'];
+            return <div className="min-w-[40px] text-sm">{address ? `${address.address}, ${address.city}` : 'N/A'}</div>;
         }
     },
     {
@@ -56,15 +96,15 @@ export const columns: ColumnDef<Order>[] = [
         header: 'Teléfono',
         cell: ({ row }: CellContext<Order, unknown>) => {
             const address = row.original.address as Order['address'];
-            return <div>{address ? address.phone : 'N/A'}</div>;
+            return <div className="min-w-[10px] text-sm">{address ? address.phone : 'N/A'}</div>;
         }
     },
     {
-        accessorKey: 'address.address',
-        header: 'Dirección',
+        accessorKey: 'user.email',
+        header: 'Mail',
         cell: ({ row }: CellContext<Order, unknown>) => {
-            const address = row.original.address as Order['address'];
-            return <div className="min-w-[200px]">{address ? `${address.address}, ${address.city}` : 'N/A'}</div>;
+            const user = row.original.user as Order['user'];
+            return <div className="min-w-[10px] text-sm">{user ? user.email : 'N/A'}</div>;
         }
     },
     {
@@ -74,7 +114,7 @@ export const columns: ColumnDef<Order>[] = [
         cell: ({ row }: CellContext<Order, unknown>) => {
             const items = row.original.items as Order['items'];
             return (
-                <div className="min-w-[250px]">
+                <div className="min-w-[180px] text-sm">
                     {items.map(item => (
                         <div key={item.id}>{item.name} x{(item.options[0] as any)?.quantity || 1}</div>
                     ))}
@@ -88,14 +128,7 @@ export const columns: ColumnDef<Order>[] = [
         cell: ({ row }: CellContext<Order, unknown>) => {
             const paymentMethod = row.original.paymentMethod || '';
             const translatedPaymentMethod = paymentMethodTranslations[paymentMethod.toLowerCase()] || paymentMethod;
-            return <div>{translatedPaymentMethod}</div>;
-        }
-    },
-    {
-        accessorKey: 'notes',
-        header: 'Notas',
-        cell: ({ row }: CellContext<Order, unknown>) => {
-            return <div className="min-w-[200px]">{row.original.notes || 'N/A'}</div>;
+            return <div className="min-w-[100px] text-sm">{translatedPaymentMethod}</div>;
         }
     },
     {
@@ -104,7 +137,7 @@ export const columns: ColumnDef<Order>[] = [
         cell: ({ row }: CellContext<Order, unknown>) => {
             const status = row.getValue('status') as Order['status'];
             const translatedStatus = statusTranslations[status] || status;
-            return <Badge variant={status === 'confirmed' ? 'default' : 'secondary'}>{translatedStatus}</Badge>;
+            return <Badge variant={status === 'confirmed' ? 'default' : 'secondary'} className="text-xs">{translatedStatus}</Badge>;
         }
     },
     {
@@ -116,7 +149,27 @@ export const columns: ColumnDef<Order>[] = [
                 style: 'currency',
                 currency: 'ARS',
             }).format(amount);
-            return <div className="font-medium text-right">{formatted}</div>;
+            return <div className="font-medium text-right min-w-[80px] text-sm">{formatted}</div>;
+        }
+    },
+    {
+        accessorKey: 'notes',
+        header: 'Notas',
+        cell: ({ row }: CellContext<Order, unknown>) => {
+            const address = row.original.address as Order['address'];
+            const notes = row.original.notes || '';
+
+            let addressInfo = '';
+            if (address) {
+                const parts = [];
+                if (address.betweenStreets) parts.push(`Entre: ${address.betweenStreets}`);
+                if (address.floorNumber) parts.push(`Piso: ${address.floorNumber}`);
+                if (address.departmentNumber) parts.push(`Depto: ${address.departmentNumber}`);
+                addressInfo = parts.join(' | ');
+            }
+
+            const allNotes = [notes, addressInfo].filter(Boolean).join(' | ');
+            return <div className="min-w-[120px] text-sm">{allNotes || 'N/A'}</div>;
         }
     },
 ]; 
