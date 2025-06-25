@@ -23,11 +23,9 @@ export function ClientsManagement({
     const behaviorOrder: ClientBehaviorCategory[] = [
         'active',
         'recovered',
-        'possible-active',
         'new',
         'tracking',
         'possible-inactive',
-        'inactive',
         'lost'
     ];
 

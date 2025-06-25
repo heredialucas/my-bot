@@ -175,15 +175,15 @@ export interface DashboardStats {
 }
 
 // Tipos para categorización de clientes
+export type OrderStatus = 'pending' | 'confirmed' | 'delivered' | 'cancelled';
+
 export type ClientBehaviorCategory =
-    | 'new'              // Solo una compra
-    | 'possible-active'   // Volvió a comprar al mes de su primera compra
-    | 'possible-inactive' // No volvió a comprar al mes de su primera compra
-    | 'active'           // +2 compras en los últimos 2 meses
-    | 'inactive'         // No compra hace más de 2 meses
-    | 'recovered'        // Inactivo y volvió a comprar
-    | 'lost'             // Más de 6 meses sin comprar
-    | 'tracking';        // Entre 1 semana y 1 mes desde primera compra
+    | 'new'
+    | 'active'
+    | 'possible-inactive'
+    | 'lost'
+    | 'recovered'
+    | 'tracking';
 
 export type ClientSpendingCategory = 'premium' | 'standard' | 'basic';
 

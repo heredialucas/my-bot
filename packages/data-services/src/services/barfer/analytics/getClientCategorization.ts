@@ -121,20 +121,7 @@ export async function getClientCategorization(): Promise<ClientAnalytics> {
 function categorizeBehavior(client: any): ClientBehaviorCategory {
     const { daysSinceLastOrder, daysSinceFirstOrder, orders, totalOrders } = client;
 
-    // 1. Cliente nuevo (solo una compra) y En seguimiento
-    if (totalOrders === 1) {
-        // En seguimiento: desde una semana después de su primer compra hasta un mes.
-        if (daysSinceFirstOrder > 7 && daysSinceFirstOrder <= 30) {
-            return 'tracking';
-        }
-        // Pasado el mes, se evalúa por su inactividad.
-        // Si no, es nuevo (primera semana) o cae en las reglas de inactividad.
-        if (daysSinceFirstOrder <= 7) {
-            return 'new';
-        }
-    }
-
-    // 2. Cliente recuperado (volvió a comprar después de 4 meses)
+    // 1. Cliente recuperado: Prioridad alta. Volvió a comprar después de 4 meses de inactividad.
     if (totalOrders > 1) {
         const sortedOrders = [...orders].sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
         const lastOrderDate = new Date(sortedOrders[0].date);
@@ -147,17 +134,19 @@ function categorizeBehavior(client: any): ClientBehaviorCategory {
         }
     }
 
-    // 3. Perdido: no compra hace mas de 4 meses
-    if (daysSinceLastOrder > 120) {
-        return 'lost';
+    // 2. Flujo para clientes con una sola compra.
+    if (totalOrders === 1) {
+        if (daysSinceFirstOrder <= 7) return 'new';
+        if (daysSinceFirstOrder > 7 && daysSinceFirstOrder <= 30) return 'tracking';
+        // Si ha pasado más de un mes, se les aplican las reglas generales de actividad.
     }
 
-    // 4. Posible Inactivo: no compra hace mas de 3 meses
-    if (daysSinceLastOrder > 90) {
-        return 'possible-inactive';
-    }
+    // 3. Categorías generales por inactividad.
+    if (daysSinceLastOrder > 120) return 'lost';
+    if (daysSinceLastOrder > 90) return 'possible-inactive';
 
-    // 5. Activo: al menos 1 compra en los ultimos 3 meses
+    // 4. Cliente activo: Si no cumple ninguna de las condiciones anteriores, se considera activo.
+    // Esto cubre a todos los clientes con una compra en los últimos 90 días.
     return 'active';
 }
 

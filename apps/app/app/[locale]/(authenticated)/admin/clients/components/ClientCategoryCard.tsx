@@ -18,10 +18,8 @@ const getCategoryColor = (category: ClientBehaviorCategory | ClientSpendingCateg
     if (type === 'behavior') {
         const behaviorColors: Record<ClientBehaviorCategory, string> = {
             'new': 'bg-blue-100 text-blue-800 border-blue-200',
-            'possible-active': 'bg-green-100 text-green-800 border-green-200',
             'possible-inactive': 'bg-yellow-100 text-yellow-800 border-yellow-200',
             'active': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-            'inactive': 'bg-orange-100 text-orange-800 border-orange-200',
             'recovered': 'bg-purple-100 text-purple-800 border-purple-200',
             'lost': 'bg-red-100 text-red-800 border-red-200',
             'tracking': 'bg-indigo-100 text-indigo-800 border-indigo-200'
@@ -41,10 +39,8 @@ const getCategoryIcon = (category: ClientBehaviorCategory | ClientSpendingCatego
     if (type === 'behavior') {
         const icons: Record<ClientBehaviorCategory, React.ReactNode> = {
             'new': <Users className="h-4 w-4" />,
-            'possible-active': <TrendingUp className="h-4 w-4" />,
             'possible-inactive': <Clock className="h-4 w-4" />,
             'active': <TrendingUp className="h-4 w-4" />,
-            'inactive': <Clock className="h-4 w-4" />,
             'recovered': <TrendingUp className="h-4 w-4" />,
             'lost': <Users className="h-4 w-4" />,
             'tracking': <Clock className="h-4 w-4" />
@@ -73,29 +69,20 @@ const getCategoryTitle = (category: ClientBehaviorCategory | ClientSpendingCateg
     return titles[category] || category;
 };
 
-const getCategoryDescription = (category: ClientBehaviorCategory | ClientSpendingCategory, dictionary: Dictionary, type: 'behavior' | 'spending'): string => {
-    const baseDescriptions: Record<string, string> = {
-        'new': dictionary.app.admin.clients.categories.newDescription,
-        'possible-active': dictionary.app.admin.clients.categories.possibleActiveDescription,
-        'possible-inactive': dictionary.app.admin.clients.categories.possibleInactiveDescription,
-        'active': dictionary.app.admin.clients.categories.activeDescription,
-        'inactive': dictionary.app.admin.clients.categories.inactiveDescription,
-        'recovered': dictionary.app.admin.clients.categories.recoveredDescription,
-        'lost': dictionary.app.admin.clients.categories.lostDescription,
-        'tracking': dictionary.app.admin.clients.categories.trackingDescription,
-        'premium': dictionary.app.admin.clients.categories.premiumDescription,
-        'standard': dictionary.app.admin.clients.categories.standardDescription,
-        'basic': dictionary.app.admin.clients.categories.basicDescription
+const getCategoryDescription = (category: ClientBehaviorCategory | ClientSpendingCategory, type: 'behavior' | 'spending'): string => {
+    const descriptions: Record<string, string> = {
+        'new': 'Cliente con 1 sola compra, realizada en la última semana.',
+        'tracking': 'Cliente con 1 sola compra, realizada entre 8 y 30 días.',
+        'active': 'Cliente con al menos una compra en los últimos 90 días.',
+        'possible-inactive': 'Última compra entre 90 y 120 días.',
+        'recovered': 'Volvió a comprar en los últimos 90 días después de +120 días de inactividad.',
+        'lost': 'No ha comprado en más de 120 días.',
+        'premium': 'Ha comprado más de 15 kg en el último mes.',
+        'standard': 'Ha comprado entre 5 y 15 kg en el último mes.',
+        'basic': 'Ha comprado menos de 5 kg en el último mes.'
     };
 
-    let description = baseDescriptions[category] || '';
-
-    if (type === 'spending') {
-        const spendingNote = dictionary.app.admin.clients.categories.spendingCalculationNote || "Cálculo por compras del último mes.";
-        description += ` ${spendingNote}`;
-    }
-
-    return description;
+    return descriptions[category] || '';
 };
 
 const getCategoryKgRange = (category: ClientSpendingCategory): string => {
@@ -124,7 +111,7 @@ export function ClientCategoryCard({
     const colorClasses = getCategoryColor(category.category, type);
     const icon = getCategoryIcon(category.category, type);
     const title = getCategoryTitle(category.category, dictionary);
-    const description = getCategoryDescription(category.category, dictionary, type);
+    const description = getCategoryDescription(category.category, type);
     const kgRange = type === 'spending' ? getCategoryKgRange(category.category as ClientSpendingCategory) : null;
 
     const handleEmailClick = () => {
