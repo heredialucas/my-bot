@@ -10,7 +10,6 @@ import {
     Text,
 } from '@react-email/components';
 import * as React from 'react';
-import BarferLogo from './barfer.png';
 
 interface BulkEmailTemplateProps {
     clientName: string;
@@ -32,14 +31,6 @@ export const BulkEmailTemplate = ({
             <Preview>Un mensaje de Barfer</Preview>
             <Body style={main}>
                 <Container style={container}>
-                    <Section style={logoContainer}>
-                        <Img
-                            src={BarferLogo}
-                            width="120"
-                            height="120"
-                            alt="Barfer"
-                        />
-                    </Section>
                     <Text style={paragraph}>Hola {clientName},</Text>
                     {/* Renderiza el contenido HTML del mensaje */}
                     <div dangerouslySetInnerHTML={{ __html: personalizedContent }} />
