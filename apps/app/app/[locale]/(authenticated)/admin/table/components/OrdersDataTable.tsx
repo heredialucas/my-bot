@@ -130,15 +130,16 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 index === 1 ? '115px' : // Día Entrega
                                                     index === 2 ? '100px' : // Rango Horario
                                                         index === 3 ? '110px' : // Notas Cliente
-                                                            index === 4 ? '140px' : // Cliente
+                                                            index === 4 ? '120px' : // Cliente
                                                                 index === 5 ? '140px' : // Dirección
                                                                     index === 6 ? '100px' : // Teléfono
-                                                                        index === 7 ? '180px' : // Mail
-                                                                            index === 8 ? '200px' : // Items
-                                                                                index === 9 ? '100px' : // Medio de pago
-                                                                                    index === 10 ? '95px' : // Estado
-                                                                                        index === 11 ? '100px' :// Total
-                                                                                            '150px'  // Notas
+                                                                        index === 7 ? '170px' : // Items
+                                                                            index === 8 ? '100px' : // Medio de pago
+                                                                                index === 9 ? '95px' : // Estado
+                                                                                    index === 10 ? '100px' :// Total
+                                                                                        index === 11 ? '150px' : // Notas
+                                                                                            index === 12 ? '180px' : // Mail
+                                                                                                '150px'
                                         }}
                                     >
                                         {header.isPlaceholder ? null : (
@@ -168,29 +169,51 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                     data-state={row.getIsSelected() && 'selected'}
                                     className={shouldHighlightRow(row) ? 'bg-red-100 dark:bg-red-900/40' : ''}
                                 >
-                                    {row.getVisibleCells().map((cell, index) => (
-                                        <TableCell
-                                            key={cell.id}
-                                            className="p-1 border-r border-border"
-                                            style={{
-                                                width: index === 0 ? '60px' :  // Fecha
-                                                    index === 1 ? '115px' : // Día Entrega
-                                                        index === 2 ? '100px' : // Rango Horario
-                                                            index === 3 ? '110px' : // Notas Cliente
-                                                                index === 4 ? '140px' : // Cliente
-                                                                    index === 5 ? '140px' : // Dirección
-                                                                        index === 6 ? '100px' : // Teléfono
-                                                                            index === 7 ? '180px' : // Mail
-                                                                                index === 8 ? '200px' : // Items
-                                                                                    index === 9 ? '100px' : // Medio de pago
-                                                                                        index === 10 ? '95px' : // Estado
-                                                                                            index === 11 ? '100px' :// Total
-                                                                                                '150px'  // Notas
-                                            }}
-                                        >
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
+                                    {row.getVisibleCells().map((cell, index) => {
+                                        // Lógica para pintar toda la celda de Fecha
+                                        let extraClass = '';
+                                        if (index === 0) {
+                                            const dateValue = cell.getValue();
+                                            let date: Date | null = null;
+                                            if (typeof dateValue === 'string' || typeof dateValue === 'number') {
+                                                date = new Date(dateValue);
+                                            }
+                                            if (date) {
+                                                const day = date.getDay();
+                                                extraClass = {
+                                                    1: 'bg-green-100 text-green-900',    // Lunes
+                                                    2: 'bg-yellow-100 text-yellow-900',  // Martes
+                                                    3: 'bg-red-100 text-red-900',        // Miércoles
+                                                    4: 'bg-amber-200 text-amber-900',    // Jueves
+                                                    6: 'bg-blue-100 text-blue-900',      // Sábado
+                                                }[day] || '';
+                                            }
+                                        }
+                                        return (
+                                            <TableCell
+                                                key={cell.id}
+                                                className={`p-1 border-r border-border ${extraClass}`}
+                                                style={{
+                                                    width: index === 0 ? '60px' :  // Fecha
+                                                        index === 1 ? '115px' : // Día Entrega
+                                                            index === 2 ? '100px' : // Rango Horario
+                                                                index === 3 ? '110px' : // Notas Cliente
+                                                                    index === 4 ? '120px' : // Cliente
+                                                                        index === 5 ? '140px' : // Dirección
+                                                                            index === 6 ? '100px' : // Teléfono
+                                                                                index === 7 ? '170px' : // Items
+                                                                                    index === 8 ? '100px' : // Medio de pago
+                                                                                        index === 9 ? '95px' : // Estado
+                                                                                            index === 10 ? '100px' :// Total
+                                                                                                index === 11 ? '150px' : // Notas
+                                                                                                    index === 12 ? '180px' : // Mail
+                                                                                                        '150px'
+                                                }}
+                                            >
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        );
+                                    })}
                                 </TableRow>
                             ))
                         ) : (

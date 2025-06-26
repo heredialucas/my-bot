@@ -136,7 +136,7 @@ export const columns: ColumnDef<Order>[] = [
         header: 'Cliente',
         cell: ({ row }: CellContext<Order, unknown>) => {
             const user = row.original.user as Order['user'];
-            return <div className="min-w-[120px] text-sm whitespace-normal break-words">{user ? `${user.name} ${user.lastName}` : 'N/A'}</div>;
+            return <div className="min-w-[90px] text-sm whitespace-normal break-words">{user ? `${user.name} ${user.lastName}` : 'N/A'}</div>;
         },
     },
     {
@@ -156,21 +156,13 @@ export const columns: ColumnDef<Order>[] = [
         }
     },
     {
-        accessorKey: 'user.email',
-        header: 'Mail',
-        cell: ({ row }: CellContext<Order, unknown>) => {
-            const user = row.original.user as Order['user'];
-            return <div className="min-w-[10px] text-sm whitespace-normal break-words">{user ? user.email : 'N/A'}</div>;
-        }
-    },
-    {
         accessorKey: 'items',
         header: 'Items',
         enableSorting: false,
         cell: ({ row }: CellContext<Order, unknown>) => {
             const items = row.original.items as Order['items'];
             return (
-                <div className="min-w-[180px] text-sm whitespace-normal break-words">
+                <div className="min-w-[160px] text-sm whitespace-normal break-words">
                     {items.map((item, index) => (
                         <div key={`${item.id}-${index}`}>{item.name} x{(item.options[0] as any)?.quantity || 1}</div>
                     ))}
@@ -226,6 +218,14 @@ export const columns: ColumnDef<Order>[] = [
 
             const allNotes = [notes, addressInfo].filter(Boolean).join(' | ');
             return <div className="min-w-[120px] text-sm whitespace-normal break-words">{allNotes || 'N/A'}</div>;
+        }
+    },
+    {
+        accessorKey: 'user.email',
+        header: 'Mail',
+        cell: ({ row }: CellContext<Order, unknown>) => {
+            const user = row.original.user as Order['user'];
+            return <div className="min-w-[10px] text-sm whitespace-normal break-words">{user ? user.email : 'N/A'}</div>;
         }
     },
 ]; 
