@@ -136,7 +136,7 @@ export const columns: ColumnDef<Order>[] = [
         header: 'Cliente',
         cell: ({ row }: CellContext<Order, unknown>) => {
             const user = row.original.user as Order['user'];
-            return <div className="min-w-[90px] text-sm whitespace-normal break-words">{user ? `${user.name} ${user.lastName}` : 'N/A'}</div>;
+            return <div className="min-w-[120px] text-sm whitespace-normal break-words">{user ? `${user.name} ${user.lastName}` : 'N/A'}</div>;
         },
     },
     {
@@ -162,7 +162,7 @@ export const columns: ColumnDef<Order>[] = [
         cell: ({ row }: CellContext<Order, unknown>) => {
             const items = row.original.items as Order['items'];
             return (
-                <div className="min-w-[160px] text-sm whitespace-normal break-words">
+                <div className="min-w-[120px] text-sm whitespace-normal break-words">
                     {items.map((item, index) => (
                         <div key={`${item.id}-${index}`}>{item.name} x{(item.options[0] as any)?.quantity || 1}</div>
                     ))}

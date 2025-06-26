@@ -127,13 +127,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         className="p-1 text-xs border-r border-border"
                                         style={{
                                             width: index === 0 ? '60px' :  // Fecha
-                                                index === 1 ? '115px' : // Día Entrega
+                                                index === 1 ? '90px' : // Día Entrega
                                                     index === 2 ? '100px' : // Rango Horario
                                                         index === 3 ? '110px' : // Notas Cliente
-                                                            index === 4 ? '120px' : // Cliente
+                                                            index === 4 ? '130px' : // Cliente
                                                                 index === 5 ? '140px' : // Dirección
                                                                     index === 6 ? '100px' : // Teléfono
-                                                                        index === 7 ? '170px' : // Items
+                                                                        index === 7 ? '125px' : // Items
                                                                             index === 8 ? '100px' : // Medio de pago
                                                                                 index === 9 ? '95px' : // Estado
                                                                                     index === 10 ? '100px' :// Total
@@ -170,22 +170,25 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                     className={shouldHighlightRow(row) ? 'bg-red-100 dark:bg-red-900/40' : ''}
                                 >
                                     {row.getVisibleCells().map((cell, index) => {
-                                        // Lógica para pintar toda la celda de Fecha
                                         let extraClass = '';
                                         if (index === 0) {
-                                            const dateValue = cell.getValue();
+                                            const createdAtObj = (row.original as any)['createdAt'];
                                             let date: Date | null = null;
-                                            if (typeof dateValue === 'string' || typeof dateValue === 'number') {
-                                                date = new Date(dateValue);
+                                            if (createdAtObj instanceof Date) {
+                                                date = createdAtObj;
+                                            } else if (createdAtObj?.$date) {
+                                                date = new Date(createdAtObj.$date);
+                                            } else if (typeof createdAtObj === 'string' || typeof createdAtObj === 'number') {
+                                                date = new Date(createdAtObj);
                                             }
                                             if (date) {
                                                 const day = date.getDay();
                                                 extraClass = {
-                                                    1: 'bg-green-100 text-green-900',    // Lunes
-                                                    2: 'bg-yellow-100 text-yellow-900',  // Martes
-                                                    3: 'bg-red-100 text-red-900',        // Miércoles
-                                                    4: 'bg-amber-200 text-amber-900',    // Jueves
-                                                    6: 'bg-blue-100 text-blue-900',      // Sábado
+                                                    1: 'bg-green-100',    // Lunes (verde suave)
+                                                    2: 'bg-yellow-100',   // Martes (amarillo suave)
+                                                    3: 'bg-red-100',      // Miércoles (rojo suave)
+                                                    4: 'bg-amber-200',    // Jueves (ámbar/marrón suave)
+                                                    6: 'bg-blue-100',     // Sábado (azul suave)
                                                 }[day] || '';
                                             }
                                         }
@@ -195,19 +198,18 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 className={`p-1 border-r border-border ${extraClass}`}
                                                 style={{
                                                     width: index === 0 ? '60px' :  // Fecha
-                                                        index === 1 ? '115px' : // Día Entrega
+                                                        index === 1 ? '90px' : // Día Entrega
                                                             index === 2 ? '100px' : // Rango Horario
                                                                 index === 3 ? '110px' : // Notas Cliente
-                                                                    index === 4 ? '120px' : // Cliente
+                                                                    index === 4 ? '130px' : // Cliente
                                                                         index === 5 ? '140px' : // Dirección
                                                                             index === 6 ? '100px' : // Teléfono
-                                                                                index === 7 ? '170px' : // Items
-                                                                                    index === 8 ? '100px' : // Medio de pago
-                                                                                        index === 9 ? '95px' : // Estado
-                                                                                            index === 10 ? '100px' :// Total
-                                                                                                index === 11 ? '150px' : // Notas
-                                                                                                    index === 12 ? '180px' : // Mail
-                                                                                                        '150px'
+                                                                                index === 7 ? '180px' : // Mail
+                                                                                    index === 8 ? '125px' : // Items
+                                                                                        index === 9 ? '100px' : // Medio de pago
+                                                                                            index === 10 ? '95px' : // Estado
+                                                                                                index === 11 ? '100px' :// Total
+                                                                                                    '150px'  // Notas
                                                 }}
                                             >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
