@@ -36,7 +36,7 @@ export default async function TablePage({
         search: currentSearch,
         sorting,
     });
-
+    //mmm
     const dictionary = await getDictionary(locale);
 
     return (
