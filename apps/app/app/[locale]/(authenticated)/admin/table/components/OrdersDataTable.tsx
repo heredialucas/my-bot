@@ -126,18 +126,19 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         key={header.id}
                                         className="p-1 text-xs border-r border-border"
                                         style={{
-                                            width: index === 0 ? '60px' : // Fecha
-                                                index === 1 ? '135px' : // Rango Horario
-                                                    index === 2 ? '110px' : // Notas Cliente
-                                                        index === 3 ? '140px' : // Cliente
-                                                            index === 4 ? '140px' : // Dirección
-                                                                index === 5 ? '100px' : // Teléfono
-                                                                    index === 6 ? '180px' : // Mail
-                                                                        index === 7 ? '160px' : // Items
-                                                                            index === 8 ? '100px' : // Medio de pago
-                                                                                index === 9 ? '95px' : // Estado
-                                                                                    index === 10 ? '100px' : // Total
-                                                                                        '150px' // Notas
+                                            width: index === 0 ? '60px' :  // Fecha
+                                                index === 1 ? '115px' : // Día Entrega
+                                                    index === 2 ? '100px' : // Rango Horario
+                                                        index === 3 ? '110px' : // Notas Cliente
+                                                            index === 4 ? '140px' : // Cliente
+                                                                index === 5 ? '140px' : // Dirección
+                                                                    index === 6 ? '100px' : // Teléfono
+                                                                        index === 7 ? '180px' : // Mail
+                                                                            index === 8 ? '200px' : // Items
+                                                                                index === 9 ? '100px' : // Medio de pago
+                                                                                    index === 10 ? '95px' : // Estado
+                                                                                        index === 11 ? '100px' :// Total
+                                                                                            '150px'  // Notas
                                         }}
                                     >
                                         {header.isPlaceholder ? null : (
@@ -172,18 +173,19 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             key={cell.id}
                                             className="p-1 border-r border-border"
                                             style={{
-                                                width: index === 0 ? '60px' : // Fecha
-                                                    index === 1 ? '80px' : // Rango Horario
-                                                        index === 2 ? '80px' : // Notas Cliente
-                                                            index === 3 ? '100px' : // Cliente
-                                                                index === 4 ? '120px' : // Dirección
-                                                                    index === 5 ? '120px' : // Mail
-                                                                        index === 6 ? '80px' : // Teléfono
-                                                                            index === 7 ? '150px' : // Items
-                                                                                index === 8 ? '80px' : // Medio de pago
-                                                                                    index === 9 ? '70px' : // Estado
-                                                                                        index === 10 ? '80px' : // Total
-                                                                                            '100px' // Notas
+                                                width: index === 0 ? '60px' :  // Fecha
+                                                    index === 1 ? '115px' : // Día Entrega
+                                                        index === 2 ? '100px' : // Rango Horario
+                                                            index === 3 ? '110px' : // Notas Cliente
+                                                                index === 4 ? '140px' : // Cliente
+                                                                    index === 5 ? '140px' : // Dirección
+                                                                        index === 6 ? '100px' : // Teléfono
+                                                                            index === 7 ? '180px' : // Mail
+                                                                                index === 8 ? '200px' : // Items
+                                                                                    index === 9 ? '100px' : // Medio de pago
+                                                                                        index === 10 ? '95px' : // Estado
+                                                                                            index === 11 ? '100px' :// Total
+                                                                                                '150px'  // Notas
                                             }}
                                         >
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -28,13 +28,14 @@ export async function getOrders({
 }: GetOrdersParams): Promise<{ orders: Order[]; pageCount: number; total: number }> {
     try {
         const collection = await getCollection('orders');
-        const matchQuery: any = {};
+        const baseFilter = { 'deliveryArea.sameDayDelivery': { $ne: true } };
+        const searchFilter: any = {};
 
         if (search) {
             const searchWords = search.split(' ').filter(Boolean).map(escapeRegex);
 
             if (searchWords.length > 0) {
-                matchQuery.$and = searchWords.map(word => ({
+                searchFilter.$and = searchWords.map(word => ({
                     $or: [
                         { 'user.name': { $regex: word, $options: 'i' } },
                         { 'user.lastName': { $regex: word, $options: 'i' } },
@@ -50,14 +51,20 @@ export async function getOrders({
 
             const isObjectId = /^[0-9a-fA-F]{24}$/.test(search.trim());
             if (isObjectId) {
-                if (matchQuery.$and) {
-                    matchQuery.$or = [...matchQuery.$and, { _id: new ObjectId(search.trim()) }];
-                    delete matchQuery.$and;
+                if (searchFilter.$and) {
+                    searchFilter.$or = [...searchFilter.$and, { _id: new ObjectId(search.trim()) }];
+                    delete searchFilter.$and;
                 } else {
-                    matchQuery._id = new ObjectId(search.trim());
+                    searchFilter._id = new ObjectId(search.trim());
                 }
             }
         }
+
+        const finalAnd = [baseFilter];
+        if (Object.keys(searchFilter).length > 0) {
+            finalAnd.push(searchFilter);
+        }
+        const matchQuery = { $and: finalAnd };
 
         const sortQuery: { [key: string]: 1 | -1 } = {};
         sorting.forEach(sort => {
