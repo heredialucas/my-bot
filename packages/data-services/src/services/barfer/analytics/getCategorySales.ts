@@ -143,7 +143,6 @@ export async function getCategorySales(statusFilter?: 'pending' | 'confirmed' | 
                 totalWeight: totalWeight > 0 ? totalWeight : null,
             };
         });
-
         return formattedResult;
 
     } catch (error) {

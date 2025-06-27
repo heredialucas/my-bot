@@ -195,7 +195,8 @@ export function CategoriesAnalyticsClient({
         const total = currentCategories.length;
         const totalQuantity = currentCategories.reduce((sum, c) => sum + c.quantity, 0);
         const totalRevenue = currentCategories.reduce((sum, c) => sum + c.revenue, 0);
-        return { total, totalQuantity, totalRevenue };
+        const totalWeight = currentCategories.reduce((sum, c) => sum + (c.totalWeight || 0), 0);
+        return { total, totalQuantity, totalRevenue, totalWeight };
     };
 
     const stats = getFilterStats();
@@ -395,7 +396,7 @@ export function CategoriesAnalyticsClient({
                         </Button>
                     </div>
                     <div className={`mt-3 text-xs sm:text-sm font-medium ${getFilterColor(statusFilter)} break-words`}>
-                        Mostrando: {stats.total} categorías • {stats.totalQuantity.toLocaleString()} unidades • ${stats.totalRevenue.toLocaleString()}
+                        Mostrando: {stats.total} categorías • {stats.totalQuantity.toLocaleString()} unidades • ${stats.totalRevenue.toLocaleString()} • {stats.totalWeight.toLocaleString()} kg
                     </div>
                 </CardContent>
             </Card>

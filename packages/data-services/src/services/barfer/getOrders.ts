@@ -45,6 +45,7 @@ export async function getOrders({
                         { 'address.city': { $regex: word, $options: 'i' } },
                         { 'paymentMethod': { $regex: word, $options: 'i' } },
                         { 'status': { $regex: word, $options: 'i' } },
+                        { 'notesOwn': { $regex: word, $options: 'i' } },
                     ]
                 }));
             }

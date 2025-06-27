@@ -122,21 +122,25 @@ export const columns: ColumnDef<Order>[] = [
         accessorKey: 'notesOwn',
         header: 'Notas Cliente',
         cell: ({ row }: CellContext<Order, unknown>) => {
-            return (
-                <Input
-                    placeholder="Nota..."
-                    className="min-w-[100px] h-7 text-xs"
-                    defaultValue=""
-                />
-            );
+            const notesOwn = row.original.notesOwn || '';
+            return <div className="min-w-[100px] text-sm">{notesOwn}</div>;
         }
+        // cell: ({ row }: CellContext<Order, unknown>) => {
+        //     return (
+        //         <Input
+        //             placeholder="Nota..."
+        //             className="min-w-[100px] h-7 text-xs"
+        //             defaultValue=""
+        //         />
+        //     );
+        // }
     },
     {
         accessorKey: 'user.name',
         header: 'Cliente',
         cell: ({ row }: CellContext<Order, unknown>) => {
-            const user = row.original.user as Order['user'];
-            return <div className="min-w-[120px] text-sm whitespace-normal break-words">{user ? `${user.name} ${user.lastName}` : 'N/A'}</div>;
+            const user = row.original.user || '';
+            return <div className="min-w-[120px] text-sm whitespace-normal break-words">{user.name} {user.lastName}</div>;
         },
     },
     {
@@ -224,6 +228,17 @@ export const columns: ColumnDef<Order>[] = [
         accessorKey: 'user.email',
         header: 'Mail',
         cell: ({ row }: CellContext<Order, unknown>) => {
+            // Si la fila está en edición, mostrar input
+            if ((row as any).isEditing) {
+                return (
+                    <Input
+                        value={row.original.user?.email || ''}
+                        className="min-w-[10px] text-xs"
+                        // El onChange real se maneja en OrdersDataTable
+                        readOnly
+                    />
+                );
+            }
             const user = row.original.user as Order['user'];
             return <div className="min-w-[10px] text-sm whitespace-normal break-words">{user ? user.email : 'N/A'}</div>;
         }

@@ -21,6 +21,7 @@ import { getCollection } from '@repo/database';
 export async function getOrdersByDay(startDate?: Date, endDate?: Date) {
     try {
         const collection = await getCollection('orders');
+        console.log('collection', collection);
         const pipeline: any[] = [];
 
         const matchCondition: any = {};

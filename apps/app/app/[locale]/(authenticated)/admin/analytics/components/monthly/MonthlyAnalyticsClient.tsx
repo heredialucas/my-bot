@@ -8,6 +8,7 @@ import { Separator } from '@repo/design-system/components/ui/separator';
 import { MonthlyChart } from '../charts/MonthlyChart';
 import { DeliveryOrdersChart } from '../charts/DeliveryOrdersChart';
 import { DeliveryRevenueChart } from '../charts/DeliveryRevenueChart';
+import { DeliveryWeightChart } from '../charts/DeliveryWeightChart';
 
 interface MonthlyData {
     month: string;
@@ -394,6 +395,15 @@ export function MonthlyAnalyticsClient({
                     <DeliveryRevenueChart data={deliveryStats} />
                 </CardContent>
             </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Peso por Tipo de Entrega</CardTitle>
+                    <CardDescription>Peso total en kg por cada tipo de entrega.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <DeliveryWeightChart data={deliveryStats} />
+                </CardContent>
+            </Card>
 
             {isComparing && compareDeliveryStats && (
                 <>
@@ -414,6 +424,15 @@ export function MonthlyAnalyticsClient({
                         </CardHeader>
                         <CardContent>
                             <DeliveryRevenueChart data={compareDeliveryStats} />
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Peso por Tipo de Entrega</CardTitle>
+                            <CardDescription>Comparación de peso total en kg por cada tipo de entrega.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <DeliveryWeightChart data={compareDeliveryStats} />
                         </CardContent>
                     </Card>
                 </>

@@ -23,6 +23,9 @@ import {
 } from '@repo/design-system/components/ui/table';
 import { Input } from '@repo/design-system/components/ui/input';
 import { Button } from '@repo/design-system/components/ui/button';
+import { Select } from '@repo/design-system/components/ui/select';
+import { Badge } from '@repo/design-system/components/ui/badge';
+import { updateOrderAction } from '../actions';
 
 interface DataTableProps<TData extends { _id: string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -47,6 +50,9 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
 
     // Estado local para el valor del input de búsqueda
     const [globalFilter, setGlobalFilter] = React.useState(searchParams.get('search') ?? '');
+    const [editingRowId, setEditingRowId] = React.useState<string | null>(null);
+    const [editValues, setEditValues] = React.useState<any>({});
+    const [loading, setLoading] = React.useState(false);
 
     // Función para determinar si una fila debe ser roja
     const shouldHighlightRow = (row: any) => {
@@ -106,6 +112,74 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         return () => clearTimeout(timeout);
     }, [globalFilter, pathname, router, searchParams]);
 
+    const handleEditClick = (row: any) => {
+        setEditingRowId(row.id);
+        setEditValues({
+            notes: row.original.notes || '',
+            notesOwn: row.original.notesOwn || '',
+            status: row.original.status || '',
+            address: row.original.address?.address || '',
+            city: row.original.address?.city || '',
+            phone: row.original.address?.phone || '',
+            paymentMethod: row.original.paymentMethod || '',
+            userName: row.original.user?.name || '',
+            userLastName: row.original.user?.lastName || '',
+            userEmail: row.original.user?.email || '',
+            total: row.original.total || 0,
+            subTotal: row.original.subTotal || 0,
+            shippingPrice: row.original.shippingPrice || 0,
+            deliveryAreaSchedule: row.original.deliveryArea?.schedule || '',
+        });
+    };
+
+    const handleCancel = () => {
+        setEditingRowId(null);
+        setEditValues({});
+    };
+
+    const handleChange = (field: string, value: any) => {
+        setEditValues((prev: any) => ({ ...prev, [field]: value }));
+    };
+
+    const handleSave = async (row: any) => {
+        setLoading(true);
+        try {
+            const result = await updateOrderAction(row.id, {
+                notes: editValues.notes,
+                notesOwn: editValues.notesOwn,
+                status: editValues.status,
+                paymentMethod: editValues.paymentMethod,
+                total: Number(editValues.total),
+                subTotal: Number(editValues.subTotal),
+                shippingPrice: Number(editValues.shippingPrice),
+                address: {
+                    ...row.original.address,
+                    address: editValues.address,
+                    city: editValues.city,
+                    phone: editValues.phone,
+                },
+                user: {
+                    ...row.original.user,
+                    name: editValues.userName,
+                    lastName: editValues.userLastName,
+                    email: editValues.userEmail,
+                },
+                deliveryArea: {
+                    ...row.original.deliveryArea,
+                    schedule: editValues.deliveryAreaSchedule,
+                },
+            });
+            if (!result.success) throw new Error(result.error || 'Error al guardar');
+            setEditingRowId(null);
+            setEditValues({});
+            router.refresh();
+        } catch (e) {
+            alert(e instanceof Error ? e.message : 'Error al guardar los cambios');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div>
             <div className="flex items-center py-4">
@@ -158,6 +232,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         )}
                                     </TableHead>
                                 ))}
+                                <TableHead className="p-1 text-xs border-r border-border" style={{ width: '80px' }}>Acciones</TableHead>
                             </TableRow>
                         ))}
                     </TableHeader>
@@ -192,6 +267,185 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 }[day] || '';
                                             }
                                         }
+                                        // Edición inline para campos editables
+                                        if (editingRowId === row.id) {
+                                            console.log('Columna:', cell.column.id);
+                                            if (cell.column.id === 'notes') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            value={editValues.notes}
+                                                            onChange={e => handleChange('notes', e.target.value)}
+                                                            className="w-full text-xs"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'notesOwn') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            value={editValues.notesOwn}
+                                                            onChange={e => handleChange('notesOwn', e.target.value)}
+                                                            className="w-full text-xs"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'status') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Select
+                                                            value={editValues.status}
+                                                            onValueChange={val => handleChange('status', val)}
+                                                        >
+                                                            <option value="pending">Pendiente</option>
+                                                            <option value="confirmed">Confirmado</option>
+                                                            <option value="delivered">Entregado</option>
+                                                            <option value="cancelled">Cancelado</option>
+                                                        </Select>
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'paymentMethod') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            value={editValues.paymentMethod}
+                                                            onChange={e => handleChange('paymentMethod', e.target.value)}
+                                                            className="w-full text-xs"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'total') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            type="number"
+                                                            value={editValues.total}
+                                                            onChange={e => handleChange('total', e.target.value)}
+                                                            className="w-full text-xs"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'subTotal') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            type="number"
+                                                            value={editValues.subTotal}
+                                                            onChange={e => handleChange('subTotal', e.target.value)}
+                                                            className="w-full text-xs"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'shippingPrice') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            type="number"
+                                                            value={editValues.shippingPrice}
+                                                            onChange={e => handleChange('shippingPrice', e.target.value)}
+                                                            className="w-full text-xs"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'address_address') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            value={editValues.address}
+                                                            onChange={e => handleChange('address', e.target.value)}
+                                                            className="w-full text-xs"
+                                                            placeholder="Dirección"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'address_city') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            value={editValues.city}
+                                                            onChange={e => handleChange('city', e.target.value)}
+                                                            className="w-full text-xs"
+                                                            placeholder="Ciudad"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'address_phone') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            value={editValues.phone}
+                                                            onChange={e => handleChange('phone', e.target.value)}
+                                                            className="w-full text-xs"
+                                                            placeholder="Teléfono"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'user_name' || cell.column.id === 'name') {
+                                                console.log('DEBUG user_name:', { id: cell.column.id, editValues });
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <div className="flex gap-1">
+                                                            <Input
+                                                                value={editValues.userName}
+                                                                onChange={e => handleChange('userName', e.target.value)}
+                                                                className="w-1/2 text-xs"
+                                                                placeholder="Nombre"
+                                                            />
+                                                            <Input
+                                                                value={editValues.userLastName}
+                                                                onChange={e => handleChange('userLastName', e.target.value)}
+                                                                className="w-1/2 text-xs"
+                                                                placeholder="Apellido"
+                                                            />
+                                                        </div>
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'user_lastName') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            value={editValues.userLastName}
+                                                            onChange={e => handleChange('userLastName', e.target.value)}
+                                                            className="w-full text-xs"
+                                                            placeholder="Apellido"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'user_email' || cell.column.id === 'email') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            value={editValues.userEmail}
+                                                            onChange={e => handleChange('userEmail', e.target.value)}
+                                                            className="w-full text-xs"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'deliveryArea.schedule') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Input
+                                                            value={editValues.deliveryAreaSchedule}
+                                                            onChange={e => handleChange('deliveryAreaSchedule', e.target.value)}
+                                                            className="w-full text-xs"
+                                                        />
+                                                    </TableCell>
+                                                );
+                                            }
+                                        }
                                         return (
                                             <TableCell
                                                 key={cell.id}
@@ -216,11 +470,22 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             </TableCell>
                                         );
                                     })}
+                                    {/* Botón de acción */}
+                                    <TableCell className="p-1 border-r border-border">
+                                        {editingRowId === row.id ? (
+                                            <div className="flex gap-2">
+                                                <Button size="sm" variant="default" onClick={() => handleSave(row)} disabled={loading}>Guardar</Button>
+                                                <Button size="sm" variant="outline" onClick={handleCancel} disabled={loading}>Cancelar</Button>
+                                            </div>
+                                        ) : (
+                                            <Button size="sm" variant="outline" onClick={() => handleEditClick(row)}>Editar</Button>
+                                        )}
+                                    </TableCell>
                                 </TableRow>
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                <TableCell colSpan={columns.length + 1} className="h-24 text-center">
                                     No se encontraron resultados.
                                 </TableCell>
                             </TableRow>

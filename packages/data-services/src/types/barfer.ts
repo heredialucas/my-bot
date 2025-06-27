@@ -42,6 +42,7 @@ export interface Order {
     subTotal: number;
     shippingPrice: number;
     notes: string;
+    notesOwn: string;
     address: Address;
     user: User;
     paymentMethod: string;

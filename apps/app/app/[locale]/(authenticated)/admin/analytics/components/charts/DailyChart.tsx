@@ -129,12 +129,7 @@ export function DailyChart({
                                                 const date = new Date(`${point.fullDate}T00:00:00`);
                                                 const dateString = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
                                                 const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                                                return (
-                                                    <div>
-                                                        <div>{dateString}</div>
-                                                        <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
-                                                    </div>
-                                                );
+                                                return `${dateString} - ${dayString}`;
                                             }
                                             return label;
                                         }}
@@ -146,14 +141,6 @@ export function DailyChart({
                                         stroke="#2563eb"
                                         strokeWidth={2}
                                         name="Todos los pedidos"
-                                        dot={{ r: 3 }}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="confirmedOrders"
-                                        stroke="#16a34a"
-                                        strokeWidth={2}
-                                        name="Pedidos confirmados"
                                         dot={{ r: 3 }}
                                     />
                                 </LineChart>
@@ -185,12 +172,7 @@ export function DailyChart({
                                                     const date = new Date(`${point.fullDate}T00:00:00`);
                                                     const dateString = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
                                                     const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                                                    return (
-                                                        <div>
-                                                            <div>{dateString}</div>
-                                                            <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
-                                                        </div>
-                                                    );
+                                                    return `${dateString} - ${dayString}`;
                                                 }
                                                 return label;
                                             }}
@@ -202,14 +184,6 @@ export function DailyChart({
                                             stroke="#ea580c"
                                             strokeWidth={2}
                                             name="Todos los pedidos"
-                                            dot={{ r: 3 }}
-                                        />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="compareConfirmedOrders"
-                                            stroke="#dc2626"
-                                            strokeWidth={2}
-                                            name="Pedidos confirmados"
                                             dot={{ r: 3 }}
                                         />
                                     </LineChart>
@@ -271,12 +245,7 @@ export function DailyChart({
                                                 const date = new Date(`${point.fullDate}T00:00:00`);
                                                 const dateString = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
                                                 const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                                                return (
-                                                    <div>
-                                                        <div>{dateString}</div>
-                                                        <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
-                                                    </div>
-                                                );
+                                                return `${dateString} - ${dayString}`;
                                             }
                                             return label;
                                         }}
@@ -288,14 +257,6 @@ export function DailyChart({
                                         stroke="#7c3aed"
                                         strokeWidth={2}
                                         name="Ingresos totales"
-                                        dot={{ r: 3 }}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="confirmedRevenue"
-                                        stroke="#059669"
-                                        strokeWidth={2}
-                                        name="Ingresos confirmados"
                                         dot={{ r: 3 }}
                                     />
                                 </LineChart>
@@ -330,12 +291,7 @@ export function DailyChart({
                                                     const date = new Date(`${point.fullDate}T00:00:00`);
                                                     const dateString = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
                                                     const dayString = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                                                    return (
-                                                        <div>
-                                                            <div>{dateString}</div>
-                                                            <div style={{ textTransform: 'capitalize' }}>{dayString}</div>
-                                                        </div>
-                                                    );
+                                                    return `${dateString} - ${dayString}`;
                                                 }
                                                 return label;
                                             }}
@@ -347,14 +303,6 @@ export function DailyChart({
                                             stroke="#f59e0b"
                                             strokeWidth={2}
                                             name="Ingresos totales"
-                                            dot={{ r: 3 }}
-                                        />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="compareConfirmedRevenue"
-                                            stroke="#ef4444"
-                                            strokeWidth={2}
-                                            name="Ingresos confirmados"
                                             dot={{ r: 3 }}
                                         />
                                     </LineChart>
