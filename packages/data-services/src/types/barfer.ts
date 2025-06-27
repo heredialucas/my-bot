@@ -34,6 +34,7 @@ export interface Category {
     discountThreshold?: number;
 }
 
+// interfaz order 
 export interface Order {
     _id: string;
     status: 'pending' | 'confirmed' | 'delivered' | 'cancelled';
