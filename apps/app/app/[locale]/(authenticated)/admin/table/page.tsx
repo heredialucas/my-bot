@@ -13,12 +13,15 @@ export default async function TablePage({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
     const { locale } = await params;
-    const { page, pageSize, search, sort } = await searchParams || { page: '1', pageSize: '50', search: '', sort: 'createdAt.desc' };
+    const { page, pageSize, search, sort, from, to } = await searchParams || { page: '1', pageSize: '50', search: '', sort: 'createdAt.desc', from: '', to: '' };
+
     const currentPage = Number(page) || 1;
     const currentPageSize = Number(pageSize) || 50;
     const currentSearch = (search as string) || '';
     const currentSort = (sort as string) || 'createdAt.desc';
     const [sortId, sortOrder] = currentSort.split('.');
+    const fromDate = from as string | undefined;
+    const toDate = to as string | undefined;
 
     const pagination: PaginationState = {
         pageIndex: currentPage - 1,
@@ -35,6 +38,8 @@ export default async function TablePage({
         pageSize: pagination.pageSize,
         search: currentSearch,
         sorting,
+        from: fromDate,
+        to: toDate,
     });
     //mmm
     const dictionary = await getDictionary(locale);

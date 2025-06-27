@@ -2,9 +2,7 @@ import 'server-only';
 import { getCollection, ObjectId } from '@repo/database';
 import type { Order } from '../../types/barfer';
 
-interface GetOrdersParams {
-    pageIndex?: number;
-    pageSize?: number;
+interface GetAllOrdersParams {
     search?: string;
     sorting?: { id: string; desc: boolean }[];
     from?: string;
@@ -19,17 +17,15 @@ function escapeRegex(string: string) {
 }
 
 /**
- * Obtiene órdenes de forma paginada, filtrada y ordenada desde el servidor.
- * @returns Un objeto con las órdenes y el conteo total de páginas.
+ * Obtiene todas las órdenes que coinciden con los filtros, sin paginación.
+ * @returns Un array de órdenes.
  */
-export async function getOrders({
-    pageIndex = 0,
-    pageSize = 50,
+export async function getAllOrders({
     search = '',
     sorting = [{ id: 'createdAt', desc: true }],
     from,
     to,
-}: GetOrdersParams): Promise<{ orders: Order[]; pageCount: number; total: number }> {
+}: GetAllOrdersParams): Promise<Order[]> {
     try {
         const collection = await getCollection('orders');
 
@@ -37,7 +33,7 @@ export async function getOrders({
         if (from && to) {
             dateFilter.createdAt = {
                 $gte: new Date(from),
-                $lte: new Date(new Date(to).setHours(23, 59, 59, 999)), // Incluye todo el día 'to'
+                $lte: new Date(new Date(to).setHours(23, 59, 59, 999)),
             };
         }
 
@@ -45,11 +41,10 @@ export async function getOrders({
             'deliveryArea.sameDayDelivery': { $ne: true },
             ...dateFilter
         };
-        const searchFilter: any = {};
 
+        const searchFilter: any = {};
         if (search) {
             const searchWords = search.split(' ').filter(Boolean).map(escapeRegex);
-
             if (searchWords.length > 0) {
                 searchFilter.$and = searchWords.map(word => ({
                     $or: [
@@ -65,7 +60,6 @@ export async function getOrders({
                     ]
                 }));
             }
-
             const isObjectId = /^[0-9a-fA-F]{24}$/.test(search.trim());
             if (isObjectId) {
                 if (searchFilter.$and) {
@@ -88,13 +82,7 @@ export async function getOrders({
             sortQuery[sort.id] = sort.desc ? -1 : 1;
         });
 
-        const skip = pageIndex * pageSize;
-        const limit = pageSize;
-
-        const total = await collection.countDocuments(matchQuery);
-        const ordersFromDB = await collection.find(matchQuery).sort(sortQuery).skip(skip).limit(limit).toArray();
-
-        const pageCount = Math.ceil(total / pageSize);
+        const ordersFromDB = await collection.find(matchQuery).sort(sortQuery).toArray();
 
         // Medida de seguridad: Eliminar duplicados por _id antes de serializar.
         const uniqueOrdersMap = new Map();
@@ -108,17 +96,10 @@ export async function getOrders({
             _id: order._id.toString(),
         })) as unknown as Order[];
 
-        return {
-            orders: serializedOrders,
-            pageCount,
-            total,
-        };
+        return serializedOrders;
 
     } catch (error) {
-        console.error('Error fetching server-side paginated orders:', error);
-        // El error de memoria puede volver a ocurrir si el conjunto de datos
-        // que coincide con el filtro es muy grande para ordenar.
-        // Un índice en `createdAt` es crucial.
-        throw new Error('Could not fetch orders.');
+        console.error('Error fetching all orders for export:', error);
+        throw new Error('Could not fetch orders for export.');
     }
 } 

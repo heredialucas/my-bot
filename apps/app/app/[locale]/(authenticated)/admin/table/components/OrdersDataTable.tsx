@@ -11,7 +11,7 @@ import {
     type SortingState,
     type PaginationState,
 } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Pencil, Save, Trash2, X } from 'lucide-react';
 
 import {
     Table,
@@ -29,6 +29,8 @@ import { updateOrderAction, deleteOrderAction, createOrderAction } from '../acti
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@repo/design-system/components/ui/dialog';
 import { Label } from '@repo/design-system/components/ui/label';
 import { Textarea } from '@repo/design-system/components/ui/textarea';
+import { DateRangeFilter } from './DateRangeFilter';
+import { exportOrdersAction } from '../exportOrdersAction';
 
 interface DataTableProps<TData extends { _id: string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -105,6 +107,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             sheetName: '',
         },
     });
+    const [isExporting, setIsExporting] = React.useState(false);
 
     // Función para determinar si una fila debe ser roja
     const shouldHighlightRow = (row: any) => {
@@ -337,145 +340,210 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         }
     };
 
+    const handleExport = async () => {
+        setIsExporting(true);
+        try {
+            const from = searchParams.get('from');
+            const to = searchParams.get('to');
+            const search = searchParams.get('search');
+
+            const result = await exportOrdersAction({
+                search: search || '',
+                from: from || '',
+                to: to || '',
+            });
+
+            if (result.success && result.data) {
+                // Construir el nombre del archivo dinámicamente
+                let fileName = 'ordenes';
+                if (from && to) {
+                    if (from === to) {
+                        fileName = `ordenes-${from}`;
+                    } else {
+                        fileName = `ordenes-del-${from}-al-${to}`;
+                    }
+                }
+                fileName += '.xlsx';
+
+                // Decodificar la cadena base64 a un array de bytes
+                const byteCharacters = atob(result.data);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+
+                const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } else {
+                alert(result.error || 'No se pudo exportar el archivo.');
+            }
+        } catch (e) {
+            console.error('Export failed:', e);
+            alert('Ocurrió un error al intentar exportar las órdenes.');
+        } finally {
+            setIsExporting(false);
+        }
+    };
+
     return (
         <div>
             <div className="flex items-center justify-between py-4">
-                <Input
-                    placeholder="Buscar en todas las columnas..."
-                    value={globalFilter}
-                    onChange={(event) => setGlobalFilter(event.target.value)}
-                    className="max-w-sm"
-                />
-                <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
-                    <DialogTrigger asChild>
-                        <Button variant="default">Crear Orden</Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                        <DialogHeader>
-                            <DialogTitle>Crear Nueva Orden</DialogTitle>
-                        </DialogHeader>
-                        <div className="grid grid-cols-2 gap-4">
-                            {/* Información del Cliente */}
-                            <div className="space-y-2">
-                                <Label>Nombre</Label>
-                                <Input
-                                    value={createFormData.user.name}
-                                    onChange={(e) => handleCreateFormChange('user.name', e.target.value)}
-                                    placeholder="Nombre del cliente"
-                                />
+                <div className="flex items-center gap-4">
+                    <Input
+                        placeholder="Buscar en todas las columnas..."
+                        value={globalFilter}
+                        onChange={(event) => setGlobalFilter(event.target.value)}
+                        className="max-w-sm"
+                    />
+                    <DateRangeFilter />
+                </div>
+                <div className="flex items-center gap-2">
+                    <Button
+                        onClick={handleExport}
+                        disabled={isExporting}
+                        className="bg-green-600 text-white hover:bg-green-700"
+                    >
+                        {isExporting ? 'Exportando...' : 'Exportar a Excel'}
+                    </Button>
+                    <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
+                        <DialogTrigger asChild>
+                            <Button variant="default">Crear Orden</Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                            <DialogHeader>
+                                <DialogTitle>Crear Nueva Orden</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* Información del Cliente */}
+                                <div className="space-y-2">
+                                    <Label>Nombre</Label>
+                                    <Input
+                                        value={createFormData.user.name}
+                                        onChange={(e) => handleCreateFormChange('user.name', e.target.value)}
+                                        placeholder="Nombre del cliente"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Apellido</Label>
+                                    <Input
+                                        value={createFormData.user.lastName}
+                                        onChange={(e) => handleCreateFormChange('user.lastName', e.target.value)}
+                                        placeholder="Apellido del cliente"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Email</Label>
+                                    <Input
+                                        type="email"
+                                        value={createFormData.user.email}
+                                        onChange={(e) => handleCreateFormChange('user.email', e.target.value)}
+                                        placeholder="Email del cliente"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Teléfono</Label>
+                                    <Input
+                                        value={createFormData.address.phone}
+                                        onChange={(e) => handleCreateFormChange('address.phone', e.target.value)}
+                                        placeholder="Teléfono"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Dirección</Label>
+                                    <Input
+                                        value={createFormData.address.address}
+                                        onChange={(e) => handleCreateFormChange('address.address', e.target.value)}
+                                        placeholder="Dirección"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Ciudad</Label>
+                                    <Input
+                                        value={createFormData.address.city}
+                                        onChange={(e) => handleCreateFormChange('address.city', e.target.value)}
+                                        placeholder="Ciudad"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Medio de Pago</Label>
+                                    <select
+                                        value={createFormData.paymentMethod}
+                                        onChange={(e) => handleCreateFormChange('paymentMethod', e.target.value)}
+                                        className="w-full p-2 border border-gray-300 rounded-md"
+                                    >
+                                        <option value="">Seleccionar</option>
+                                        <option value="cash">Efectivo</option>
+                                        <option value="transfer">Transferencia</option>
+                                        <option value="bank-transfer">Transferencia Bancaria</option>
+                                        <option value="mercado-pago">Mercado Pago</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Estado</Label>
+                                    <select
+                                        value={createFormData.status}
+                                        onChange={(e) => handleCreateFormChange('status', e.target.value)}
+                                        className="w-full p-2 border border-gray-300 rounded-md"
+                                    >
+                                        <option value="pending">Pendiente</option>
+                                        <option value="confirmed">Confirmado</option>
+                                        <option value="delivered">Entregado</option>
+                                        <option value="cancelled">Cancelado</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Rango Horario</Label>
+                                    <Input
+                                        value={createFormData.deliveryArea.schedule}
+                                        onChange={(e) => handleCreateFormChange('deliveryArea.schedule', e.target.value)}
+                                        placeholder="Ej: Lunes a Viernes de 10hs a 17hs"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Total</Label>
+                                    <Input
+                                        type="number"
+                                        value={createFormData.total}
+                                        onChange={(e) => handleCreateFormChange('total', Number(e.target.value))}
+                                        placeholder="0"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Notas Cliente</Label>
+                                    <Textarea
+                                        value={createFormData.notes}
+                                        onChange={(e) => handleCreateFormChange('notes', e.target.value)}
+                                        placeholder="Notas del cliente"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Notas Propias</Label>
+                                    <Textarea
+                                        value={createFormData.notesOwn}
+                                        onChange={(e) => handleCreateFormChange('notesOwn', e.target.value)}
+                                        placeholder="Notas propias"
+                                    />
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                <Label>Apellido</Label>
-                                <Input
-                                    value={createFormData.user.lastName}
-                                    onChange={(e) => handleCreateFormChange('user.lastName', e.target.value)}
-                                    placeholder="Apellido del cliente"
-                                />
+                            <div className="flex justify-end gap-2 mt-4">
+                                <Button variant="outline" onClick={() => setShowCreateModal(false)}>
+                                    Cancelar
+                                </Button>
+                                <Button onClick={handleCreateOrder} disabled={loading}>
+                                    {loading ? 'Creando...' : 'Crear Orden'}
+                                </Button>
                             </div>
-                            <div className="space-y-2">
-                                <Label>Email</Label>
-                                <Input
-                                    type="email"
-                                    value={createFormData.user.email}
-                                    onChange={(e) => handleCreateFormChange('user.email', e.target.value)}
-                                    placeholder="Email del cliente"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Teléfono</Label>
-                                <Input
-                                    value={createFormData.address.phone}
-                                    onChange={(e) => handleCreateFormChange('address.phone', e.target.value)}
-                                    placeholder="Teléfono"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Dirección</Label>
-                                <Input
-                                    value={createFormData.address.address}
-                                    onChange={(e) => handleCreateFormChange('address.address', e.target.value)}
-                                    placeholder="Dirección"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Ciudad</Label>
-                                <Input
-                                    value={createFormData.address.city}
-                                    onChange={(e) => handleCreateFormChange('address.city', e.target.value)}
-                                    placeholder="Ciudad"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Medio de Pago</Label>
-                                <select
-                                    value={createFormData.paymentMethod}
-                                    onChange={(e) => handleCreateFormChange('paymentMethod', e.target.value)}
-                                    className="w-full p-2 border border-gray-300 rounded-md"
-                                >
-                                    <option value="">Seleccionar</option>
-                                    <option value="cash">Efectivo</option>
-                                    <option value="transfer">Transferencia</option>
-                                    <option value="bank-transfer">Transferencia Bancaria</option>
-                                    <option value="mercado-pago">Mercado Pago</option>
-                                </select>
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Estado</Label>
-                                <select
-                                    value={createFormData.status}
-                                    onChange={(e) => handleCreateFormChange('status', e.target.value)}
-                                    className="w-full p-2 border border-gray-300 rounded-md"
-                                >
-                                    <option value="pending">Pendiente</option>
-                                    <option value="confirmed">Confirmado</option>
-                                    <option value="delivered">Entregado</option>
-                                    <option value="cancelled">Cancelado</option>
-                                </select>
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Rango Horario</Label>
-                                <Input
-                                    value={createFormData.deliveryArea.schedule}
-                                    onChange={(e) => handleCreateFormChange('deliveryArea.schedule', e.target.value)}
-                                    placeholder="Ej: Lunes a Viernes de 10hs a 17hs"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Total</Label>
-                                <Input
-                                    type="number"
-                                    value={createFormData.total}
-                                    onChange={(e) => handleCreateFormChange('total', Number(e.target.value))}
-                                    placeholder="0"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Notas Cliente</Label>
-                                <Textarea
-                                    value={createFormData.notes}
-                                    onChange={(e) => handleCreateFormChange('notes', e.target.value)}
-                                    placeholder="Notas del cliente"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Notas Propias</Label>
-                                <Textarea
-                                    value={createFormData.notesOwn}
-                                    onChange={(e) => handleCreateFormChange('notesOwn', e.target.value)}
-                                    placeholder="Notas propias"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex justify-end gap-2 mt-4">
-                            <Button variant="outline" onClick={() => setShowCreateModal(false)}>
-                                Cancelar
-                            </Button>
-                            <Button onClick={handleCreateOrder} disabled={loading}>
-                                {loading ? 'Creando...' : 'Crear Orden'}
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
+                        </DialogContent>
+                    </Dialog>
+                </div>
             </div>
             <div className="rounded-md border">
                 <Table className="table-fixed w-full border-collapse">
@@ -761,13 +829,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                     <TableCell className="p-1 border-r border-border">
                                         {editingRowId === row.id ? (
                                             <div className="flex gap-2">
-                                                <Button size="sm" variant="default" onClick={() => handleSave(row)} disabled={loading}>Guardar</Button>
-                                                <Button size="sm" variant="outline" onClick={handleCancel} disabled={loading}>Cancelar</Button>
+                                                <Button size="icon" variant="default" onClick={() => handleSave(row)} disabled={loading}><Save className="w-4 h-4" /></Button>
+                                                <Button size="icon" variant="outline" onClick={handleCancel} disabled={loading}><X className="w-4 h-4" /></Button>
                                             </div>
                                         ) : (
                                             <div className="flex gap-2">
-                                                <Button size="sm" variant="outline" onClick={() => handleEditClick(row)}>Editar</Button>
-                                                <Button size="sm" variant="destructive" onClick={() => handleDelete(row)} disabled={loading}>Eliminar</Button>
+                                                <Button size="icon" variant="outline" onClick={() => handleEditClick(row)}><Pencil className="w-4 h-4" /></Button>
+                                                <Button size="icon" variant="destructive" onClick={() => handleDelete(row)} disabled={loading}><Trash2 className="w-4 h-4" /></Button>
                                             </div>
                                         )}
                                     </TableCell>
