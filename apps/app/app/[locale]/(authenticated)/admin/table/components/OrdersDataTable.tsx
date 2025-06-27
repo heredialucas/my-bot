@@ -23,7 +23,6 @@ import {
 } from '@repo/design-system/components/ui/table';
 import { Input } from '@repo/design-system/components/ui/input';
 import { Button } from '@repo/design-system/components/ui/button';
-import { Select } from '@repo/design-system/components/ui/select';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { updateOrderAction, deleteOrderAction, createOrderAction } from '../actions';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@repo/design-system/components/ui/dialog';
@@ -109,6 +108,17 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
     });
     const [isExporting, setIsExporting] = React.useState(false);
 
+    // Lista de productos disponibles
+    const availableProducts = [
+        'Barfer box Gato Vaca',
+        'Barfer box Perro Pollo',
+        'Barfer box Perro Cerdo',
+        'Barfer box Gato Pollo',
+        'Barfer box Gato Cordero',
+        'Barfer box Perro Vaca',
+        'Barfer box Perro Cordero'
+    ];
+
     // Función para determinar si una fila debe ser roja
     const shouldHighlightRow = (row: any) => {
         const status = row.original.status;
@@ -184,6 +194,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             subTotal: row.original.subTotal || 0,
             shippingPrice: row.original.shippingPrice || 0,
             deliveryAreaSchedule: row.original.deliveryArea?.schedule || '',
+            items: row.original.items || [],
         });
     };
 
@@ -223,6 +234,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                     ...row.original.deliveryArea,
                     schedule: editValues.deliveryAreaSchedule,
                 },
+                items: editValues.items,
             });
             if (!result.success) throw new Error(result.error || 'Error al guardar');
             setEditingRowId(null);
@@ -532,6 +544,80 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         placeholder="Notas propias"
                                     />
                                 </div>
+                                <div className="space-y-2 col-span-2">
+                                    <Label>Items</Label>
+                                    <div className="space-y-2">
+                                        {createFormData.items?.map((item: any, index: number) => (
+                                            <div key={index} className="flex gap-2">
+                                                <select
+                                                    value={item.name || ''}
+                                                    onChange={(e) => {
+                                                        const newItems = [...createFormData.items];
+                                                        newItems[index] = {
+                                                            ...newItems[index],
+                                                            name: e.target.value,
+                                                            id: e.target.value
+                                                        };
+                                                        handleCreateFormChange('items', newItems);
+                                                    }}
+                                                    className="flex-1 p-2 border border-gray-300 rounded-md"
+                                                >
+                                                    <option value="">Seleccionar producto</option>
+                                                    {availableProducts.map(product => (
+                                                        <option key={product} value={product}>
+                                                            {product}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <Input
+                                                    type="number"
+                                                    value={item.options?.[0]?.quantity || 1}
+                                                    onChange={(e) => {
+                                                        const newItems = [...createFormData.items];
+                                                        newItems[index] = {
+                                                            ...newItems[index],
+                                                            options: [{
+                                                                ...newItems[index].options?.[0],
+                                                                quantity: parseInt(e.target.value) || 1
+                                                            }]
+                                                        };
+                                                        handleCreateFormChange('items', newItems);
+                                                    }}
+                                                    className="w-20 p-2"
+                                                    placeholder="Qty"
+                                                />
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    onClick={() => {
+                                                        const newItems = createFormData.items.filter((_: any, i: number) => i !== index);
+                                                        handleCreateFormChange('items', newItems);
+                                                    }}
+                                                >
+                                                    X
+                                                </Button>
+                                            </div>
+                                        ))}
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                                const newItems = [...createFormData.items, {
+                                                    id: '',
+                                                    name: '',
+                                                    description: '',
+                                                    images: [],
+                                                    options: [{ name: 'Default', price: 0, quantity: 1 }],
+                                                    price: 0,
+                                                    salesCount: 0,
+                                                    discountApllied: 0,
+                                                }];
+                                                handleCreateFormChange('items', newItems);
+                                            }}
+                                        >
+                                            + Agregar Item
+                                        </Button>
+                                    </div>
+                                </div>
                             </div>
                             <div className="flex justify-end gap-2 mt-4">
                                 <Button variant="outline" onClick={() => setShowCreateModal(false)}>
@@ -650,15 +736,16 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             if (cell.column.id === 'status') {
                                                 return (
                                                     <TableCell key={cell.id} className="p-1 border-r border-border">
-                                                        <Select
+                                                        <select
                                                             value={editValues.status}
-                                                            onValueChange={val => handleChange('status', val)}
+                                                            onChange={e => handleChange('status', e.target.value)}
+                                                            className="w-full p-1 text-xs border border-gray-300 rounded-md"
                                                         >
                                                             <option value="pending">Pendiente</option>
                                                             <option value="confirmed">Confirmado</option>
                                                             <option value="delivered">Entregado</option>
                                                             <option value="cancelled">Cancelado</option>
-                                                        </Select>
+                                                        </select>
                                                     </TableCell>
                                                 );
                                             }
@@ -797,6 +884,75 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                             onChange={e => handleChange('deliveryAreaSchedule', e.target.value)}
                                                             className="w-full text-xs"
                                                         />
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'items') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <div className="space-y-1">
+                                                            {editValues.items?.map((item: any, index: number) => (
+                                                                <div key={index} className="flex gap-1">
+                                                                    <select
+                                                                        value={item.name || ''}
+                                                                        onChange={e => {
+                                                                            const newItems = [...editValues.items];
+                                                                            newItems[index] = {
+                                                                                ...newItems[index],
+                                                                                name: e.target.value,
+                                                                                id: e.target.value
+                                                                            };
+                                                                            handleChange('items', newItems);
+                                                                        }}
+                                                                        className="flex-1 p-1 text-xs border border-gray-300 rounded-md"
+                                                                    >
+                                                                        <option value="">Seleccionar producto</option>
+                                                                        {availableProducts.map(product => (
+                                                                            <option key={product} value={product}>
+                                                                                {product}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
+                                                                    <Input
+                                                                        type="number"
+                                                                        value={item.options?.[0]?.quantity || 1}
+                                                                        onChange={e => {
+                                                                            const newItems = [...editValues.items];
+                                                                            newItems[index] = {
+                                                                                ...newItems[index],
+                                                                                options: [{
+                                                                                    ...newItems[index].options?.[0],
+                                                                                    quantity: parseInt(e.target.value) || 1
+                                                                                }]
+                                                                            };
+                                                                            handleChange('items', newItems);
+                                                                        }}
+                                                                        className="w-12 p-1 text-xs"
+                                                                        placeholder="Qty"
+                                                                    />
+                                                                </div>
+                                                            ))}
+                                                            <Button
+                                                                size="sm"
+                                                                variant="outline"
+                                                                onClick={() => {
+                                                                    const newItems = [...editValues.items, {
+                                                                        id: '',
+                                                                        name: '',
+                                                                        description: '',
+                                                                        images: [],
+                                                                        options: [{ name: 'Default', price: 0, quantity: 1 }],
+                                                                        price: 0,
+                                                                        salesCount: 0,
+                                                                        discountApllied: 0,
+                                                                    }];
+                                                                    handleChange('items', newItems);
+                                                                }}
+                                                                className="w-full text-xs"
+                                                            >
+                                                                + Agregar Item
+                                                            </Button>
+                                                        </div>
                                                     </TableCell>
                                                 );
                                             }
