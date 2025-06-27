@@ -20,5 +20,8 @@ export * from './analytics/getProductTimeline';
 
 // ===== ORDERS =====
 export { getOrders } from './getOrders';
+export { updateOrder } from './updateOrder';
+export { deleteOrder } from './deleteOrder';
+export { createOrder } from './createOrder';
 
 // ===== CLIENT MANAGEMENT =====

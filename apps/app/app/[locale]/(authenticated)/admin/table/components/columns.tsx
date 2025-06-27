@@ -120,7 +120,7 @@ export const columns: ColumnDef<Order>[] = [
     },
     {
         accessorKey: 'notesOwn',
-        header: 'Notas Cliente',
+        header: 'Notas propias',
         cell: ({ row }: CellContext<Order, unknown>) => {
             const notesOwn = row.original.notesOwn || '';
             return <div className="min-w-[100px] text-sm">{notesOwn}</div>;
@@ -228,13 +228,11 @@ export const columns: ColumnDef<Order>[] = [
         accessorKey: 'user.email',
         header: 'Mail',
         cell: ({ row }: CellContext<Order, unknown>) => {
-            // Si la fila está en edición, mostrar input
             if ((row as any).isEditing) {
                 return (
                     <Input
                         value={row.original.user?.email || ''}
                         className="min-w-[10px] text-xs"
-                        // El onChange real se maneja en OrdersDataTable
                         readOnly
                     />
                 );
