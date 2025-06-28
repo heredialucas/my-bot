@@ -119,7 +119,9 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         'Barfer box Gato Pollo',
         'Barfer box Gato Cordero',
         'Barfer box Perro Vaca',
-        'Barfer box Perro Cordero'
+        'Barfer box Perro Cordero',
+        'Cornalitos',
+        'Orejas'
     ];
 
     // Lista de productos Raw para mayoristas
@@ -135,8 +137,6 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
 
     // Lista de complementos sueltos para mayoristas
     const complementProducts = [
-        'Cornalitos',
-        'Orejas',
         'Patas',
         'Hígado',
         'Corazón',
@@ -155,8 +155,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
     // Función para obtener productos según el tipo de cliente
     const getProductsByClientType = (clientType: 'minorista' | 'mayorista') => {
         if (clientType === 'mayorista') {
-            return [...availableProducts, ...rawProducts, ...complementProducts];
+            // Combinar todas las listas y eliminar duplicados
+            const allProducts = [...availableProducts, ...rawProducts, ...complementProducts];
+            const uniqueProducts = [...new Set(allProducts)];
+            console.log('Productos para mayorista:', uniqueProducts);
+            return uniqueProducts;
         }
+        console.log('Productos para minorista:', availableProducts);
         return availableProducts;
     };
 
