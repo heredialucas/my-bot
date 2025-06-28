@@ -9,10 +9,10 @@ import Image from 'next/image';
 
 type CasesProps = {
   dictionary: Dictionary;
-  projects: Product[];
+  projects: CaseStudy[];
 };
 
-export type Product = {
+export type CaseStudy = {
   id: string;
   title: string;
   description: string;
@@ -25,14 +25,14 @@ export type Product = {
 };
 
 export const Cases = ({ dictionary, projects }: CasesProps) => {
-  const [selectedProject, setSelectedProject] = useState<Product | null>(null);
+  const [selectedProject, setSelectedProject] = useState<CaseStudy | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  const openProjectDetails = (project: Product) => {
+  const openProjectDetails = (project: CaseStudy) => {
     setSelectedProject(project);
     setIsModalOpen(true);
   };
@@ -47,8 +47,8 @@ export const Cases = ({ dictionary, projects }: CasesProps) => {
     >
       {/* Elementos decorativos */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -left-20 top-1/3 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute right-0 bottom-0 w-96 h-96 bg-blue-400/10 rounded-full blur-2xl"></div>
+        <div className="absolute -left-20 top-1/3 w-64 h-64 bg-[#0d4b3d]/20 rounded-full blur-3xl"></div>
+        <div className="absolute right-0 bottom-0 w-96 h-96 bg-[#0d4b3d]/10 rounded-full blur-2xl"></div>
         <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-white/30 rounded-full animate-ping"></div>
       </div>
 
@@ -56,7 +56,7 @@ export const Cases = ({ dictionary, projects }: CasesProps) => {
       <motion.div variants={fadeIn} className="text-center mb-16 relative">
         {/* Frase flotante */}
         <span className="absolute -top-8 left-4 md:left-20 text-sm md:text-lg text-white/70 font-normal italic -rotate-12 origin-left">
-          &quot;{dictionary.web.home.cases.quote}&quot;
+          &quot;{dictionary.web.home.cases.quote || 'Data is the new oil. LupaPyme helps you refine it.'}&quot;
         </span>
 
         {/* Título centrado */}
@@ -64,12 +64,12 @@ export const Cases = ({ dictionary, projects }: CasesProps) => {
           id="projects"
           className="text-3xl md:text-4xl font-bold text-white mb-4"
         >
-          {dictionary.web.home.cases.projectsTitle}
+          {dictionary.web.home.cases.projectsTitle || 'Our Clients\' Results'}
         </h2>
-        <div className="w-20 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mx-auto mb-6"></div>
+        <div className="w-20 h-1 bg-gradient-to-r from-[#0d4b3d]/70 to-[#0d4b3d] rounded-full mx-auto mb-6"></div>
 
         <p className="text-white/70 text-sm max-w-2xl mx-auto my-2">
-          {dictionary.web.home.cases.subtitle}
+          {dictionary.web.home.cases.subtitle || 'We are proud of the impact we have on our clients\' businesses. Here are some of their stories.'}
         </p>
       </motion.div>
 
@@ -109,7 +109,7 @@ export const Cases = ({ dictionary, projects }: CasesProps) => {
                     <div
                       className={`w-2 h-2 rounded-full ${project.status === "finished"
                         ? "bg-green-400 animate-pulse"
-                        : "bg-blue-400 animate-pulse"
+                        : "bg-[#0d4b3d] animate-pulse"
                         }`}
                     ></div>
                     <span className="text-xs text-white/70 capitalize">
@@ -166,7 +166,7 @@ export const Cases = ({ dictionary, projects }: CasesProps) => {
                       <div
                         className={`w-2 h-2 rounded-full ${project.status === "finished"
                           ? "bg-green-400 animate-pulse"
-                          : "bg-blue-400 animate-pulse"
+                          : "bg-[#0d4b3d] animate-pulse"
                           }`}
                       ></div>
                       <span className="text-xs text-white/70 capitalize">

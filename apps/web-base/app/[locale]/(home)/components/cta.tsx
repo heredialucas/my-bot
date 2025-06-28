@@ -12,9 +12,9 @@ type CTAProps = {
 };
 
 export const CTA = ({ dictionary, locale = 'es' }: CTAProps) => {
-  // Create WhatsApp message for food-saving app
+  // Create WhatsApp message for LupaPyme
   const getWhatsAppMessage = () => {
-    return "¡Hola! Quiero saber más sobre cómo usar Ganga-Menú para crear el menú digital de mi restaurante";
+    return "¡Hola! Quiero saber más sobre cómo LupaPyme puede ayudar a mi negocio a crecer con métricas y retención de clientes.";
   };
 
   return (
@@ -29,11 +29,11 @@ export const CTA = ({ dictionary, locale = 'es' }: CTAProps) => {
           id="contact"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            {dictionary.web.home.cta.title || "¿Tenés un negocio gastronómico?"}
+            {dictionary.web.home.cta.heading || "¿Tenés un negocio?"}
           </h2>
           <div className="w-20 h-1 bg-white rounded-full mx-auto mb-6"></div>
           <p className="text-lg text-white/90">
-            {dictionary.web.home.cta.description || "Unite a nuestra red de comercios y convertí el excedente de comida en ganancias mientras ayudás al planeta"}
+            {dictionary.web.home.cta.paragraph || "Usa LupaPyme para convertir tus datos en ganancias y ayudar a crecer tu negocio."}
           </p>
         </motion.div>
 
@@ -52,30 +52,30 @@ export const CTA = ({ dictionary, locale = 'es' }: CTAProps) => {
             <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-[#0d4b3d]/20 dark:bg-[#0d4b3d]/50 rounded-xl flex items-center justify-center">
-                  <Utensils className="w-8 h-8 text-[#0d4b3d] dark:text-white" />
+                  <ShoppingBag className="w-8 h-8 text-[#0d4b3d] dark:text-white" />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
-                    {dictionary.web.global.primaryCta || "Registra tu restaurante"}
+                    {dictionary.web.global.primaryCta || "Comienza a potenciar tu negocio"}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-300">Proceso 100% digital y gratuito</p>
+                  <p className="text-gray-600 dark:text-gray-300">Proceso 100% digital y adaptable.</p>
                 </div>
               </div>
 
-              <p className="mb-8 text-gray-600 dark:text-gray-300">Registra tu restaurante en nuestra plataforma y comienza a crear menús digitales profesionales. Atrae más clientes y mejora la experiencia gastronómica de tu negocio.</p>
+              <p className="mb-8 text-gray-600 dark:text-gray-300">Conecta tus datos en nuestra plataforma y comienza a tomar decisiones estratégicas. Atrae más clientes y mejora la rentabilidad de tu negocio.</p>
 
               <div className="space-y-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#0d4b3d]/20 dark:bg-[#0d4b3d]/50 flex items-center justify-center text-[#0d4b3d] dark:text-white font-bold">1</div>
-                  <p className="flex-1 text-gray-800 dark:text-gray-200">Registra tu restaurante en nuestra plataforma</p>
+                  <p className="flex-1 text-gray-800 dark:text-gray-200">Conecta tus fuentes de datos</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#0d4b3d]/20 dark:bg-[#0d4b3d]/50 flex items-center justify-center text-[#0d4b3d] dark:text-white font-bold">2</div>
-                  <p className="flex-1 text-gray-800 dark:text-gray-200">Crea tu menú digital con fotos y descripciones</p>
+                  <p className="flex-1 text-gray-800 dark:text-gray-200">Analiza tus métricas clave</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#0d4b3d]/20 dark:bg-[#0d4b3d]/50 flex items-center justify-center text-[#0d4b3d] dark:text-white font-bold">3</div>
-                  <p className="flex-1 text-gray-800 dark:text-gray-200">Comparte tu menú y atrae más clientes</p>
+                  <p className="flex-1 text-gray-800 dark:text-gray-200">Toma decisiones informadas para crecer</p>
                 </div>
               </div>
 

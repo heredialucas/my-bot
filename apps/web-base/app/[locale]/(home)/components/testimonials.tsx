@@ -12,6 +12,15 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { staggerContainer, fadeIn } from '../lib/animations';
 
+type Testimonial = {
+  title: string;
+  description: string;
+  author: {
+    name: string;
+    location: string;
+  };
+};
+
 type TestimonialsProps = {
   dictionary: Dictionary;
 };
@@ -23,41 +32,41 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
   // Sample testimonials to use if dictionary doesn't have them
   const sampleTestimonials = [
     {
-      title: "¡Comida deliciosa a mitad de precio!",
-      description: "Uso Ganga-Menú en mi restaurante y mis clientes están encantados. Pueden ver todos nuestros platos con fotos hermosas y hacer pedidos más fácilmente.",
+      title: "¡Mis ventas han aumentado un 20%!",
+      description: "Desde que uso LupaPyme, entiendo mucho mejor a mis clientes. He podido crear campañas de marketing personalizadas que han aumentado mis ventas y la fidelidad de mis clientes.",
       author: {
-        name: "María García",
-        location: "Madrid"
+        name: "Ana Pérez",
+        location: "Emprendedora"
       }
     },
     {
-      title: "Gran manera de reducir el desperdicio",
-      description: "Me encanta saber que estoy contribuyendo a reducir el desperdicio alimentario mientras disfruto de comida increíble. La app es súper intuitiva y los establecimientos son de primera.",
+      title: "Ahora tomo decisiones basadas en datos",
+      description: "LupaPyme me ha dado la visibilidad que necesitaba sobre mi negocio. Ahora puedo tomar decisiones estratégicas basadas en datos reales, no en intuiciones.",
       author: {
-        name: "Carlos Rodríguez",
-        location: "Barcelona"
+        name: "Juan López",
+        location: "Dueño de Pyme"
       }
     },
     {
-      title: "Descubrí mis cafeterías favoritas",
-      description: "Implementamos Ganga-Menú y ahora actualizar nuestro menú es súper fácil. Los especiales del día se cambian en segundos y los clientes lo ven inmediatamente.",
+      title: "La mejor herramienta para retener clientes",
+      description: "Con la segmentación de clientes de LupaPyme, he podido identificar a mis clientes más valiosos y crear programas de fidelización que funcionan. ¡Mi tasa de retención ha mejorado muchísimo!",
       author: {
-        name: "Laura Martínez",
-        location: "Valencia"
+        name: "Sofía Gómez",
+        location: "Gerente de Marketing"
       }
     },
     {
-      title: "Ahorro y calidad garantizada",
-      description: "Llevo 3 meses usando la app y nunca me ha decepcionado. Los packs sorpresa son siempre de calidad y el ahorro es real. Lo recomiendo a todo el mundo.",
+      title: "Fácil de usar y muy potente",
+      description: "Me sorprendió lo fácil que es de usar LupaPyme. En pocos minutos ya tenía mis dashboards configurados y empecé a ver información súper valiosa. ¡La recomiendo!",
       author: {
-        name: "Pablo Sánchez",
-        location: "Sevilla"
+        name: "Carlos Fernández",
+        location: "Consultor de Negocios"
       }
     }
   ];
 
   // Get testimonials from dictionary if available, otherwise use samples
-  const testimonials = dictionary.web.home.testimonials?.items?.length > 0
+  const testimonials: Testimonial[] = dictionary.web.home.testimonials?.items?.length > 0
     ? dictionary.web.home.testimonials.items
     : sampleTestimonials;
 
@@ -102,7 +111,7 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full mx-auto mb-2"></div>
           <p className="text-muted-foreground text-center max-w-2xl mx-auto text-lg var(--font-nunito)">
-            {dictionary.web.home.testimonials?.description || "Descubre cómo Ganga-Menú está transformando la experiencia gastronómica de restaurantes y clientes"}
+            {dictionary.web.home.testimonials?.description || "Descubre cómo LupaPyme está ayudando a negocios como el tuyo a crecer."}
           </p>
         </motion.div>
 
@@ -115,7 +124,7 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
         >
           <Carousel setApi={setApi} className="w-full">
             <CarouselContent>
-              {testimonials.map((item, index) => (
+              {testimonials.map((item: Testimonial, index: number) => (
                 <CarouselItem className="md:basis-1/2 lg:basis-1/2 p-2" key={index}>
                   <div className="flex h-full flex-col justify-between rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-green-200 dark:border-green-800 hover:border-green-400 dark:hover:border-green-600 transition-all duration-300">
                     <div className="flex justify-between items-start mb-4">
@@ -144,7 +153,7 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
                         <p className="font-semibold text-gray-800 dark:text-white var(--font-nunito)">{item.author.name}</p>
                         <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 var(--font-nunito)">
                           <MapPin className="h-3 w-3 mr-1" />
-                          {('location' in item.author ? item.author.location : item.author.name)}
+                          {item.author.location}
                         </div>
                       </div>
                     </div>

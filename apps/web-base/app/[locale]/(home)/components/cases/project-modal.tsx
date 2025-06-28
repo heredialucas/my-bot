@@ -1,6 +1,6 @@
 'use client';
 
-import { type Product } from './product-card';
+import { type CaseStudy } from './cases';
 import type { Dictionary } from '@repo/internationalization';
 import Image from 'next/image';
 import {
@@ -19,7 +19,7 @@ import {
 } from '@repo/design-system/components/ui/carousel';
 
 type ProjectModalProps = {
-    project: Product | null;
+    project: CaseStudy | null;
     dictionary: Dictionary;
     onClose: () => void;
     open: boolean;
@@ -37,7 +37,7 @@ export const ProjectModal = ({ project, dictionary, onClose, open }: ProjectModa
                         <div
                             className={`w-2 h-2 rounded-full ${project.status === "finished"
                                 ? "bg-success animate-pulse"
-                                : "bg-blue-400 animate-pulse"
+                                : "bg-[#0d4b3d] animate-pulse"
                                 }`}
                         ></div>
                         <DialogDescription>
@@ -77,7 +77,7 @@ export const ProjectModal = ({ project, dictionary, onClose, open }: ProjectModa
                 {/* Project Description */}
                 <div className="space-y-4">
                     <div>
-                        <h3 className="text-base font-medium mb-2">Description</h3>
+                        <h3 className="text-base font-medium mb-2">{dictionary.web.home.cases.modal.description || 'Description'}</h3>
                         <p className="text-muted-foreground">{project.description}</p>
                         {project.status_description && (
                             <p className="text-muted-foreground mt-2">{project.status_description}</p>
@@ -86,7 +86,7 @@ export const ProjectModal = ({ project, dictionary, onClose, open }: ProjectModa
 
                     {/* Technologies */}
                     <div>
-                        <h3 className="text-base font-medium mb-2">Technologies</h3>
+                        <h3 className="text-base font-medium mb-2">{dictionary.web.home.cases.modal.technologies || 'Technologies'}</h3>
                         <div className="flex flex-wrap gap-2">
                             {project.technologies.map((tech, index) => (
                                 <span
@@ -101,7 +101,7 @@ export const ProjectModal = ({ project, dictionary, onClose, open }: ProjectModa
 
                     {/* Features */}
                     <div>
-                        <h3 className="text-base font-medium mb-2">Features</h3>
+                        <h3 className="text-base font-medium mb-2">{dictionary.web.home.cases.modal.features || 'Features'}</h3>
                         <ul className="list-disc pl-5 space-y-1">
                             {project.features.map((feature, index) => (
                                 <li key={index} className="text-muted-foreground">

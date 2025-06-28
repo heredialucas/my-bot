@@ -3,24 +3,13 @@
 import Image from 'next/image';
 import type { Dictionary } from '@repo/internationalization';
 import { MouseEvent } from 'react';
-
-export type Product = {
-    id: string;
-    title: string;
-    description: string;
-    images: string[];
-    status: string;
-    size: string;
-    status_description: string;
-    technologies: string[];
-    features: string[];
-};
+import type { CaseStudy } from './cases';
 
 export type ProjectCardProps = {
-    project: Product;
+    project: CaseStudy;
     dictionary: Dictionary;
     size: string;
-    onClick: (project: Product) => void;
+    onClick: (project: CaseStudy) => void;
 };
 
 export const ProductCard = ({ project, dictionary, size, onClick }: ProjectCardProps) => {
@@ -36,7 +25,7 @@ export const ProductCard = ({ project, dictionary, size, onClick }: ProjectCardP
     };
 
     // Use the first image if available, otherwise use a placeholder
-    const imageUrl = project.images.length > 0 ? project.images[0] : '';
+    const imageUrl = project.images?.[0] || null;
 
     return (
         <div
@@ -45,14 +34,16 @@ export const ProductCard = ({ project, dictionary, size, onClick }: ProjectCardP
         >
             <div className={`relative ${aspectRatioClass}`}>
                 <div className="h-full w-full">
-                    <Image
-                        src={imageUrl}
-                        alt={project.title}
-                        className="object-cover w-full h-full"
-                        width={800}
-                        height={600}
-                        priority
-                    />
+                    {imageUrl && (
+                        <Image
+                            src={imageUrl}
+                            alt={project.title}
+                            className="object-cover w-full h-full"
+                            width={800}
+                            height={600}
+                            priority
+                        />
+                    )}
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent z-10"></div>
             </div>
@@ -62,7 +53,7 @@ export const ProductCard = ({ project, dictionary, size, onClick }: ProjectCardP
                     <div
                         className={`w-2 h-2 rounded-full ${project.status === "finished"
                             ? "bg-success animate-pulse"
-                            : "bg-blue-400 animate-pulse"
+                            : "bg-[#0d4b3d] animate-pulse"
                             }`}
                     ></div>
                     <span className="text-xs text-muted-foreground capitalize">

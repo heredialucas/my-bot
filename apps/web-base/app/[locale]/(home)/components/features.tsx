@@ -1,7 +1,7 @@
 'use client';
 
 import type { Dictionary } from '@repo/internationalization';
-import { MenuIcon, Smartphone, BarChart3, Clock, DollarSign, Users } from 'lucide-react';
+import { Smartphone, BarChart3, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { staggerContainer, fadeIn } from '../lib/animations';
 
@@ -10,18 +10,23 @@ type FeaturesProps = {
 };
 
 export const Features = ({ dictionary }: FeaturesProps) => {
-  const features = dictionary.web.home.features.items.map((item, index) => ({
-    icon: [
-      <MenuIcon className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      <Smartphone className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      <Clock className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      <BarChart3 className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      <Users className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      <DollarSign className="w-6 h-6 text-[#0d4b3d] dark:text-white" />
-    ][index],
-    title: item.title,
-    description: item.description
-  }));
+  const features = [
+    {
+      icon: <BarChart3 className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
+      title: dictionary.web.home.features.featureOne.title,
+      description: dictionary.web.home.features.featureOne.paragraph
+    },
+    {
+      icon: <Users className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
+      title: dictionary.web.home.features.featureTwo.title,
+      description: dictionary.web.home.features.featureTwo.paragraph
+    },
+    {
+      icon: <Smartphone className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
+      title: dictionary.web.home.features.featureThree.title,
+      description: dictionary.web.home.features.featureThree.paragraph
+    }
+  ];
 
   return (
     <motion.section
@@ -44,11 +49,11 @@ export const Features = ({ dictionary }: FeaturesProps) => {
         {/* Header */}
         <motion.div variants={fadeIn} className="text-center mb-16 relative">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 var(--font-nunito)">
-            {dictionary.web.home.features.title || "Why Choose Ganga-Menú"}
+            {dictionary.web.home.features.title || "Why Choose LupaPyme"}
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-[#0d4b3d]/70 to-[#0d4b3d] rounded-full mx-auto mb-6"></div>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto var(--font-nunito)">
-            {dictionary.web.home.features.description || "Transform your restaurant's digital presence with our powerful menu management platform designed specifically for food businesses"}
+            {dictionary.web.home.features.paragraph || "From detailed analytics to communication tools, LupaPyme has everything you need to take your business to the next level."}
           </p>
         </motion.div>
 

@@ -16,20 +16,20 @@ type StatsProps = {
 export const Stats = ({ dictionary }: StatsProps) => {
   const steps = [
     {
-      title: dictionary.web.home.stats.process?.[0]?.title || "Descarga la App",
-      description: dictionary.web.home.stats.process?.[0]?.description || "Registra tu restaurante y configura la información básica en minutos."
+      title: dictionary.web.home.stats.process?.[0]?.title || "Conecta tus datos",
+      description: dictionary.web.home.stats.process?.[0]?.description || "Conecta tu sistema de ventas o sube tus datos de forma segura."
     },
     {
-      title: dictionary.web.home.stats.process?.[1]?.title || "Encuentra packs",
-      description: dictionary.web.home.stats.process?.[1]?.description || "Explora los packs sorpresa disponibles cerca de ti y elige los que más te apetezcan."
+      title: dictionary.web.home.stats.process?.[1]?.title || "Analiza tus métricas",
+      description: dictionary.web.home.stats.process?.[1]?.description || "Visualiza tus KPIs más importantes en un dashboard intuitivo."
     },
     {
-      title: dictionary.web.home.stats.process?.[2]?.title || "Reserva y paga",
-      description: dictionary.web.home.stats.process?.[2]?.description || "Haz tu reserva con un solo clic y paga directamente desde la app de forma segura."
+      title: dictionary.web.home.stats.process?.[2]?.title || "Segmenta tus clientes",
+      description: dictionary.web.home.stats.process?.[2]?.description || "Clasifica a tus clientes y entiende su comportamiento de compra."
     },
     {
-      title: dictionary.web.home.stats.process?.[3]?.title || "Recoge y disfruta",
-      description: dictionary.web.home.stats.process?.[3]?.description || "Pasa por el establecimiento a la hora indicada, muestra tu reserva y disfruta de tu deliciosa comida salvada."
+      title: dictionary.web.home.stats.process?.[3]?.title || "Toma acción",
+      description: dictionary.web.home.stats.process?.[3]?.description || "Usa la información para crear campañas de marketing y fidelización."
     }
   ];
 
@@ -52,11 +52,11 @@ export const Stats = ({ dictionary }: StatsProps) => {
         className="text-center mb-16"
       >
         <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 var(--font-nunito)">
-          {dictionary.web.home.stats.title || "Cómo funciona Ganga-Menú"}
+          {dictionary.web.home.stats.title || "Cómo funciona LupaPyme"}
         </h2>
         <div className="w-20 h-1 bg-gradient-to-r from-[#0d4b3d]/70 to-[#0d4b3d] rounded-full mx-auto mb-6"></div>
         <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto var(--font-nunito)">
-          {dictionary.web.home.stats.description || "Es muy sencillo empezar a salvar comida con nuestra app. Sigue estos cuatro pasos y únete al movimiento contra el desperdicio alimentario"}
+          {dictionary.web.home.stats.description || "Sigue estos sencillos pasos para empezar a entender a tus clientes y potenciar tu negocio."}
         </p>
       </motion.div>
 
@@ -108,7 +108,7 @@ export const Stats = ({ dictionary }: StatsProps) => {
         >
           <Image
             src={logoWithBg}
-            alt="Ganga-Menú App"
+            alt="LupaPyme App"
             width={600}
             height={400}
             className="rounded-lg shadow-xl"

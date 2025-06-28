@@ -34,22 +34,22 @@ export const Footer = ({ dictionary }: FooterProps) => {
 
   // Navigation labels with dictionary fallbacks
   const navLabels = {
-    navigation: dictionary?.web.home.footer?.navigation || dictionary?.web.header?.navigation || "Navegación",
+    navigation: dictionary?.web.footer?.product.title || "Navegación",
     home: dictionary?.web.header?.home || "Inicio",
-    features: dictionary?.web.home.footer?.features || dictionary?.web.header?.features || "Características",
-    pricing: dictionary?.web.header?.pricing || "Precios",
-    about: dictionary?.web.header?.about || "Acerca de",
-    contact: dictionary?.web.home.footer?.contact || dictionary?.web.header?.contact || "Contacto"
+    features: dictionary?.web.footer?.product.features || "Características",
+    pricing: dictionary?.web.footer?.product.pricing || "Precios",
+    about: dictionary?.web.footer?.product.about || "Acerca de",
+    contact: dictionary?.web.footer?.product.contact || "Contacto"
   };
 
   // Features labels with dictionary fallbacks
   const featureLabels = {
-    features: dictionary?.web.home.footer?.features || "Características"
+    features: dictionary?.web.footer?.product.title || "Características"
   };
 
   // Contact labels with dictionary fallbacks
   const contactLabels = {
-    contact: dictionary?.web.home.footer?.contact || "Contacto"
+    contact: dictionary?.web.footer?.company.title || "Contacto"
   };
 
   return (
@@ -74,17 +74,16 @@ export const Footer = ({ dictionary }: FooterProps) => {
               <div className="relative flex items-center">
                 <Image
                   src={logo}
-                  alt="Ganga-Menú"
-                  width={60}
+                  alt="LupaPyme"
+                  width={180}
                   height={60}
-                  className="h-14 w-auto mr-[-7px]"
+                  className="h-14 w-auto"
                 />
-                <span className="text-3xl font-bold text-[#0d4b3d] dark:text-white">anga-Menú</span>
               </div>
             </motion.div>
 
             <p className="leading-relaxed max-w-sm text-gray-600 dark:text-gray-300">
-              {dictionary?.web.home.footer?.companyDescription || "Transforma la presencia digital de tu restaurante con menús interactivos hermosos que muestran tus platos y mejoran la experiencia del cliente."}
+              {dictionary?.web.footer?.companyDescription || "LupaPyme is the platform that helps you understand your customers and boost your business. In-depth metrics, customer retention, and total control of your company."}
             </p>
             <div className="flex gap-4 mt-6">
               <a
@@ -171,15 +170,15 @@ export const Footer = ({ dictionary }: FooterProps) => {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
                 <ShoppingBag className="w-4 h-4 text-[#0d4b3d]" />
-                <span>{dictionary?.web.home.footer?.menuCreation || "Creación de Menús Digitales"}</span>
+                <span>{dictionary?.web.footer?.menuCreation || "Creación de Menús Digitales"}</span>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
                 <Shield className="w-4 h-4 text-[#0d4b3d]" />
-                <span>{dictionary?.web.home.footer?.mobileFirst || "Diseño Mobile-First"}</span>
+                <span>{dictionary?.web.footer?.mobileFirst || "Diseño Mobile-First"}</span>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
                 <CheckCircle className="w-4 h-4 text-[#0d4b3d]" />
-                <span>{dictionary?.web.home.footer?.analytics || "Análisis e Insights"}</span>
+                <span>{dictionary?.web.footer?.analytics || "Análisis e Insights"}</span>
               </li>
             </ul>
           </div>
@@ -193,10 +192,10 @@ export const Footer = ({ dictionary }: FooterProps) => {
               <li className="flex items-center gap-3 justify-center md:justify-start">
                 <Mail className="w-4 h-4 text-[#0d4b3d]" />
                 <a
-                  href="mailto:info@ganga-menu.com"
+                  href="mailto:info@lupapyme.com"
                   className="text-gray-600 dark:text-gray-300 hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
                 >
-                  info@ganga-menu.com
+                  info@lupapyme.com
                 </a>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start">
@@ -213,7 +212,7 @@ export const Footer = ({ dictionary }: FooterProps) => {
                   href={`/${locale}/sign-in`}
                   className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white px-4 py-2 rounded-lg transition-colors inline-block"
                 >
-                  {dictionary?.web.home.footer?.getStarted || "Comenzar"}
+                  {dictionary?.web.footer?.getStarted || "Comenzar"}
                 </Link>
               </li>
             </ul>
@@ -222,41 +221,23 @@ export const Footer = ({ dictionary }: FooterProps) => {
 
         {/* App Stores */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 border-t border-[#0d4b3d]/10 py-8">
-          <a href="#" className="block">
-            <Image
-              src=""
-              alt="Download on App Store"
-              width={140}
-              height={42}
-              className="h-10 w-auto"
-            />
-          </a>
-          <a href="#" className="block">
-            <Image
-              src=""
-              alt="Get it on Google Play"
-              width={140}
-              height={42}
-              className="h-10 w-auto"
-            />
-          </a>
         </div>
 
         {/* Copyright and Legal */}
         <div className="border-t border-[#0d4b3d]/10 py-8 text-center md:flex md:justify-between text-sm text-gray-500 dark:text-gray-400">
-          <div>© {new Date().getFullYear()} Ganga-Menú. {dictionary?.web.home.footer?.rights || "Todos los derechos reservados"}</div>
+          <div>© {new Date().getFullYear()} LupaPyme. {dictionary?.web.footer?.rights || "Todos los derechos reservados"}</div>
           <div className="flex flex-wrap justify-center md:justify-end gap-4 mt-4 md:mt-0">
             <Link
               href={`/${locale}/privacy`}
               className="hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
             >
-              {dictionary?.web.home.footer?.privacy || "Política de Privacidad"}
+              {dictionary?.web.footer?.legal.privacy || "Política de Privacidad"}
             </Link>
             <Link
               href={`/${locale}/terms`}
               className="hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
             >
-              {dictionary?.web.home.footer?.terms || "Términos y Condiciones"}
+              {dictionary?.web.footer?.legal.terms || "Términos y Condiciones"}
             </Link>
           </div>
         </div>

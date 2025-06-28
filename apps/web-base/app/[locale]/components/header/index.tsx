@@ -11,7 +11,7 @@ import {
 } from '@repo/design-system/components/ui/navigation-menu';
 import { Menu, MoveRight, X } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 import type { Dictionary } from '@repo/internationalization';
@@ -25,16 +25,6 @@ type HeaderProps = {
 
 export const Header = ({ dictionary, locale }: HeaderProps) => {
   const pathname = usePathname();
-  const [rotation, setRotation] = useState(0);
-
-  // Logo rotation animation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRotation(prev => (prev + 90) % 360);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const navigationItems = [
     {
@@ -57,26 +47,25 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
 
   // Ensure first letter is capitalized for all navigation items
   const capitalizeFirstLetter = (string: string): string => {
+    if (!string) return '';
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   };
 
   const [isOpen, setOpen] = useState(false);
   return (
     <header className="sticky top-0 left-0 z-40 w-full border-b bg-background">
-      <div className="container relative mx-auto flex items-center justify-between min-h-16 px-4">
+      <div className="container relative mx-auto flex items-center justify-between min-h-20 px-4">
         {/* Logo on the left */}
         <div className="flex items-center">
           <Link href={`/${locale}`} className="flex items-center">
             <div className="relative flex items-center">
               <Image
                 src={logo}
-                alt="Ganga-Menú"
-                width={100}
-                height={40}
-                className="w-auto h-10 transition-transform duration-300 mr-[-5px]"
-                style={{ transform: `rotate(${rotation}deg)` }}
+                alt="LupaPyme"
+                width={180}
+                height={60}
+                className="w-auto h-16"
               />
-              <span className="text-xl font-bold text-[#0d4b3d] dark:text-white">anga-Menú</span>
             </div>
           </Link>
         </div>

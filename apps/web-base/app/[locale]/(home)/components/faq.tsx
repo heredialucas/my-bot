@@ -8,7 +8,7 @@ import {
 } from '@repo/design-system/components/ui/accordion';
 import { Button } from '@repo/design-system/components/ui/button';
 import type { Dictionary } from '@repo/internationalization';
-import { MessageCircle, HelpCircle, Leaf, RecycleIcon, Utensils, Clock, DollarSign, ShoppingBag } from 'lucide-react';
+import { MessageCircle, HelpCircle, BarChart3, Lightbulb, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../lib/animations';
@@ -21,41 +21,48 @@ type FAQProps = {
 // Sample FAQ items to use if dictionary doesn't have them
 const sampleFaqItems = [
   {
-    question: "¿Cómo funciona Ganga-Menú?",
-    answer: "Ganga-Menú es una plataforma que permite a los restaurantes crear menús digitales interactivos. Subes fotos de tus platos, agregas descripciones y precios, y obtienes un enlace único para compartir con tus clientes. Es fácil, rápido y totalmente personalizable."
+    question: "¿Qué es LupaPyme?",
+    answer: "LupaPyme es una plataforma que ayuda a las pymes a analizar sus datos de negocio para tomar mejores decisiones y potenciar su crecimiento."
   },
   {
-    question: "¿Qué tipo de restaurantes pueden usar Ganga-Menú?",
-    answer: "Cualquier tipo de establecimiento gastronómico: restaurantes, cafeterías, bares, pizzerías, panaderías, food trucks, etc. Nuestra plataforma se adapta a cualquier tipo de menú, desde comida rápida hasta alta cocina."
+    question: "¿Qué tipo de negocios pueden usar LupaPyme?",
+    answer: "Cualquier pyme que quiera tomar decisiones basadas en datos. Desde tiendas de retail, restaurantes, hasta negocios de servicios."
   },
   {
-    question: "¿Es difícil actualizar mi menú?",
-    answer: "Para nada. Puedes actualizar precios, agregar especiales del día, cambiar descripciones o subir nuevas fotos en cuestión de segundos desde nuestro panel de administración. Los cambios se reflejan inmediatamente en tu menú digital."
+    question: "¿Es difícil de usar?",
+    answer: "Para nada. Nuestra plataforma está diseñada para ser intuitiva y fácil de usar, sin necesidad de conocimientos técnicos."
   },
   {
-    question: "¿Puedo personalizar el diseño de mi menú?",
-    answer: "Sí, puedes personalizar colores, añadir el logo de tu restaurante, organizar las categorías como prefieras y destacar tus platos especiales. Todo se hace de forma visual e intuitiva."
+    question: "¿Mis datos están seguros?",
+    answer: "Sí, la seguridad de tus datos es nuestra máxima prioridad. Usamos encriptación y los más altos estándares de seguridad."
   },
   {
-    question: "¿Cuánto cuesta usar Ganga-Menú?",
-    answer: "Ofrecemos diferentes planes adaptados a las necesidades de cada restaurante. Tenemos un plan gratuito para empezar, y planes profesionales con características avanzadas. Visita nuestra página de precios para más detalles."
+    question: "¿Cuánto cuesta usar LupaPyme?",
+    answer: "Tenemos planes para todo tipo de negocios, incluyendo un plan gratuito para empezar. Puedes ver todos los detalles en nuestra página de precios."
   },
   {
-    question: "¿Necesito conocimientos técnicos para usar Ganga-Menú?",
-    answer: "No necesitas ningún conocimiento técnico. Nuestra plataforma está diseñada para ser súper intuitiva. Si tienes dudas, nuestro equipo de soporte está siempre disponible para ayudarte."
+    question: "¿Necesito instalar algo?",
+    answer: "No, LupaPyme es una plataforma 100% online. Solo necesitas una conexión a internet para acceder a tus dashboards."
   }
 ];
 
+type FaqItem = {
+  question: string;
+  answer: string;
+};
+
 export const FAQ = ({ dictionary, locale }: FAQProps) => {
-  // Create WhatsApp message 
+  // Create WhatsApp message
   const getWhatsAppMessage = () => {
-    return "¡Hola! Tengo preguntas sobre Ganga-Menú para crear mi menú digital. Me interesa saber más sobre cómo funciona y cómo puedo empezar a usarlo. ¡Gracias!";
+    return "¡Hola! Tengo preguntas sobre LupaPyme. Me interesa saber más sobre cómo funciona y cómo puede ayudar a mi negocio.";
   };
 
   // Get FAQ items from dictionary if available, otherwise use samples
-  const faqItems = dictionary.web.home.faq?.items?.length > 0
-    ? dictionary.web.home.faq.items
-    : sampleFaqItems;
+  const faqItems: FaqItem[] =
+    dictionary.web.home.faq?.questions?.map((q: FaqItem) => ({
+      question: q.question,
+      answer: q.answer,
+    })) ?? sampleFaqItems;
 
   return (
     <div className="w-full py-20 lg:py-40" id="faq">
@@ -68,11 +75,12 @@ export const FAQ = ({ dictionary, locale }: FAQProps) => {
           className="text-center max-w-2xl mx-auto mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-white">
-            {dictionary.web.home.faq?.title || "Preguntas frecuentes"}
+            {dictionary.web.home.faq?.title || 'Preguntas frecuentes'}
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-[#0d4b3d]/70 to-[#0d4b3d] rounded-full mx-auto mb-4"></div>
           <p className="text-base text-gray-600 dark:text-gray-300">
-            {dictionary.web.home.faq?.description || "Respuestas a las dudas más comunes sobre Ganga-Menú y cómo crear tu menú digital"}
+            {dictionary.web.home.faq?.description ||
+              'Respuestas a las dudas más comunes sobre LupaPyme y cómo puede ayudar a tu negocio.'}
           </p>
         </motion.div>
 
@@ -88,14 +96,18 @@ export const FAQ = ({ dictionary, locale }: FAQProps) => {
               <HelpCircle className="w-8 h-8 text-[#0d4b3d] dark:text-white" />
             </div>
             <h3 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
-              {dictionary.web.home.faq?.needMore || "¿Necesitas más información?"}
+              {dictionary.web.home.faq?.contact?.title || '¿Necesitas más información?'}
             </h3>
             <p className="text-gray-600 dark:text-gray-300 text-center lg:text-left mb-4">
-              {dictionary.web.home.faq?.contactDescription || "Contáctanos si tienes dudas sobre cómo usar Ganga-Menú o quieres saber más sobre cómo digitalizar tu menú"}
+              {dictionary.web.home.faq?.contact?.description ||
+                'Contáctanos si tienes dudas sobre cómo usar LupaPyme o quieres saber más sobre cómo potenciar tu negocio.'}
             </p>
-            <Button className="gap-2 bg-[#0d4b3d] hover:bg-[#0d4b3d]/80 text-white shadow-md" asChild>
+            <Button
+              className="gap-2 bg-[#0d4b3d] hover:bg-[#0d4b3d]/80 text-white shadow-md"
+              asChild
+            >
               <Link href={`/${locale}/contact`}>
-                {dictionary.web.home.faq?.cta || "Contáctanos"}{' '}
+                {dictionary.web.home.faq?.contact?.cta || 'Contáctanos'}{' '}
                 <MessageCircle className="h-4 w-4" />
               </Link>
             </Button>
@@ -103,21 +115,21 @@ export const FAQ = ({ dictionary, locale }: FAQProps) => {
             <div className="flex gap-6 mt-8 justify-center lg:justify-start">
               <div className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 bg-[#0d4b3d]/10 dark:bg-[#0d4b3d]/30 rounded-full flex items-center justify-center">
-                  <Leaf className="w-6 h-6 text-[#0d4b3d] dark:text-white" />
+                  <BarChart3 className="w-6 h-6 text-[#0d4b3d] dark:text-white" />
                 </div>
-                <span className="text-sm text-gray-600 dark:text-gray-300">Ecológico</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">Data-driven</span>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 bg-[#0d4b3d]/10 dark:bg-[#0d4b3d]/30 rounded-full flex items-center justify-center">
-                  <DollarSign className="w-6 h-6 text-[#0d4b3d] dark:text-white" />
+                  <Lightbulb className="w-6 h-6 text-[#0d4b3d] dark:text-white" />
                 </div>
-                <span className="text-sm text-gray-600 dark:text-gray-300">Ahorro</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">Insights</span>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 bg-[#0d4b3d]/10 dark:bg-[#0d4b3d]/30 rounded-full flex items-center justify-center">
-                  <Utensils className="w-6 h-6 text-[#0d4b3d] dark:text-white" />
+                  <Heart className="w-6 h-6 text-[#0d4b3d] dark:text-white" />
                 </div>
-                <span className="text-sm text-gray-600 dark:text-gray-300">Delicioso</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">Fidelización</span>
               </div>
             </div>
           </motion.div>
@@ -130,7 +142,7 @@ export const FAQ = ({ dictionary, locale }: FAQProps) => {
             className="flex flex-col gap-4"
           >
             <Accordion type="single" collapsible className="w-full">
-              {faqItems.map((item, index) => (
+              {faqItems.map((item: FaqItem, index: number) => (
                 <AccordionItem
                   key={index}
                   value={`index-${index}`}
