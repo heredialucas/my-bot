@@ -24,11 +24,12 @@ import {
 import { Input } from '@repo/design-system/components/ui/input';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Badge } from '@repo/design-system/components/ui/badge';
-import { updateOrderAction, deleteOrderAction, createOrderAction } from '../actions';
+import { updateOrderAction, deleteOrderAction, createOrderAction, migrateClientTypeAction } from '../actions';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@repo/design-system/components/ui/dialog';
 import { Label } from '@repo/design-system/components/ui/label';
 import { Textarea } from '@repo/design-system/components/ui/textarea';
 import { DateRangeFilter } from './DateRangeFilter';
+import { ClientTypeFilter } from './ClientTypeFilter';
 import { exportOrdersAction } from '../exportOrdersAction';
 
 interface DataTableProps<TData extends { _id: string }, TValue> {
@@ -66,6 +67,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         notes: '',
         notesOwn: '',
         paymentMethod: '',
+        clientType: 'minorista' as 'minorista' | 'mayorista',
         address: {
             address: '',
             city: '',
@@ -107,6 +109,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         },
     });
     const [isExporting, setIsExporting] = React.useState(false);
+    const [isMigrating, setIsMigrating] = React.useState(false);
 
     // Lista de productos disponibles
     const availableProducts = [
@@ -118,6 +121,44 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         'Barfer box Perro Vaca',
         'Barfer box Perro Cordero'
     ];
+
+    // Lista de productos Raw para mayoristas
+    const rawProducts = [
+        'Raw Vaca',
+        'Raw Pollo',
+        'Raw Cerdo',
+        'Raw Cordero',
+        'Raw Pescado',
+        'Raw Pavo',
+        'Raw Conejo'
+    ];
+
+    // Lista de complementos sueltos para mayoristas
+    const complementProducts = [
+        'Cornalitos',
+        'Orejas',
+        'Patas',
+        'Hígado',
+        'Corazón',
+        'Riñones',
+        'Pulmones',
+        'Bazo',
+        'Mollejas',
+        'Lengua',
+        'Cabeza',
+        'Cuello',
+        'Alas',
+        'Muslos',
+        'Pechuga'
+    ];
+
+    // Función para obtener productos según el tipo de cliente
+    const getProductsByClientType = (clientType: 'minorista' | 'mayorista') => {
+        if (clientType === 'mayorista') {
+            return [...availableProducts, ...rawProducts, ...complementProducts];
+        }
+        return availableProducts;
+    };
 
     // Función para determinar si una fila debe ser roja
     const shouldHighlightRow = (row: any) => {
@@ -183,6 +224,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             notes: row.original.notes || '',
             notesOwn: row.original.notesOwn || '',
             status: row.original.status || '',
+            clientType: row.original.clientType || 'minorista',
             address: row.original.address?.address || '',
             city: row.original.address?.city || '',
             phone: row.original.address?.phone || '',
@@ -214,6 +256,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                 notes: editValues.notes,
                 notesOwn: editValues.notesOwn,
                 status: editValues.status,
+                clientType: editValues.clientType,
                 paymentMethod: editValues.paymentMethod,
                 total: Number(editValues.total),
                 subTotal: Number(editValues.subTotal),
@@ -279,6 +322,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                 notes: '',
                 notesOwn: '',
                 paymentMethod: '',
+                clientType: 'minorista' as 'minorista' | 'mayorista',
                 address: {
                     address: '',
                     city: '',
@@ -358,11 +402,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             const from = searchParams.get('from');
             const to = searchParams.get('to');
             const search = searchParams.get('search');
+            const clientType = searchParams.get('clientType');
 
             const result = await exportOrdersAction({
                 search: search || '',
                 from: from || '',
                 to: to || '',
+                clientType: clientType && clientType !== 'all' ? clientType : '',
             });
 
             if (result.success && result.data) {
@@ -405,10 +451,32 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         }
     };
 
+    const handleMigrateClientType = async () => {
+        if (!confirm('¿Estás seguro de que quieres ejecutar la migración? Esto agregará el campo "clientType" con valor "minorista" a todas las órdenes que no lo tengan.')) {
+            return;
+        }
+
+        setIsMigrating(true);
+        try {
+            const result = await migrateClientTypeAction();
+            if (result.success && 'updatedCount' in result) {
+                alert(`Migración completada exitosamente. ${result.updatedCount} órdenes actualizadas.`);
+                router.refresh();
+            } else {
+                alert(result.error || 'Error al ejecutar la migración.');
+            }
+        } catch (e) {
+            console.error('Migration failed:', e);
+            alert('Ocurrió un error al intentar ejecutar la migración.');
+        } finally {
+            setIsMigrating(false);
+        }
+    };
+
     return (
         <div>
-            <div className="flex items-center justify-between py-4">
-                <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-4 py-4">
+                <div className="flex items-center gap-4 flex-wrap">
                     <Input
                         placeholder="Buscar en todas las columnas..."
                         value={globalFilter}
@@ -416,7 +484,9 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                         className="max-w-sm"
                     />
                     <DateRangeFilter />
+                    <ClientTypeFilter />
                 </div>
+
                 <div className="flex items-center gap-2">
                     <Button
                         onClick={handleExport}
@@ -425,6 +495,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                     >
                         {isExporting ? 'Exportando...' : 'Exportar a Excel'}
                     </Button>
+                    {/* <Button
+                        onClick={handleMigrateClientType}
+                        disabled={isMigrating}
+                        className="bg-blue-600 text-white hover:bg-blue-700"
+                    >
+                        {isMigrating ? 'Migrando...' : 'Migrar Clientes'}
+                    </Button> */}
                     <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
                         <DialogTrigger asChild>
                             <Button variant="default">Crear Orden</Button>
@@ -512,6 +589,17 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                     </select>
                                 </div>
                                 <div className="space-y-2">
+                                    <Label>Tipo de Cliente</Label>
+                                    <select
+                                        value={createFormData.clientType}
+                                        onChange={(e) => handleCreateFormChange('clientType', e.target.value)}
+                                        className="w-full p-2 border border-gray-300 rounded-md"
+                                    >
+                                        <option value="minorista">Minorista</option>
+                                        <option value="mayorista">Mayorista</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
                                     <Label>Rango Horario</Label>
                                     <Input
                                         value={createFormData.deliveryArea.schedule}
@@ -563,7 +651,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                     className="flex-1 p-2 border border-gray-300 rounded-md"
                                                 >
                                                     <option value="">Seleccionar producto</option>
-                                                    {availableProducts.map(product => (
+                                                    {getProductsByClientType(createFormData.clientType).map(product => (
                                                         <option key={product} value={product}>
                                                             {product}
                                                         </option>
@@ -642,19 +730,20 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         className="p-1 text-xs border-r border-border"
                                         style={{
                                             width: index === 0 ? '60px' :  // Fecha
-                                                index === 1 ? '90px' : // Día Entrega
-                                                    index === 2 ? '100px' : // Rango Horario
-                                                        index === 3 ? '110px' : // Notas Cliente
-                                                            index === 4 ? '130px' : // Cliente
-                                                                index === 5 ? '140px' : // Dirección
-                                                                    index === 6 ? '100px' : // Teléfono
-                                                                        index === 7 ? '125px' : // Items
-                                                                            index === 8 ? '100px' : // Medio de pago
-                                                                                index === 9 ? '95px' : // Estado
-                                                                                    index === 10 ? '100px' :// Total
-                                                                                        index === 11 ? '150px' : // Notas
-                                                                                            index === 12 ? '180px' : // Mail
-                                                                                                '150px'
+                                                index === 1 ? '100px' : // Tipo Cliente
+                                                    index === 2 ? '90px' : // Día Entrega
+                                                        index === 3 ? '100px' : // Rango Horario
+                                                            index === 4 ? '110px' : // Notas Cliente
+                                                                index === 5 ? '130px' : // Cliente
+                                                                    index === 6 ? '140px' : // Dirección
+                                                                        index === 7 ? '100px' : // Teléfono
+                                                                            index === 8 ? '125px' : // Items
+                                                                                index === 9 ? '100px' : // Medio de pago
+                                                                                    index === 10 ? '95px' : // Estado
+                                                                                        index === 11 ? '100px' :// Total
+                                                                                            index === 12 ? '150px' : // Notas
+                                                                                                index === 13 ? '180px' : // Mail
+                                                                                                    '150px'
                                         }}
                                     >
                                         {header.isPlaceholder ? null : (
@@ -745,6 +834,20 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                             <option value="confirmed">Confirmado</option>
                                                             <option value="delivered">Entregado</option>
                                                             <option value="cancelled">Cancelado</option>
+                                                        </select>
+                                                    </TableCell>
+                                                );
+                                            }
+                                            if (cell.column.id === 'clientType') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <select
+                                                            value={editValues.clientType}
+                                                            onChange={e => handleChange('clientType', e.target.value)}
+                                                            className="w-full p-1 text-xs border border-gray-300 rounded-md"
+                                                        >
+                                                            <option value="minorista">Minorista</option>
+                                                            <option value="mayorista">Mayorista</option>
                                                         </select>
                                                     </TableCell>
                                                 );
@@ -907,7 +1010,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                                         className="flex-1 p-1 text-xs border border-gray-300 rounded-md"
                                                                     >
                                                                         <option value="">Seleccionar producto</option>
-                                                                        {availableProducts.map(product => (
+                                                                        {getProductsByClientType(editValues.clientType).map(product => (
                                                                             <option key={product} value={product}>
                                                                                 {product}
                                                                             </option>
@@ -963,18 +1066,20 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 className={`p-1 border-r border-border ${extraClass}`}
                                                 style={{
                                                     width: index === 0 ? '60px' :  // Fecha
-                                                        index === 1 ? '90px' : // Día Entrega
-                                                            index === 2 ? '100px' : // Rango Horario
-                                                                index === 3 ? '110px' : // Notas Cliente
-                                                                    index === 4 ? '130px' : // Cliente
-                                                                        index === 5 ? '140px' : // Dirección
-                                                                            index === 6 ? '100px' : // Teléfono
-                                                                                index === 7 ? '180px' : // Mail
+                                                        index === 1 ? '100px' : // Tipo Cliente
+                                                            index === 2 ? '90px' : // Día Entrega
+                                                                index === 3 ? '100px' : // Rango Horario
+                                                                    index === 4 ? '110px' : // Notas Cliente
+                                                                        index === 5 ? '130px' : // Cliente
+                                                                            index === 6 ? '140px' : // Dirección
+                                                                                index === 7 ? '100px' : // Teléfono
                                                                                     index === 8 ? '125px' : // Items
                                                                                         index === 9 ? '100px' : // Medio de pago
                                                                                             index === 10 ? '95px' : // Estado
                                                                                                 index === 11 ? '100px' :// Total
-                                                                                                    '150px'  // Notas
+                                                                                                    index === 12 ? '150px' : // Notas
+                                                                                                        index === 13 ? '180px' : // Mail
+                                                                                                            '150px'
                                                 }}
                                             >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

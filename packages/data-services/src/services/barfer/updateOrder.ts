@@ -8,6 +8,7 @@ const updateOrderSchema = z.object({
     user: z.any().optional(),
     notesOwn: z.string().optional(),
     paymentMethod: z.string().optional(),
+    clientType: z.enum(['minorista', 'mayorista']).optional(),
     coupon: z.any().optional(),
     deliveryArea: z.any().optional(),
     items: z.any().optional(),

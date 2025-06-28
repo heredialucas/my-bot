@@ -11,6 +11,7 @@ const createOrderSchema = z.object({
     notes: z.string().optional(),
     notesOwn: z.string().optional(),
     paymentMethod: z.string(),
+    clientType: z.enum(['minorista', 'mayorista']).default('minorista'),
     address: z.object({
         address: z.string(),
         city: z.string(),

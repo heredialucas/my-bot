@@ -42,6 +42,22 @@ export const columns: ColumnDef<Order>[] = [
         }
     },
     {
+        accessorKey: 'clientType',
+        header: 'Tipo Cliente',
+        cell: ({ row }: CellContext<Order, unknown>) => {
+            const clientType = row.getValue('clientType') as Order['clientType'];
+            const isWholesale = clientType === 'mayorista';
+            return (
+                <Badge
+                    variant={isWholesale ? 'destructive' : 'secondary'}
+                    className="text-xs"
+                >
+                    {clientType === 'mayorista' ? 'Mayorista' : 'Minorista'}
+                </Badge>
+            );
+        }
+    },
+    {
         id: 'deliveryDay',
         header: 'Día Entrega',
         cell: ({ row }: CellContext<Order, unknown>) => {

@@ -9,6 +9,7 @@ interface GetOrdersParams {
     sorting?: { id: string; desc: boolean }[];
     from?: string;
     to?: string;
+    clientType?: string;
 }
 
 /**
@@ -29,22 +30,29 @@ export async function getOrders({
     sorting = [{ id: 'createdAt', desc: true }],
     from,
     to,
+    clientType,
 }: GetOrdersParams): Promise<{ orders: Order[]; pageCount: number; total: number }> {
     try {
         const collection = await getCollection('orders');
 
-        const dateFilter: any = {};
-        if (from && to) {
-            dateFilter.createdAt = {
-                $gte: new Date(from),
-                $lte: new Date(new Date(to).setHours(23, 59, 59, 999)), // Incluye todo el día 'to'
-            };
+        const baseFilter: any = {};
+
+        // Filtro por fecha si se proporciona
+        if (from || to) {
+            baseFilter.createdAt = {};
+            if (from) {
+                baseFilter.createdAt.$gte = new Date(from);
+            }
+            if (to) {
+                baseFilter.createdAt.$lte = new Date(to);
+            }
         }
 
-        const baseFilter = {
-            'deliveryArea.sameDayDelivery': { $ne: true },
-            ...dateFilter
-        };
+        // Filtro por tipo de cliente si se proporciona
+        if (clientType && clientType !== 'all') {
+            baseFilter.clientType = clientType;
+        }
+
         const searchFilter: any = {};
 
         if (search) {
@@ -62,6 +70,7 @@ export async function getOrders({
                         { 'paymentMethod': { $regex: word, $options: 'i' } },
                         { 'status': { $regex: word, $options: 'i' } },
                         { 'notesOwn': { $regex: word, $options: 'i' } },
+                        { 'clientType': { $regex: word, $options: 'i' } },
                     ]
                 }));
             }

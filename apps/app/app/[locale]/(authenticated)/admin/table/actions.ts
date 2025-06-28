@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { updateOrder } from '@repo/data-services/src/services/barfer/updateOrder';
 import { deleteOrder } from '@repo/data-services/src/services/barfer/deleteOrder';
 import { createOrder } from '@repo/data-services/src/services/barfer/createOrder';
+import { migrateClientType } from '@repo/data-services/src/services/barfer/migrateClientType';
 
 export async function updateOrderAction(id: string, data: any) {
     try {
@@ -38,5 +39,15 @@ export async function createOrderAction(data: any) {
     } catch (error) {
         console.error('Error in createOrderAction:', error);
         return { success: false, error: 'Error al crear la orden' };
+    }
+}
+
+export async function migrateClientTypeAction() {
+    try {
+        const result = await migrateClientType();
+        revalidatePath('/admin/table');
+        return result;
+    } catch (error) {
+        return { success: false, error: (error as Error).message };
     }
 } 

@@ -23,5 +23,6 @@ export { getOrders } from './getOrders';
 export { updateOrder } from './updateOrder';
 export { deleteOrder } from './deleteOrder';
 export { createOrder } from './createOrder';
+export { migrateClientType } from './migrateClientType';
 
 // ===== CLIENT MANAGEMENT =====
