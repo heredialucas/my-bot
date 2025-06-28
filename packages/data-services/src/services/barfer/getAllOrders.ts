@@ -40,7 +40,9 @@ export async function getAllOrders({
                 baseFilter.createdAt.$gte = new Date(from);
             }
             if (to) {
-                baseFilter.createdAt.$lte = new Date(to);
+                const toDate = new Date(to);
+                toDate.setDate(toDate.getDate() + 1);
+                baseFilter.createdAt.$lt = toDate;
             }
         }
 

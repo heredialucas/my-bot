@@ -158,10 +158,8 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             // Combinar todas las listas y eliminar duplicados
             const allProducts = [...availableProducts, ...rawProducts, ...complementProducts];
             const uniqueProducts = [...new Set(allProducts)];
-            console.log('Productos para mayorista:', uniqueProducts);
             return uniqueProducts;
         }
-        console.log('Productos para minorista:', availableProducts);
         return availableProducts;
     };
 
