@@ -116,6 +116,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
     const [isExporting, setIsExporting] = React.useState(false);
     const [isMigrating, setIsMigrating] = React.useState(false);
     const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
+    const [productSearchFilter, setProductSearchFilter] = React.useState('');
 
     // Lista de productos disponibles
     const availableProducts = [
@@ -133,6 +134,10 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         'Barfer box Perro Vaca 10kg',
         'Barfer box Perro Cordero 5kg',
         'Barfer box Perro Cordero 10kg',
+        'BIG DOG (15kg) - POLLO',
+        'BIG DOG (15kg) - VACA',
+        'HUESOS CARNOSOS - 5KG',
+        'Box de Complementos - 1 U',
         'Cornalitos',
         'Orejas'
     ];
@@ -168,11 +173,52 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         return availableProducts;
     };
 
+    // Función para filtrar productos por búsqueda
+    const getFilteredProducts = (clientType: 'minorista' | 'mayorista', searchTerm: string) => {
+        const products = getProductsByClientType(clientType);
+        if (!searchTerm) return products;
+
+        return products.filter(product =>
+            product.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    };
+
     // Función para determinar el color de la fila
     const shouldHighlightRow = (row: any) => {
         const status = row.original.status?.toLowerCase();
         if (status === 'delivered') return 'green';
         return null;
+    };
+
+    // Función para determinar el color de fondo de la celda de fecha
+    const getDateCellBackgroundColor = (deliveryDay: string) => {
+        if (!deliveryDay) return '';
+
+        const date = new Date(deliveryDay);
+        const day = date.getDay();
+
+        switch (day) {
+            case 1: // Lunes
+                return 'bg-green-100';
+            case 2: // Martes
+                return 'bg-yellow-100';
+            case 3: // Miércoles
+                return 'bg-red-100';
+            case 4: // Jueves
+                return 'bg-yellow-600';
+            case 6: // Sábado
+                return 'bg-blue-100';
+            default:
+                return '';
+        }
+    };
+
+    // Función para determinar el color de fondo de la celda de estado
+    const getStatusCellBackgroundColor = (status: string) => {
+        if (status === 'pending') {
+            return 'bg-red-100';
+        }
+        return '';
     };
 
     const table = useReactTable({
@@ -226,6 +272,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
 
     const handleEditClick = (row: any) => {
         setEditingRowId(row.id);
+        setProductSearchFilter('');
         setEditValues({
             notes: row.original.notes || '',
             notesOwn: row.original.notesOwn || '',
@@ -250,6 +297,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
     const handleCancel = () => {
         setEditingRowId(null);
         setEditValues({});
+        setProductSearchFilter('');
     };
 
     const handleChange = (field: string, value: any) => {
@@ -259,6 +307,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
     const handleSave = async (row: any) => {
         setLoading(true);
         try {
+            // Filtrar items: eliminar los que no tienen nombre o tienen cantidad 0
+            const filteredItems = editValues.items?.filter((item: any) => {
+                const hasName = item.name && item.name.trim() !== '';
+                const hasQuantity = item.options?.[0]?.quantity > 0;
+                return hasName && hasQuantity;
+            }) || [];
+
             const result = await updateOrderAction(row.id, {
                 notes: editValues.notes,
                 notesOwn: editValues.notesOwn,
@@ -284,12 +339,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                     ...row.original.deliveryArea,
                     schedule: editValues.deliveryAreaSchedule,
                 },
-                items: editValues.items,
+                items: filteredItems,
                 deliveryDay: editValues.deliveryDay,
             });
             if (!result.success) throw new Error(result.error || 'Error al guardar');
             setEditingRowId(null);
             setEditValues({});
+            setProductSearchFilter('');
             router.refresh();
         } catch (e) {
             alert(e instanceof Error ? e.message : 'Error al guardar los cambios');
@@ -319,7 +375,19 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         console.log('Creating order with data:', createFormData);
         setLoading(true);
         try {
-            const result = await createOrderAction(createFormData);
+            // Filtrar items: eliminar los que no tienen nombre o tienen cantidad 0
+            const filteredItems = createFormData.items?.filter((item: any) => {
+                const hasName = item.name && item.name.trim() !== '';
+                const hasQuantity = item.options?.[0]?.quantity > 0;
+                return hasName && hasQuantity;
+            }) || [];
+
+            const orderDataWithFilteredItems = {
+                ...createFormData,
+                items: filteredItems
+            };
+
+            const result = await createOrderAction(orderDataWithFilteredItems);
             if (!result.success) throw new Error(result.error || 'Error al crear');
             setShowCreateModal(false);
             setCreateFormData({
@@ -692,7 +760,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                     className="flex-1 p-2 border border-gray-300 rounded-md"
                                                 >
                                                     <option value="">Seleccionar producto</option>
-                                                    {getProductsByClientType(createFormData.orderType).map(product => (
+                                                    {getProductsByClientType('mayorista').map(product => (
                                                         <option key={product} value={product}>
                                                             {product}
                                                         </option>
@@ -702,15 +770,24 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                     type="number"
                                                     value={item.options?.[0]?.quantity || 1}
                                                     onChange={(e) => {
-                                                        const newItems = [...createFormData.items];
-                                                        newItems[index] = {
-                                                            ...newItems[index],
-                                                            options: [{
-                                                                ...newItems[index].options?.[0],
-                                                                quantity: parseInt(e.target.value) || 1
-                                                            }]
-                                                        };
-                                                        handleCreateFormChange('items', newItems);
+                                                        const quantity = parseInt(e.target.value) || 0;
+
+                                                        if (quantity <= 0) {
+                                                            // Eliminar el item si la cantidad es 0 o menor
+                                                            const newItems = createFormData.items.filter((_: any, i: number) => i !== index);
+                                                            handleCreateFormChange('items', newItems);
+                                                        } else {
+                                                            // Actualizar la cantidad
+                                                            const newItems = [...createFormData.items];
+                                                            newItems[index] = {
+                                                                ...newItems[index],
+                                                                options: [{
+                                                                    ...newItems[index].options?.[0],
+                                                                    quantity: quantity
+                                                                }]
+                                                            };
+                                                            handleCreateFormChange('items', newItems);
+                                                        }
                                                     }}
                                                     className="w-20 p-2"
                                                     placeholder="Qty"
@@ -803,16 +880,16 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         key={header.id}
                                         className="px-0 py-1 text-xs border-r border-border"
                                         style={{
-                                            width: index === 0 ? '100px' :  // Tipo Cliente
-                                                index === 1 ? '90px' : // Fecha (antes Día Entrega)
+                                            width: index === 0 ? '80px' :  // Tipo Cliente
+                                                index === 1 ? '70px' : // Fecha (antes Día Entrega)
                                                     index === 2 ? '100px' : // Rango Horario
                                                         index === 3 ? '110px' : // Notas Cliente
                                                             index === 4 ? '130px' : // Cliente
                                                                 index === 5 ? '140px' : // Dirección
                                                                     index === 6 ? '100px' : // Teléfono
-                                                                        index === 7 ? '125px' : // Items
+                                                                        index === 7 ? '220px' : // Items
                                                                             index === 8 ? '100px' : // Medio de pago
-                                                                                index === 9 ? '95px' : // Estado
+                                                                                index === 9 ? '75px' : // Estado
                                                                                     index === 10 ? '100px' :// Total
                                                                                         index === 11 ? '150px' : // Notas
                                                                                             index === 12 ? '180px' : // Mail
@@ -899,8 +976,9 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 );
                                             }
                                             if (cell.column.id === 'status') {
+                                                const bgColor = getStatusCellBackgroundColor(editValues.status);
                                                 return (
-                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
+                                                    <TableCell key={cell.id} className={`px-0 py-1 border-r border-border ${bgColor}`}>
                                                         <select
                                                             value={editValues.status}
                                                             onChange={e => handleChange('status', e.target.value)}
@@ -1076,6 +1154,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 return (
                                                     <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <div className="space-y-1">
+                                                            {/* Buscador de productos */}
+                                                            <Input
+                                                                placeholder="Buscar producto..."
+                                                                value={productSearchFilter}
+                                                                onChange={(e) => setProductSearchFilter(e.target.value)}
+                                                                className="w-full p-1 text-xs"
+                                                            />
                                                             {editValues.items?.map((item: any, index: number) => (
                                                                 <div key={index} className="flex gap-1">
                                                                     <select
@@ -1092,7 +1177,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                                         className="flex-1 p-1 text-xs border border-gray-300 rounded-md text-center"
                                                                     >
                                                                         <option value="">Seleccionar producto</option>
-                                                                        {getProductsByClientType(editValues.orderType).map(product => (
+                                                                        {getFilteredProducts(editValues.orderType, productSearchFilter).map(product => (
                                                                             <option key={product} value={product}>
                                                                                 {product}
                                                                             </option>
@@ -1102,15 +1187,24 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                                         type="number"
                                                                         value={item.options?.[0]?.quantity || 1}
                                                                         onChange={e => {
-                                                                            const newItems = [...editValues.items];
-                                                                            newItems[index] = {
-                                                                                ...newItems[index],
-                                                                                options: [{
-                                                                                    ...newItems[index].options?.[0],
-                                                                                    quantity: parseInt(e.target.value) || 1
-                                                                                }]
-                                                                            };
-                                                                            handleChange('items', newItems);
+                                                                            const quantity = parseInt(e.target.value) || 0;
+
+                                                                            if (quantity <= 0) {
+                                                                                // Eliminar el item si la cantidad es 0 o menor
+                                                                                const newItems = editValues.items.filter((_: any, i: number) => i !== index);
+                                                                                handleChange('items', newItems);
+                                                                            } else {
+                                                                                // Actualizar la cantidad
+                                                                                const newItems = [...editValues.items];
+                                                                                newItems[index] = {
+                                                                                    ...newItems[index],
+                                                                                    options: [{
+                                                                                        ...newItems[index].options?.[0],
+                                                                                        quantity: quantity
+                                                                                    }]
+                                                                                };
+                                                                                handleChange('items', newItems);
+                                                                            }
                                                                         }}
                                                                         className="w-12 p-1 text-xs text-center"
                                                                         placeholder="Qty"
@@ -1142,8 +1236,9 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 );
                                             }
                                             if (cell.column.id === 'deliveryDay' || cell.column.id === 'fecha') {
+                                                const bgColor = getDateCellBackgroundColor(editValues.deliveryDay || '');
                                                 return (
-                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
+                                                    <TableCell key={cell.id} className={`px-0 py-1 border-r border-border ${bgColor}`}>
                                                         <Popover>
                                                             <PopoverTrigger asChild>
                                                                 <Input
@@ -1171,21 +1266,35 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 );
                                             }
                                         }
+                                        // Aplicar color de fondo para la celda de fecha
+                                        let dateBgColor = '';
+                                        if (cell.column.id === 'deliveryDay' || cell.column.id === 'fecha') {
+                                            const deliveryDay = (row.original as any).deliveryDay;
+                                            dateBgColor = getDateCellBackgroundColor(deliveryDay);
+                                        }
+
+                                        // Aplicar color de fondo para la celda de estado
+                                        let statusBgColor = '';
+                                        if (cell.column.id === 'status') {
+                                            const status = (row.original as any).status;
+                                            statusBgColor = getStatusCellBackgroundColor(status);
+                                        }
+
                                         return (
                                             <TableCell
                                                 key={cell.id}
-                                                className={`px-0 py-1 border-r border-border ${extraClass} text-center`}
+                                                className={`px-0 py-1 border-r border-border ${extraClass} ${dateBgColor} ${statusBgColor} text-center`}
                                                 style={{
-                                                    width: index === 0 ? '100px' :  // Tipo Cliente
-                                                        index === 1 ? '90px' : // Fecha (antes Día Entrega)
+                                                    width: index === 0 ? '80px' :  // Tipo Cliente
+                                                        index === 1 ? '70px' : // Fecha (antes Día Entrega)
                                                             index === 2 ? '100px' : // Rango Horario
                                                                 index === 3 ? '110px' : // Notas Cliente
                                                                     index === 4 ? '130px' : // Cliente
                                                                         index === 5 ? '140px' : // Dirección
                                                                             index === 6 ? '100px' : // Teléfono
-                                                                                index === 7 ? '125px' : // Items
+                                                                                index === 7 ? '220px' : // Items
                                                                                     index === 8 ? '100px' : // Medio de pago
-                                                                                        index === 9 ? '95px' : // Estado
+                                                                                        index === 9 ? '75px' : // Estado
                                                                                             index === 10 ? '100px' :// Total
                                                                                                 index === 11 ? '150px' : // Notas
                                                                                                     index === 12 ? '180px' : // Mail
