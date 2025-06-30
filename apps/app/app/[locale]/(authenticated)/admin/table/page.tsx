@@ -13,7 +13,7 @@ export default async function TablePage({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
     const { locale } = await params;
-    const { page, pageSize, search, sort, from, to, clientType } = await searchParams || { page: '1', pageSize: '50', search: '', sort: 'createdAt.desc', from: '', to: '', clientType: '' };
+    const { page, pageSize, search, sort, from, to, orderType } = await searchParams || { page: '1', pageSize: '50', search: '', sort: 'createdAt.desc', from: '', to: '', clientType: '' };
 
     const currentPage = Number(page) || 1;
     const currentPageSize = Number(pageSize) || 50;
@@ -22,7 +22,7 @@ export default async function TablePage({
     const [sortId, sortOrder] = currentSort.split('.');
     const fromDate = from as string | undefined;
     const toDate = to as string | undefined;
-    const currentClientType = (clientType as string) || '';
+    const currentOrderType = (orderType as string) || '';
 
     const pagination: PaginationState = {
         pageIndex: currentPage - 1,
@@ -41,7 +41,7 @@ export default async function TablePage({
         sorting,
         from: fromDate,
         to: toDate,
-        clientType: currentClientType,
+        orderType: currentOrderType,
     });
     //mmm
     const dictionary = await getDictionary(locale);

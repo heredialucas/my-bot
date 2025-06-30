@@ -7,21 +7,22 @@ interface ExportParams {
     search?: string;
     from?: string;
     to?: string;
-    clientType?: string;
+    orderType?: string;
 }
 
 export async function exportOrdersAction({
     search = '',
     from = '',
     to = '',
-    clientType = '',
+    orderType = '',
 }: ExportParams): Promise<{ success: boolean; data?: string; error?: string }> {
     try {
         const orders = await getAllOrders({
-            search,
+            search: search || '',
+            sorting: [{ id: 'createdAt', desc: true }],
             from: from || undefined,
             to: to || undefined,
-            clientType: clientType && clientType !== 'all' ? clientType : undefined,
+            orderType: orderType && orderType !== 'all' ? orderType : undefined,
         });
 
         if (orders.length === 0) {

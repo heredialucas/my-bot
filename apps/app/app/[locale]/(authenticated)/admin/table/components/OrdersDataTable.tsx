@@ -411,13 +411,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             const from = searchParams.get('from');
             const to = searchParams.get('to');
             const search = searchParams.get('search');
-            const clientType = searchParams.get('clientType');
+            const orderType = searchParams.get('orderType');
 
             const result = await exportOrdersAction({
                 search: search || '',
                 from: from || '',
                 to: to || '',
-                clientType: clientType && clientType !== 'all' ? clientType : '',
+                orderType: orderType && orderType !== 'all' ? orderType : '',
             });
 
             if (result.success && result.data) {
