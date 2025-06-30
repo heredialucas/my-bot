@@ -17,6 +17,7 @@ import {
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Dictionary } from '@repo/internationalization';
 import type { SidebarItem } from '@repo/auth/server-permissions';
+import { useSidebar } from '@/store/sidebarStore';
 
 // Mapeo de iconos
 const ICON_MAP = {
@@ -35,6 +36,7 @@ export function AdminSidebarClient({ items, dictionary }: AdminSidebarClientProp
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const activeTab = searchParams.get('tab') || 'config';
+    const { isCollapsed } = useSidebar();
 
     const isActivePath = (path: string) => {
         if (path.includes('?tab=')) {
@@ -47,23 +49,45 @@ export function AdminSidebarClient({ items, dictionary }: AdminSidebarClientProp
     return (
         <>
             {/* Desktop Sidebar */}
-            <Sidebar variant="inset" className="hidden md:block border-r border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 fixed left-0 top-16 bottom-0 w-64 overflow-y-auto">
+            <Sidebar
+                variant="inset"
+                className={cn(
+                    "hidden md:flex border-r border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 h-full flex-col relative",
+                    isCollapsed ? "w-20" : "w-64"
+                )}
+            >
                 <SidebarContent>
                     <SidebarMenu>
                         {items.map((item) => {
                             const IconComponent = ICON_MAP[item.icon as keyof typeof ICON_MAP];
+                            const itemLabel = dictionary.app.admin.navigation[item.label as keyof typeof dictionary.app.admin.navigation] || item.label;
+
                             return (
                                 <SidebarMenuItem
                                     key={item.label}
                                     className={cn(
+                                        "group relative flex",
                                         isActivePath(item.href) && "text-green-500 bg-green-500/10",
                                         !isActivePath(item.href) && "text-gray-600 dark:text-zinc-400"
                                     )}
                                 >
-                                    <Link href={item.href} className="flex items-center gap-3 px-3 py-2 rounded-lg w-full hover:bg-gray-100 dark:hover:bg-zinc-800">
-                                        {IconComponent && <IconComponent className="h-5 w-5" />}
-                                        <span>{dictionary.app.admin.navigation[item.label as keyof typeof dictionary.app.admin.navigation] || item.label}</span>
+                                    <Link href={item.href} className={cn(
+                                        "flex flex-1 items-center gap-3 py-2 rounded-lg w-full hover:bg-gray-100 dark:hover:bg-zinc-800",
+                                        isCollapsed ? "px-3 justify-center" : "px-3"
+                                    )}>
+                                        {IconComponent && <IconComponent className="h-5 w-5 shrink-0" />}
+                                        <span className={cn(
+                                            "transition-all",
+                                            isCollapsed && "sr-only"
+                                        )}>
+                                            {itemLabel}
+                                        </span>
                                     </Link>
+                                    {isCollapsed && (
+                                        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 px-2 py-1 bg-gray-900 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap dark:bg-gray-50 dark:text-gray-900">
+                                            {itemLabel}
+                                        </div>
+                                    )}
                                 </SidebarMenuItem>
                             );
                         })}
