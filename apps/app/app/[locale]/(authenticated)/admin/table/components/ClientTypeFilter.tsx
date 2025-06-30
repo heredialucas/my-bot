@@ -3,20 +3,20 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/design-system/components/ui/select';
 
-export function ClientTypeFilter() {
+export function OrderTypeFilter() {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const currentClientType = searchParams.get('clientType') || 'all';
+    const currentOrderType = searchParams.get('orderType') || 'all';
 
-    const handleClientTypeChange = (value: string) => {
+    const handleOrderTypeChange = (value: string) => {
         const params = new URLSearchParams(searchParams);
 
         if (value && value !== 'all') {
-            params.set('clientType', value);
+            params.set('orderType', value);
         } else {
-            params.delete('clientType');
+            params.delete('orderType');
         }
 
         // Reset to first page when filtering
@@ -27,8 +27,8 @@ export function ClientTypeFilter() {
 
     return (
         <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Tipo Cliente:</span>
-            <Select value={currentClientType} onValueChange={handleClientTypeChange}>
+            <span className="text-sm font-medium">Tipo Orden:</span>
+            <Select value={currentOrderType} onValueChange={handleOrderTypeChange}>
                 <SelectTrigger className="w-[140px]">
                     <SelectValue placeholder="Todos" />
                 </SelectTrigger>

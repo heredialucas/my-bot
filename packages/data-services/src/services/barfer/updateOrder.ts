@@ -8,7 +8,7 @@ const updateOrderSchema = z.object({
     user: z.any().optional(),
     notesOwn: z.string().optional(),
     paymentMethod: z.string().optional(),
-    clientType: z.enum(['minorista', 'mayorista']).optional(),
+    orderType: z.enum(['minorista', 'mayorista']).optional(),
     coupon: z.any().optional(),
     deliveryArea: z.any().optional(),
     items: z.any().optional(),
@@ -16,6 +16,7 @@ const updateOrderSchema = z.object({
     subTotal: z.number().optional(),
     shippingPrice: z.number().optional(),
     updatedAt: z.string().optional(),
+    deliveryDay: z.string().optional(),
     // Agrega aquí otros campos editables si es necesario
 });
 
@@ -34,4 +35,14 @@ export async function updateOrder(id: string, data: any) {
     console.log('result', result);
     if (!result) throw new Error('Order not found');
     return result.value;
+}
+
+export async function updateOrdersStatusBulk(ids: string[], status: string) {
+    const collection = await getCollection('orders');
+    const objectIds = ids.map(id => new ObjectId(id));
+    const result = await collection.updateMany(
+        { _id: { $in: objectIds } },
+        { $set: { status, updatedAt: new Date().toISOString() } }
+    );
+    return { success: true, modifiedCount: result.modifiedCount };
 } 

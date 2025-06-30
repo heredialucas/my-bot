@@ -21,96 +21,67 @@ const paymentMethodTranslations: Record<string, string> = {
 
 export const columns: ColumnDef<Order>[] = [
     {
-        accessorKey: 'createdAt',
-        header: 'Fecha',
+        accessorKey: 'orderType',
+        header: 'Tipo Orden',
         cell: ({ row }: CellContext<Order, unknown>) => {
-            const date = new Date(row.getValue('createdAt') as string);
-            const day = date.getDay();
-            const dayBg = {
-                1: 'bg-green-100 text-green-900',    // Lunes
-                2: 'bg-yellow-100 text-yellow-900',  // Martes
-                3: 'bg-red-100 text-red-900',        // Miércoles
-                4: 'bg-amber-200 text-amber-900',    // Jueves (marrón suave)
-                6: 'bg-blue-100 text-blue-900',      // Sábado
-            }[day] || '';
-
-            return (
-                <div className={`min-w-[10px] text-center rounded font-medium ${dayBg}`}>
-                    {date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' })}
-                </div>
-            );
-        }
-    },
-    {
-        accessorKey: 'clientType',
-        header: 'Tipo Cliente',
-        cell: ({ row }: CellContext<Order, unknown>) => {
-            const clientType = row.getValue('clientType') as Order['clientType'];
-            const isWholesale = clientType === 'mayorista';
+            const orderType = row.getValue('orderType') as Order['orderType'];
+            const isWholesale = orderType === 'mayorista';
             return (
                 <Badge
                     variant={isWholesale ? 'destructive' : 'secondary'}
                     className="text-xs"
                 >
-                    {clientType === 'mayorista' ? 'Mayorista' : 'Minorista'}
+                    {orderType === 'mayorista' ? 'Mayorista' : 'Minorista'}
                 </Badge>
             );
         }
     },
     {
         id: 'deliveryDay',
-        header: 'Día Entrega',
+        header: 'Fecha',
         cell: ({ row }: CellContext<Order, unknown>) => {
-            const schedule = row.original.deliveryArea?.schedule;
-            const createdAt = new Date(row.original.createdAt);
-
-            if (!schedule || !createdAt) {
-                return <div className="w-full text-center text-sm">N/A</div>;
-            }
-
-            const daysOfWeek: Record<string, number> = {
-                domingo: 0, lunes: 1, martes: 2, miercoles: 3,
-                jueves: 4, viernes: 5, sabado: 6
-            };
-
-            const daysRegex = /(Lunes|Martes|Mi[eé]rcoles|Jueves|Viernes|S[áa]bado|Domingo)/gi;
-            const matches = schedule.match(daysRegex);
-
-            if (!matches) {
+            const deliveryDay = row.original.deliveryDay;
+            if (!deliveryDay) {
                 return <div className="w-full text-center text-sm">--</div>;
             }
-
-            const deliveryDays = [...new Set(matches)].map(day => {
-                const normalizedDay = day.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                return daysOfWeek[normalizedDay];
-            }).filter(day => day !== undefined);
-
-            if (deliveryDays.length === 0) {
-                return <div className="w-full text-center text-sm">--</div>;
-            }
-
-            let deliveryDate = new Date(createdAt);
-            deliveryDate.setDate(deliveryDate.getDate() + 1); // Start checking from the next day
-
-            while (!deliveryDays.includes(deliveryDate.getDay())) {
-                deliveryDate.setDate(deliveryDate.getDate() + 1);
-            }
-
-            const formattedDeliveryDate = deliveryDate.toLocaleDateString('es-AR', {
-                weekday: 'short',
+            const date = new Date(deliveryDay);
+            const formatted = date.toLocaleDateString('es-AR', {
                 day: '2-digit',
-                month: '2-digit',
-            }).replace(/[,.]/g, '').toLowerCase();
-
-
+                month: 'short',
+            }).replace('.', '').replace(/\s/g, '-');
+            // Colores por día de la semana
+            const day = date.getDay();
+            let bgColor = '';
+            switch (day) {
+                case 1: // Lunes
+                    bgColor = 'bg-green-100';
+                    break;
+                case 2: // Martes
+                    bgColor = 'bg-yellow-100';
+                    break;
+                case 3: // Miércoles
+                    bgColor = 'bg-red-100';
+                    break;
+                case 4: // Jueves
+                    bgColor = 'bg-yellow-600';
+                    break;
+                case 6: // Sábado
+                    bgColor = 'bg-blue-100';
+                    break;
+                default:
+                    bgColor = '';
+            }
             return (
-                <div className="flex h-full w-full items-center justify-center text-center">
+                <div className={`flex h-full w-full items-center justify-center text-center ${bgColor} rounded-sm`} style={{ minWidth: 60, maxWidth: 70 }}>
                     <span className="font-semibold text-gray-800 dark:text-gray-200">
-                        {formattedDeliveryDate || '--'}
+                        {formatted}
                     </span>
                 </div>
             );
-        }
+        },
+        size: 70, // Más angosto
+        minSize: 60,
+        maxSize: 80,
     },
     {
         accessorKey: 'deliveryArea.schedule',
@@ -205,7 +176,14 @@ export const columns: ColumnDef<Order>[] = [
         cell: ({ row }: CellContext<Order, unknown>) => {
             const status = row.getValue('status') as Order['status'];
             const translatedStatus = statusTranslations[status] || status;
-            return <Badge variant={status === 'confirmed' ? 'default' : 'secondary'} className="text-xs">{translatedStatus}</Badge>;
+            let colorClass = '';
+            if (status === 'pending') colorClass = 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300';
+            if (status === 'confirmed') colorClass = 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300';
+            return (
+                <span className={`text-xs px-2 py-1 rounded ${colorClass}`}>
+                    {translatedStatus}
+                </span>
+            );
         }
     },
     {

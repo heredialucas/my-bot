@@ -49,7 +49,8 @@ export interface Order {
     paymentMethod: string;
     coupon: Coupon | null;
     deliveryArea: DeliveryArea;
-    clientType: 'minorista' | 'mayorista';
+    orderType: 'minorista' | 'mayorista';
+    deliveryDay: string;
     createdAt: string;
     updatedAt: string;
 }

@@ -11,7 +11,7 @@ const createOrderSchema = z.object({
     notes: z.string().optional(),
     notesOwn: z.string().optional(),
     paymentMethod: z.string(),
-    clientType: z.enum(['minorista', 'mayorista']).default('minorista'),
+    orderType: z.enum(['minorista', 'mayorista']).default('minorista'),
     address: z.object({
         address: z.string(),
         city: z.string(),
@@ -56,6 +56,7 @@ const createOrderSchema = z.object({
         discount: z.number(),
         type: z.enum(['percentage', 'fixed']),
     }).optional(),
+    deliveryDay: z.string(),
 });
 
 export async function createOrder(data: z.infer<typeof createOrderSchema>): Promise<{ success: boolean; order?: Order; error?: string }> {

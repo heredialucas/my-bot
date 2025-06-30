@@ -4,6 +4,7 @@ import { updateOrder } from '@repo/data-services/src/services/barfer/updateOrder
 import { deleteOrder } from '@repo/data-services/src/services/barfer/deleteOrder';
 import { createOrder } from '@repo/data-services/src/services/barfer/createOrder';
 import { migrateClientType } from '@repo/data-services/src/services/barfer/migrateClientType';
+import { updateOrdersStatusBulk } from '@repo/data-services/src/services/barfer/updateOrder';
 
 export async function updateOrderAction(id: string, data: any) {
     try {
@@ -50,4 +51,9 @@ export async function migrateClientTypeAction() {
     } catch (error) {
         return { success: false, error: (error as Error).message };
     }
+}
+
+export async function updateOrdersStatusBulkAction(ids: string[], status: string) {
+    'use server';
+    return await updateOrdersStatusBulk(ids, status);
 } 

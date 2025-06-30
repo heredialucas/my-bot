@@ -24,13 +24,17 @@ import {
 import { Input } from '@repo/design-system/components/ui/input';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Badge } from '@repo/design-system/components/ui/badge';
-import { updateOrderAction, deleteOrderAction, createOrderAction, migrateClientTypeAction } from '../actions';
+import { updateOrderAction, deleteOrderAction, createOrderAction, migrateClientTypeAction, updateOrdersStatusBulkAction } from '../actions';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@repo/design-system/components/ui/dialog';
 import { Label } from '@repo/design-system/components/ui/label';
 import { Textarea } from '@repo/design-system/components/ui/textarea';
 import { DateRangeFilter } from './DateRangeFilter';
-import { ClientTypeFilter } from './ClientTypeFilter';
+import { OrderTypeFilter } from './ClientTypeFilter';
 import { exportOrdersAction } from '../exportOrdersAction';
+import { Calendar } from '@repo/design-system/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@repo/design-system/components/ui/popover';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 interface DataTableProps<TData extends { _id: string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -67,7 +71,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         notes: '',
         notesOwn: '',
         paymentMethod: '',
-        clientType: 'minorista' as 'minorista' | 'mayorista',
+        orderType: 'minorista' as 'minorista' | 'mayorista',
         address: {
             address: '',
             city: '',
@@ -107,9 +111,11 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             whatsappNumber: '',
             sheetName: '',
         },
+        deliveryDay: '',
     });
     const [isExporting, setIsExporting] = React.useState(false);
     const [isMigrating, setIsMigrating] = React.useState(false);
+    const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
 
     // Lista de productos disponibles
     const availableProducts = [
@@ -165,11 +171,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
     // Función para determinar el color de la fila
     const shouldHighlightRow = (row: any) => {
         const status = row.original.status?.toLowerCase();
-        const paymentMethod = row.original.paymentMethod?.toLowerCase() || '';
-        const isTransfer = paymentMethod.includes('mercado') || paymentMethod.includes('transfer');
-
-        if (status === 'pending' && isTransfer) return 'red';
-        if (status === 'confirmed' && isTransfer) return 'green';
+        if (status === 'delivered') return 'green';
         return null;
     };
 
@@ -181,6 +183,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             sorting,
             pagination,
             globalFilter,
+            rowSelection,
         },
         getRowId: (row) => row._id,
         manualPagination: true,
@@ -205,6 +208,8 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             }
             router.push(`${pathname}?${params.toString()}`);
         },
+        onRowSelectionChange: setRowSelection,
+        enableRowSelection: true,
     });
 
     // Debounce para la búsqueda
@@ -225,7 +230,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             notes: row.original.notes || '',
             notesOwn: row.original.notesOwn || '',
             status: row.original.status || '',
-            clientType: row.original.clientType || 'minorista',
+            orderType: row.original.orderType || 'minorista',
             address: row.original.address?.address || '',
             city: row.original.address?.city || '',
             phone: row.original.address?.phone || '',
@@ -238,6 +243,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             shippingPrice: row.original.shippingPrice || 0,
             deliveryAreaSchedule: row.original.deliveryArea?.schedule || '',
             items: row.original.items || [],
+            deliveryDay: row.original.deliveryDay || '',
         });
     };
 
@@ -257,7 +263,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                 notes: editValues.notes,
                 notesOwn: editValues.notesOwn,
                 status: editValues.status,
-                clientType: editValues.clientType,
+                orderType: editValues.orderType,
                 paymentMethod: editValues.paymentMethod,
                 total: Number(editValues.total),
                 subTotal: Number(editValues.subTotal),
@@ -279,6 +285,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                     schedule: editValues.deliveryAreaSchedule,
                 },
                 items: editValues.items,
+                deliveryDay: editValues.deliveryDay,
             });
             if (!result.success) throw new Error(result.error || 'Error al guardar');
             setEditingRowId(null);
@@ -323,7 +330,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                 notes: '',
                 notesOwn: '',
                 paymentMethod: '',
-                clientType: 'minorista' as 'minorista' | 'mayorista',
+                orderType: 'minorista' as 'minorista' | 'mayorista',
                 address: {
                     address: '',
                     city: '',
@@ -363,6 +370,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                     whatsappNumber: '',
                     sheetName: '',
                 },
+                deliveryDay: '',
             });
             router.refresh();
         } catch (e) {
@@ -474,6 +482,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         }
     };
 
+    const headerCheckboxRef = React.useRef<HTMLInputElement>(null);
+    React.useEffect(() => {
+        if (headerCheckboxRef.current) {
+            headerCheckboxRef.current.indeterminate = table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected();
+        }
+    }, [table.getIsSomeRowsSelected(), table.getIsAllRowsSelected()]);
+
     return (
         <div>
             <div className="flex flex-col gap-4 py-4">
@@ -485,7 +500,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                         className="max-w-sm"
                     />
                     <DateRangeFilter />
-                    <ClientTypeFilter />
+                    <OrderTypeFilter />
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -592,8 +607,8 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                 <div className="space-y-2">
                                     <Label>Tipo de Cliente</Label>
                                     <select
-                                        value={createFormData.clientType}
-                                        onChange={(e) => handleCreateFormChange('clientType', e.target.value)}
+                                        value={createFormData.orderType}
+                                        onChange={(e) => handleCreateFormChange('orderType', e.target.value)}
                                         className="w-full p-2 border border-gray-300 rounded-md"
                                     >
                                         <option value="minorista">Minorista</option>
@@ -633,6 +648,31 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         placeholder="Notas propias"
                                     />
                                 </div>
+                                <div className="space-y-2">
+                                    <Label>Fecha de Entrega</Label>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Input
+                                                readOnly
+                                                value={createFormData.deliveryDay ? format(new Date(createFormData.deliveryDay), 'PPP', { locale: es }) : ''}
+                                                placeholder="Seleccionar fecha"
+                                            />
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={createFormData.deliveryDay ? new Date(createFormData.deliveryDay) : undefined}
+                                                onSelect={(date) => {
+                                                    if (date) {
+                                                        handleCreateFormChange('deliveryDay', date.toISOString());
+                                                    }
+                                                }}
+                                                locale={es}
+                                                initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
                                 <div className="space-y-2 col-span-2">
                                     <Label>Items</Label>
                                     <div className="space-y-2">
@@ -652,7 +692,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                     className="flex-1 p-2 border border-gray-300 rounded-md"
                                                 >
                                                     <option value="">Seleccionar producto</option>
-                                                    {getProductsByClientType(createFormData.clientType).map(product => (
+                                                    {getProductsByClientType(createFormData.orderType).map(product => (
                                                         <option key={product} value={product}>
                                                             {product}
                                                         </option>
@@ -718,6 +758,29 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                             </div>
                         </DialogContent>
                     </Dialog>
+                    <Button
+                        variant="default"
+                        disabled={Object.keys(rowSelection).length === 0 || loading}
+                        onClick={async () => {
+                            const selectedIds = Object.keys(rowSelection).filter((id) => rowSelection[id]);
+                            setLoading(true);
+                            try {
+                                const result = await updateOrdersStatusBulkAction(selectedIds, 'delivered');
+                                if (result.success) {
+                                    setRowSelection({});
+                                    router.refresh();
+                                } else {
+                                    alert('No se pudo actualizar el estado.');
+                                }
+                            } catch (e) {
+                                alert('Ocurrió un error al actualizar las órdenes.');
+                            } finally {
+                                setLoading(false);
+                            }
+                        }}
+                    >
+                        Marcar como Entregado
+                    </Button>
                 </div>
             </div>
             <div className="rounded-md border">
@@ -725,26 +788,33 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
+                                <TableHead className="p-1 text-xs border-r border-border" style={{ width: '32px' }}>
+                                    <input
+                                        type="checkbox"
+                                        ref={headerCheckboxRef}
+                                        checked={table.getIsAllRowsSelected()}
+                                        onChange={table.getToggleAllRowsSelectedHandler()}
+                                    />
+                                </TableHead>
                                 {headerGroup.headers.map((header, index) => (
                                     <TableHead
                                         key={header.id}
                                         className="p-1 text-xs border-r border-border"
                                         style={{
-                                            width: index === 0 ? '60px' :  // Fecha
-                                                index === 1 ? '100px' : // Tipo Cliente
-                                                    index === 2 ? '90px' : // Día Entrega
-                                                        index === 3 ? '100px' : // Rango Horario
-                                                            index === 4 ? '110px' : // Notas Cliente
-                                                                index === 5 ? '130px' : // Cliente
-                                                                    index === 6 ? '140px' : // Dirección
-                                                                        index === 7 ? '100px' : // Teléfono
-                                                                            index === 8 ? '125px' : // Items
-                                                                                index === 9 ? '100px' : // Medio de pago
-                                                                                    index === 10 ? '95px' : // Estado
-                                                                                        index === 11 ? '100px' :// Total
-                                                                                            index === 12 ? '150px' : // Notas
-                                                                                                index === 13 ? '180px' : // Mail
-                                                                                                    '150px'
+                                            width: index === 0 ? '100px' :  // Tipo Cliente
+                                                index === 1 ? '90px' : // Fecha (antes Día Entrega)
+                                                    index === 2 ? '100px' : // Rango Horario
+                                                        index === 3 ? '110px' : // Notas Cliente
+                                                            index === 4 ? '130px' : // Cliente
+                                                                index === 5 ? '140px' : // Dirección
+                                                                    index === 6 ? '100px' : // Teléfono
+                                                                        index === 7 ? '125px' : // Items
+                                                                            index === 8 ? '100px' : // Medio de pago
+                                                                                index === 9 ? '95px' : // Estado
+                                                                                    index === 10 ? '100px' :// Total
+                                                                                        index === 11 ? '150px' : // Notas
+                                                                                            index === 12 ? '180px' : // Mail
+                                                                                                '150px'
                                         }}
                                     >
                                         {header.isPlaceholder ? null : (
@@ -774,36 +844,20 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                     key={row.id}
                                     data-state={row.getIsSelected() && 'selected'}
                                     className={
-                                        shouldHighlightRow(row) === 'red'
-                                            ? 'bg-red-100 dark:bg-red-900/40'
-                                            : shouldHighlightRow(row) === 'green'
-                                                ? 'bg-green-100 dark:bg-green-900/40'
-                                                : ''
+                                        shouldHighlightRow(row) === 'green'
+                                            ? 'bg-green-100 dark:bg-green-900/40'
+                                            : ''
                                     }
                                 >
+                                    <TableCell className="p-1 border-r border-border">
+                                        <input
+                                            type="checkbox"
+                                            checked={row.getIsSelected()}
+                                            onChange={row.getToggleSelectedHandler()}
+                                        />
+                                    </TableCell>
                                     {row.getVisibleCells().map((cell, index) => {
                                         let extraClass = '';
-                                        if (index === 0) {
-                                            const createdAtObj = (row.original as any)['createdAt'];
-                                            let date: Date | null = null;
-                                            if (createdAtObj instanceof Date) {
-                                                date = createdAtObj;
-                                            } else if (createdAtObj?.$date) {
-                                                date = new Date(createdAtObj.$date);
-                                            } else if (typeof createdAtObj === 'string' || typeof createdAtObj === 'number') {
-                                                date = new Date(createdAtObj);
-                                            }
-                                            if (date) {
-                                                const day = date.getDay();
-                                                extraClass = {
-                                                    1: 'bg-green-100',    // Lunes (verde suave)
-                                                    2: 'bg-yellow-100',   // Martes (amarillo suave)
-                                                    3: 'bg-red-100',      // Miércoles (rojo suave)
-                                                    4: 'bg-amber-200',    // Jueves (ámbar/marrón suave)
-                                                    6: 'bg-blue-100',     // Sábado (azul suave)
-                                                }[day] || '';
-                                            }
-                                        }
                                         // Edición inline para campos editables
                                         if (editingRowId === row.id) {
                                             console.log('Columna:', cell.column.id);
@@ -819,12 +873,23 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 );
                                             }
                                             if (cell.column.id === 'notes') {
+                                                // Extraer info de dirección como en columns.tsx
+                                                const address = (row.original as any)['address'] || {};
+                                                let addressInfo = '';
+                                                const parts = [];
+                                                if (address.betweenStreets) parts.push(`Entre: ${address.betweenStreets}`);
+                                                if (address.floorNumber) parts.push(`Piso: ${address.floorNumber}`);
+                                                if (address.departmentNumber) parts.push(`Depto: ${address.departmentNumber}`);
+                                                addressInfo = parts.join(' | ');
+                                                // Combinar nota y dirección en el input
+                                                const combinedValue = addressInfo ? `${editValues.notes}${editValues.notes ? ' | ' : ''}${addressInfo}` : editValues.notes;
                                                 return (
                                                     <TableCell key={cell.id} className="p-1 border-r border-border">
                                                         <Input
-                                                            value={editValues.notes}
-                                                            onChange={e => handleChange('notes', e.target.value)}
+                                                            value={combinedValue}
+                                                            onChange={e => handleChange('notes', e.target.value.split(' | ')[0])}
                                                             className="w-full text-xs"
+                                                            placeholder="Nota del cliente y dirección"
                                                         />
                                                     </TableCell>
                                                 );
@@ -845,12 +910,12 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                     </TableCell>
                                                 );
                                             }
-                                            if (cell.column.id === 'clientType') {
+                                            if (cell.column.id === 'orderType') {
                                                 return (
                                                     <TableCell key={cell.id} className="p-1 border-r border-border">
                                                         <select
-                                                            value={editValues.clientType}
-                                                            onChange={e => handleChange('clientType', e.target.value)}
+                                                            value={editValues.orderType}
+                                                            onChange={e => handleChange('orderType', e.target.value)}
                                                             className="w-full p-1 text-xs border border-gray-300 rounded-md"
                                                         >
                                                             <option value="minorista">Minorista</option>
@@ -862,11 +927,17 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             if (cell.column.id === 'paymentMethod') {
                                                 return (
                                                     <TableCell key={cell.id} className="p-1 border-r border-border">
-                                                        <Input
+                                                        <select
                                                             value={editValues.paymentMethod}
                                                             onChange={e => handleChange('paymentMethod', e.target.value)}
-                                                            className="w-full text-xs"
-                                                        />
+                                                            className="w-full p-1 text-xs border border-gray-300 rounded-md"
+                                                        >
+                                                            <option value="">Seleccionar</option>
+                                                            <option value="mercado-pago">Mercado Pago</option>
+                                                            <option value="cash">Efectivo</option>
+                                                            <option value="bank-transfer">Transferencia Bancaria</option>
+                                                            <option value="transfer">Transferencia</option>
+                                                        </select>
                                                     </TableCell>
                                                 );
                                             }
@@ -1017,7 +1088,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                                         className="flex-1 p-1 text-xs border border-gray-300 rounded-md"
                                                                     >
                                                                         <option value="">Seleccionar producto</option>
-                                                                        {getProductsByClientType(editValues.clientType).map(product => (
+                                                                        {getProductsByClientType(editValues.orderType).map(product => (
                                                                             <option key={product} value={product}>
                                                                                 {product}
                                                                             </option>
@@ -1066,27 +1137,55 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                     </TableCell>
                                                 );
                                             }
+                                            if (cell.column.id === 'deliveryDay' || cell.column.id === 'fecha') {
+                                                return (
+                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                        <Popover>
+                                                            <PopoverTrigger asChild>
+                                                                <Input
+                                                                    readOnly
+                                                                    value={editValues.deliveryDay ? format(new Date(editValues.deliveryDay), 'dd/MM/yyyy') : ''}
+                                                                    placeholder="Seleccionar fecha"
+                                                                    className="w-full text-xs"
+                                                                />
+                                                            </PopoverTrigger>
+                                                            <PopoverContent className="w-auto p-0">
+                                                                <Calendar
+                                                                    mode="single"
+                                                                    selected={editValues.deliveryDay ? new Date(editValues.deliveryDay) : undefined}
+                                                                    onSelect={(date) => {
+                                                                        if (date) {
+                                                                            handleChange('deliveryDay', date.toISOString());
+                                                                        }
+                                                                    }}
+                                                                    locale={es}
+                                                                    initialFocus
+                                                                />
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                    </TableCell>
+                                                );
+                                            }
                                         }
                                         return (
                                             <TableCell
                                                 key={cell.id}
                                                 className={`p-1 border-r border-border ${extraClass}`}
                                                 style={{
-                                                    width: index === 0 ? '60px' :  // Fecha
-                                                        index === 1 ? '100px' : // Tipo Cliente
-                                                            index === 2 ? '90px' : // Día Entrega
-                                                                index === 3 ? '100px' : // Rango Horario
-                                                                    index === 4 ? '110px' : // Notas Cliente
-                                                                        index === 5 ? '130px' : // Cliente
-                                                                            index === 6 ? '140px' : // Dirección
-                                                                                index === 7 ? '100px' : // Teléfono
-                                                                                    index === 8 ? '125px' : // Items
-                                                                                        index === 9 ? '100px' : // Medio de pago
-                                                                                            index === 10 ? '95px' : // Estado
-                                                                                                index === 11 ? '100px' :// Total
-                                                                                                    index === 12 ? '150px' : // Notas
-                                                                                                        index === 13 ? '180px' : // Mail
-                                                                                                            '150px'
+                                                    width: index === 0 ? '100px' :  // Tipo Cliente
+                                                        index === 1 ? '90px' : // Fecha (antes Día Entrega)
+                                                            index === 2 ? '100px' : // Rango Horario
+                                                                index === 3 ? '110px' : // Notas Cliente
+                                                                    index === 4 ? '130px' : // Cliente
+                                                                        index === 5 ? '140px' : // Dirección
+                                                                            index === 6 ? '100px' : // Teléfono
+                                                                                index === 7 ? '125px' : // Items
+                                                                                    index === 8 ? '100px' : // Medio de pago
+                                                                                        index === 9 ? '95px' : // Estado
+                                                                                            index === 10 ? '100px' :// Total
+                                                                                                index === 11 ? '150px' : // Notas
+                                                                                                    index === 12 ? '180px' : // Mail
+                                                                                                        '150px'
                                                 }}
                                             >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -1111,7 +1210,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={columns.length + 1} className="h-24 text-center">
+                                <TableCell colSpan={columns.length + 2} className="h-24 text-center">
                                     No se encontraron resultados.
                                 </TableCell>
                             </TableRow>

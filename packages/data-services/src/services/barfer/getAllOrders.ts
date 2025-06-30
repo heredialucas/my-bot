@@ -7,7 +7,7 @@ interface GetAllOrdersParams {
     sorting?: { id: string; desc: boolean }[];
     from?: string;
     to?: string;
-    clientType?: string;
+    orderType?: string;
 }
 
 /**
@@ -26,7 +26,7 @@ export async function getAllOrders({
     sorting = [{ id: 'createdAt', desc: true }],
     from,
     to,
-    clientType,
+    orderType,
 }: GetAllOrdersParams): Promise<Order[]> {
     try {
         const collection = await getCollection('orders');
@@ -46,9 +46,9 @@ export async function getAllOrders({
             }
         }
 
-        // Filtro por tipo de cliente si se proporciona
-        if (clientType && clientType !== 'all') {
-            baseFilter.clientType = clientType;
+        // Filtro por tipo de orden si se proporciona
+        if (orderType && orderType !== 'all') {
+            baseFilter.orderType = orderType;
         }
 
         const searchFilter: any = {};
@@ -66,7 +66,7 @@ export async function getAllOrders({
                         { 'paymentMethod': { $regex: word, $options: 'i' } },
                         { 'status': { $regex: word, $options: 'i' } },
                         { 'notesOwn': { $regex: word, $options: 'i' } },
-                        { 'clientType': { $regex: word, $options: 'i' } },
+                        { 'orderType': { $regex: word, $options: 'i' } },
                     ]
                 }));
             }

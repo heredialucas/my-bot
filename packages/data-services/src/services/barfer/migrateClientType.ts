@@ -5,10 +5,10 @@ export async function migrateClientType(): Promise<{ success: boolean; updatedCo
     try {
         const collection = await getCollection('orders');
 
-        // Actualizar todas las órdenes que no tengan el campo clientType
+        // Actualizar todas las órdenes que no tengan el campo orderType
         const result = await collection.updateMany(
-            { clientType: { $exists: false } },
-            { $set: { clientType: 'minorista' } }
+            { orderType: { $exists: false } },
+            { $set: { orderType: 'minorista' } }
         );
 
         console.log(`Migración completada: ${result.modifiedCount} órdenes actualizadas`);
