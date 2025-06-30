@@ -213,10 +213,13 @@ export const columns: ColumnDef<Order>[] = [
         header: () => <div className="w-full text-right">Total</div>,
         cell: ({ row }: CellContext<Order, unknown>) => {
             const amount = parseFloat(row.getValue('total') as string);
+            const rounded = Math.round(amount);
             const formatted = new Intl.NumberFormat('es-AR', {
                 style: 'currency',
                 currency: 'ARS',
-            }).format(amount);
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            }).format(rounded);
             return <div className="font-medium text-right min-w-[80px] text-sm">{formatted}</div>;
         }
     },

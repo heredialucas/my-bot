@@ -162,16 +162,15 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         return availableProducts;
     };
 
-    // Función para determinar si una fila debe ser roja
+    // Función para determinar el color de la fila
     const shouldHighlightRow = (row: any) => {
-        const status = row.original.status;
-        const paymentMethod = row.original.paymentMethod?.toLowerCase();
+        const status = row.original.status?.toLowerCase();
+        const paymentMethod = row.original.paymentMethod?.toLowerCase() || '';
+        const isTransfer = paymentMethod.includes('mercado') || paymentMethod.includes('transfer');
 
-        return status === 'pending' && (
-            paymentMethod === 'mercado pago' ||
-            paymentMethod === 'transferencia bancaria' ||
-            paymentMethod === 'bank-transfer'
-        );
+        if (status === 'pending' && isTransfer) return 'red';
+        if (status === 'confirmed' && isTransfer) return 'green';
+        return null;
     };
 
     const table = useReactTable({
@@ -774,7 +773,13 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && 'selected'}
-                                    className={shouldHighlightRow(row) ? 'bg-red-100 dark:bg-red-900/40' : ''}
+                                    className={
+                                        shouldHighlightRow(row) === 'red'
+                                            ? 'bg-red-100 dark:bg-red-900/40'
+                                            : shouldHighlightRow(row) === 'green'
+                                                ? 'bg-green-100 dark:bg-green-900/40'
+                                                : ''
+                                    }
                                 >
                                     {row.getVisibleCells().map((cell, index) => {
                                         let extraClass = '';
