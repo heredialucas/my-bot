@@ -38,7 +38,7 @@ export async function exportOrdersAction({
             'Direccion': `${order.address?.address || ''}, ${order.address?.city || ''}`,
             'Notas Cliente': order.notes || '',
             'Notas Propias': order.notesOwn || '',
-            'Items': order.items.map(item => `${item.name} x${(item.options[0] as any)?.quantity || 1}`).join(', '),
+            'Items': order.items.map(item => `${item.name} x${(item.options[0] as any)?.quantity || 1}`).join('\n'),
             'Medio de Pago': order.paymentMethod || '',
             'Estado': order.status,
             'Total': order.total,
@@ -57,7 +57,7 @@ export async function exportOrdersAction({
             { wch: 40 }, // Direccion
             { wch: 40 }, // Notas Cliente
             { wch: 40 }, // Notas Propias
-            { wch: 50 }, // Items
+            { wch: 60 }, // Items (más ancho para productos en líneas separadas)
             { wch: 20 }, // Medio de Pago
             { wch: 15 }, // Estado
             { wch: 12 }, // Total
