@@ -58,7 +58,7 @@ export default async function TablePage({
                     Una lista de todas las órdenes en el sistema.
                 </p>
             </div>
-            <div className="px-5">
+            <div>
                 <OrdersDataTable
                     columns={columns}
                     data={orders}

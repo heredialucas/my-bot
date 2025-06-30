@@ -788,18 +788,20 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
-                                <TableHead className="p-1 text-xs border-r border-border" style={{ width: '32px' }}>
-                                    <input
-                                        type="checkbox"
-                                        ref={headerCheckboxRef}
-                                        checked={table.getIsAllRowsSelected()}
-                                        onChange={table.getToggleAllRowsSelectedHandler()}
-                                    />
+                                <TableHead className="px-0 py-1 text-xs border-r border-border" style={{ width: '32px' }}>
+                                    <div className="flex justify-center">
+                                        <input
+                                            type="checkbox"
+                                            ref={headerCheckboxRef}
+                                            checked={table.getIsAllRowsSelected()}
+                                            onChange={table.getToggleAllRowsSelectedHandler()}
+                                        />
+                                    </div>
                                 </TableHead>
                                 {headerGroup.headers.map((header, index) => (
                                     <TableHead
                                         key={header.id}
-                                        className="p-1 text-xs border-r border-border"
+                                        className="px-0 py-1 text-xs border-r border-border"
                                         style={{
                                             width: index === 0 ? '100px' :  // Tipo Cliente
                                                 index === 1 ? '90px' : // Fecha (antes Día Entrega)
@@ -822,7 +824,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 variant="ghost"
                                                 onClick={header.column.getToggleSortingHandler()}
                                                 disabled={!header.column.getCanSort()}
-                                                className="h-6 px-1 text-xs"
+                                                className="h-6 px-1 text-xs w-full justify-center"
                                             >
                                                 {flexRender(header.column.columnDef.header, header.getContext())}
                                                 {{
@@ -833,7 +835,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         )}
                                     </TableHead>
                                 ))}
-                                <TableHead className="p-1 text-xs border-r border-border" style={{ width: '80px' }}>Acciones</TableHead>
+                                <TableHead className="px-0 py-1 text-xs border-r border-border text-center" style={{ width: '80px' }}>Acciones</TableHead>
                             </TableRow>
                         ))}
                     </TableHeader>
@@ -849,12 +851,14 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             : ''
                                     }
                                 >
-                                    <TableCell className="p-1 border-r border-border">
-                                        <input
-                                            type="checkbox"
-                                            checked={row.getIsSelected()}
-                                            onChange={row.getToggleSelectedHandler()}
-                                        />
+                                    <TableCell className="px-0 py-1 border-r border-border">
+                                        <div className="flex justify-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={row.getIsSelected()}
+                                                onChange={row.getToggleSelectedHandler()}
+                                            />
+                                        </div>
                                     </TableCell>
                                     {row.getVisibleCells().map((cell, index) => {
                                         let extraClass = '';
@@ -863,11 +867,11 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             console.log('Columna:', cell.column.id);
                                             if (cell.column.id === 'notesOwn') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             value={editValues.notesOwn}
                                                             onChange={e => handleChange('notesOwn', e.target.value)}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                         />
                                                     </TableCell>
                                                 );
@@ -884,11 +888,11 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 // Combinar nota y dirección en el input
                                                 const combinedValue = addressInfo ? `${editValues.notes}${editValues.notes ? ' | ' : ''}${addressInfo}` : editValues.notes;
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             value={combinedValue}
                                                             onChange={e => handleChange('notes', e.target.value.split(' | ')[0])}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                             placeholder="Nota del cliente y dirección"
                                                         />
                                                     </TableCell>
@@ -896,11 +900,11 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             }
                                             if (cell.column.id === 'status') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <select
                                                             value={editValues.status}
                                                             onChange={e => handleChange('status', e.target.value)}
-                                                            className="w-full p-1 text-xs border border-gray-300 rounded-md"
+                                                            className="w-full p-1 text-xs border border-gray-300 rounded-md text-center"
                                                         >
                                                             <option value="pending">Pendiente</option>
                                                             <option value="confirmed">Confirmado</option>
@@ -912,11 +916,11 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             }
                                             if (cell.column.id === 'orderType') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <select
                                                             value={editValues.orderType}
                                                             onChange={e => handleChange('orderType', e.target.value)}
-                                                            className="w-full p-1 text-xs border border-gray-300 rounded-md"
+                                                            className="w-full p-1 text-xs border border-gray-300 rounded-md text-center"
                                                         >
                                                             <option value="minorista">Minorista</option>
                                                             <option value="mayorista">Mayorista</option>
@@ -926,11 +930,11 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             }
                                             if (cell.column.id === 'paymentMethod') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <select
                                                             value={editValues.paymentMethod}
                                                             onChange={e => handleChange('paymentMethod', e.target.value)}
-                                                            className="w-full p-1 text-xs border border-gray-300 rounded-md"
+                                                            className="w-full p-1 text-xs border border-gray-300 rounded-md text-center"
                                                         >
                                                             <option value="">Seleccionar</option>
                                                             <option value="mercado-pago">Mercado Pago</option>
@@ -943,47 +947,47 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             }
                                             if (cell.column.id === 'total') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             type="number"
                                                             value={editValues.total}
                                                             onChange={e => handleChange('total', e.target.value)}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                         />
                                                     </TableCell>
                                                 );
                                             }
                                             if (cell.column.id === 'subTotal') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             type="number"
                                                             value={editValues.subTotal}
                                                             onChange={e => handleChange('subTotal', e.target.value)}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                         />
                                                     </TableCell>
                                                 );
                                             }
                                             if (cell.column.id === 'shippingPrice') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             type="number"
                                                             value={editValues.shippingPrice}
                                                             onChange={e => handleChange('shippingPrice', e.target.value)}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                         />
                                                     </TableCell>
                                                 );
                                             }
                                             if (cell.column.id === 'address_address') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             value={editValues.address}
                                                             onChange={e => handleChange('address', e.target.value)}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                             placeholder="Dirección"
                                                         />
                                                     </TableCell>
@@ -991,11 +995,11 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             }
                                             if (cell.column.id === 'address_city') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             value={editValues.city}
                                                             onChange={e => handleChange('city', e.target.value)}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                             placeholder="Ciudad"
                                                         />
                                                     </TableCell>
@@ -1003,11 +1007,11 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             }
                                             if (cell.column.id === 'address_phone') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             value={editValues.phone}
                                                             onChange={e => handleChange('phone', e.target.value)}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                             placeholder="Teléfono"
                                                         />
                                                     </TableCell>
@@ -1016,18 +1020,18 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             if (cell.column.id === 'user_name' || cell.column.id === 'name') {
                                                 console.log('DEBUG user_name:', { id: cell.column.id, editValues });
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <div className="flex gap-1">
                                                             <Input
                                                                 value={editValues.userName}
                                                                 onChange={e => handleChange('userName', e.target.value)}
-                                                                className="w-1/2 text-xs"
+                                                                className="w-1/2 text-xs text-center"
                                                                 placeholder="Nombre"
                                                             />
                                                             <Input
                                                                 value={editValues.userLastName}
                                                                 onChange={e => handleChange('userLastName', e.target.value)}
-                                                                className="w-1/2 text-xs"
+                                                                className="w-1/2 text-xs text-center"
                                                                 placeholder="Apellido"
                                                             />
                                                         </div>
@@ -1036,11 +1040,11 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             }
                                             if (cell.column.id === 'user_lastName') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             value={editValues.userLastName}
                                                             onChange={e => handleChange('userLastName', e.target.value)}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                             placeholder="Apellido"
                                                         />
                                                     </TableCell>
@@ -1048,29 +1052,29 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             }
                                             if (cell.column.id === 'user_email' || cell.column.id === 'email') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             value={editValues.userEmail}
                                                             onChange={e => handleChange('userEmail', e.target.value)}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                         />
                                                     </TableCell>
                                                 );
                                             }
                                             if (cell.column.id === 'deliveryArea.schedule') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
                                                             value={editValues.deliveryAreaSchedule}
                                                             onChange={e => handleChange('deliveryAreaSchedule', e.target.value)}
-                                                            className="w-full text-xs"
+                                                            className="w-full text-xs text-center"
                                                         />
                                                     </TableCell>
                                                 );
                                             }
                                             if (cell.column.id === 'items') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <div className="space-y-1">
                                                             {editValues.items?.map((item: any, index: number) => (
                                                                 <div key={index} className="flex gap-1">
@@ -1085,7 +1089,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                                             };
                                                                             handleChange('items', newItems);
                                                                         }}
-                                                                        className="flex-1 p-1 text-xs border border-gray-300 rounded-md"
+                                                                        className="flex-1 p-1 text-xs border border-gray-300 rounded-md text-center"
                                                                     >
                                                                         <option value="">Seleccionar producto</option>
                                                                         {getProductsByClientType(editValues.orderType).map(product => (
@@ -1108,7 +1112,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                                             };
                                                                             handleChange('items', newItems);
                                                                         }}
-                                                                        className="w-12 p-1 text-xs"
+                                                                        className="w-12 p-1 text-xs text-center"
                                                                         placeholder="Qty"
                                                                     />
                                                                 </div>
@@ -1139,14 +1143,14 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                             }
                                             if (cell.column.id === 'deliveryDay' || cell.column.id === 'fecha') {
                                                 return (
-                                                    <TableCell key={cell.id} className="p-1 border-r border-border">
+                                                    <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Popover>
                                                             <PopoverTrigger asChild>
                                                                 <Input
                                                                     readOnly
                                                                     value={editValues.deliveryDay ? format(new Date(editValues.deliveryDay), 'dd/MM/yyyy') : ''}
                                                                     placeholder="Seleccionar fecha"
-                                                                    className="w-full text-xs"
+                                                                    className="w-full text-xs text-center"
                                                                 />
                                                             </PopoverTrigger>
                                                             <PopoverContent className="w-auto p-0">
@@ -1170,7 +1174,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         return (
                                             <TableCell
                                                 key={cell.id}
-                                                className={`p-1 border-r border-border ${extraClass}`}
+                                                className={`px-0 py-1 border-r border-border ${extraClass} text-center`}
                                                 style={{
                                                     width: index === 0 ? '100px' :  // Tipo Cliente
                                                         index === 1 ? '90px' : // Fecha (antes Día Entrega)
@@ -1193,14 +1197,14 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         );
                                     })}
                                     {/* Botón de acción */}
-                                    <TableCell className="p-1 border-r border-border">
+                                    <TableCell className="px-0 py-1 border-r border-border">
                                         {editingRowId === row.id ? (
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-2 justify-center">
                                                 <Button size="icon" variant="default" onClick={() => handleSave(row)} disabled={loading}><Save className="w-4 h-4" /></Button>
                                                 <Button size="icon" variant="outline" onClick={handleCancel} disabled={loading}><X className="w-4 h-4" /></Button>
                                             </div>
                                         ) : (
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-2 justify-center">
                                                 <Button size="icon" variant="outline" onClick={() => handleEditClick(row)}><Pencil className="w-4 h-4" /></Button>
                                                 <Button size="icon" variant="destructive" onClick={() => handleDelete(row)} disabled={loading}><Trash2 className="w-4 h-4" /></Button>
                                             </div>
