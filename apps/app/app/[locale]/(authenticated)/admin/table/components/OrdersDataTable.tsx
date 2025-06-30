@@ -113,43 +113,42 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
 
     // Lista de productos disponibles
     const availableProducts = [
-        'Barfer box Gato Vaca',
-        'Barfer box Perro Pollo',
-        'Barfer box Perro Cerdo',
-        'Barfer box Gato Pollo',
-        'Barfer box Gato Cordero',
-        'Barfer box Perro Vaca',
-        'Barfer box Perro Cordero',
+        'Barfer box Gato Vaca 5kg',
+        'Barfer box Gato Vaca 10kg',
+        'Barfer box Perro Pollo 5kg',
+        'Barfer box Perro Pollo 10kg',
+        'Barfer box Perro Cerdo 5kg',
+        'Barfer box Perro Cerdo 10kg',
+        'Barfer box Gato Pollo 5kg',
+        'Barfer box Gato Pollo 10kg',
+        'Barfer box Gato Cordero 5kg',
+        'Barfer box Gato Cordero 10kg',
+        'Barfer box Perro Vaca 5kg',
+        'Barfer box Perro Vaca 10kg',
+        'Barfer box Perro Cordero 5kg',
+        'Barfer box Perro Cordero 10kg',
         'Cornalitos',
         'Orejas'
     ];
 
     // Lista de productos Raw para mayoristas
     const rawProducts = [
-        'Raw Vaca',
-        'Raw Pollo',
-        'Raw Cerdo',
-        'Raw Cordero',
-        'Raw Pescado',
-        'Raw Pavo',
-        'Raw Conejo'
+        'Traquea X1',
+        'Traquea X2',
+        'Orejas',
+        'Pollo 40grs',
+        'Pollo 100grs',
+        'Higado 40grs',
+        'Higado 100grs',
+        'Cornalitos 30grs'
     ];
 
     // Lista de complementos sueltos para mayoristas
     const complementProducts = [
-        'Patas',
-        'Hígado',
-        'Corazón',
-        'Riñones',
-        'Pulmones',
-        'Bazo',
-        'Mollejas',
-        'Lengua',
-        'Cabeza',
-        'Cuello',
-        'Alas',
-        'Muslos',
-        'Pechuga'
+        'Cornalitos 200grs',
+        'Caldo de huesos',
+        'Hueso recreativo',
+        'Garras 300grs'
     ];
 
     // Función para obtener productos según el tipo de cliente
