@@ -36,13 +36,23 @@ export async function getClientCategorization(): Promise<ClientAnalytics> {
                     averageOrderValue: { $divide: ['$totalSpent', '$totalOrders'] },
                     daysSinceFirstOrder: {
                         $divide: [
-                            { $subtract: [new Date(), '$firstOrderDate'] },
+                            {
+                                $subtract: [
+                                    "$$NOW",
+                                    { $toDate: "$firstOrderDate" }
+                                ]
+                            },
                             1000 * 60 * 60 * 24
                         ]
                     },
                     daysSinceLastOrder: {
                         $divide: [
-                            { $subtract: [new Date(), '$lastOrderDate'] },
+                            {
+                                $subtract: [
+                                    "$$NOW",
+                                    { $toDate: "$lastOrderDate" }
+                                ]
+                            },
                             1000 * 60 * 60 * 24
                         ]
                     }
