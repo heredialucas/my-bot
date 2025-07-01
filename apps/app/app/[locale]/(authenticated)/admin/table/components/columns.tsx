@@ -73,7 +73,7 @@ export const columns: ColumnDef<Order>[] = [
             }
             return (
                 <div className={`flex h-full w-full items-center justify-center text-center ${bgColor} rounded-sm`} style={{ minWidth: 60, maxWidth: 70 }}>
-                    <span className="font-semibold text-gray-800 dark:text-gray-200">
+                    <span className="font-semibold">
                         {formatted}
                     </span>
                 </div>
@@ -178,7 +178,7 @@ export const columns: ColumnDef<Order>[] = [
             const translatedStatus = statusTranslations[status] || status;
             const paymentMethod = row.original.paymentMethod;
             let colorClass = '';
-            if (status === 'pending' && paymentMethod !== 'cash') colorClass = 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300';
+            if (status === 'pending' && paymentMethod !== 'cash') colorClass = 'bg-red-100 force-dark-black text-red-900';
             if (status === 'confirmed') colorClass = 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300';
             return (
                 <span className={`text-xs px-2 py-1 rounded ${colorClass}`}>

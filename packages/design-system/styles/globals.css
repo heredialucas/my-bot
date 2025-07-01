@@ -128,3 +128,8 @@
     @apply min-h-[100dvh];
   }
 }
+
+.dark .force-dark-black {
+  --foreground: 0 0% 0% !important;
+  color: hsl(var(--foreground)) !important;
+}

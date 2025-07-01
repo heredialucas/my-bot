@@ -1285,7 +1285,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         return (
                                             <TableCell
                                                 key={cell.id}
-                                                className={`px-0 py-1 border-r border-border ${extraClass} ${dateBgColor} ${statusBgColor} text-center`}
+                                                className={`px-0 py-1 border-r border-border ${extraClass} ${dateBgColor} ${statusBgColor} text-center${dateBgColor ? ' force-dark-black' : ''}`}
                                                 style={{
                                                     width: index === 0 ? '80px' :  // Tipo Cliente
                                                         index === 1 ? '70px' : // Fecha (antes Día Entrega)
