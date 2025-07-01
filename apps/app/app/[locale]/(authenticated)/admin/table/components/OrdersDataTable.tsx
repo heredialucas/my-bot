@@ -121,15 +121,12 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
     // Lista de productos disponibles
     const availableProducts = [
         'Barfer box Gato Vaca 5kg',
-        'Barfer box Gato Vaca 10kg',
         'Barfer box Perro Pollo 5kg',
         'Barfer box Perro Pollo 10kg',
         'Barfer box Perro Cerdo 5kg',
         'Barfer box Perro Cerdo 10kg',
         'Barfer box Gato Pollo 5kg',
-        'Barfer box Gato Pollo 10kg',
         'Barfer box Gato Cordero 5kg',
-        'Barfer box Gato Cordero 10kg',
         'Barfer box Perro Vaca 5kg',
         'Barfer box Perro Vaca 10kg',
         'Barfer box Perro Cordero 5kg',
@@ -138,8 +135,6 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         'BIG DOG (15kg) - VACA',
         'HUESOS CARNOSOS - 5KG',
         'Box de Complementos - 1 U',
-        'Cornalitos',
-        'Orejas'
     ];
 
     // Lista de productos Raw para mayoristas
@@ -151,7 +146,8 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
         'Pollo 100grs',
         'Higado 40grs',
         'Higado 100grs',
-        'Cornalitos 30grs'
+        'Cornalitos 30grs',
+        'Orejas'
     ];
 
     // Lista de complementos sueltos para mayoristas
@@ -170,7 +166,12 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
             const uniqueProducts = [...new Set(allProducts)];
             return uniqueProducts;
         }
-        return availableProducts;
+        // Excluir 'Cornalitos' y 'Orejas' para minorista en cualquier lista
+        const forbidden = ['Cornalitos', 'Orejas'];
+        const allProducts = [...availableProducts, ...rawProducts, ...complementProducts];
+        const filtered = allProducts.filter(product => !forbidden.some(f => product.trim().toLowerCase().startsWith(f.toLowerCase())));
+        // Eliminar duplicados
+        return [...new Set(filtered)];
     };
 
     // Función para filtrar productos por búsqueda
@@ -214,8 +215,8 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
     };
 
     // Función para determinar el color de fondo de la celda de estado
-    const getStatusCellBackgroundColor = (status: string) => {
-        if (status === 'pending') {
+    const getStatusCellBackgroundColor = (status: string, paymentMethod: string) => {
+        if (status === 'pending' && paymentMethod !== 'cash') {
             return 'bg-red-100';
         }
         return '';
@@ -760,7 +761,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                     className="flex-1 p-2 border border-gray-300 rounded-md"
                                                 >
                                                     <option value="">Seleccionar producto</option>
-                                                    {getProductsByClientType('mayorista').map(product => (
+                                                    {getProductsByClientType(createFormData.orderType).map(product => (
                                                         <option key={product} value={product}>
                                                             {product}
                                                         </option>
@@ -889,7 +890,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                                     index === 6 ? '100px' : // Teléfono
                                                                         index === 7 ? '220px' : // Items
                                                                             index === 8 ? '100px' : // Medio de pago
-                                                                                index === 9 ? '75px' : // Estado
+                                                                                index === 9 ? '85px' : // Estado
                                                                                     index === 10 ? '100px' :// Total
                                                                                         index === 11 ? '150px' : // Notas
                                                                                             index === 12 ? '180px' : // Mail
@@ -976,7 +977,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                 );
                                             }
                                             if (cell.column.id === 'status') {
-                                                const bgColor = getStatusCellBackgroundColor(editValues.status);
+                                                const bgColor = getStatusCellBackgroundColor(editValues.status, editValues.paymentMethod);
                                                 return (
                                                     <TableCell key={cell.id} className={`px-0 py-1 border-r border-border ${bgColor}`}>
                                                         <select
@@ -1139,7 +1140,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                     </TableCell>
                                                 );
                                             }
-                                            if (cell.column.id === 'deliveryArea.schedule') {
+                                            if (cell.column.id === 'deliveryArea.schedule' || cell.column.id === 'deliveryArea_schedule') {
                                                 return (
                                                     <TableCell key={cell.id} className="px-0 py-1 border-r border-border">
                                                         <Input
@@ -1277,7 +1278,8 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                         let statusBgColor = '';
                                         if (cell.column.id === 'status') {
                                             const status = (row.original as any).status;
-                                            statusBgColor = getStatusCellBackgroundColor(status);
+                                            const paymentMethod = (row.original as any).paymentMethod;
+                                            statusBgColor = getStatusCellBackgroundColor(status, paymentMethod);
                                         }
 
                                         return (
@@ -1294,7 +1296,7 @@ export function OrdersDataTable<TData extends { _id: string }, TValue>({
                                                                             index === 6 ? '100px' : // Teléfono
                                                                                 index === 7 ? '220px' : // Items
                                                                                     index === 8 ? '100px' : // Medio de pago
-                                                                                        index === 9 ? '75px' : // Estado
+                                                                                        index === 9 ? '85px' : // Estado
                                                                                             index === 10 ? '100px' :// Total
                                                                                                 index === 11 ? '150px' : // Notas
                                                                                                     index === 12 ? '180px' : // Mail

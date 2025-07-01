@@ -148,7 +148,7 @@ export const columns: ColumnDef<Order>[] = [
     },
     {
         accessorKey: 'items',
-        header: 'Items',
+        header: 'Productos',
         enableSorting: false,
         cell: ({ row }: CellContext<Order, unknown>) => {
             const items = row.original.items as Order['items'];
@@ -176,8 +176,9 @@ export const columns: ColumnDef<Order>[] = [
         cell: ({ row }: CellContext<Order, unknown>) => {
             const status = row.getValue('status') as Order['status'];
             const translatedStatus = statusTranslations[status] || status;
+            const paymentMethod = row.original.paymentMethod;
             let colorClass = '';
-            if (status === 'pending') colorClass = 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300';
+            if (status === 'pending' && paymentMethod !== 'cash') colorClass = 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300';
             if (status === 'confirmed') colorClass = 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300';
             return (
                 <span className={`text-xs px-2 py-1 rounded ${colorClass}`}>
@@ -188,7 +189,7 @@ export const columns: ColumnDef<Order>[] = [
     },
     {
         accessorKey: 'total',
-        header: () => <div className="w-full text-right">Total</div>,
+        header: () => <div className="w-full text-center">Total</div>,
         cell: ({ row }: CellContext<Order, unknown>) => {
             const amount = parseFloat(row.getValue('total') as string);
             const rounded = Math.round(amount);
@@ -198,7 +199,7 @@ export const columns: ColumnDef<Order>[] = [
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
             }).format(rounded);
-            return <div className="font-medium text-right min-w-[80px] text-sm">{formatted}</div>;
+            return <div className="font-medium text-center min-w-[80px] text-sm">{formatted}</div>;
         }
     },
     {
