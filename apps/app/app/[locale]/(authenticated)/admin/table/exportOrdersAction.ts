@@ -68,16 +68,18 @@ export async function exportOrdersAction({
 
         // Forzar alineación a la izquierda en las columnas 'Total' y 'Telefono'
         const leftAlignCols = ['Total', 'Telefono'];
-        const range = XLSX.utils.decode_range(worksheet['!ref']);
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-            const headerCell = worksheet[XLSX.utils.encode_col(C) + '1'];
-            const header = headerCell?.v;
-            if (typeof header === 'string' && leftAlignCols.includes(header)) {
-                for (let R = range.s.r + 1; R <= range.e.r; ++R) {
-                    const cellAddress = XLSX.utils.encode_col(C) + (R + 1);
-                    if (!worksheet[cellAddress]) continue;
-                    if (!worksheet[cellAddress].s) worksheet[cellAddress].s = {};
-                    worksheet[cellAddress].s.alignment = { horizontal: 'left' };
+        if (worksheet['!ref']) {
+            const range = XLSX.utils.decode_range(worksheet['!ref']);
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const headerCell = worksheet[XLSX.utils.encode_col(C) + '1'];
+                const header = headerCell?.v;
+                if (typeof header === 'string' && leftAlignCols.includes(header)) {
+                    for (let R = range.s.r + 1; R <= range.e.r; ++R) {
+                        const cellAddress = XLSX.utils.encode_col(C) + (R + 1);
+                        if (!worksheet[cellAddress]) continue;
+                        if (!worksheet[cellAddress].s) worksheet[cellAddress].s = {};
+                        worksheet[cellAddress].s.alignment = { horizontal: 'left' };
+                    }
                 }
             }
         }
