@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
 
-export default function AuthenticatedRootPage({
+export default async function AuthenticatedRootPage({
     params,
 }: {
-    params: { locale: string };
+    params: Promise<{ locale: string }>;
 }) {
-    redirect(`/${params.locale}/account`);
+    const { locale } = await params;
+    redirect(`/${locale}/account`);
 } 

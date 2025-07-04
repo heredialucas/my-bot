@@ -11,9 +11,9 @@ export default async function AuthenticatedLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }) {
-  const { locale } = params;
+  const { locale } = await params;
   const dictionary = await getDictionary(locale);
   const user = await getCurrentUserWithPermissions();
 
