@@ -1,23 +1,23 @@
-import { Prisma } from "@repo/database";
 import { ClientData } from "./client";
 import { ProductData } from "./product";
 
 export type OrderStatus = "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
-export type PaymentMethod = "CASH" | "CREDIT_CARD" | "BANK_TRANSFER" | "OTHER";
 
 export type OrderItemData = {
     id: string;
     quantity: number;
-    price: Prisma.Decimal;
+    price: number;
     productId: string;
     orderId: string;
     product: ProductData;
 };
 
+export type PaymentMethod = "CASH" | "CREDIT_CARD" | "BANK_TRANSFER" | "OTHER";
+
 export type PaymentData = {
     id: string;
     paymentDate: Date;
-    amount: Prisma.Decimal;
+    amount: number;
     paymentMethod: PaymentMethod;
     receiptNumber: string | null;
     notes: string | null;
@@ -28,7 +28,7 @@ export type OrderData = {
     id: string;
     orderDate: Date;
     status: OrderStatus;
-    totalAmount: Prisma.Decimal;
+    totalAmount: number;
     clientId: string;
     sellerId: string;
 };

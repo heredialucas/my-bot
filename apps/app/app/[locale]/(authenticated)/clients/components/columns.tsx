@@ -1,7 +1,7 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { ClientData } from "@repo/data-services"
+import { type ClientData } from "@repo/data-services"
 import { Button } from "@repo/design-system/components/ui/button"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import {
@@ -41,6 +41,10 @@ export const getClientColumns = (
             header: "Email",
         },
         {
+            accessorKey: "address",
+            header: "Dirección",
+        },
+        {
             accessorKey: "phone",
             header: "Teléfono",
         },
@@ -72,15 +76,8 @@ export const getClientColumns = (
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                            <DropdownMenuItem
-                                onClick={() => navigator.clipboard.writeText(client.id)}
-                            >
-                                Copiar ID Cliente
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => onEdit(client)}>
-                                Editar Cliente
+                                Editar
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => router.push(`/clients/${client.id}`)}>
                                 Ver detalles

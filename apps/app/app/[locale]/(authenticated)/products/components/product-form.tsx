@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition, useRef } from 'react';
+import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -29,6 +29,7 @@ interface ProductFormProps {
 export function ProductForm({ product, onSuccess, dictionary }: ProductFormProps) {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
+    const productDict = dictionary.app.admin.products;
 
     const form = useForm<ProductFormSchema>({
         resolver: zodResolver(productFormSchema),
@@ -76,7 +77,7 @@ export function ProductForm({ product, onSuccess, dictionary }: ProductFormProps
                     name="name"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Nombre</FormLabel>
+                            <FormLabel>{productDict.form.name}</FormLabel>
                             <FormControl>
                                 <Input placeholder="Producto de ejemplo" {...field} />
                             </FormControl>
@@ -89,7 +90,7 @@ export function ProductForm({ product, onSuccess, dictionary }: ProductFormProps
                     name="description"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Descripción</FormLabel>
+                            <FormLabel>{productDict.form.description}</FormLabel>
                             <FormControl>
                                 <Textarea placeholder="Describe el producto" {...field} value={field.value ?? ''} />
                             </FormControl>
@@ -102,7 +103,7 @@ export function ProductForm({ product, onSuccess, dictionary }: ProductFormProps
                     name="sku"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>SKU</FormLabel>
+                            <FormLabel>Código</FormLabel>
                             <FormControl>
                                 <Input placeholder="PROD-001" {...field} />
                             </FormControl>
@@ -115,7 +116,7 @@ export function ProductForm({ product, onSuccess, dictionary }: ProductFormProps
                     name="price"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Precio</FormLabel>
+                            <FormLabel>{productDict.form.price}</FormLabel>
                             <FormControl>
                                 <Input type="number" step="0.01" placeholder="99.99" {...field} />
                             </FormControl>
@@ -128,7 +129,7 @@ export function ProductForm({ product, onSuccess, dictionary }: ProductFormProps
                     name="quantityInStock"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Stock Central</FormLabel>
+                            <FormLabel>{productDict.form.stock}</FormLabel>
                             <FormControl>
                                 <Input type="number" placeholder="100" {...field} />
                             </FormControl>
@@ -137,7 +138,7 @@ export function ProductForm({ product, onSuccess, dictionary }: ProductFormProps
                     )}
                 />
                 <Button type="submit" disabled={isPending}>
-                    {isPending ? 'Guardando...' : product ? 'Actualizar Producto' : 'Crear Producto'}
+                    {isPending ? 'Guardando...' : product ? productDict.form.update : productDict.form.create}
                 </Button>
             </form>
         </Form>

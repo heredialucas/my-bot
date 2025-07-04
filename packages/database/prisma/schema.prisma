@@ -79,7 +79,7 @@ model Client {
   email          String?  @unique
   phone          String?
   address        String?
-  accountBalance Decimal  @default(0) @db.Decimal(10, 2)
+  accountBalance Float    @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -96,7 +96,7 @@ model Product {
   name            String
   description     String?
   sku             String      @unique // Stock Keeping Unit
-  price           Decimal     @db.Decimal(10, 2)
+  price           Float
   quantityInStock Int         @default(0) // Stock en almacén central
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
@@ -133,7 +133,7 @@ model Order {
   id          String      @id @default(uuid())
   orderDate   DateTime    @default(now())
   status      OrderStatus @default(PENDING)
-  totalAmount Decimal     @db.Decimal(10, 2)
+  totalAmount Float
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
@@ -150,9 +150,9 @@ model Order {
 }
 
 model OrderItem {
-  id       String  @id @default(uuid())
+  id       String @id @default(uuid())
   quantity Int
-  price    Decimal @db.Decimal(10, 2) // Precio en el momento del pedido
+  price    Float // Precio en el momento del pedido
 
   orderId String
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -173,7 +173,7 @@ enum PaymentMethod {
 model Payment {
   id            String        @id @default(uuid())
   paymentDate   DateTime      @default(now())
-  amount        Decimal       @db.Decimal(10, 2)
+  amount        Float
   paymentMethod PaymentMethod
   receiptNumber String?       @unique
   notes         String?

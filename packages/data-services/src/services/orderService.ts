@@ -1,6 +1,6 @@
 'use server';
 
-import { Prisma, database } from '@repo/database';
+import { database } from '@repo/database';
 import { getCurrentUser } from './authService';
 
 /**
@@ -80,15 +80,15 @@ export async function createOrder(data: {
     });
 
     const productPriceMap = new Map(products.map((p) => [p.id, p.price]));
-    let totalAmount = new Prisma.Decimal(0);
+    let totalAmount = 0;
 
     const orderItemsData = data.items.map((item) => {
         const price = productPriceMap.get(item.productId);
         if (!price) {
             throw new Error(`Product with ID ${item.productId} not found or has no price.`);
         }
-        const itemTotal = price.mul(item.quantity);
-        totalAmount = totalAmount.add(itemTotal);
+        const itemTotal = price * item.quantity;
+        totalAmount += itemTotal;
         return {
             productId: item.productId,
             quantity: item.quantity,

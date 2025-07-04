@@ -2,6 +2,7 @@
 
 import { type ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
     DropdownMenu,
@@ -23,25 +24,51 @@ export const getProductColumns = (
             header: dictionary.table.name,
         },
         {
+            accessorKey: 'sku',
+            header: 'Código',
+        },
+        {
             accessorKey: 'price',
             header: dictionary.table.price,
             cell: ({ row }) => {
                 const price = parseFloat(row.getValue('price'));
-                const formatted = new Intl.NumberFormat('en-US', {
+                const formatted = new Intl.NumberFormat('es-AR', {
                     style: 'currency',
-                    currency: 'USD',
+                    currency: 'ARS',
                 }).format(price);
                 return <div className="font-medium">{formatted}</div>;
             },
         },
         {
-            accessorKey: 'stock',
+            accessorKey: 'quantityInStock',
             header: dictionary.table.stock,
+            cell: ({ row }) => {
+                const stock = row.getValue('quantityInStock') as number;
+                return (
+                    <div className={`font-medium ${stock <= 10 ? 'text-red-600' : stock <= 50 ? 'text-yellow-600' : 'text-green-600'}`}>
+                        {stock}
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: 'description',
+            header: 'Descripción',
+            cell: ({ row }) => {
+                const description = row.getValue('description') as string | null;
+                return (
+                    <div className="max-w-32 truncate">
+                        {description || '-'}
+                    </div>
+                );
+            },
         },
         {
             id: 'actions',
             cell: ({ row }) => {
                 const product = row.original;
+                const router = useRouter();
+
                 return (
                     <div className="text-right">
                         <DropdownMenu>
@@ -52,15 +79,12 @@ export const getProductColumns = (
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>{dictionary.table.actions}</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => navigator.clipboard.writeText(product.id)}>
-                                    {dictionary.table.copyId}
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => openDialog(product)}>
                                     {dictionary.table.edit}
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>{dictionary.table.viewDetails}</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/products/${product.id}`)}>
+                                    Ver Detalles
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

@@ -1,11 +1,9 @@
-import { Prisma } from "@repo/database";
-
 export type ProductData = {
     id: string;
     name: string;
     description: string | null;
     sku: string;
-    price: Prisma.Decimal;
+    price: number;
     quantityInStock: number;
     createdAt: Date;
     updatedAt: Date;

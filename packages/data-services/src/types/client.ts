@@ -7,7 +7,7 @@ export type ClientData = {
     email: string | null;
     phone: string | null;
     address: string | null;
-    accountBalance: Prisma.Decimal;
+    accountBalance: number;
     createdAt: Date;
     updatedAt: Date;
     sellerId: string;

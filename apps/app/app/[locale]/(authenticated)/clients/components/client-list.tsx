@@ -9,7 +9,7 @@ import {
     DialogTitle,
 } from '@repo/design-system/components/ui/dialog';
 import { Button } from '@repo/design-system/components/ui/button';
-import { ClientData } from '@repo/data-services';
+import { type ClientData } from '@repo/data-services';
 import { type Dictionary } from '@repo/internationalization';
 import { ClientForm } from './client-form';
 import { getClientColumns } from './columns';
@@ -35,7 +35,7 @@ export function ClientList({ clients, dictionary }: ClientListProps) {
         setIsDialogOpen(true);
     };
 
-    const columns = useMemo(() => getClientColumns(openDialog), []);
+    const columns = useMemo(() => getClientColumns(openDialog), [openDialog]);
 
     return (
         <div>

@@ -14,7 +14,7 @@ import {
 import { Input } from '@repo/design-system/components/ui/input';
 import { Button } from '@repo/design-system/components/ui/button';
 import { useToast } from '@repo/design-system/hooks/use-toast';
-import { ClientData } from '@repo/data-services';
+import { type ClientData } from '@repo/data-services';
 import { type Dictionary } from '@repo/internationalization';
 import { clientFormSchema, ClientFormSchema } from '../lib/schemas';
 import { createClientAction, updateClientAction } from '../actions';

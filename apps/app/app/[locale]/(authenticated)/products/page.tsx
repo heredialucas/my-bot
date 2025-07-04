@@ -21,10 +21,12 @@ export default async function ProductsPage({
     const products = await getAllProducts();
 
     return (
-        <div>
-            <h1 className="text-2xl font-bold mb-4">
-                Catálogo de Productos
-            </h1>
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-2xl font-bold">
+                    {dictionary.app.admin.products.title}
+                </h1>
+            </div>
             <ProductList products={products} dictionary={dictionary} />
         </div>
     );

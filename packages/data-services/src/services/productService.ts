@@ -1,16 +1,16 @@
 'use server';
 
-import { Prisma, database } from '@repo/database';
+import { database } from '@repo/database';
 import { getCurrentUser } from './authService';
 import { ProductFormData } from '../types';
 
 /**
  * Get all products from the central catalog.
- * Only accessible to admins.
+ * Accessible to admins and sellers (sellers need it to add products to their inventory).
  */
 export async function getAllProducts() {
     const user = await getCurrentUser();
-    if (user?.role !== 'admin') {
+    if (user?.role !== 'admin' && user?.role !== 'seller') {
         return [];
     }
 
@@ -22,6 +22,27 @@ export async function getAllProducts() {
     } catch (error) {
         console.error("Error fetching all products:", error);
         return [];
+    }
+}
+
+/**
+ * Get a single product by its ID.
+ * Only accessible to admins.
+ */
+export async function getProductById(productId: string) {
+    const user = await getCurrentUser();
+    if (user?.role !== 'admin') {
+        return null;
+    }
+
+    try {
+        const product = await database.product.findUnique({
+            where: { id: productId },
+        });
+        return product;
+    } catch (error) {
+        console.error(`Error fetching product with ID ${productId}:`, error);
+        return null;
     }
 }
 
@@ -62,8 +83,11 @@ export async function createProduct(data: ProductFormData) {
     try {
         const product = await database.product.create({
             data: {
-                ...data,
-                price: new Prisma.Decimal(data.price),
+                name: data.name,
+                description: data.description || null,
+                sku: data.sku,
+                price: data.price,
+                quantityInStock: data.quantityInStock,
             }
         });
         return { success: true, product };
@@ -86,8 +110,11 @@ export async function updateProduct(productId: string, data: Partial<ProductForm
         const product = await database.product.update({
             where: { id: productId },
             data: {
-                ...data,
-                ...(data.price && { price: new Prisma.Decimal(data.price) }),
+                ...(data.name && { name: data.name }),
+                ...(data.description !== undefined && { description: data.description || null }),
+                ...(data.sku && { sku: data.sku }),
+                ...(data.price !== undefined && { price: data.price }),
+                ...(data.quantityInStock !== undefined && { quantityInStock: data.quantityInStock }),
             }
         });
         return { success: true, product };
