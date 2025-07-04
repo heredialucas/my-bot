@@ -94,6 +94,21 @@
         "title": "Gestión de Clientes",
         "subtitle": "Análisis de Comportamiento de Clientes",
         "description": "Visualiza y gestiona las categorías de clientes basadas en su comportamiento de compra",
+        "form": {
+          "createTitle": "Crear Nuevo Cliente",
+          "editTitle": "Editar Cliente",
+          "name": "Nombre",
+          "lastName": "Apellido",
+          "email": "Email",
+          "phone": "Teléfono",
+          "address": "Dirección"
+        },
+        "table": {
+          "actions": "Acciones"
+        },
+        "detail": {
+          "title": "Detalles del Cliente"
+        },
         "categories": {
           "title": "Categorías de Clientes",
           "behaviorTitle": "Por Comportamiento de Compra",
@@ -137,6 +152,86 @@
         "empty": {
           "title": "No hay clientes",
           "description": "Aún no tienes clientes registrados con pedidos"
+        }
+      },
+      "products": {
+        "title": "Gestión de Productos",
+        "subtitle": "Catálogo de Productos",
+        "description": "Gestiona todos los productos de tu inventario.",
+        "newProduct": "Nuevo Producto",
+        "noProducts": "No hay productos registrados.",
+        "table": {
+          "name": "Nombre",
+          "price": "Precio",
+          "stock": "Stock",
+          "actions": "Acciones",
+          "copyId": "Copiar ID de producto",
+          "edit": "Editar Producto",
+          "viewDetails": "Ver detalles del producto"
+        },
+        "form": {
+          "createTitle": "Crear Nuevo Producto",
+          "editTitle": "Editar Producto",
+          "name": "Nombre",
+          "description": "Descripción",
+          "price": "Precio",
+          "stock": "Stock",
+          "cancel": "Cancelar",
+          "create": "Crear Producto",
+          "update": "Actualizar Producto"
+        }
+      },
+      "inventory": {
+        "title": "Mi Inventario",
+        "subtitle": "Gestión de Stock de Vendedor",
+        "description": "Gestiona el stock de los productos que vendes.",
+        "table": {
+          "product": "Producto",
+          "sku": "SKU",
+          "price": "Precio",
+          "stock": "Mi Stock",
+          "actions": "Acciones",
+          "editStock": "Editar Stock"
+        },
+        "form": {
+          "title": "Actualizar Stock",
+          "product": "Producto",
+          "currentStock": "Stock Actual",
+          "newStock": "Nuevo Stock",
+          "cancel": "Cancelar",
+          "update": "Actualizar Stock"
+        }
+      },
+      "orders": {
+        "title": "Gestión de Pedidos",
+        "subtitle": "Historial de Pedidos",
+        "description": "Revisa y gestiona todos los pedidos.",
+        "newOrder": "Nuevo Pedido",
+        "table": {
+          "id": "ID Pedido",
+          "client": "Cliente",
+          "date": "Fecha",
+          "total": "Monto Total",
+          "status": "Estado",
+          "actions": "Acciones",
+          "viewDetails": "Ver Detalles"
+        },
+        "form": {
+          "title": "Crear Nuevo Pedido",
+          "selectClient": "Seleccionar un cliente",
+          "searchClient": "Buscar cliente...",
+          "noClientFound": "Ningún cliente encontrado.",
+          "searchProduct": "Buscar producto...",
+          "noProductFound": "Ningún producto encontrado.",
+          "addProduct": "Añadir Producto",
+          "orderItems": "Ítems del Pedido",
+          "product": "Producto",
+          "quantity": "Cantidad",
+          "price": "Precio",
+          "subtotal": "Subtotal",
+          "total": "Total",
+          "createOrder": "Crear Pedido",
+          "creatingOrder": "Creando pedido..."
         }
       },
       "users": {

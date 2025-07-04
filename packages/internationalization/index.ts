@@ -1,5 +1,5 @@
 import 'server-only';
-import type en from './dictionaries/en.json';
+import type es from './dictionaries/es.json';
 import languine from './languine.json';
 
 export const locales = [
@@ -8,7 +8,7 @@ export const locales = [
 ] as const;
 
 export type Locale = typeof locales[number];
-export type Dictionary = typeof en;
+export type Dictionary = typeof es;
 type Dictionaries = Record<Locale, () => Promise<Dictionary>>;
 
 const dictionaries = locales.reduce<Dictionaries>((acc, locale) => {

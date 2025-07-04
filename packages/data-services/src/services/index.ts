@@ -7,3 +7,6 @@ export * from './imageService';
 export * from './uploadR2Image';
 export * from './userService';
 export * from './templateService';
+export * from './clientService';
+export * from './productService';
+export * from './orderService';

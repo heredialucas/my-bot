@@ -127,6 +127,9 @@ importers:
       '@aws-sdk/lib-storage':
         specifier: ^3.828.0
         version: 3.828.0(@aws-sdk/client-s3@3.828.0)
+      '@hookform/resolvers':
+        specifier: ^4.1.3
+        version: 4.1.3(react-hook-form@7.54.2)
       '@prisma/client':
         specifier: 6.4.1
         version: 6.4.1(prisma@6.4.1)(typescript@5.8.2)
@@ -217,6 +220,9 @@ importers:
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
+      react-hook-form:
+        specifier: ^7.54.2
+        version: 7.54.2(react@19.0.0)
       recharts:
         specifier: ^2.15.1
         version: 2.15.1(react-dom@19.0.0)(react@19.0.0)
@@ -4614,8 +4620,8 @@ packages:
       express-rate-limit: 7.5.1(express@5.1.0)
       pkce-challenge: 5.0.0
       raw-body: 3.0.0
-      zod: 3.24.2
-      zod-to-json-schema: 3.24.6(zod@3.24.2)
+      zod: 3.25.73
+      zod-to-json-schema: 3.24.6(zod@3.25.73)
     transitivePeerDependencies:
       - supports-color
     dev: false

@@ -56,7 +56,6 @@ export function UserHeaderClient({ logo, title = 'Repartito', extraItems, dictio
                 </div>
                 <div className="flex items-center gap-3">
                     <ModeToggle />
-                    {/* <LanguageSwitcher /> */}
                     {extraItems}
                     <LogoutButton userName={user?.name} dictionary={dictionary} locale={locale} />
                 </div>
