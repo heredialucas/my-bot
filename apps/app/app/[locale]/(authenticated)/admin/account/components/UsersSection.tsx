@@ -16,14 +16,29 @@ import type { UserData } from '@repo/data-services/src/types/user';
 import { UserRole } from '@repo/database';
 import type { Dictionary } from '@repo/internationalization';
 import { createUser, updateUser, deleteUser } from '../actions';
+import { ScrollArea } from '@repo/design-system/components/ui/scroll-area';
+import { Permission } from '@repo/auth/server-permissions';
 
 interface UsersSectionProps {
     users: UserData[];
     currentUser: any;
     dictionary: Dictionary;
+    allPermissions: Permission[];
 }
 
-export function UsersSection({ users, currentUser, dictionary }: UsersSectionProps) {
+// Función para agrupar permisos por categoría (ej. 'clients:view' -> 'clients')
+const groupPermissions = (permissions: Permission[]) => {
+    return permissions.reduce((acc, permission) => {
+        const [group] = permission.split(':');
+        if (!acc[group]) {
+            acc[group] = [];
+        }
+        acc[group].push(permission);
+        return acc;
+    }, {} as Record<string, Permission[]>);
+};
+
+export function UsersSection({ users, currentUser, dictionary, allPermissions }: UsersSectionProps) {
     const { toast } = useToast();
     const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<UserData | null>(null);
@@ -63,6 +78,25 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
             permissions: user.permissions || [],
         });
         setIsUserDialogOpen(true);
+    };
+
+    const handlePermissionChange = (permission: Permission, checked: boolean) => {
+        setUserForm(prev => {
+            const newPermissions = checked
+                ? [...prev.permissions, permission]
+                : prev.permissions.filter(p => p !== permission);
+            return { ...prev, permissions: newPermissions };
+        });
+    };
+
+    const handleRoleChange = (role: UserRole) => {
+        // Si el rol es admin, los permisos específicos no son necesarios.
+        // Se puede considerar limpiar los permisos para evitar confusiones.
+        if (role === 'admin') {
+            setUserForm(prev => ({ ...prev, role, permissions: [] }));
+        } else {
+            setUserForm(prev => ({ ...prev, role }));
+        }
     };
 
     const handleUserSubmit = async () => {
@@ -229,199 +263,85 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
                         </DialogTitle>
                         <DialogDescription>
                             {editingUser ?
-                                'Actualiza la información del usuario' :
-                                'Completa los campos para crear un nuevo usuario'
+                                'Actualiza los datos del usuario.' :
+                                'Completa el formulario para agregar un nuevo usuario.'
                             }
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="user-name">Nombre</Label>
-                                <Input
-                                    id="user-name"
-                                    value={userForm.name}
-                                    onChange={(e) => setUserForm(prev => ({ ...prev, name: e.target.value }))}
-                                    disabled={isPending}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="user-lastName">Apellido</Label>
-                                <Input
-                                    id="user-lastName"
-                                    value={userForm.lastName}
-                                    onChange={(e) => setUserForm(prev => ({ ...prev, lastName: e.target.value }))}
-                                    disabled={isPending}
-                                />
-                            </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">Nombre</Label>
+                            <Input id="name" value={userForm.name} onChange={e => setUserForm({ ...userForm, name: e.target.value })} className="col-span-3" />
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="user-email">Email</Label>
-                            <Input
-                                id="user-email"
-                                type="email"
-                                value={userForm.email}
-                                onChange={(e) => setUserForm(prev => ({ ...prev, email: e.target.value }))}
-                                disabled={isPending}
-                            />
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="lastName" className="text-right">Apellido</Label>
+                            <Input id="lastName" value={userForm.lastName} onChange={e => setUserForm({ ...userForm, lastName: e.target.value })} className="col-span-3" />
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="user-password">
-                                Contraseña
-                                {editingUser && ' (dejar vacío para no cambiar)'}
-                            </Label>
-                            <Input
-                                id="user-password"
-                                type="password"
-                                value={userForm.password}
-                                onChange={(e) => setUserForm(prev => ({ ...prev, password: e.target.value }))}
-                                disabled={isPending}
-                            />
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="email" className="text-right">Email</Label>
+                            <Input id="email" type="email" value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} className="col-span-3" />
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="user-role">Rol</Label>
-                            <Select
-                                value={userForm.role}
-                                onValueChange={(value: UserRole) => setUserForm(prev => ({ ...prev, role: value }))}
-                                disabled={isPending}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue />
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="password" className="text-right">Contraseña</Label>
+                            <Input id="password" type="password" placeholder={editingUser ? 'Dejar en blanco para no cambiar' : ''} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="role" className="text-right">Rol</Label>
+                            <Select value={userForm.role} onValueChange={(value) => handleRoleChange(value as UserRole)}>
+                                <SelectTrigger className="col-span-3">
+                                    <SelectValue placeholder="Selecciona un rol" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="admin">Administrador</SelectItem>
-                                    <SelectItem value="user">Usuario</SelectItem>
+                                    <SelectItem value="admin">Admin</SelectItem>
+                                    <SelectItem value="seller">Seller</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="space-y-2">
-                            <Label>Permisos del Usuario</Label>
-                            <div className="max-h-60 overflow-y-auto space-y-4 p-4 border rounded-lg">
-                                {/* Permisos de Vista */}
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-2">
-                                        <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                                        <Label className="text-sm font-medium text-blue-700 dark:text-blue-400">Permisos de Vista</Label>
-                                    </div>
-                                    <div className="ml-4 space-y-2">
-                                        <div className="flex items-center space-x-2">
-                                            <Switch
-                                                checked={userForm.permissions.includes('analytics:view')}
-                                                onCheckedChange={(checked) => {
-                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'analytics:view'] }));
-                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'analytics:view') }));
-                                                }}
-                                                disabled={isPending}
-                                            />
-                                            <Label className="text-sm">Ver estadísticas</Label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <Switch
-                                                checked={userForm.permissions.includes('clients:view')}
-                                                onCheckedChange={(checked) => {
-                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'clients:view'] }));
-                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'clients:view') }));
-                                                }}
-                                                disabled={isPending}
-                                            />
-                                            <Label className="text-sm">Ver clientes</Label>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                {/* Permisos de Edición */}
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-2">
-                                        <div className="h-2 w-2 rounded-full bg-orange-500"></div>
-                                        <Label className="text-sm font-medium text-orange-700 dark:text-orange-400">Permisos de Edición</Label>
+                        {/* Sección de Permisos */}
+                        <div className="grid grid-cols-4 items-start gap-4 pt-4">
+                            <Label className="text-right pt-2">Permisos</Label>
+                            <div className="col-span-3 space-y-2">
+                                <ScrollArea
+                                    className="h-60 rounded-md border p-4"
+                                    style={{ opacity: userForm.role === 'admin' ? 0.5 : 1 }}
+                                >
+                                    <div className="space-y-4" style={{ pointerEvents: userForm.role === 'admin' ? 'none' : 'auto' }}>
+                                        {Object.entries(groupPermissions(allPermissions)).map(([group, permissions]) => (
+                                            <div key={group}>
+                                                <h4 className="font-medium capitalize mb-3 text-base text-gray-800 dark:text-gray-200">
+                                                    {dictionary.app.admin.permissions.groups[group as keyof typeof dictionary.app.admin.permissions.groups] || group}
+                                                </h4>
+                                                <div className="space-y-3 pl-2">
+                                                    {permissions.map(permission => (
+                                                        <div key={permission} className="flex items-center justify-between">
+                                                            <label htmlFor={permission} className="text-sm font-normal text-gray-700 dark:text-gray-300">
+                                                                {dictionary.app.admin.permissions.labels[permission as keyof typeof dictionary.app.admin.permissions.labels] || permission.split(':')[1].replace(/_/g, ' ')}
+                                                            </label>
+                                                            <Switch
+                                                                id={permission}
+                                                                checked={userForm.permissions.includes(permission)}
+                                                                onCheckedChange={(checked) => handlePermissionChange(permission, !!checked)}
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                    <div className="ml-4 space-y-2">
-                                        <div className="flex items-center space-x-2">
-                                            <Switch
-                                                checked={userForm.permissions.includes('account:edit_own')}
-                                                onCheckedChange={(checked) => {
-                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'account:edit_own'] }));
-                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'account:edit_own') }));
-                                                }}
-                                                disabled={isPending}
-                                            />
-                                            <Label className="text-sm">Editar su propio perfil</Label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <Switch
-                                                checked={userForm.permissions.includes('account:change_password')}
-                                                onCheckedChange={(checked) => {
-                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'account:change_password'] }));
-                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'account:change_password') }));
-                                                }}
-                                                disabled={isPending}
-                                            />
-                                            <Label className="text-sm">Cambiar su contraseña</Label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Permisos de Órdenes */}
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-2">
-                                        <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                                        <Label className="text-sm font-medium text-green-700 dark:text-green-400">Permisos de Órdenes</Label>
-                                    </div>
-                                    <div className="ml-4 space-y-2">
-                                        <div className="flex items-center space-x-2">
-                                            <Switch
-                                                checked={userForm.permissions.includes('table:view')}
-                                                onCheckedChange={(checked) => {
-                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'table:view'] }));
-                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'table:view') }));
-                                                }}
-                                                disabled={isPending}
-                                            />
-                                            <Label className="text-sm">Ver órdenes</Label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <Switch
-                                                checked={userForm.permissions.includes('table:edit')}
-                                                onCheckedChange={(checked) => {
-                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'table:edit'] }));
-                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'table:edit') }));
-                                                }}
-                                                disabled={isPending}
-                                            />
-                                            <Label className="text-sm">Editar órdenes</Label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <Switch
-                                                checked={userForm.permissions.includes('table:notify')}
-                                                onCheckedChange={(checked) => {
-                                                    if (checked) setUserForm(prev => ({ ...prev, permissions: [...prev.permissions, 'table:notify'] }));
-                                                    else setUserForm(prev => ({ ...prev, permissions: prev.permissions.filter(p => p !== 'table:notify') }));
-                                                }}
-                                                disabled={isPending}
-                                            />
-                                            <Label className="text-sm">Notificar clientes (órdenes)</Label>
-                                        </div>
-                                    </div>
-                                </div>
+                                </ScrollArea>
+                                {userForm.role === 'admin' && (
+                                    <p className="text-xs text-muted-foreground italic">
+                                        Los administradores tienen todos los permisos por defecto.
+                                    </p>
+                                )}
                             </div>
-
-                            <p className="text-sm text-muted-foreground pt-2">
-                                Asigna los permisos específicos para el usuario.
-                                <br />
-                                <span className="text-xs">Nota: Todos los usuarios pueden ver su propia cuenta por defecto.</span>
-                            </p>
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsUserDialogOpen(false)} disabled={isPending}>
-                            Cancelar
-                        </Button>
+                        <Button variant="outline" onClick={() => setIsUserDialogOpen(false)}>Cancelar</Button>
                         <Button onClick={handleUserSubmit} disabled={isPending}>
-                            {isPending ? (
-                                editingUser ? 'Actualizando...' : 'Creando...'
-                            ) : (
-                                editingUser ? 'Actualizar Usuario' : 'Crear Usuario'
-                            )}
+                            {isPending ? 'Guardando...' : 'Guardar Cambios'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

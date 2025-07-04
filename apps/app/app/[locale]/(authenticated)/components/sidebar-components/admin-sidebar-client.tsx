@@ -6,6 +6,10 @@ import {
     Users,
     BarChart3,
     Table,
+    ShoppingCart,
+    Archive,
+    Package,
+    CreditCard,
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -25,6 +29,10 @@ const ICON_MAP = {
     Users,
     BarChart3,
     Table,
+    ShoppingCart,
+    Archive,
+    Package,
+    CreditCard,
 } as const;
 
 type AdminSidebarClientProps = {

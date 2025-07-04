@@ -1,7 +1,11 @@
 import { getCurrentUser } from '@repo/data-services/src/services/authService';
 import { getAllUsers } from '@repo/data-services/src/services/userService';
 import { getDictionary } from '@repo/internationalization';
-import { hasPermission, requirePermission } from '@repo/auth/server-permissions';
+import {
+    hasPermission,
+    requirePermission,
+    ADMIN_PERMISSIONS
+} from '@repo/auth/server-permissions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/design-system/components/ui/tabs';
 import { ProfileSection } from './components/ProfileSection';
 import { PasswordSection } from './components/PasswordSection';
@@ -35,6 +39,9 @@ export default async function AccountPage({ params }: AccountPageProps) {
     // Verificar si puede gestionar usuarios para obtener la lista
     const canManageUsers = await hasPermission('account:manage_users');
     const users = canManageUsers ? await getAllUsers(currentUser.id) : []; // Excluir al usuario actual
+
+    // Filtrar los permisos de administrador para que no se puedan asignar desde la UI
+    const assignablePermissions = ADMIN_PERMISSIONS.filter(p => !p.startsWith('admin:'));
 
     return (
         <div className="space-y-6 p-4 md:p-6">
@@ -72,6 +79,7 @@ export default async function AccountPage({ params }: AccountPageProps) {
                             users={users}
                             currentUser={currentUser}
                             dictionary={dictionary}
+                            allPermissions={assignablePermissions}
                         />
                     </TabsContent>
                 )}

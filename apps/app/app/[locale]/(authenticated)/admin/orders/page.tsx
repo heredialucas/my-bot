@@ -1,7 +1,7 @@
 import { getDictionary } from '@repo/internationalization';
 import { type Locale } from '@repo/internationalization';
 
-export default async function ClientsPage({
+export default async function OrdersPage({
     params,
 }: {
     params: Promise<{ locale: Locale }>;
@@ -12,9 +12,9 @@ export default async function ClientsPage({
     return (
         <div>
             <h1 className="text-2xl font-bold">
-                {dictionary.app.admin.navigation.clients}
+                {dictionary.app.admin.navigation.orders}
             </h1>
-            <p>{/* Contenido de la página de clientes aquí */}</p>
+            <p>{/* Contenido de la página de pedidos aquí */}</p>
         </div>
     );
 } 

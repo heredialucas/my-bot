@@ -8,9 +8,6 @@ import { getCurrentUser } from '@repo/data-services/src/services/authService';
 
 // Tipos de permisos disponibles
 export type Permission =
-    // Analytics
-    | 'analytics:view'
-    | 'analytics:export'
     // Users
     | 'users:view'
     | 'users:create'
@@ -29,16 +26,29 @@ export type Permission =
     | 'clients:create'
     | 'clients:edit'
     | 'clients:delete'
-    // Table
-    | 'table:view'
-    | 'table:export'
-    | 'table:delete'
-    | 'table:edit'
+    | 'clients:view_account_balance'
+    | 'clients:manage_account_balance'
+    // Inventory (Stock)
+    | 'inventory:view'
+    | 'inventory:manage'
+    // Orders
+    | 'orders:view'
+    | 'orders:create'
+    | 'orders:edit'
+    | 'orders:cancel'
+    // Products
+    | 'products:view'
+    | 'products:create'
+    | 'products:edit'
+    | 'products:delete'
+    // Sellers
+    | 'sellers:view'
+    // Payments
+    | 'payments:view'
+    | 'payments:manage';
 
 // Permisos por defecto para admins (siempre tienen todos)
 export const ADMIN_PERMISSIONS: Permission[] = [
-    'analytics:view',
-    'analytics:export',
     'users:view',
     'users:create',
     'users:edit',
@@ -53,10 +63,21 @@ export const ADMIN_PERMISSIONS: Permission[] = [
     'clients:create',
     'clients:edit',
     'clients:delete',
-    'table:view',
-    'table:export',
-    'table:delete',
-    'table:edit',
+    'clients:view_account_balance',
+    'clients:manage_account_balance',
+    'inventory:view',
+    'inventory:manage',
+    'orders:view',
+    'orders:create',
+    'orders:edit',
+    'orders:cancel',
+    'products:view',
+    'products:create',
+    'products:edit',
+    'products:delete',
+    'sellers:view',
+    'payments:view',
+    'payments:manage',
 ];
 
 /**
@@ -69,7 +90,7 @@ export async function getCurrentUserWithPermissions() {
     }
 
     const isAdmin = user.role.toLowerCase() === 'admin';
-    const isUser = user.role.toLowerCase() === 'user';
+    const isSeller = user.role.toLowerCase() === 'seller';
 
     // Si es admin, tiene todos los permisos siempre
     if (isAdmin) {
@@ -77,17 +98,17 @@ export async function getCurrentUserWithPermissions() {
             ...user,
             permissions: ADMIN_PERMISSIONS,
             isAdmin: true,
-            isUser: false,
+            isSeller: false,
         };
     }
 
-    // Si es usuario normal, usar sus permisos personalizados
-    if (isUser) {
+    // Si es vendedor, usar sus permisos personalizados
+    if (isSeller) {
         return {
             ...user,
             permissions: user.permissions, // Usar permisos del usuario desde la BD
             isAdmin: false,
-            isUser: true,
+            isSeller: true,
         };
     }
 
@@ -96,7 +117,7 @@ export async function getCurrentUserWithPermissions() {
         ...user,
         permissions: [],
         isAdmin: false,
-        isUser: true,
+        isSeller: false,
     };
 }
 
@@ -184,6 +205,35 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
         href: '/admin/clients',
         icon: 'Users',
         requiredPermissions: ['clients:view'],
+    },
+    {
+        label: 'orders',
+        mobileLabel: 'ordersMobile',
+        href: '/admin/orders',
+        icon: 'ShoppingCart',
+        requiredPermissions: ['orders:view'],
+    },
+    {
+        label: 'inventory',
+        mobileLabel: 'inventoryMobile',
+        href: '/admin/inventory',
+        icon: 'Archive',
+        requiredPermissions: ['inventory:view'],
+    },
+    {
+        label: 'products',
+        mobileLabel: 'productsMobile',
+        href: '/admin/products',
+        icon: 'Package',
+        requiredPermissions: ['products:view'],
+        adminOnly: true,
+    },
+    {
+        label: 'payments',
+        mobileLabel: 'paymentsMobile',
+        href: '/admin/payments',
+        icon: 'CreditCard',
+        requiredPermissions: ['payments:view'],
     },
 ];
 

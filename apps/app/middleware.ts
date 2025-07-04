@@ -36,7 +36,7 @@ const ROUTE_PERMISSIONS: Record<string, string[]> = {
 // Lógica mejorada para dirigir a los usuarios a la página más útil después de iniciar sesión.
 const getDefaultRedirect = (userRole: Role, userPermissions: string[]): string => {
   if (userRole === ROLES.ADMIN) {
-    return '/admin/clients'; // El Admin siempre va al dashboard principal.
+    return '/admin/account'; // El Admin siempre va al dashboard principal.
   }
 
   // Lógica de redirección para Vendedores (Sellers)

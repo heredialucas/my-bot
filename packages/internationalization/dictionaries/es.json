@@ -3,18 +3,25 @@
     "admin": {
       "title": "LupaPyme - Panel de Administración",
       "navigation": {
-        "dashboard": "Inicio",
-        "users": "Usuarios",
+        "dashboard": "Dashboard",
+        "analytics": "Analíticas",
+        "clients": "Clientes",
+        "clientsMobile": "Clientes",
+        "orders": "Pedidos",
+        "ordersMobile": "Pedidos",
+        "inventory": "Inventario",
+        "inventoryMobile": "Inventario",
+        "products": "Productos",
+        "productsMobile": "Productos",
+        "payments": "Pagos",
+        "paymentsMobile": "Pagos",
+        "account": "Mi Cuenta",
+        "accountMobile": "Cuenta",
         "settings": "Configuración",
+        "users": "Usuarios",
         "logout": "Cerrar Sesión",
         "loggingOut": "Cerrando sesión...",
-        "account": "Mi Cuenta",
-        "analytics": "Estadísticas",
-        "clients": "Clientes",
         "table": "Tabla",
-        "accountMobile": "Cuenta",
-        "analyticsMobile": "KPIs",
-        "clientsMobile": "Clientes",
         "tableMobile": "Tabla"
       },
       "menu": {
@@ -176,6 +183,106 @@
             "userCreated": "Usuario creado exitosamente",
             "userUpdated": "Usuario actualizado exitosamente"
           }
+        },
+        "permissions": {
+          "groups": {
+            "users": "Usuarios",
+            "account": "Cuenta",
+            "clients": "Clientes",
+            "inventory": "Inventario",
+            "orders": "Pedidos",
+            "products": "Productos",
+            "sellers": "Vendedores",
+            "payments": "Pagos"
+          },
+          "labels": {
+            "users:view": "Ver usuarios",
+            "users:create": "Crear usuarios",
+            "users:edit": "Editar usuarios",
+            "users:delete": "Eliminar usuarios",
+            "account:view_own": "Ver cuenta propia",
+            "account:edit_own": "Editar cuenta propia",
+            "account:change_password": "Cambiar contraseña",
+            "account:manage_users": "Gestionar usuarios",
+            "clients:view": "Ver clientes",
+            "clients:create": "Crear clientes",
+            "clients:edit": "Editar clientes",
+            "clients:delete": "Eliminar clientes",
+            "clients:view_account_balance": "Ver saldo de cuenta",
+            "clients:manage_account_balance": "Gestionar saldo de cuenta",
+            "inventory:view": "Ver inventario",
+            "inventory:manage": "Gestionar inventario",
+            "orders:view": "Ver pedidos",
+            "orders:create": "Crear pedidos",
+            "orders:edit": "Editar pedidos",
+            "orders:cancel": "Cancelar pedidos",
+            "products:view": "Ver productos",
+            "products:create": "Crear productos",
+            "products:edit": "Editar productos",
+            "products:delete": "Eliminar productos",
+            "sellers:view": "Ver vendedores",
+            "payments:view": "Ver pagos",
+            "payments:manage": "Gestionar pagos"
+          }
+        }
+      },
+      "pageTitles": {
+        "dashboard": "Dashboard",
+        "analytics": "Analíticas",
+        "clients": "Clientes",
+        "clientsMobile": "Clientes",
+        "orders": "Pedidos",
+        "ordersMobile": "Pedidos",
+        "inventory": "Inventario",
+        "inventoryMobile": "Inventario",
+        "products": "Productos",
+        "productsMobile": "Productos",
+        "payments": "Pagos",
+        "paymentsMobile": "Pagos",
+        "account": "Mi Cuenta",
+        "accountMobile": "Cuenta",
+        "settings": "Configuración",
+        "users": "Usuarios"
+      },
+      "permissions": {
+        "groups": {
+          "users": "Usuarios",
+          "account": "Cuenta",
+          "clients": "Clientes",
+          "inventory": "Inventario",
+          "orders": "Pedidos",
+          "products": "Productos",
+          "sellers": "Vendedores",
+          "payments": "Pagos"
+        },
+        "labels": {
+          "users:view": "Ver usuarios",
+          "users:create": "Crear usuarios",
+          "users:edit": "Editar usuarios",
+          "users:delete": "Eliminar usuarios",
+          "account:view_own": "Ver cuenta propia",
+          "account:edit_own": "Editar cuenta propia",
+          "account:change_password": "Cambiar contraseña",
+          "account:manage_users": "Gestionar usuarios",
+          "clients:view": "Ver clientes",
+          "clients:create": "Crear clientes",
+          "clients:edit": "Editar clientes",
+          "clients:delete": "Eliminar clientes",
+          "clients:view_account_balance": "Ver saldo de cuenta",
+          "clients:manage_account_balance": "Gestionar saldo de cuenta",
+          "inventory:view": "Ver inventario",
+          "inventory:manage": "Gestionar inventario",
+          "orders:view": "Ver pedidos",
+          "orders:create": "Crear pedidos",
+          "orders:edit": "Editar pedidos",
+          "orders:cancel": "Cancelar pedidos",
+          "products:view": "Ver productos",
+          "products:create": "Crear productos",
+          "products:edit": "Editar productos",
+          "products:delete": "Eliminar productos",
+          "sellers:view": "Ver vendedores",
+          "payments:view": "Ver pagos",
+          "payments:manage": "Gestionar pagos"
         }
       }
     },
@@ -703,6 +810,12 @@
       "analytics": "Análisis e Insights",
       "getStarted": "Comenzar",
       "rights": "Todos los derechos reservados"
+    },
+    "landing": {
+      "title": "LupaPyme"
     }
+  },
+  "error": {
+    "go_back": "Volver"
   }
 }

@@ -4,17 +4,24 @@
       "title": "LupaPyme - Admin Panel",
       "navigation": {
         "dashboard": "Dashboard",
-        "users": "Users",
-        "settings": "Settings",
-        "logout": "Logout",
-        "loggingOut": "Logging out...",
-        "account": "My Account",
         "analytics": "Analytics",
         "clients": "Clients",
-        "table": "Table",
-        "accountMobile": "Account",
-        "analyticsMobile": "KPIs",
         "clientsMobile": "Clients",
+        "orders": "Orders",
+        "ordersMobile": "Orders",
+        "inventory": "Inventory",
+        "inventoryMobile": "Inventory",
+        "products": "Products",
+        "productsMobile": "Products",
+        "payments": "Payments",
+        "paymentsMobile": "Payments",
+        "account": "My Account",
+        "accountMobile": "Account",
+        "settings": "Settings",
+        "users": "Users",
+        "logout": "Logout",
+        "loggingOut": "Logging out...",
+        "table": "Table",
         "tableMobile": "Table"
       },
       "menu": {
@@ -139,6 +146,51 @@
       "dashboard": {
         "title": "Repartito Administration Panel",
         "description": "Access Repartito's administrative tools to manage your business efficiently."
+      },
+      "pageTitles": {
+        "title": "LupaPyme - Admin Panel",
+        "description": "Access LupaPyme's administrative tools to manage your business efficiently."
+      },
+      "permissions": {
+        "groups": {
+          "users": "Users",
+          "account": "Account",
+          "clients": "Clients",
+          "inventory": "Inventory",
+          "orders": "Orders",
+          "products": "Products",
+          "sellers": "Sellers",
+          "payments": "Payments"
+        },
+        "labels": {
+          "users:view": "View users",
+          "users:create": "Create users",
+          "users:edit": "Edit users",
+          "users:delete": "Delete users",
+          "account:view_own": "View own account",
+          "account:edit_own": "Edit own account",
+          "account:change_password": "Change password",
+          "account:manage_users": "Manage users",
+          "clients:view": "View clients",
+          "clients:create": "Create clients",
+          "clients:edit": "Edit clients",
+          "clients:delete": "Delete clients",
+          "clients:view_account_balance": "View account balance",
+          "clients:manage_account_balance": "Manage account balance",
+          "inventory:view": "View inventory",
+          "inventory:manage": "Manage inventory",
+          "orders:view": "View orders",
+          "orders:create": "Create orders",
+          "orders:edit": "Edit orders",
+          "orders:cancel": "Cancel orders",
+          "products:view": "View products",
+          "products:create": "Create products",
+          "products:edit": "Edit products",
+          "products:delete": "Delete products",
+          "sellers:view": "View sellers",
+          "payments:view": "View payments",
+          "payments:manage": "Manage payments"
+        }
       }
     },
     "client": {
@@ -521,6 +573,12 @@
       "analytics": "Analytics and Insights",
       "getStarted": "Get Started",
       "rights": "All rights reserved"
+    },
+    "landing": {
+      "title": "LupaPyme"
     }
+  },
+  "error": {
+    "go_back": "Go back"
   }
 }
