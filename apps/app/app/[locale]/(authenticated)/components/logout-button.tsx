@@ -11,7 +11,8 @@ import {
 import { LogOut } from 'lucide-react';
 import { useTransition } from 'react';
 import { Dictionary } from '@repo/internationalization';
-import { logoutAction } from '../actions';
+import { signOut } from '@repo/data-services/src/services/authService';
+import { redirect } from 'next/navigation';
 
 interface LogoutButtonProps {
     userName?: string;
@@ -24,7 +25,8 @@ export function LogoutButton({ userName, dictionary, locale = 'es' }: LogoutButt
 
     const handleLogout = () => {
         startTransition(async () => {
-            await logoutAction(locale);
+            await signOut();
+            redirect(`/${locale}/sign-in`);
         });
     };
 

@@ -16,6 +16,17 @@ import {
 import { Search, MessageCircle, Phone } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
 import type { ClientForTable } from '@repo/data-services/src/services/barfer/analytics/getClientsByCategory';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@repo/design-system/components/ui/dropdown-menu';
+
+export type WhatsAppTemplate = {
+    id: string;
+    name: string;
+};
 
 interface Client extends ClientForTable { }
 

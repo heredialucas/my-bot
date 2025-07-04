@@ -35,7 +35,7 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
         lastName: '',
         email: '',
         password: '',
-        role: 'user' as UserRole,
+        role: 'seller' as UserRole,
         permissions: [] as string[],
     });
 
@@ -46,7 +46,7 @@ export function UsersSection({ users, currentUser, dictionary }: UsersSectionPro
             lastName: '',
             email: '',
             password: '',
-            role: 'user',
+            role: 'seller',
             permissions: ['account:view_own'], // Permiso básico por defecto
         });
         setIsUserDialogOpen(true);

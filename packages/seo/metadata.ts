@@ -1,5 +1,5 @@
 import merge from 'lodash.merge';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 
 type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
   title: string;
@@ -7,13 +7,21 @@ type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
   image?: string;
 };
 
-const applicationName = 'Barfer';
-const author: Metadata['authors'] = {
-  name: 'Barfer',
-  url: 'https://barfer.app/',
+type CreateMetadataParams = {
+  title: string;
+  description: string;
+  keywords: string[];
+  images: string[];
 };
-const publisher = 'Barfer';
-const twitterHandle = '@barfer';
+
+const applicationName = 'Repartito';
+const authors = [{
+  name: 'Repartito',
+  url: 'https://repartito.app/',
+}];
+const creator = 'Lucas Heredia';
+const publisher = 'Repartito';
+const twitterHandle = '@repartito';
 
 export const createMetadata = ({
   title,
@@ -26,8 +34,8 @@ export const createMetadata = ({
     title: parsedTitle,
     description,
     applicationName,
-    authors: [author],
-    creator: author.name,
+    authors: authors,
+    creator: creator,
     formatDetection: {
       telephone: false,
     },

@@ -179,25 +179,11 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
         requiredPermissions: ['account:view_own'],
     },
     {
-        label: 'analytics',
-        mobileLabel: 'analyticsMobile',
-        href: '/admin/analytics',
-        icon: 'BarChart3',
-        requiredPermissions: ['analytics:view'],
-    },
-    {
         label: 'clients',
         mobileLabel: 'clientsMobile',
         href: '/admin/clients',
         icon: 'Users',
         requiredPermissions: ['clients:view'],
-    },
-    {
-        label: 'table',
-        mobileLabel: 'tableMobile',
-        href: '/admin/table',
-        icon: 'Table',
-        requiredPermissions: ['table:view'],
     },
 ];
 

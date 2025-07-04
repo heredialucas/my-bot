@@ -27,7 +27,7 @@ export default async function AccessDenied({ params }: AccessDeniedProps) {
                 </h1>
 
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                    No tienes permisos para acceder a esta área. Esta sección está reservada para usuarios autorizados de Barfer con el rol apropiado.
+                    No tienes permisos para acceder a esta área. Esta sección está reservada para usuarios autorizados de Repartito con el rol apropiado.
                 </p>
 
                 <div className="bg-gray-50 dark:bg-zinc-700/30 p-4 rounded-md text-left mb-6">
@@ -35,14 +35,14 @@ export default async function AccessDenied({ params }: AccessDeniedProps) {
                         ¿Necesitas acceso?
                     </h2>
                     <p className="text-gray-600 dark:text-gray-300">
-                        Si necesitas acceso a esta sección, contacta a un administrador de Barfer para solicitar la autorización apropiada para la gestión del sistema.
+                        Si necesitas acceso a esta sección, contacta a un administrador de Repartito para solicitar la autorización apropiada para la gestión del sistema.
                     </p>
                 </div>
 
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                         <ShieldAlert className="h-5 w-5" />
-                        <span className="font-medium">Barfer</span>
+                        <span className="font-medium">Repartito</span>
                     </div>
                     <form action={async () => {
                         'use server';

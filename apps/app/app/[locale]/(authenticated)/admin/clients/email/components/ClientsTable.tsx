@@ -13,9 +13,9 @@ import {
     TableHeader,
     TableRow,
 } from '@repo/design-system/components/ui/table';
-import { Search, Mail } from 'lucide-react';
+import { Search, Mail, Phone } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
-import type { ClientForTable } from '@repo/data-services/src/services/barfer/analytics/getClientsByCategory';
+import type { ClientForTable } from '@repo/data-services/src/services/repartito/analytics/getClientsByCategory';
 
 interface Client extends ClientForTable { }
 

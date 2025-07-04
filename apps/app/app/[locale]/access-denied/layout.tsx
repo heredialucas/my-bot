@@ -13,11 +13,11 @@ export default function AccessDeniedLayout({ children }: AccessDeniedLayoutProps
                 <div className="container mx-auto">
                     <Link href="/" className="flex items-center gap-2">
                         <ShieldAlert className="h-5 w-5 text-blue-500" />
-                        <span className="font-bold text-lg">Barfer</span>
+                        <span className="font-bold text-lg">Repartito</span>
                     </Link>
                 </div>
             </header>
-            {children}
+            <main className="flex-grow p-4 md:p-6">{children}</main>
         </div>
     );
 } 

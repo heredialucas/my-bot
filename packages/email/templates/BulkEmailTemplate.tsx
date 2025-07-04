@@ -28,7 +28,7 @@ export const BulkEmailTemplate = ({
     return (
         <Html>
             <Head />
-            <Preview>Un mensaje de Barfer</Preview>
+            <Preview>Un mensaje de Repartito</Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Text style={paragraph}>Hola {clientName},</Text>
@@ -36,7 +36,7 @@ export const BulkEmailTemplate = ({
                     <div dangerouslySetInnerHTML={{ __html: personalizedContent }} />
                     <Hr style={hr} />
                     <Text style={footer}>
-                        Barfer - {new Date().getFullYear()}
+                        Repartito - {new Date().getFullYear()}
                     </Text>
                 </Container>
             </Body>

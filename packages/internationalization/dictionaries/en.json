@@ -135,6 +135,10 @@
       "layout": {
         "title": "LupaPyme Administration Panel",
         "description": "Access LupaPyme's administrative tools to manage your business efficiently."
+      },
+      "dashboard": {
+        "title": "Repartito Administration Panel",
+        "description": "Access Repartito's administrative tools to manage your business efficiently."
       }
     },
     "client": {

@@ -7,11 +7,18 @@ import { Badge } from '@repo/design-system/components/ui/badge';
 import { ArrowLeft, Mail, Send, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { Dictionary } from '@repo/internationalization';
-import type { ClientForTable } from '@repo/data-services/src/services/barfer/analytics/getClientsByCategory';
+import type { ClientForTable } from '@repo/data-services/src/services/repartito/analytics/getClientsByCategory';
 import type { EmailTemplateData } from '@repo/data-services';
 import { ClientsTable } from './ClientsTable';
 import { TemplateSelectorClient } from './TemplateSelectorClient';
 import { sendBulkEmailAction } from '../actions';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@repo/design-system/components/ui/select';
 
 interface EmailClientsViewClientProps {
     category?: string;

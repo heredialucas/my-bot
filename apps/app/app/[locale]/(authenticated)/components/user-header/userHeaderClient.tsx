@@ -1,9 +1,7 @@
 'use client';
 
-import { getCurrentUser } from '@repo/data-services/src/services/authService';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { LogoutButton } from '../logout-button';
-import { LanguageSwitcher } from '../language-switcher';
 import { Dictionary } from '@repo/internationalization';
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
 import { useSidebar } from '@/store/sidebarStore';
@@ -27,7 +25,7 @@ interface UserHeaderClientProps {
     locale?: string;
 }
 
-export function UserHeaderClient({ logo, title = 'Barfer', extraItems, dictionary, user, locale }: UserHeaderClientProps) {
+export function UserHeaderClient({ logo, title = 'Repartito', extraItems, dictionary, user, locale }: UserHeaderClientProps) {
     const { isCollapsed, toggleCollapse } = useSidebar();
     const [isLogoAreaHovered, setLogoAreaHovered] = useState(false);
 

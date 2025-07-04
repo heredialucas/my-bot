@@ -5,7 +5,6 @@ import { Badge } from '@repo/design-system/components/ui/badge';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Users, TrendingUp, Clock, Mail, MessageCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import type { ClientCategoryStats, ClientBehaviorCategory, ClientSpendingCategory } from '@repo/data-services';
 import type { Dictionary } from '@repo/internationalization';
 
 interface ClientCategoryCardProps {

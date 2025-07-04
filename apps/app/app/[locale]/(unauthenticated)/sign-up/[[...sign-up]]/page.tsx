@@ -40,13 +40,6 @@ const SignUpPage = async ({
 
   return (
     <>
-      <div className="flex flex-col space-y-2 text-center mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-          {dictionary.app.auth.signUp.title || title}
-        </h1>
-        <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
-      </div>
-
       {errorMessage && (
         <div className="mb-6 p-3 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
           <p className="text-sm text-red-600 dark:text-red-400">{errorMessage}</p>
