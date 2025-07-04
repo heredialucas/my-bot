@@ -18,40 +18,44 @@ type Role = (typeof ROLES)[keyof typeof ROLES];
 
 // --- 2. Permisos y Rutas ---
 // Mapa detallado de rutas y los permisos necesarios para acceder a ellas.
-// Soporta rutas base (ej. '/admin/clients') para cubrir sub-rutas (ej. '/admin/clients/new').
+// Soporta rutas base (ej. '/clients') para cubrir sub-rutas (ej. '/clients/new').
 const ROUTE_PERMISSIONS: Record<string, string[]> = {
-  // Rutas de Vendedor y Admin
-  '/admin/account': ['account:view_own'],
-  '/admin/orders': ['orders:view_own', 'orders:view_all'],
-  '/admin/clients': ['clients:view', 'clients:create', 'clients:edit'],
+  // Rutas con permisos específicos de visualización
+  '/account': ['account:view_own'],
+  '/clients': ['clients:view'],
+  '/products': ['products:view'],
+  '/inventory': ['inventory:view'],
+  '/payments': ['payments:view'],
+  '/analytics': ['analytics:view_global'],
 
-  // Rutas exclusivas de Admin
-  '/admin/analytics': ['analytics:view_global'],
-  '/admin/products': ['products:view', 'products:create', 'products:edit'],
-  '/admin/inventory': ['inventory:view', 'inventory:assign'],
-  '/admin/users': ['users:view', 'users:manage'],
+  // La ruta de pedidos permite el acceso si el usuario puede ver sus propios pedidos O todos los pedidos.
+  // La lógica en `hasAccessToRoute` maneja este caso (usando .some()).
+  '/orders': ['orders:view_own', 'orders:view_all'],
+
+  // La gestión de usuarios está dentro de 'account', pero si tuviera su propia página, este sería el permiso.
+  '/users': ['account:manage_users'],
 };
 
 // --- 3. Redirección por Rol ---
 // Lógica mejorada para dirigir a los usuarios a la página más útil después de iniciar sesión.
 const getDefaultRedirect = (userRole: Role, userPermissions: string[]): string => {
   if (userRole === ROLES.ADMIN) {
-    return '/admin/account'; // El Admin siempre va al dashboard principal.
+    return '/account'; // El Admin siempre va al dashboard principal.
   }
 
   // Lógica de redirección para Vendedores (Sellers)
   if (userPermissions.includes('orders:create')) {
-    return '/admin/orders/new'; // Prioridad 1: Si puede crear pedidos, llevarlo allí.
+    return '/orders/new'; // Prioridad 1: Si puede crear pedidos, llevarlo allí.
   }
   if (userPermissions.includes('orders:view_own')) {
-    return '/admin/orders'; // Prioridad 2: Ver sus pedidos.
+    return '/orders'; // Prioridad 2: Ver sus pedidos.
   }
   if (userPermissions.includes('clients:view')) {
-    return '/admin/clients'; // Prioridad 3: Ver sus clientes.
+    return '/clients'; // Prioridad 3: Ver sus clientes.
   }
 
   // Por defecto, cualquier usuario autenticado puede ver su propia cuenta.
-  return '/admin/account';
+  return '/account';
 };
 
 // Rutas públicas que no requieren autenticación.
@@ -81,7 +85,7 @@ const hasAccessToRoute = (pathname: string, userRole: Role, userPermissions: str
   }
 
   // Encuentra la ruta base más específica que coincida con el pathname actual.
-  // Ej: para '/admin/clients/123/edit', encontrará la regla de '/admin/clients'.
+  // Ej: para '/clients/123/edit', encontrará la regla de '/clients'.
   const matchingRoute = Object.keys(ROUTE_PERMISSIONS)
     .filter(route => pathname.startsWith(route))
     .sort((a, b) => b.length - a.length)[0];
@@ -92,13 +96,15 @@ const hasAccessToRoute = (pathname: string, userRole: Role, userPermissions: str
     return requiredPermissions.some(permission => userPermissions.includes(permission));
   }
 
-  // Si está en /admin pero no hay una regla definida, se deniega el acceso por seguridad.
-  if (pathname.startsWith('/admin')) {
+  // Si está en una ruta de primer nivel pero no hay una regla definida, denegar por seguridad.
+  // Esto previene el acceso a rutas como /settings si no se definen explícitamente.
+  if (!pathname.includes('/', 1)) {
     return false;
   }
 
-  // Por defecto, denegar acceso.
-  return false;
+  // Por defecto, permitir acceso a sub-rutas si la ruta base está permitida
+  // (ej. /clients/123). La protección debe ser a nivel de página/componente.
+  return !!matchingRoute;
 };
 
 const getUserRole = (role?: string): Role => {

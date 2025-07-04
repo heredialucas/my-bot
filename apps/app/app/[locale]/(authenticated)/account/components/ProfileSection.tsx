@@ -10,6 +10,7 @@ import { useToast } from '@repo/design-system/hooks/use-toast';
 import { User } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
 import { updateProfile } from '../actions';
+import { getAccountPermissions } from '../../utils/permissions';
 
 interface ProfileSectionProps {
     currentUser: any;
@@ -26,7 +27,7 @@ export function ProfileSection({ currentUser, dictionary }: ProfileSectionProps)
     });
 
     // Verificar si el usuario tiene permisos para editar su perfil
-    const canEditProfile = currentUser?.permissions?.includes('account:edit_own') || currentUser?.role === 'admin';
+    const { canEditProfile } = getAccountPermissions(currentUser);
 
     const handleProfileUpdate = async () => {
         if (!currentUser) return;
@@ -69,31 +70,43 @@ export function ProfileSection({ currentUser, dictionary }: ProfileSectionProps)
                 <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
                     <div className="space-y-2">
                         <Label htmlFor="name">Nombre</Label>
-                        <Input
-                            id="name"
-                            value={profileForm.name}
-                            onChange={(e) => setProfileForm(prev => ({ ...prev, name: e.target.value }))}
-                            disabled={!canEditProfile || isPending}
-                        />
+                        {canEditProfile ? (
+                            <Input
+                                id="name"
+                                value={profileForm.name}
+                                onChange={(e) => setProfileForm(prev => ({ ...prev, name: e.target.value }))}
+                                disabled={isPending}
+                            />
+                        ) : (
+                            <p className="text-sm text-muted-foreground pt-2">{profileForm.name}</p>
+                        )}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="lastName">Apellido</Label>
-                        <Input
-                            id="lastName"
-                            value={profileForm.lastName}
-                            onChange={(e) => setProfileForm(prev => ({ ...prev, lastName: e.target.value }))}
-                            disabled={!canEditProfile || isPending}
-                        />
+                        {canEditProfile ? (
+                            <Input
+                                id="lastName"
+                                value={profileForm.lastName}
+                                onChange={(e) => setProfileForm(prev => ({ ...prev, lastName: e.target.value }))}
+                                disabled={isPending}
+                            />
+                        ) : (
+                            <p className="text-sm text-muted-foreground pt-2">{profileForm.lastName}</p>
+                        )}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            value={profileForm.email}
-                            onChange={(e) => setProfileForm(prev => ({ ...prev, email: e.target.value }))}
-                            disabled={!canEditProfile || isPending}
-                        />
+                        {canEditProfile ? (
+                            <Input
+                                id="email"
+                                type="email"
+                                value={profileForm.email}
+                                onChange={(e) => setProfileForm(prev => ({ ...prev, email: e.target.value }))}
+                                disabled={isPending}
+                            />
+                        ) : (
+                            <p className="text-sm text-muted-foreground pt-2">{profileForm.email}</p>
+                        )}
                     </div>
                 </div>
 

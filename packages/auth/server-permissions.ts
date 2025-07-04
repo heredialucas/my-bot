@@ -21,6 +21,8 @@ export type Permission =
     // Admin
     | 'admin:full_access'
     | 'admin:system_settings'
+    // Analytics
+    | 'analytics:view_global'
     // Clients
     | 'clients:view'
     | 'clients:create'
@@ -31,8 +33,10 @@ export type Permission =
     // Inventory (Stock)
     | 'inventory:view'
     | 'inventory:manage'
+    | 'inventory:assign'
     // Orders
-    | 'orders:view'
+    | 'orders:view_own'
+    | 'orders:view_all'
     | 'orders:create'
     | 'orders:edit'
     | 'orders:cancel'
@@ -59,6 +63,7 @@ export const ADMIN_PERMISSIONS: Permission[] = [
     'account:manage_users',
     'admin:full_access',
     'admin:system_settings',
+    'analytics:view_global',
     'clients:view',
     'clients:create',
     'clients:edit',
@@ -67,7 +72,9 @@ export const ADMIN_PERMISSIONS: Permission[] = [
     'clients:manage_account_balance',
     'inventory:view',
     'inventory:manage',
-    'orders:view',
+    'inventory:assign',
+    'orders:view_own',
+    'orders:view_all',
     'orders:create',
     'orders:edit',
     'orders:cancel',
@@ -195,35 +202,35 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
     {
         label: 'account',
         mobileLabel: 'accountMobile',
-        href: '/admin/account',
+        href: '/account',
         icon: 'User',
         requiredPermissions: ['account:view_own'],
     },
     {
         label: 'clients',
         mobileLabel: 'clientsMobile',
-        href: '/admin/clients',
+        href: '/clients',
         icon: 'Users',
         requiredPermissions: ['clients:view'],
     },
     {
         label: 'orders',
         mobileLabel: 'ordersMobile',
-        href: '/admin/orders',
+        href: '/orders',
         icon: 'ShoppingCart',
-        requiredPermissions: ['orders:view'],
+        requiredPermissions: ['orders:view_own'],
     },
     {
         label: 'inventory',
         mobileLabel: 'inventoryMobile',
-        href: '/admin/inventory',
+        href: '/inventory',
         icon: 'Archive',
         requiredPermissions: ['inventory:view'],
     },
     {
         label: 'products',
         mobileLabel: 'productsMobile',
-        href: '/admin/products',
+        href: '/products',
         icon: 'Package',
         requiredPermissions: ['products:view'],
         adminOnly: true,
@@ -231,7 +238,7 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
     {
         label: 'payments',
         mobileLabel: 'paymentsMobile',
-        href: '/admin/payments',
+        href: '/payments',
         icon: 'CreditCard',
         requiredPermissions: ['payments:view'],
     },

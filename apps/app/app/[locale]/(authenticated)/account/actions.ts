@@ -53,7 +53,7 @@ export async function updateProfile(userId: string, formData: FormData) {
 
         await updateUserService(userId, { ...validated.data, password: '' });
 
-        revalidatePath('/admin/account');
+        revalidatePath('/account');
         return { success: true, message: 'Perfil actualizado exitosamente' };
     } catch (error) {
         return { success: false, message: 'Error al actualizar el perfil' };
@@ -83,7 +83,7 @@ export async function changePassword(userId: string, formData: FormData) {
             return { success: false, message: result.message || 'Error al cambiar la contraseña' };
         }
 
-        revalidatePath('/admin/account');
+        revalidatePath('/account');
         return { success: true, message: 'Contraseña actualizada exitosamente' };
 
     } catch (error) {
@@ -120,7 +120,7 @@ export async function createUser(formData: FormData) {
             return { success: false, message: result.message || 'Error al crear el usuario' };
         }
 
-        revalidatePath('/admin/account');
+        revalidatePath('/account');
         return { success: true, message: 'Usuario creado exitosamente' };
 
     } catch (error) {
@@ -150,14 +150,13 @@ export async function updateUser(userId: string, formData: FormData) {
 
         await updateUserService(userId, { ...validated.data, role: validated.data.role as UserRole, password: validated.data.password || '' });
 
-        revalidatePath('/admin/account');
+        revalidatePath('/account');
         return { success: true, message: 'Usuario actualizado exitosamente' };
 
     } catch (error) {
         return { success: false, message: 'Error al actualizar el usuario' };
     }
 }
-
 
 export async function deleteUser(userId: string) {
     try {
@@ -166,7 +165,7 @@ export async function deleteUser(userId: string) {
         }
 
         await deleteUserService(userId);
-        revalidatePath('/admin/account');
+        revalidatePath('/account');
         return { success: true, message: 'Usuario eliminado exitosamente' };
 
     } catch (error) {
