@@ -312,16 +312,22 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                                                 <h4 className="font-medium capitalize mb-3 text-base text-gray-800 dark:text-gray-200">
                                                     {dictionary.app.admin.permissions.groups[group as keyof typeof dictionary.app.admin.permissions.groups] || group}
                                                 </h4>
-                                                <div className="space-y-3 pl-2">
+                                                <div className="space-y-4 pl-2">
                                                     {permissions.map(permission => (
-                                                        <div key={permission} className="flex items-center justify-between">
-                                                            <label htmlFor={permission} className="text-sm font-normal text-gray-700 dark:text-gray-300">
-                                                                {dictionary.app.admin.permissions.labels[permission as keyof typeof dictionary.app.admin.permissions.labels] || permission.split(':')[1].replace(/_/g, ' ')}
-                                                            </label>
+                                                        <div key={permission} className="flex items-start justify-between">
+                                                            <div className="flex-1">
+                                                                <label htmlFor={permission} className="text-sm font-normal text-gray-700 dark:text-gray-300">
+                                                                    {dictionary.app.admin.permissions.labels[permission as keyof typeof dictionary.app.admin.permissions.labels] || permission.split(':')[1].replace(/_/g, ' ')}
+                                                                </label>
+                                                                <p className="text-xs text-muted-foreground pr-2">
+                                                                    {dictionary.app.admin.permissions.descriptions[permission as keyof typeof dictionary.app.admin.permissions.descriptions] || 'Sin descripción'}
+                                                                </p>
+                                                            </div>
                                                             <Switch
                                                                 id={permission}
                                                                 checked={userForm.permissions.includes(permission)}
                                                                 onCheckedChange={(checked) => handlePermissionChange(permission, !!checked)}
+                                                                className="mt-1"
                                                             />
                                                         </div>
                                                     ))}

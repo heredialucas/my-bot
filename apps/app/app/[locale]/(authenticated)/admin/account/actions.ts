@@ -34,7 +34,7 @@ const userSchema = z.object({
     lastName: z.string().min(1, 'El apellido es requerido'),
     email: z.string().email('Email inválido'),
     password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres').optional().or(z.literal('')),
-    role: z.enum(['admin', 'user']),
+    role: z.enum(['admin', 'seller']),
     permissions: z.array(z.string()),
 });
 

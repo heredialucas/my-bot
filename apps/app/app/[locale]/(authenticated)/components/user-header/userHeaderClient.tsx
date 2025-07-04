@@ -41,15 +41,6 @@ export function UserHeaderClient({ logo, title = 'Repartito', extraItems, dictio
                         {logo}
                     </div>
 
-                    {title && (
-                        <div className={cn(
-                            "font-bold text-base sm:text-xl text-gray-900 dark:text-white transition-all",
-                            isCollapsed ? "opacity-0 -translate-x-4 w-0" : "opacity-100 translate-x-0 w-auto"
-                        )}>
-                            {title}
-                        </div>
-                    )}
-
                     <Button
                         variant="ghost"
                         size="icon"
