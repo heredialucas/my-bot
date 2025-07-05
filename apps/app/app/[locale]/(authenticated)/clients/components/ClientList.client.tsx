@@ -11,10 +11,10 @@ import {
 import { Button } from '@repo/design-system/components/ui/button';
 import { type ClientData } from '@repo/data-services';
 import { type Dictionary } from '@repo/internationalization';
-import { ClientForm } from './client-form';
 import { getClientColumns } from './columns';
 import { DataTable } from '@/components/data-table';
 import { UserData } from '@repo/data-services/src/types/user';
+import { ClientForm } from './ClientForm.client';
 
 interface ClientListProps {
     clients: ClientData[];

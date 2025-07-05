@@ -2,11 +2,12 @@
 // SERVICIOS DEL SISTEMA (PostgreSQL/Prisma)
 // ==========================================
 export * from './authService';
+export * from './clientService';
 export * from './dataService';
 export * from './imageService';
-export * from './uploadR2Image';
-export * from './userService';
-export * from './templateService';
-export * from './clientService';
-export * from './productService';
+export * from './inventoryService';
 export * from './orderService';
+export * from './productService';
+export * from './templateService';
+export * from './userService';
+export * from './uploadR2Image';

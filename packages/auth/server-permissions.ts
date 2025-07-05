@@ -30,10 +30,6 @@ export type Permission =
     | 'clients:delete'
     | 'clients:view_account_balance'
     | 'clients:manage_account_balance'
-    // Inventory (Stock)
-    | 'inventory:view'
-    | 'inventory:manage'
-    | 'inventory:assign'
     // Orders
     | 'orders:view_own'
     | 'orders:view_all'
@@ -70,9 +66,6 @@ export const ADMIN_PERMISSIONS: Permission[] = [
     'clients:delete',
     'clients:view_account_balance',
     'clients:manage_account_balance',
-    'inventory:view',
-    'inventory:manage',
-    'inventory:assign',
     'orders:view_own',
     'orders:view_all',
     'orders:create',
@@ -207,18 +200,19 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
         requiredPermissions: ['account:view_own'],
     },
     {
-        label: 'inventory',
-        mobileLabel: 'inventoryMobile',
-        href: '/inventory',
-        icon: 'Archive',
-        requiredPermissions: ['inventory:view'],
-    },
-    {
         label: 'products',
         mobileLabel: 'productsMobile',
         href: '/products',
         icon: 'Package',
         requiredPermissions: ['products:view'],
+        adminOnly: true,
+    },
+    {
+        label: 'sellers',
+        mobileLabel: 'sellersMobile',
+        href: '/sellers',
+        icon: 'Users',
+        requiredPermissions: ['sellers:view'],
         adminOnly: true,
     },
     {

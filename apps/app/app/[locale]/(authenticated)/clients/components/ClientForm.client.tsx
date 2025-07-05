@@ -1,6 +1,5 @@
 'use client';
 
-import { useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -18,7 +17,7 @@ import { type ClientData } from '@repo/data-services';
 import { type Dictionary } from '@repo/internationalization';
 import { clientFormSchema, ClientFormSchema } from '../lib/schemas';
 import { createClientAction, updateClientAction } from '../actions';
-import { useRef, useState, useTransition } from 'react';
+import { useRef, useTransition } from 'react';
 import { UserData } from '@repo/data-services/src/types/user';
 import {
     Select,

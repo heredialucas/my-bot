@@ -22,7 +22,9 @@
         "logout": "Cerrar Sesión",
         "loggingOut": "Cerrando sesión...",
         "table": "Tabla",
-        "tableMobile": "Tabla"
+        "tableMobile": "Tabla",
+        "sellers": "Vendedores",
+        "sellersMobile": "Vendedores"
       },
       "menu": {
         "title": "Gestión de Menú",
@@ -913,7 +915,8 @@
       "mobileFirst": "Diseño Mobile-First",
       "analytics": "Análisis e Insights",
       "getStarted": "Comenzar",
-      "rights": "Todos los derechos reservados"
+      "rights": "Todos los derechos reservados",
+      "description": "El software de gestión definitivo para revolucionar tu forma de vender."
     },
     "landing": {
       "title": "Repartito"

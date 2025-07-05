@@ -298,6 +298,11 @@ export async function getAllSellers() {
             where: {
                 role: 'seller',
             },
+            include: {
+                _count: {
+                    select: { inventory: true },
+                },
+            },
             orderBy: {
                 name: 'asc',
             },

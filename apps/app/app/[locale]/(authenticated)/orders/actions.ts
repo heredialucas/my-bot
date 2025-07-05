@@ -7,7 +7,7 @@ import { getCurrentUser } from '@repo/data-services';
 import { createOrder as createOrderInDb } from '@repo/data-services';
 import { type Locale } from '@repo/internationalization';
 import { getClientsBySellerId } from "@repo/data-services/src/services/clientService";
-import { getInventoryBySellerId } from "@repo/data-services/src/services/productService";
+import { getInventoryBySellerId } from "@repo/data-services/src/services/inventoryService";
 
 const itemSchema = z.object({
     productId: z.string(),

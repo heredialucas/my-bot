@@ -72,31 +72,6 @@ export async function getInventoryBySeller() {
 }
 
 /**
- * Get the inventory for a specific seller by ID.
- * Only accessible to admins.
- */
-export async function getInventoryBySellerId(sellerId: string) {
-    const user = await getCurrentUser();
-    if (user?.role !== 'admin') {
-        return [];
-    }
-
-    try {
-        const inventory = await database.inventory.findMany({
-            where: { sellerId: sellerId },
-            include: {
-                product: true, // Include the full product details
-            },
-            orderBy: { updatedAt: 'desc' },
-        });
-        return inventory;
-    } catch (error) {
-        console.error("Error fetching inventory for seller:", error);
-        return [];
-    }
-}
-
-/**
  * Create a new product in the central catalog.
  * Only accessible to admins.
  */
@@ -144,7 +119,7 @@ export async function updateProduct(productId: string, data: Partial<ProductForm
         });
         return { success: true, product };
     } catch (error) {
-        console.error("Error updating product:", error);
+        console.error("Error al actualizar el producto:", error);
         return { success: false, message: 'Error interno del servidor' };
     }
 }

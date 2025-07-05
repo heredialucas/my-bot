@@ -2,7 +2,7 @@ import { getDictionary } from '@repo/internationalization';
 import { type Locale } from '@repo/internationalization';
 import { getCurrentUser } from '@repo/data-services/src/services/authService';
 import { getClientsBySeller, getAllClients, getAllSellers } from '@repo/data-services';
-import { ClientList } from './components/client-list';
+import { ClientList } from './components/ClientList.client';
 
 export default async function ClientsPage({
     params,
