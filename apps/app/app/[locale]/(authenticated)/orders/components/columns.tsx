@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@repo/design-system/components/ui/button';
+import { useToast } from '@repo/design-system/hooks/use-toast';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,11 +17,10 @@ import {
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { type FullOrderData } from '@repo/data-services/src/types';
 import { type Dictionary } from '@repo/internationalization';
+import { deleteOrderAction } from '../actions';
 
 const statusVariantMap: { [key: string]: 'default' | 'secondary' | 'destructive' | 'outline' } = {
     PENDING: 'secondary',
-    PROCESSING: 'default',
-    SHIPPED: 'outline',
     DELIVERED: 'default',
     CANCELLED: 'destructive',
 };
@@ -47,6 +49,21 @@ export const getOrderColumns = (
             cell: ({ row }) => new Date(row.getValue('orderDate')).toLocaleDateString(),
         },
         {
+            accessorKey: 'items',
+            header: 'Productos',
+            cell: ({ row }) => {
+                const totalItems = row.original.items.reduce((sum, item) => sum + item.quantity, 0);
+                return (
+                    <div className="text-sm">
+                        <div className="font-medium">{totalItems} unidades</div>
+                        <div className="text-muted-foreground">
+                            {row.original.items.length} productos
+                        </div>
+                    </div>
+                );
+            },
+        },
+        {
             accessorKey: 'totalAmount',
             header: dictionary.table.total,
             cell: ({ row }) => {
@@ -70,6 +87,42 @@ export const getOrderColumns = (
             id: 'actions',
             cell: ({ row }) => {
                 const order = row.original;
+                const router = useRouter();
+                const { toast } = useToast();
+                const [isDeleting, setIsDeleting] = useState(false);
+
+                const handleDelete = async () => {
+                    if (!confirm(`¿Estás seguro de que quieres eliminar el pedido #${order.id}?`)) {
+                        return;
+                    }
+
+                    setIsDeleting(true);
+                    try {
+                        const result = await deleteOrderAction(order.id);
+                        if (result.success) {
+                            toast({
+                                title: 'Éxito',
+                                description: result.message,
+                            });
+                            router.refresh();
+                        } else {
+                            toast({
+                                title: 'Error',
+                                description: result.message,
+                                variant: 'destructive',
+                            });
+                        }
+                    } catch (error) {
+                        toast({
+                            title: 'Error',
+                            description: 'No se pudo eliminar el pedido.',
+                            variant: 'destructive',
+                        });
+                    } finally {
+                        setIsDeleting(false);
+                    }
+                };
+
                 return (
                     <div className="text-right">
                         <DropdownMenu>
@@ -85,6 +138,13 @@ export const getOrderColumns = (
                                     <Link href={`/${locale}/orders/${order.id}`}>
                                         {dictionary.table.viewDetails}
                                     </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={handleDelete}
+                                    className="text-red-600 focus:text-red-600"
+                                    disabled={isDeleting}
+                                >
+                                    {isDeleting ? 'Eliminando...' : 'Eliminar Pedido'}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

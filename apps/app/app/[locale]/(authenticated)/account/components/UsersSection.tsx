@@ -62,7 +62,7 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
             email: '',
             password: '',
             role: 'seller',
-            permissions: ['account:view_own'], // Permiso básico por defecto
+            permissions: ['account:view_own', 'account:edit_own', 'account:change_password', 'clients:view', 'clients:create', 'clients:edit', 'clients:view_account_balance', 'orders:view_own', 'orders:create', 'payments:view'], // Permisos por defecto para vendedores
         });
         setIsUserDialogOpen(true);
     };
@@ -90,10 +90,16 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
     };
 
     const handleRoleChange = (role: UserRole) => {
-        // Si el rol es admin, los permisos específicos no son necesarios.
-        // Se puede considerar limpiar los permisos para evitar confusiones.
         if (role === 'admin') {
+            // Si el rol es admin, los permisos específicos no son necesarios.
             setUserForm(prev => ({ ...prev, role, permissions: [] }));
+        } else if (role === 'seller') {
+            // Si el rol es seller, asignar permisos por defecto
+            setUserForm(prev => ({
+                ...prev,
+                role,
+                permissions: ['account:view_own', 'account:edit_own', 'account:change_password', 'clients:view', 'clients:create', 'clients:edit', 'clients:view_account_balance', 'orders:view_own', 'orders:create', 'payments:view']
+            }));
         } else {
             setUserForm(prev => ({ ...prev, role }));
         }

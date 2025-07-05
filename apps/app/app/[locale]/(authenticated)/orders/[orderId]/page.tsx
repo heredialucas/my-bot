@@ -1,6 +1,7 @@
 import { getDictionary } from '@repo/internationalization';
 import { type Locale } from '@repo/internationalization';
 import { getOrderById } from '@repo/data-services';
+import { getCurrentUser } from '@repo/data-services/src/services/authService';
 import { notFound } from 'next/navigation';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
@@ -8,11 +9,11 @@ import { Separator } from '@repo/design-system/components/ui/separator';
 import Link from 'next/link';
 import { ArrowLeftIcon } from 'lucide-react';
 import { Button } from '@repo/design-system/components/ui/button';
+import { AddPaymentDialog } from '../components/AddPaymentDialog.client';
+import { OrderStatusSelect } from '../components/OrderStatusSelect.client';
 
 const statusVariantMap: { [key: string]: 'default' | 'secondary' | 'destructive' | 'outline' } = {
     PENDING: 'secondary',
-    PROCESSING: 'default',
-    SHIPPED: 'outline',
     DELIVERED: 'default',
     CANCELLED: 'destructive',
 };
@@ -24,6 +25,7 @@ export default async function OrderDetailPage({
 }) {
     const { locale, orderId } = await params;
     const dictionary = await getDictionary(locale);
+    const user = await getCurrentUser();
     const order = await getOrderById(orderId);
 
     if (!order) {
@@ -108,9 +110,17 @@ export default async function OrderDetailPage({
                         </div>
                         <div>
                             <span className="font-medium">Estado:</span>{' '}
-                            <Badge variant={statusVariantMap[order.status] || 'default'}>
-                                {order.status}
-                            </Badge>
+                            {user && (user.role === 'admin' || order.sellerId === user.id) ? (
+                                <OrderStatusSelect
+                                    orderId={order.id}
+                                    currentStatus={order.status}
+                                    hasPayments={order.payments && order.payments.length > 0}
+                                />
+                            ) : (
+                                <Badge variant={statusVariantMap[order.status] || 'default'}>
+                                    {order.status}
+                                </Badge>
+                            )}
                         </div>
                         <div>
                             <span className="font-medium">Total:</span>{' '}
@@ -125,7 +135,7 @@ export default async function OrderDetailPage({
             {/* Items del Pedido */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Productos</CardTitle>
+                    <CardTitle>Productos ({order.items.length} productos, {order.items.reduce((sum, item) => sum + item.quantity, 0)} unidades)</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
@@ -145,7 +155,7 @@ export default async function OrderDetailPage({
                                     </div>
                                     <div className="text-right space-y-1">
                                         <div className="text-sm">
-                                            Cantidad: <span className="font-medium">{item.quantity}</span>
+                                            Cantidad: <span className="font-medium">{item.quantity} unidades</span>
                                         </div>
                                         <div className="text-sm">
                                             Precio unitario: {formatCurrency(item.price)}
@@ -158,17 +168,38 @@ export default async function OrderDetailPage({
                                 {index < order.items.length - 1 && <Separator className="mt-4" />}
                             </div>
                         ))}
+                        <Separator />
+                        <div className="flex justify-between items-center pt-2">
+                            <span className="font-medium">Total de productos:</span>
+                            <span className="font-bold">{order.items.reduce((sum, item) => sum + item.quantity, 0)} unidades</span>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
 
             {/* Pagos */}
-            {order.payments && order.payments.length > 0 && (
-                <Card>
-                    <CardHeader>
+            <Card>
+                <CardHeader>
+                    <div className="flex justify-between items-center">
                         <CardTitle>Historial de Pagos</CardTitle>
-                    </CardHeader>
-                    <CardContent>
+                        <div className="flex gap-2">
+                            {user && (user.role === 'admin' || order.sellerId === user.id) && (
+                                <AddPaymentDialog
+                                    orderId={order.id}
+                                    orderTotal={order.totalAmount}
+                                    currentPayments={order.payments?.reduce((sum, payment) => sum + payment.amount, 0) || 0}
+                                />
+                            )}
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href="/payments">
+                                    Ver Todos los Pagos
+                                </Link>
+                            </Button>
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    {order.payments && order.payments.length > 0 ? (
                         <div className="space-y-4">
                             {order.payments.map((payment, index) => (
                                 <div key={payment.id}>
@@ -195,10 +226,33 @@ export default async function OrderDetailPage({
                                     {index < order.payments.length - 1 && <Separator className="mt-4" />}
                                 </div>
                             ))}
+                            <Separator />
+                            <div className="flex justify-between items-center pt-4">
+                                <span className="font-medium">Total Pagado:</span>
+                                <span className="text-lg font-bold text-green-600">
+                                    {formatCurrency(order.payments.reduce((sum, payment) => sum + payment.amount, 0))}
+                                </span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="font-medium">Monto Pendiente:</span>
+                                <span className="text-lg font-bold text-orange-600">
+                                    {formatCurrency(order.totalAmount - order.payments.reduce((sum, payment) => sum + payment.amount, 0))}
+                                </span>
+                            </div>
                         </div>
-                    </CardContent>
-                </Card>
-            )}
+                    ) : (
+                        <div className="text-center py-8 text-muted-foreground">
+                            <p>No se han registrado pagos para este pedido.</p>
+                            <p className="text-sm mt-2">
+                                Monto pendiente: <span className="font-semibold">{formatCurrency(order.totalAmount)}</span>
+                            </p>
+                            <p className="text-xs mt-1">
+                                💡 <strong>Tip:</strong> Cambia el estado a "Entregado" para generar automáticamente un pago.
+                            </p>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
         </div>
     );
 } 

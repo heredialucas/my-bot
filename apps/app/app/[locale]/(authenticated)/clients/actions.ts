@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { getCurrentUser } from '@repo/data-services/src/services/authService';
-import { createClient, updateClient } from '@repo/data-services';
+import { createClient, updateClient, deleteClient } from '@repo/data-services';
 import { clientFormSchema } from './lib/schemas';
 
 type FormState = {
@@ -90,4 +90,20 @@ export async function updateClientAction(
     }
 
     return { success: false, message: result.message || 'No se pudo actualizar el cliente.' };
+}
+
+export async function deleteClientAction(clientId: string): Promise<FormState> {
+    const user = await getCurrentUser();
+    if (!user) {
+        return { success: false, message: 'Usuario no autenticado.' };
+    }
+
+    const result = await deleteClient(clientId);
+
+    if (result.success) {
+        revalidatePath('/clients');
+        return { success: true, message: 'Cliente eliminado con éxito.' };
+    }
+
+    return { success: false, message: result.message || 'No se pudo eliminar el cliente.' };
 } 

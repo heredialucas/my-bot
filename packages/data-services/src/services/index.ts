@@ -7,6 +7,7 @@ export * from './dataService';
 export * from './imageService';
 export * from './inventoryService';
 export * from './orderService';
+export * from './paymentService';
 export * from './productService';
 export * from './templateService';
 export * from './userService';

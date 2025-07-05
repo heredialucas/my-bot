@@ -13,10 +13,14 @@ import {
     DropdownMenuTrigger,
 } from "@repo/design-system/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
+import { useToast } from "@repo/design-system/hooks/use-toast"
+import { deleteClientAction } from "../actions"
+import { useState } from "react"
 
 // Esta función se puede exportar y usar para pasar props al componente de acciones
 export const getClientColumns = (
-    onEdit: (client: ClientData) => void
+    onEdit: (client: ClientData) => void,
+    isAdmin: boolean = false
 ): ColumnDef<ClientData>[] => [
         {
             accessorKey: "firstName",
@@ -40,6 +44,16 @@ export const getClientColumns = (
             accessorKey: "email",
             header: "Email",
         },
+        ...(isAdmin ? [{
+            accessorKey: "seller",
+            header: "Vendedor",
+            cell: ({ row }: { row: { original: ClientData } }) => {
+                const client = row.original;
+                return client.seller
+                    ? `${client.seller.name} ${client.seller.lastName}`
+                    : 'Sin asignar';
+            },
+        }] : []),
         {
             accessorKey: "address",
             header: "Dirección",
@@ -66,6 +80,40 @@ export const getClientColumns = (
             cell: ({ row }) => {
                 const client = row.original
                 const router = useRouter()
+                const { toast } = useToast()
+                const [isDeleting, setIsDeleting] = useState(false)
+
+                const handleDelete = async () => {
+                    if (!confirm(`¿Estás seguro de que quieres eliminar el cliente ${client.firstName} ${client.lastName}?`)) {
+                        return;
+                    }
+
+                    setIsDeleting(true);
+                    try {
+                        const result = await deleteClientAction(client.id);
+                        if (result.success) {
+                            toast({
+                                title: 'Éxito',
+                                description: result.message,
+                            });
+                            router.refresh();
+                        } else {
+                            toast({
+                                title: 'Error',
+                                description: result.message,
+                                variant: 'destructive',
+                            });
+                        }
+                    } catch (error) {
+                        toast({
+                            title: 'Error',
+                            description: 'No se pudo eliminar el cliente.',
+                            variant: 'destructive',
+                        });
+                    } finally {
+                        setIsDeleting(false);
+                    }
+                };
 
                 return (
                     <DropdownMenu>
@@ -81,6 +129,13 @@ export const getClientColumns = (
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => router.push(`/clients/${client.id}`)}>
                                 Ver detalles
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={handleDelete}
+                                className="text-red-600 focus:text-red-600"
+                                disabled={isDeleting}
+                            >
+                                {isDeleting ? 'Eliminando...' : 'Eliminar Cliente'}
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

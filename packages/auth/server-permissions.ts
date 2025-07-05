@@ -80,6 +80,20 @@ export const ADMIN_PERMISSIONS: Permission[] = [
     'payments:manage',
 ];
 
+// Permisos por defecto para vendedores
+export const SELLER_DEFAULT_PERMISSIONS: Permission[] = [
+    'account:view_own',
+    'account:edit_own',
+    'account:change_password',
+    'clients:view',
+    'clients:create',
+    'clients:edit',
+    'clients:view_account_balance',
+    'orders:view_own',
+    'orders:create',
+    'payments:view',
+];
+
 /**
  * Obtiene el usuario actual y sus permisos desde las cookies
  */

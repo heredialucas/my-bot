@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@repo/data-services';
-import { createOrder as createOrderInDb } from '@repo/data-services';
+import { createOrder as createOrderInDb, deleteOrder, updateOrderStatus } from '@repo/data-services';
 import { type Locale } from '@repo/internationalization';
 import { getClientsBySellerId } from "@repo/data-services/src/services/clientService";
 import { getInventoryBySellerId } from "@repo/data-services/src/services/inventoryService";
@@ -90,5 +90,27 @@ export async function getSellerDataForOrder(sellerId: string) {
     } catch (error) {
         console.error(error);
         return { success: false, message: "Failed to fetch seller data." };
+    }
+}
+
+export async function deleteOrderAction(orderId: string) {
+    return await deleteOrder(orderId);
+}
+
+/**
+ * Server action para actualizar el estado de un pedido
+ */
+export async function updateOrderStatusAction(orderId: string, newStatus: string) {
+    try {
+        const result = await updateOrderStatus(orderId, newStatus as any);
+        if (result.success) {
+            revalidatePath('/orders');
+            revalidatePath(`/orders/${orderId}`);
+            revalidatePath('/payments');
+        }
+        return result;
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        return { success: false, message: 'Error al actualizar el estado del pedido.' };
     }
 } 

@@ -64,6 +64,16 @@ export async function getAllClients() {
     }
     try {
         const clients = await database.client.findMany({
+            include: {
+                seller: {
+                    select: {
+                        id: true,
+                        name: true,
+                        lastName: true,
+                        email: true,
+                    },
+                },
+            },
             orderBy: {
                 createdAt: 'desc',
             },

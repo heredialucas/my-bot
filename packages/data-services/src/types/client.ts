@@ -11,6 +11,12 @@ export type ClientData = {
     createdAt: Date;
     updatedAt: Date;
     sellerId: string;
+    seller?: {
+        id: string;
+        name: string;
+        lastName: string;
+        email: string;
+    };
 };
 
 export type ClientFormData = {

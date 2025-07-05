@@ -38,7 +38,7 @@ export function ClientList({ clients, dictionary, user, sellers }: ClientListPro
         setIsDialogOpen(true);
     };
 
-    const columns = useMemo(() => getClientColumns(openDialog), [openDialog]);
+    const columns = useMemo(() => getClientColumns(openDialog, user.role === 'admin'), [openDialog, user.role]);
 
     return (
         <div>

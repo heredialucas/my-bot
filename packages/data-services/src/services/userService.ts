@@ -5,6 +5,7 @@ import { UserData, UserFormData } from '../types/user';
 import { database } from '@repo/database';
 import { UserRole } from '@repo/database';
 import bcrypt from 'bcryptjs';
+import { SELLER_DEFAULT_PERMISSIONS } from '@repo/auth/server-permissions';
 import { getCurrentUser } from './authService';
 
 /**
@@ -28,9 +29,23 @@ export async function createUser(data: UserFormData & { role: UserRole; permissi
         // Hash de la contraseña
         const hashedPassword = await bcrypt.hash(data.password, 12);
 
-        // Asegurarse de que el permiso 'account:view_own' siempre esté presente
-        const permissionsWithDefault = new Set(data.permissions || []);
-        permissionsWithDefault.add('account:view_own');
+        // Asignar permisos basados en el rol
+        let finalPermissions: string[] = [];
+
+        if (data.role === 'seller') {
+            // Para vendedores, usar permisos por defecto o combinar con los especificados
+            finalPermissions = [...SELLER_DEFAULT_PERMISSIONS];
+            if (data.permissions && data.permissions.length > 0) {
+                // Si se especifican permisos adicionales, combinarlos
+                const permissionsSet = new Set([...finalPermissions, ...data.permissions]);
+                finalPermissions = Array.from(permissionsSet);
+            }
+        } else {
+            // Para otros roles, usar los permisos especificados o básicos
+            const permissionsWithDefault = new Set(data.permissions || []);
+            permissionsWithDefault.add('account:view_own');
+            finalPermissions = Array.from(permissionsWithDefault);
+        }
 
         // Crear el usuario con contraseña hasheada y los permisos del formulario
         const user = await database.user.create({
@@ -40,7 +55,7 @@ export async function createUser(data: UserFormData & { role: UserRole; permissi
                 email: data.email,
                 password: hashedPassword,
                 role: data.role,
-                permissions: Array.from(permissionsWithDefault),
+                permissions: finalPermissions,
             },
         });
 
@@ -316,5 +331,46 @@ export async function getAllSellers() {
     } catch (error) {
         console.error('Error fetching sellers:', error);
         return [];
+    }
+}
+
+/**
+ * Actualizar permisos de vendedores existentes que no tengan permisos asignados
+ * Solo para uso administrativo
+ */
+export async function updateSellersPermissions() {
+    try {
+        const sellers = await database.user.findMany({
+            where: {
+                role: 'seller',
+            },
+        });
+
+        const sellersToUpdate = sellers.filter(seller =>
+            !seller.permissions ||
+            !Array.isArray(seller.permissions) ||
+            seller.permissions.length === 0
+        );
+
+        for (const seller of sellersToUpdate) {
+            await database.user.update({
+                where: { id: seller.id },
+                data: {
+                    permissions: SELLER_DEFAULT_PERMISSIONS,
+                },
+            });
+        }
+
+        return {
+            success: true,
+            updated: sellersToUpdate.length,
+            message: `Se actualizaron ${sellersToUpdate.length} vendedores con permisos por defecto.`
+        };
+    } catch (error) {
+        console.error('Error al actualizar permisos de vendedores:', error);
+        return {
+            success: false,
+            message: 'Error al actualizar permisos de vendedores.'
+        };
     }
 } 

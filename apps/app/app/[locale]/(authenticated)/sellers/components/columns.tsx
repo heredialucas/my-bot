@@ -12,8 +12,10 @@ import {
 import { Button } from '@repo/design-system/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
 import { AssignProductsDialog } from './AssignProductsDialog.client';
-import { getSellerInventoryAction } from '../actions';
+import { ViewProductsDialog } from './ViewProductsDialog.client';
+import { getSellerInventoryAction, deleteSellerAction } from '../actions';
 import { useToast } from '@repo/design-system/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 export type SellerData = Pick<User, 'id' | 'name' | 'lastName' | 'email'> & {
     _count: {
@@ -24,7 +26,9 @@ export type SellerData = Pick<User, 'id' | 'name' | 'lastName' | 'email'> & {
 function ActionsCell({ seller, products }: { seller: SellerData; products: Product[] }) {
     const [isLoading, setIsLoading] = useState(false);
     const [inventory, setInventory] = useState<{ productId: string; quantity: number }[]>([]);
+    const [isDeleting, setIsDeleting] = useState(false);
     const { toast } = useToast();
+    const router = useRouter();
 
     const handleDialogOpen = async () => {
         setIsLoading(true);
@@ -53,6 +57,38 @@ function ActionsCell({ seller, products }: { seller: SellerData; products: Produ
         }
     };
 
+    const handleDelete = async () => {
+        if (!confirm(`¿Estás seguro de que quieres eliminar al vendedor ${seller.name} ${seller.lastName}?`)) {
+            return;
+        }
+
+        setIsDeleting(true);
+        try {
+            const result = await deleteSellerAction(seller.id);
+            if (result.success) {
+                toast({
+                    title: 'Éxito',
+                    description: result.message,
+                });
+                router.refresh();
+            } else {
+                toast({
+                    title: 'Error',
+                    description: result.message,
+                    variant: 'destructive',
+                });
+            }
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: 'No se pudo eliminar el vendedor.',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -62,6 +98,11 @@ function ActionsCell({ seller, products }: { seller: SellerData; products: Produ
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+                <ViewProductsDialog seller={seller}>
+                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        Ver Productos Asignados
+                    </DropdownMenuItem>
+                </ViewProductsDialog>
                 <AssignProductsDialog
                     seller={seller}
                     products={products}
@@ -74,6 +115,13 @@ function ActionsCell({ seller, products }: { seller: SellerData; products: Produ
                         {isLoading ? 'Cargando...' : 'Asignar Productos'}
                     </DropdownMenuItem>
                 </AssignProductsDialog>
+                <DropdownMenuItem
+                    onSelect={handleDelete}
+                    className="text-red-600 focus:text-red-600"
+                    disabled={isDeleting}
+                >
+                    {isDeleting ? 'Eliminando...' : 'Eliminar Vendedor'}
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );
