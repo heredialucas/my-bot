@@ -26,7 +26,7 @@ export default async function PaymentsPage({
                 <p className="text-sm text-muted-foreground mt-1">
                     {user.role === 'admin'
                         ? 'Gestiona todos los pagos del sistema y genera facturas.'
-                        : 'Visualiza los pagos de tus ventas y genera facturas para tus clientes.'}
+                        : 'Visualiza los pagos de tus repartos y genera facturas para tus clientes.'}
                 </p>
             </div>
 

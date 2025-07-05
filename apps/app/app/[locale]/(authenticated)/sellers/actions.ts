@@ -2,7 +2,7 @@
 
 import { getAllProducts } from '@repo/data-services/src/services/productService';
 import { getInventoryBySellerId, updateSellerInventory } from '@repo/data-services/src/services/inventoryService';
-import { deleteUser, updateSellersPermissions } from '@repo/data-services/src/services/userService';
+import { deleteUser } from '@repo/data-services/src/services/userService';
 
 /**
  * Obtiene todos los datos necesarios para el diálogo de asignación de productos.
@@ -60,16 +60,3 @@ export async function deleteSellerAction(sellerId: string) {
         return { success: false, message: 'Error al eliminar el vendedor.' };
     }
 }
-
-/**
- * Server action para actualizar permisos de vendedores existentes
- */
-export async function updateSellersPermissionsAction() {
-    try {
-        const result = await updateSellersPermissions();
-        return result;
-    } catch (error) {
-        console.error('Error al actualizar permisos de vendedores:', error);
-        return { success: false, message: 'Error al actualizar permisos de vendedores.' };
-    }
-} 

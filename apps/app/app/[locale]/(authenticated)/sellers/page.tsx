@@ -1,7 +1,6 @@
 import { AdminOnly } from '@repo/auth/components/PermissionGate';
 import { Locale } from '@repo/internationalization';
 import SellersWithData from './components/SellersWithData.server';
-import { UpdatePermissionsButton } from './components/UpdatePermissionsButton.client';
 
 type SellersPageProps = {
     params: Promise<{
@@ -28,7 +27,6 @@ export default async function SellersPage({ params }: SellersPageProps) {
                                 tiene asignados cada vendedor.
                             </p>
                         </div>
-                        <UpdatePermissionsButton />
                     </div>
                     <SellersWithData />
                 </div>

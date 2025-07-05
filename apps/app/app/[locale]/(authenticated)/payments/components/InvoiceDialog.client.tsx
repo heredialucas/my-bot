@@ -11,7 +11,9 @@ import { Button } from '@repo/design-system/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Separator } from '@repo/design-system/components/ui/separator';
 import { PrinterIcon, DownloadIcon } from 'lucide-react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import type { PaymentData } from './columns';
+import { InvoicePDF } from './InvoicePDF';
 
 type InvoiceDialogProps = {
     payment: PaymentData;
@@ -63,16 +65,6 @@ export function InvoiceDialog({ payment, isOpen, onClose }: InvoiceDialogProps) 
         }, 1000);
     };
 
-    const handleDownload = () => {
-        setIsGenerating(true);
-        // Simular tiempo de generación
-        setTimeout(() => {
-            // Aquí implementarías la lógica para generar y descargar el PDF
-            console.log('Downloading invoice for payment:', payment.id);
-            setIsGenerating(false);
-        }, 1000);
-    };
-
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -89,15 +81,21 @@ export function InvoiceDialog({ payment, isOpen, onClose }: InvoiceDialogProps) 
                                 <PrinterIcon className="h-4 w-4 mr-2" />
                                 Imprimir
                             </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleDownload}
-                                disabled={isGenerating}
+                            <PDFDownloadLink
+                                document={<InvoicePDF payment={payment} />}
+                                fileName={`factura-${payment.receiptNumber || payment.id.slice(-8)}.pdf`}
                             >
-                                <DownloadIcon className="h-4 w-4 mr-2" />
-                                Descargar PDF
-                            </Button>
+                                {({ loading }) => (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        disabled={loading || isGenerating}
+                                    >
+                                        <DownloadIcon className="h-4 w-4 mr-2" />
+                                        {loading ? 'Generando...' : 'Descargar PDF'}
+                                    </Button>
+                                )}
+                            </PDFDownloadLink>
                         </div>
                     </DialogTitle>
                 </DialogHeader>
@@ -110,7 +108,7 @@ export function InvoiceDialog({ payment, isOpen, onClose }: InvoiceDialogProps) 
                                 Repartito
                             </CardTitle>
                             <p className="text-sm text-muted-foreground">
-                                Sistema de Gestión de Ventas
+                                Sistema de Gestión de Repartos
                             </p>
                         </CardHeader>
                     </Card>
@@ -177,30 +175,44 @@ export function InvoiceDialog({ payment, isOpen, onClose }: InvoiceDialogProps) 
                     {/* Información del pedido */}
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-lg">Información del Pedido</CardTitle>
+                            <CardTitle className="text-lg">Información del Reparto</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
                             <div>
-                                <span className="font-medium">ID del Pedido:</span>{' '}
+                                <span className="font-medium">ID del Reparto:</span>{' '}
                                 {payment.order.id}
                             </div>
                             <div>
-                                <span className="font-medium">Fecha del Pedido:</span>{' '}
+                                <span className="font-medium">Fecha del Reparto:</span>{' '}
                                 {formatDate(payment.order.orderDate)}
                             </div>
                             <div>
-                                <span className="font-medium">Total del Pedido:</span>{' '}
+                                <span className="font-medium">Total del Reparto:</span>{' '}
                                 <span className="font-bold">
                                     {formatCurrency(payment.order.totalAmount)}
                                 </span>
                             </div>
+                            <div>
+                                <span className="font-medium">Total Pagado:</span>{' '}
+                                <span className="font-bold text-green-600">
+                                    {formatCurrency(payment.amount)}
+                                </span>
+                            </div>
+                            {payment.amount < payment.order.totalAmount && (
+                                <div>
+                                    <span className="font-medium">Pendiente:</span>{' '}
+                                    <span className="font-bold text-orange-600">
+                                        {formatCurrency(payment.order.totalAmount - payment.amount)}
+                                    </span>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
 
-                    {/* Productos del pedido */}
+                    {/* Productos del reparto */}
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-lg">Productos del Pedido</CardTitle>
+                            <CardTitle className="text-lg">Productos del Reparto</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-3">
@@ -248,7 +260,7 @@ export function InvoiceDialog({ payment, isOpen, onClose }: InvoiceDialogProps) 
                     {/* Pie de página */}
                     <div className="text-center text-sm text-muted-foreground print:mt-8">
                         <p>Gracias por su pago</p>
-                        <p>Repartito - Sistema de Gestión de Ventas</p>
+                        <p>Repartito - Sistema de Gestión de Repartos</p>
                     </div>
                 </div>
             </DialogContent>

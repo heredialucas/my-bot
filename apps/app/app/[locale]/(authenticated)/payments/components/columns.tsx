@@ -86,12 +86,8 @@ function ActionsCell({ payment }: { payment: PaymentData }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => setIsInvoiceDialogOpen(true)}>
-                        <FileText className="mr-2 h-4 w-4" />
-                        Generar Factura
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => console.log('Ver detalles', payment.id)}>
                         <Eye className="mr-2 h-4 w-4" />
-                        Ver Detalles
+                        Ver Detalle
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
