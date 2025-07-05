@@ -162,13 +162,19 @@ export async function getCurrentUser() {
                 return null;
             }
 
+            const permissions = Array.isArray(user.permissions)
+                ? user.permissions.map(p => String(p))
+                : [];
+
             return {
                 id: user.id,
                 name: user.name,
                 lastName: user.lastName,
                 email: user.email,
                 role: user.role,
-                permissions: Array.isArray(user.permissions) ? user.permissions : [],
+                permissions,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
             };
         } catch (parseError) {
             console.error('Error al analizar el token:', parseError);

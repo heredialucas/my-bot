@@ -1,7 +1,7 @@
 {
   "app": {
     "admin": {
-      "title": "LupaPyme - Panel de Administración",
+      "title": "Repartito - Panel de Administración",
       "navigation": {
         "dashboard": "Dashboard",
         "analytics": "Analíticas",
@@ -437,6 +437,10 @@
           "payments:view": "Permite ver los pagos registrados.",
           "payments:manage": "Permite registrar o modificar pagos."
         }
+      },
+      "layout": {
+        "title": "Panel de Administración Repartito",
+        "description": "Accede a las herramientas administrativas de Repartito para gestionar tu negocio de manera eficiente."
       }
     },
     "client": {
@@ -492,10 +496,6 @@
           "accountCreation": "Error al crear la cuenta",
           "generic": "Ha ocurrido un error al crear la cuenta"
         }
-      },
-      "layout": {
-        "title": "Panel de Administración LupaPyme",
-        "description": "Accede a las herramientas administrativas de LupaPyme para gestionar tu negocio de manera eficiente."
       },
       "account": {
         "title": "Gestión de Cuenta",
@@ -694,158 +694,109 @@
     },
     "home": {
       "meta": {
-        "title": "LupaPyme - Métricas de Negocio para Retención de Clientes",
-        "description": "La plataforma para entender a tus clientes e impulsar tu negocio. Métricas a fondo, retención de clientes y control total de tu empresa."
+        "title": {
+          "template": "%s - Repartito",
+          "default": "Repartito - Métricas de Negocio para Retención de Clientes"
+        },
+        "description": "Repartito te da las herramientas necesarias para analizar las métricas de tu negocio, entender el comportamiento de tus clientes y tomar decisiones estratégicas para aumentar la retención y las ventas."
       },
       "hero": {
-        "heading": "Entiende a tus clientes, haz crecer tu negocio",
-        "paragraph": "LupaPyme te da las herramientas necesarias para analizar las métricas de tu negocio, entender el comportamiento de tus clientes y tomar decisiones estratégicas para aumentar la retención y las ventas.",
+        "title": "La plataforma que impulsa tu negocio",
+        "paragraph": "Repartito te da las herramientas necesarias para analizar las métricas de tu negocio, entender el comportamiento de tus clientes y tomar decisiones estratégicas para aumentar la retención y las ventas.",
         "primaryCta": "Comienza ahora",
-        "secondaryCta": "Saber más"
+        "secondaryCta": "Contactar a ventas"
       },
       "features": {
-        "title": "Todas las herramientas que necesitas en un solo lugar",
-        "paragraph": "Desde analíticas detalladas hasta herramientas de comunicación, LupaPyme tiene todo lo que necesitas para llevar tu negocio al siguiente nivel.",
-        "featureOne": {
-          "title": "Analíticas Avanzadas",
-          "paragraph": "Visualiza tus ventas, clientes y productos como nunca antes. Identifica patrones y oportunidades de crecimiento."
-        },
-        "featureTwo": {
-          "title": "Segmentación de Clientes",
-          "paragraph": "Clasifica a tus clientes automáticamente según su comportamiento de compra. Crea estrategias personalizadas para cada segmento."
-        },
-        "featureThree": {
-          "title": "Comunicación Directa",
-          "paragraph": "Contacta a tus clientes por WhatsApp o Email directamente desde la plataforma para fidelizarlos e impulsar ventas."
-        }
+        "title": "¿Por qué elegir Repartito?",
+        "paragraph": "Desde analíticas detalladas hasta herramientas de comunicación, Repartito tiene todo lo que necesitas para llevar tu negocio al siguiente nivel."
+      },
+      "metrics": {
+        "title": "Entiende tu negocio a fondo",
+        "description": "Métricas clave para entender la salud de tu negocio"
       },
       "stats": {
-        "title": "Cómo funciona LupaPyme",
-        "description": "Sigue estos sencillos pasos para empezar a entender a tus clientes y potenciar tu negocio.",
-        "process": [
-          {
-            "title": "Conecta tus datos",
-            "description": "Conecta tu sistema de ventas o sube tus datos de forma segura."
-          },
-          {
-            "title": "Analiza tus métricas",
-            "description": "Visualiza tus KPIs más importantes en un dashboard intuitivo."
-          },
-          {
-            "title": "Segmenta tus clientes",
-            "description": "Clasifica a tus clientes y entiende su comportamiento de compra."
-          },
-          {
-            "title": "Toma acción",
-            "description": "Usa la información para crear campañas de marketing y fidelización."
-          }
-        ]
+        "title": "Cómo funciona Repartito",
+        "one": {
+          "title": "Conecta tus datos",
+          "description": "Importa tus ventas desde un Excel o conéctate directamente a tu sistema de punto de venta."
+        },
+        "two": {
+          "title": "Visualiza tus métricas",
+          "description": "Explora dashboards interactivos con toda la información clave de tu negocio."
+        },
+        "three": {
+          "title": "Actúa y crece",
+          "description": "Usa los insights para crear campañas, fidelizar clientes y tomar decisiones estratégicas."
+        }
       },
       "testimonials": {
-        "title": "Lo que dicen nuestros usuarios",
-        "description": "Descubre cómo LupaPyme está ayudando a negocios como el tuyo a crecer.",
-        "items": [
+        "title": "Lo que dicen nuestros clientes",
+        "description": "Descubre cómo Repartito está ayudando a negocios como el tuyo a crecer.",
+        "clients": [
           {
-            "title": "¡Mis ventas han aumentado un 20%!",
-            "description": "Desde que uso LupaPyme, entiendo mucho mejor a mis clientes. He podido crear campañas de marketing personalizadas que han aumentado mis ventas y la fidelidad de mis clientes.",
-            "author": {
-              "name": "Ana Pérez",
-              "location": "Emprendedora"
-            }
+            "name": "Laura G.",
+            "role": "Dueña de tienda local",
+            "description": "Desde que uso Repartito, entiendo mucho mejor a mis clientes. He podido crear campañas de marketing personalizadas que han aumentado mis ventas y la fidelidad de mis clientes."
           },
           {
-            "title": "Ahora tomo decisiones basadas en datos",
-            "description": "LupaPyme me ha dado la visibilidad que necesitaba sobre mi negocio. Ahora puedo tomar decisiones estratégicas basadas en datos reales, no en intuiciones.",
-            "author": {
-              "name": "Juan López",
-              "location": "Dueño de Pyme"
-            }
+            "name": "Carlos M.",
+            "role": "Gerente de E-commerce",
+            "description": "Repartito me ha dado la visibilidad que necesitaba sobre mi negocio. Ahora puedo tomar decisiones estratégicas basadas en datos reales, no en intuiciones."
           },
           {
-            "title": "La mejor herramienta para retener clientes",
-            "description": "Con la segmentación de clientes de LupaPyme, he podido identificar a mis clientes más valiosos y crear programas de fidelización que funcionan. ¡Mi tasa de retención ha mejorado muchísimo!",
-            "author": {
-              "name": "Sofía Gómez",
-              "location": "Gerente de Marketing"
-            }
+            "name": "Ana R.",
+            "role": "Directora de Marketing",
+            "description": "Con la segmentación de clientes de Repartito, he podido identificar a mis clientes más valiosos y crear programas de fidelización que funcionan. ¡Mi tasa de retención ha mejorado muchísimo!"
           },
           {
-            "title": "Fácil de usar y muy potente",
-            "description": "Me sorprendió lo fácil que es de usar LupaPyme. En pocos minutos ya tenía mis dashboards configurados y empecé a ver información súper valiosa. ¡La recomiendo!",
-            "author": {
-              "name": "Carlos Fernández",
-              "location": "Consultor de Negocios"
-            }
+            "name": "Pedro S.",
+            "role": "Emprendedor",
+            "description": "Me sorprendió lo fácil que es de usar Repartito. En pocos minutos ya tenía mis dashboards configurados y empecé a ver información súper valiosa. ¡La recomiendo!"
           }
         ]
       },
       "cta": {
-        "heading": "¿Listo para potenciar tu negocio?",
-        "paragraph": "Empieza a usar LupaPyme hoy mismo y descubre todo lo que puedes lograr.",
-        "primaryCta": "Comienza gratis"
+        "title": "¿Listo para empezar?",
+        "paragraph": "Empieza a usar Repartito hoy mismo y descubre todo lo que puedes lograr.",
+        "primaryCta": "Comienza ahora",
+        "secondaryCta": "Contactar a ventas"
       },
       "faq": {
         "title": "Preguntas Frecuentes",
-        "description": "¿Tienes preguntas? Tenemos respuestas. Si no encuentras lo que buscas, contáctanos.",
-        "questions": [
+        "items": [
           {
-            "question": "¿Qué es LupaPyme?",
-            "answer": "LupaPyme es una plataforma que ayuda a pequeñas y medianas empresas a analizar sus datos de negocio para tomar mejores decisiones, con foco en la retención de clientes."
+            "question": "¿Qué es Repartito?",
+            "answer": "Repartito es una plataforma que ayuda a pequeñas y medianas empresas a analizar sus datos de negocio para tomar mejores decisiones, con foco en la retención de clientes."
           },
           {
             "question": "¿Cómo funciona?",
-            "answer": "Conectas tu sistema de ventas (o subes tus datos) y LupaPyme los procesa automáticamente para generar métricas e informes clave."
+            "answer": "Conectas tu sistema de ventas (o subes tus datos) y Repartito los procesa automáticamente para generar métricas e informes clave."
           },
           {
-            "question": "¿Es seguro?",
-            "answer": "Sí, nos tomamos la seguridad muy en serio. Todos tus datos están encriptados y protegidos con los más altos estándares de seguridad."
+            "question": "¿Qué tipo de negocios pueden usarlo?",
+            "answer": "Cualquier negocio que busque entender mejor a sus clientes y potenciar sus ventas. Es ideal para tiendas, restaurantes y servicios."
           },
           {
-            "question": "¿Cuál es el precio?",
-            "answer": "Tenemos diferentes planes que se adaptan a las necesidades de tu negocio. Puedes consultarlos en nuestra página de precios."
+            "question": "¿Necesito instalar algo?",
+            "answer": "No, Repartito es una plataforma 100% online. Solo necesitas una conexión a internet para acceder a tus dashboards."
           }
-        ],
-        "contact": {
-          "title": "¿Aún tienes dudas?",
-          "description": "No te preocupes. Contacta con nuestro equipo y estaremos encantados de ayudarte.",
-          "cta": "Contáctanos"
-        },
-        "newsletter": {
-          "title": "Obtén ideas para tu negocio",
-          "description": "Suscríbete a nuestro boletín para recibir consejos, casos de estudio y actualizaciones sobre cómo aprovechar tus datos para crecer.",
-          "placeholder": "Tu dirección de correo electrónico",
-          "subscribe": "Suscribirse",
-          "subscribing": "Suscribiendo...",
-          "success": "¡Gracias por suscribirte!",
-          "error": "Algo salió mal. Por favor, inténtalo de nuevo.",
-          "validation": "Por favor, introduce un correo electrónico válido",
-          "privacy": "Respetamos tu privacidad. No spam."
-        }
+        ]
       },
       "cases": {
         "title": "Casos de Éxito",
-        "description": "Descubre cómo LupaPyme ha ayudado a negocios como el tuyo a crecer.",
-        "quote": "Los datos son el nuevo petróleo. LupaPyme te ayuda a refinarlo.",
-        "projectsTitle": "Resultados de Nuestros Clientes",
-        "subtitle": "Estamos orgullosos del impacto que tenemos en los negocios de nuestros clientes. Aquí te presentamos algunas de sus historias.",
-        "projectStatus": {
-          "finished": "Finalizado",
-          "inProgress": "En Progreso"
-        },
-        "modal": {
-          "description": "Descripción",
-          "technologies": "Tecnologías",
-          "features": "Características"
-        }
+        "description": "Descubre cómo Repartito ha ayudado a negocios como el tuyo a crecer.",
+        "quote": "Los datos son el nuevo petróleo. Repartito te ayuda a refinarlo.",
+        "author": "Científico de Datos",
+        "authorRole": "en Repartito"
       }
     },
     "pricing": {
       "meta": {
-        "title": "Precios - LupaPyme",
+        "title": "Precios - Repartito",
         "description": "Encuentra el plan perfecto para tu negocio. Comienza gratis."
       },
       "title": "Planes flexibles para negocios de todos los tamaños",
-      "paragraph": "Elige el plan que mejor se adapte a tus necesidades y empieza a crecer con LupaPyme.",
+      "paragraph": "Elige el plan que mejor se adapte a tus necesidades y empieza a crecer con Repartito.",
       "primaryCta": "Comienza ahora",
       "plans": {
         "monthly": "Mensual",
@@ -896,10 +847,10 @@
     },
     "contact": {
       "meta": {
-        "title": "Contacto - LupaPyme",
+        "title": "Contacto - Repartito",
         "description": "Ponte en contacto con nosotros. Estamos aquí para ayudarte."
       },
-      "title": "Contáctanos",
+      "title": "Ponte en Contacto",
       "paragraph": "¿Tienes preguntas o quieres más información? Envíanos un mensaje y te responderemos lo antes posible.",
       "form": {
         "name": "Nombre",
@@ -945,7 +896,7 @@
         "contact": "Contacto"
       },
       "company": {
-        "title": "Empresa",
+        "title": "Compañía",
         "about": "Nosotros",
         "blog": "Blog",
         "careers": "Carreras"
@@ -956,16 +907,16 @@
         "privacy": "Política de Privacidad"
       },
       "copy": "Todos los derechos reservados.",
-      "companyDescription": "LupaPyme es la plataforma que te ayuda a entender a tus clientes e impulsar tu negocio. Métricas a fondo, retención de clientes y control total de tu empresa.",
+      "companyDescription": "Repartito es la plataforma que te ayuda a entender a tus clientes e impulsar tu negocio. Métricas a fondo, retención de clientes y control total de tu empresa.",
       "navigation": "Navegación",
-      "menuCreation": "Creación de Menús Digitales",
+      "menuCreation": "Creación de Menú Digital",
       "mobileFirst": "Diseño Mobile-First",
       "analytics": "Análisis e Insights",
       "getStarted": "Comenzar",
       "rights": "Todos los derechos reservados"
     },
     "landing": {
-      "title": "LupaPyme"
+      "title": "Repartito"
     }
   },
   "error": {

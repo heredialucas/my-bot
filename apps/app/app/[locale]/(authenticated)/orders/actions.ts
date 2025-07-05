@@ -6,6 +6,8 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@repo/data-services';
 import { createOrder as createOrderInDb } from '@repo/data-services';
 import { type Locale } from '@repo/internationalization';
+import { getClientsBySellerId } from "@repo/data-services/src/services/clientService";
+import { getInventoryBySellerId } from "@repo/data-services/src/services/productService";
 
 const itemSchema = z.object({
     productId: z.string(),
@@ -62,4 +64,31 @@ export async function createOrder(
 
     revalidatePath(`/${locale}/orders`);
     redirect(`/${locale}/orders`);
+}
+
+export async function createOrderAction(data: {
+    clientId: string;
+    sellerId: string;
+    items: { productId: string; quantity: number }[];
+}) {
+    try {
+        const order = await createOrderInDb(data);
+        return { success: true, orderId: order.id };
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: "Failed to create order." };
+    }
+}
+
+export async function getSellerDataForOrder(sellerId: string) {
+    try {
+        const [clients, inventory] = await Promise.all([
+            getClientsBySellerId(sellerId),
+            getInventoryBySellerId(sellerId),
+        ]);
+        return { success: true, clients, inventory };
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: "Failed to fetch seller data." };
+    }
 } 

@@ -1,252 +1,214 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@repo/design-system/components/ui/button';
-import { Input } from '@repo/design-system/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/design-system/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from '@repo/design-system/components/ui/form';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@repo/design-system/components/ui/select';
-import { Trash2, Plus } from 'lucide-react';
+import { Input } from '@repo/design-system/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@repo/design-system/components/ui/table';
 import { useToast } from '@repo/design-system/hooks/use-toast';
-import { type ClientData } from '@repo/data-services/src/types';
-import { type InventoryData } from '@repo/data-services/src/types/product';
-import { type Dictionary, type Locale } from '@repo/internationalization';
-import { createOrder } from '../actions';
+import { type Dictionary } from '@repo/internationalization';
+import { type ClientData, type InventoryWithProduct } from '@repo/data-services';
+import { type UserData } from '@repo/data-services/src/types/user';
+import { createOrderAction, getSellerDataForOrder } from '../actions';
+import { TrashIcon } from 'lucide-react';
+
+const newOrderSchema = z.object({
+    clientId: z.string().min(1, 'Debes seleccionar un cliente.'),
+    items: z.array(z.object({
+        productId: z.string(),
+        quantity: z.number().min(1, 'La cantidad debe ser al menos 1.'),
+        price: z.number(),
+        stock: z.number(),
+    })).min(1, 'Debes agregar al menos un producto.'),
+});
+
+type NewOrderFormValues = z.infer<typeof newOrderSchema>;
 
 interface NewOrderFormProps {
-    clients: ClientData[];
-    inventory: InventoryData[];
+    user: UserData;
+    sellers: UserData[];
+    initialClients: ClientData[];
+    initialInventory: InventoryWithProduct[];
     dictionary: Dictionary;
 }
 
-const orderItemSchema = z.object({
-    productId: z.string().min(1, 'Producto requerido'),
-    quantity: z.coerce.number().min(1, 'Cantidad debe ser mayor a 0'),
-});
-
-const formSchema = z.object({
-    clientId: z.string().min(1, 'Cliente requerido'),
-    items: z.array(orderItemSchema).min(1, 'Debe agregar al menos un producto'),
-});
-
-type FormData = z.infer<typeof formSchema>;
-
-export function NewOrderForm({ clients, inventory, dictionary }: NewOrderFormProps) {
+export function NewOrderForm({ user, sellers, initialClients, initialInventory, dictionary }: NewOrderFormProps) {
+    const [selectedSellerId, setSelectedSellerId] = useState<string | null>(user.role === 'seller' ? user.id : null);
+    const [clients, setClients] = useState<ClientData[]>(initialClients);
+    const [inventory, setInventory] = useState<InventoryWithProduct[]>(initialInventory);
+    const [isFetchingData, startDataTransition] = useTransition();
+    const router = useRouter();
     const { toast } = useToast();
-    const [isPending, startTransition] = useTransition();
 
-    const form = useForm<FormData>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            clientId: '',
-            items: [{ productId: '', quantity: 1 }],
-        },
+    const form = useForm<NewOrderFormValues>({
+        resolver: zodResolver(newOrderSchema),
+        defaultValues: { clientId: '', items: [] },
     });
+    const { fields, append, remove } = useFieldArray({ control: form.control, name: 'items' });
 
-    const { fields, append, remove } = useFieldArray({
-        control: form.control,
-        name: 'items',
-    });
+    const handleSellerChange = async (sellerId: string) => {
+        setSelectedSellerId(sellerId);
+        form.reset({ clientId: '', items: [] });
+        setClients([]);
+        setInventory([]);
 
-    const watchedItems = form.watch('items');
-
-    const calculateTotal = () => {
-        return watchedItems.reduce((total, item) => {
-            const product = inventory.find(inv => inv.productId === item.productId);
-            if (product && item.quantity) {
-                return total + (product.product.price * item.quantity);
-            }
-            return total;
-        }, 0);
-    };
-
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('es-AR', {
-            style: 'currency',
-            currency: 'ARS',
-        }).format(amount);
-    };
-
-    function onSubmit(values: FormData) {
-        startTransition(async () => {
-            const formData = new FormData();
-            formData.append('clientId', values.clientId);
-            formData.append('items', JSON.stringify(values.items));
-
-            const result = await createOrder('es', { errors: {}, message: null }, formData);
-
-            toast({
-                title: result.message ? 'Error' : 'Éxito',
-                description: result.message || 'Pedido creado exitosamente',
-                variant: result.message ? 'destructive' : 'default',
-            });
-
-            if (!result.message) {
-                form.reset();
+        startDataTransition(async () => {
+            const result = await getSellerDataForOrder(sellerId);
+            if (result.success) {
+                setClients(result.clients || []);
+                setInventory(result.inventory || []);
+            } else {
+                toast({ title: 'Error', description: 'No se pudieron cargar los datos del vendedor.', variant: 'destructive' });
             }
         });
-    }
+    };
+
+    const addProductToOrder = (inventoryItem: InventoryWithProduct) => {
+        const existingItem = fields.find(item => item.productId === inventoryItem.product.id);
+        if (existingItem) {
+            toast({ title: 'Producto ya agregado', description: 'Este producto ya está en el pedido.', variant: 'default' });
+            return;
+        }
+        append({
+            productId: inventoryItem.product.id,
+            quantity: 1,
+            price: inventoryItem.product.price,
+            stock: inventoryItem.quantity,
+        });
+    };
+
+    const onSubmit = async (values: NewOrderFormValues) => {
+        if (!selectedSellerId) {
+            toast({ title: 'Error', description: 'No se ha seleccionado un vendedor.', variant: 'destructive' });
+            return;
+        }
+
+        const result = await createOrderAction({
+            sellerId: selectedSellerId,
+            clientId: values.clientId,
+            items: values.items.map(item => ({ productId: item.productId, quantity: item.quantity })),
+        });
+
+        if (result.success) {
+            toast({ title: 'Éxito', description: 'Pedido creado correctamente.' });
+            router.push('/orders');
+        } else {
+            toast({ title: 'Error', description: result.message, variant: 'destructive' });
+        }
+    };
+
+    const isFormDisabled = user.role === 'admin' && !selectedSellerId;
+    const total = fields.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
     return (
-        <div className="space-y-6">
-            <Form {...form}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Columna Izquierda: Formulario y Pedido */}
+            <div className="lg:col-span-2 space-y-6">
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    {/* Selección de Cliente */}
+                    {user.role === 'admin' && (
+                        <Card>
+                            <CardHeader><CardTitle>1. Seleccionar Vendedor</CardTitle></CardHeader>
+                            <CardContent>
+                                <Select onValueChange={handleSellerChange} disabled={isFetchingData}>
+                                    <SelectTrigger><SelectValue placeholder="Elige un vendedor..." /></SelectTrigger>
+                                    <SelectContent>
+                                        {sellers.map(s => <SelectItem key={s.id} value={s.id}>{s.name} {s.lastName}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </CardContent>
+                        </Card>
+                    )}
+
                     <Card>
-                        <CardHeader>
-                            <CardTitle>Información del Cliente</CardTitle>
-                        </CardHeader>
+                        <CardHeader><CardTitle>{user.role === 'admin' ? '2. ' : ''}Seleccionar Cliente</CardTitle></CardHeader>
                         <CardContent>
-                            <FormField
-                                control={form.control}
-                                name="clientId"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Cliente</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Seleccionar cliente" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {clients.map((client) => (
-                                                    <SelectItem key={client.id} value={client.id}>
-                                                        {client.firstName} {client.lastName}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            <Select
+                                onValueChange={(value) => form.setValue('clientId', value)}
+                                disabled={isFormDisabled || isFetchingData}
+                            >
+                                <SelectTrigger><SelectValue placeholder="Elige un cliente..." /></SelectTrigger>
+                                <SelectContent>
+                                    {clients.map(c => <SelectItem key={c.id} value={c.id}>{c.firstName} {c.lastName}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                            {form.formState.errors.clientId && <p className="text-red-500 text-sm mt-1">{form.formState.errors.clientId.message}</p>}
                         </CardContent>
                     </Card>
 
-                    {/* Productos */}
                     <Card>
-                        <CardHeader>
-                            <CardTitle>Productos</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {fields.map((field, index) => (
-                                <div key={field.id} className="flex gap-4 items-end">
-                                    <FormField
-                                        control={form.control}
-                                        name={`items.${index}.productId`}
-                                        render={({ field }) => (
-                                            <FormItem className="flex-1">
-                                                <FormLabel>Producto</FormLabel>
-                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                    <FormControl>
-                                                        <SelectTrigger>
-                                                            <SelectValue placeholder="Seleccionar producto" />
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        {inventory.map((item) => (
-                                                            <SelectItem key={item.productId} value={item.productId}>
-                                                                {item.product.name} - Stock: {item.quantity} - {formatCurrency(item.product.price)}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name={`items.${index}.quantity`}
-                                        render={({ field }) => (
-                                            <FormItem className="w-24">
-                                                <FormLabel>Cantidad</FormLabel>
-                                                <FormControl>
+                        <CardHeader><CardTitle>Pedido Actual</CardTitle></CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Producto</TableHead>
+                                        <TableHead>Cantidad</TableHead>
+                                        <TableHead>Precio Unit.</TableHead>
+                                        <TableHead>Subtotal</TableHead>
+                                        <TableHead />
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {fields.map((item, index) => {
+                                        const product = inventory.find(i => i.product.id === item.productId)?.product;
+                                        return (
+                                            <TableRow key={item.id}>
+                                                <TableCell>{product?.name}</TableCell>
+                                                <TableCell>
                                                     <Input
                                                         type="number"
-                                                        min="1"
-                                                        {...field}
-                                                        onChange={(e) => field.onChange(Number(e.target.value))}
+                                                        {...form.register(`items.${index}.quantity`, { valueAsNumber: true })}
+                                                        max={item.stock}
+                                                        min={1}
+                                                        className="w-20"
                                                     />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="icon"
-                                        onClick={() => remove(index)}
-                                        disabled={fields.length === 1}
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            ))}
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => append({ productId: '', quantity: 1 })}
-                                className="w-full"
-                            >
-                                <Plus className="h-4 w-4 mr-2" />
-                                Agregar Producto
-                            </Button>
-                        </CardContent>
-                    </Card>
-
-                    {/* Resumen */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Resumen del Pedido</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-2">
-                                {watchedItems.map((item, index) => {
-                                    const inventoryItem = inventory.find(inv => inv.productId === item.productId);
-                                    if (!inventoryItem || !item.quantity) return null;
-
-                                    const subtotal = inventoryItem.product.price * item.quantity;
-                                    return (
-                                        <div key={index} className="flex justify-between text-sm">
-                                            <span>
-                                                {inventoryItem.product.name} x {item.quantity}
-                                            </span>
-                                            <span>{formatCurrency(subtotal)}</span>
-                                        </div>
-                                    );
-                                })}
-                                <div className="border-t pt-2 flex justify-between font-bold">
-                                    <span>Total:</span>
-                                    <span>{formatCurrency(calculateTotal())}</span>
-                                </div>
+                                                </TableCell>
+                                                <TableCell>${item.price}</TableCell>
+                                                <TableCell>${(item.price * item.quantity).toFixed(2)}</TableCell>
+                                                <TableCell>
+                                                    <Button variant="ghost" size="icon" onClick={() => remove(index)}><TrashIcon className="w-4 h-4" /></Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            </Table>
+                            <div className="text-right font-bold text-lg mt-4">
+                                Total: ${total.toFixed(2)}
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Button type="submit" disabled={isPending} className="w-full">
-                        {isPending ? 'Creando pedido...' : 'Crear Pedido'}
+                    <Button type="submit" disabled={isFormDisabled || isFetchingData || fields.length === 0}>
+                        Crear Pedido
                     </Button>
                 </form>
-            </Form>
+            </div>
+
+            {/* Columna Derecha: Inventario */}
+            <div className="space-y-6">
+                <Card>
+                    <CardHeader><CardTitle>Inventario Disponible</CardTitle></CardHeader>
+                    <CardContent>
+                        {isFormDisabled ? <p className="text-muted-foreground">Selecciona un vendedor para ver su inventario.</p> :
+                            inventory.length === 0 ? <p className="text-muted-foreground">No hay inventario disponible.</p> :
+                                <div className="space-y-2 max-h-96 overflow-y-auto">
+                                    {inventory.map(item => (
+                                        <div key={item.id} className="flex justify-between items-center p-2 border rounded-md">
+                                            <span>{item.product.name} ({item.quantity})</span>
+                                            <Button size="sm" onClick={() => addProductToOrder(item)} disabled={fields.some(f => f.productId === item.product.id)}>+</Button>
+                                        </div>
+                                    ))}
+                                </div>
+                        }
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 } 

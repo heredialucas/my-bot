@@ -19,14 +19,24 @@ import { type Dictionary } from '@repo/internationalization';
 import { clientFormSchema, ClientFormSchema } from '../lib/schemas';
 import { createClientAction, updateClientAction } from '../actions';
 import { useRef, useState, useTransition } from 'react';
+import { UserData } from '@repo/data-services/src/types/user';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@repo/design-system/components/ui/select';
 
 interface ClientFormProps {
     client?: ClientData;
     onSuccess: () => void;
     dictionary: Dictionary;
+    user: UserData;
+    sellers: UserData[];
 }
 
-export function ClientForm({ client, onSuccess, dictionary }: ClientFormProps) {
+export function ClientForm({ client, onSuccess, dictionary, user, sellers }: ClientFormProps) {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
     const formRef = useRef<HTMLFormElement>(null);
@@ -39,6 +49,7 @@ export function ClientForm({ client, onSuccess, dictionary }: ClientFormProps) {
             email: client?.email || '',
             phone: client?.phone || '',
             address: client?.address || '',
+            sellerId: client?.sellerId || '',
         },
     });
 
@@ -137,6 +148,34 @@ export function ClientForm({ client, onSuccess, dictionary }: ClientFormProps) {
                         </FormItem>
                     )}
                 />
+
+                {user.role === 'admin' && (
+                    <FormField
+                        control={form.control}
+                        name="sellerId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Vendedor Asignado</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccionar un vendedor..." />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {sellers.map((seller) => (
+                                            <SelectItem key={seller.id} value={seller.id}>
+                                                {seller.name} {seller.lastName}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                )}
+
                 <Button type="submit" disabled={isPending}>
                     {isPending ? 'Guardando...' : client ? 'Actualizar' : 'Crear'}
                 </Button>

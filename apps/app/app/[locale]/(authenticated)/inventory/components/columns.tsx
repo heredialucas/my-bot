@@ -1,22 +1,12 @@
 'use client';
 
 import { type ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal } from 'lucide-react';
-import { Button } from '@repo/design-system/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from '@repo/design-system/components/ui/dropdown-menu';
-import { type InventoryData } from '@repo/data-services/src/types/product';
+import { type InventoryWithProduct } from '@repo/data-services';
 import { type Dictionary } from '@repo/internationalization';
 
 export const getInventoryColumns = (
-    openDialog: (inventoryItem?: InventoryData) => void,
     dictionary: Dictionary['app']['admin']['inventory'],
-): ColumnDef<InventoryData>[] => [
+): ColumnDef<InventoryWithProduct>[] => [
         {
             accessorKey: 'product.name',
             header: dictionary.table.product,
@@ -45,30 +35,6 @@ export const getInventoryColumns = (
                 return (
                     <div className={`font-medium ${stock <= 0 ? 'text-red-600' : stock <= 10 ? 'text-yellow-600' : 'text-green-600'}`}>
                         {stock}
-                    </div>
-                );
-            },
-        },
-        {
-            id: 'actions',
-            cell: ({ row }) => {
-                const inventoryItem = row.original;
-                return (
-                    <div className="text-right">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-8 w-8 p-0">
-                                    <span className="sr-only">Open menu</span>
-                                    <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>{dictionary.table.actions}</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => openDialog(inventoryItem)}>
-                                    {dictionary.table.editStock}
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
                     </div>
                 );
             },

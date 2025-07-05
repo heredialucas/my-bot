@@ -17,7 +17,6 @@ export async function createClient(data: ClientFormData) {
         const client = await database.client.create({
             data: {
                 ...data,
-                sellerId: user.id,
             },
         });
 
@@ -97,7 +96,7 @@ export async function getClientById(clientId: string) {
     }
 }
 
-export async function updateClient(clientId: string, data: ClientFormData) {
+export async function updateClient(clientId: string, data: Partial<ClientFormData>) {
     const user = await getCurrentUser();
     if (!user?.id) {
         return { success: false, message: 'Usuario no autenticado' };
@@ -168,5 +167,26 @@ export async function deleteClient(clientId: string) {
     } catch (error) {
         console.error("Error al eliminar cliente:", error);
         return { success: false, message: 'Error interno del servidor' };
+    }
+}
+
+/**
+ * Get all clients for a specific seller by their ID. Only for admins.
+ */
+export async function getClientsBySellerId(sellerId: string) {
+    const user = await getCurrentUser();
+    if (user?.role !== 'admin') {
+        return [];
+    }
+
+    try {
+        const clients = await database.client.findMany({
+            where: { sellerId },
+            orderBy: { createdAt: 'desc' },
+        });
+        return clients;
+    } catch (error) {
+        console.error(`Error fetching clients for seller ${sellerId}:`, error);
+        return [];
     }
 } 

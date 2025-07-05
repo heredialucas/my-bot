@@ -207,20 +207,6 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
         requiredPermissions: ['account:view_own'],
     },
     {
-        label: 'clients',
-        mobileLabel: 'clientsMobile',
-        href: '/clients',
-        icon: 'Users',
-        requiredPermissions: ['clients:view'],
-    },
-    {
-        label: 'orders',
-        mobileLabel: 'ordersMobile',
-        href: '/orders',
-        icon: 'ShoppingCart',
-        requiredPermissions: ['orders:view_own'],
-    },
-    {
         label: 'inventory',
         mobileLabel: 'inventoryMobile',
         href: '/inventory',
@@ -234,6 +220,20 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
         icon: 'Package',
         requiredPermissions: ['products:view'],
         adminOnly: true,
+    },
+    {
+        label: 'clients',
+        mobileLabel: 'clientsMobile',
+        href: '/clients',
+        icon: 'Users',
+        requiredPermissions: ['clients:view'],
+    },
+    {
+        label: 'orders',
+        mobileLabel: 'ordersMobile',
+        href: '/orders',
+        icon: 'ShoppingCart',
+        requiredPermissions: ['orders:view_own'],
     },
     {
         label: 'payments',

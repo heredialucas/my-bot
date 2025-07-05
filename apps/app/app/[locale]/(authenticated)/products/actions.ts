@@ -1,8 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createProduct, updateProduct, deleteProduct } from '@repo/data-services';
+import { createProduct, updateProduct, deleteProduct, setInventoryForSeller } from '@repo/data-services';
 import { productFormSchema } from './lib/schemas';
+import { z } from 'zod';
 
 interface FormState {
     success: boolean;
@@ -73,5 +74,24 @@ export async function deleteProductAction(productId: string): Promise<FormState>
         return { success: true, message: 'Producto eliminado con éxito.' };
     } catch (error) {
         return { success: false, message: 'Error interno del servidor.' };
+    }
+}
+
+const setInventorySchema = z.object({
+    quantity: z.coerce.number().int().min(0, 'La cantidad no puede ser negativa.'),
+});
+
+export async function setInventoryForSellerAction(
+    productId: string,
+    sellerId: string,
+    quantity: number
+): Promise<FormState> {
+    const result = await setInventoryForSeller(productId, sellerId, quantity);
+
+    if (result.success) {
+        revalidatePath(`/products/${productId}`);
+        return { success: true, message: 'Stock actualizado con éxito.' };
+    } else {
+        return { success: false, message: result.message || 'Error al asignar stock.' };
     }
 } 

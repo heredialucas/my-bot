@@ -72,6 +72,31 @@ export async function getInventoryBySeller() {
 }
 
 /**
+ * Get the inventory for a specific seller by ID.
+ * Only accessible to admins.
+ */
+export async function getInventoryBySellerId(sellerId: string) {
+    const user = await getCurrentUser();
+    if (user?.role !== 'admin') {
+        return [];
+    }
+
+    try {
+        const inventory = await database.inventory.findMany({
+            where: { sellerId: sellerId },
+            include: {
+                product: true, // Include the full product details
+            },
+            orderBy: { updatedAt: 'desc' },
+        });
+        return inventory;
+    } catch (error) {
+        console.error("Error fetching inventory for seller:", error);
+        return [];
+    }
+}
+
+/**
  * Create a new product in the central catalog.
  * Only accessible to admins.
  */
@@ -173,6 +198,67 @@ export async function updateInventoryQuantity(productId: string, quantity: numbe
         return { success: true, inventoryItem: updatedInventoryItem };
     } catch (error) {
         console.error("Error updating inventory quantity:", error);
+        return { success: false, message: 'Error interno del servidor' };
+    }
+}
+
+/**
+ * Get the inventory for a specific product across all sellers.
+ * Includes seller details. Only for admins.
+ */
+export async function getInventoryForProduct(productId: string) {
+    const user = await getCurrentUser();
+    if (user?.role !== 'admin') {
+        return [];
+    }
+    try {
+        const inventory = await database.inventory.findMany({
+            where: { productId },
+            include: {
+                seller: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    },
+                },
+            },
+        });
+        return inventory;
+    } catch (error) {
+        console.error(`Error fetching inventory for product ${productId}:`, error);
+        return [];
+    }
+}
+
+/**
+ * Sets the inventory quantity for a specific product and seller.
+ * Only accessible to admins.
+ */
+export async function setInventoryForSeller(productId: string, sellerId: string, quantity: number) {
+    const user = await getCurrentUser();
+    if (user?.role !== 'admin') {
+        return { success: false, message: 'No autorizado' };
+    }
+
+    try {
+        const inventoryItem = await database.inventory.upsert({
+            where: {
+                productId_sellerId: {
+                    productId,
+                    sellerId,
+                },
+            },
+            update: { quantity },
+            create: {
+                productId,
+                sellerId,
+                quantity,
+            },
+        });
+        return { success: true, inventoryItem };
+    } catch (error) {
+        console.error('Error setting inventory for seller:', error);
         return { success: false, message: 'Error interno del servidor' };
     }
 } 

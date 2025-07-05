@@ -17,7 +17,7 @@ export type ProductFormData = {
     quantityInStock: number;
 };
 
-export type InventoryData = {
+export type InventoryWithProduct = {
     id: string;
     quantity: number;
     updatedAt: Date;

@@ -5,6 +5,9 @@ import { notFound } from 'next/navigation';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Separator } from '@repo/design-system/components/ui/separator';
+import Link from 'next/link';
+import { ArrowLeftIcon } from 'lucide-react';
+import { Button } from '@repo/design-system/components/ui/button';
 
 const statusVariantMap: { [key: string]: 'default' | 'secondary' | 'destructive' | 'outline' } = {
     PENDING: 'secondary',
@@ -47,7 +50,12 @@ export default async function OrderDetailPage({
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">
+                <h1 className="text-3xl font-bold flex items-center gap-2">
+                    <Link href={`/${locale}/orders`}>
+                        <Button variant="outline" size="icon">
+                            <ArrowLeftIcon className="w-4 h-4" />
+                        </Button>
+                    </Link>
                     Pedido #{order.id.slice(-8)}
                 </h1>
                 <Badge variant={statusVariantMap[order.status] || 'default'}>
@@ -127,7 +135,7 @@ export default async function OrderDetailPage({
                                     <div className="flex-1">
                                         <h4 className="font-medium">{item.product.name}</h4>
                                         <p className="text-sm text-muted-foreground">
-                                            SKU: {item.product.sku}
+                                            Código: {item.product.sku}
                                         </p>
                                         {item.product.description && (
                                             <p className="text-sm text-muted-foreground">

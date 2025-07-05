@@ -51,9 +51,9 @@ export const getOrderColumns = (
             header: dictionary.table.total,
             cell: ({ row }) => {
                 const amount = parseFloat(row.getValue('totalAmount'));
-                const formatted = new Intl.NumberFormat('en-US', {
+                const formatted = new Intl.NumberFormat('es-AR', {
                     style: 'currency',
-                    currency: 'USD',
+                    currency: 'ARS',
                 }).format(amount);
                 return <div className="font-medium">{formatted}</div>;
             },

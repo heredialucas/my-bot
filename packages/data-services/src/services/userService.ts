@@ -5,6 +5,7 @@ import { UserData, UserFormData } from '../types/user';
 import { database } from '@repo/database';
 import { UserRole } from '@repo/database';
 import bcrypt from 'bcryptjs';
+import { getCurrentUser } from './authService';
 
 /**
  * Crear un nuevo usuario
@@ -284,5 +285,31 @@ export async function changePassword(userId: string, currentPassword: string, ne
             message: 'Error interno del servidor',
             error: 'SERVER_ERROR'
         };
+    }
+}
+
+export async function getAllSellers() {
+    const user = await getCurrentUser();
+    if (user?.role !== 'admin') {
+        return [];
+    }
+    try {
+        const sellers = await database.user.findMany({
+            where: {
+                role: 'seller',
+            },
+            orderBy: {
+                name: 'asc',
+            },
+        });
+        return sellers.map(seller => {
+            const permissions = Array.isArray(seller.permissions)
+                ? seller.permissions.map(p => String(p))
+                : [];
+            return { ...seller, permissions };
+        });
+    } catch (error) {
+        console.error('Error fetching sellers:', error);
+        return [];
     }
 } 

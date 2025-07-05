@@ -1,6 +1,9 @@
 import { getDictionary, type Locale } from '@repo/internationalization';
 import { getClientsBySeller, getInventoryBySeller } from '@repo/data-services';
 import { NewOrderForm } from '../components/new-order-form';
+import { getCurrentUser } from '@repo/data-services/src/services/authService';
+import { getAllSellers } from '@repo/data-services/src/services/userService';
+import { redirect } from 'next/navigation';
 
 export default async function NewOrderPage({
     params,
@@ -9,17 +12,34 @@ export default async function NewOrderPage({
 }) {
     const { locale } = await params;
     const dictionary = await getDictionary(locale);
-    const clients = await getClientsBySeller();
-    const inventory = await getInventoryBySeller();
+    const user = await getCurrentUser();
+
+    if (!user) {
+        redirect(`/${locale}/sign-in`);
+    }
+
+    // Fetch initial data based on role
+    const sellers = user.role === 'admin' ? await getAllSellers() : [];
+    const initialClients = user.role === 'seller' ? await getClientsBySeller() : [];
+    const initialInventory = user.role === 'seller' ? await getInventoryBySeller() : [];
 
     return (
-        <div>
-            <h1 className="text-2xl font-bold mb-4">
-                {dictionary.app.admin.orders.newOrder}
-            </h1>
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-2xl font-bold">
+                    {dictionary.app.admin.orders.newOrder}
+                </h1>
+                <p className="text-muted-foreground">
+                    {user.role === 'admin'
+                        ? 'Selecciona un vendedor para crear un pedido en su nombre.'
+                        : 'Crea un nuevo pedido seleccionando un cliente y agregando productos de tu inventario.'}
+                </p>
+            </div>
             <NewOrderForm
-                clients={clients}
-                inventory={inventory}
+                user={user}
+                sellers={sellers}
+                initialClients={initialClients}
+                initialInventory={initialInventory}
                 dictionary={dictionary}
             />
         </div>

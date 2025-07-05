@@ -19,4 +19,5 @@ export type ClientFormData = {
     email?: string;
     phone?: string;
     address?: string;
+    sellerId: string;
 }; 

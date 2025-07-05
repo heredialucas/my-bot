@@ -14,13 +14,16 @@ import { type Dictionary } from '@repo/internationalization';
 import { ClientForm } from './client-form';
 import { getClientColumns } from './columns';
 import { DataTable } from '@/components/data-table';
+import { UserData } from '@repo/data-services/src/types/user';
 
 interface ClientListProps {
     clients: ClientData[];
     dictionary: Dictionary;
+    user: UserData;
+    sellers: UserData[];
 }
 
-export function ClientList({ clients, dictionary }: ClientListProps) {
+export function ClientList({ clients, dictionary, user, sellers }: ClientListProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState<ClientData | undefined>(undefined);
     const router = useRouter();
@@ -57,6 +60,8 @@ export function ClientList({ clients, dictionary }: ClientListProps) {
                         client={selectedClient}
                         onSuccess={handleFormSuccess}
                         dictionary={dictionary}
+                        user={user}
+                        sellers={sellers}
                     />
                 </DialogContent>
             </Dialog>

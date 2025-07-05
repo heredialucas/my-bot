@@ -1,7 +1,7 @@
 import { getDictionary } from '@repo/internationalization';
 import { type Locale } from '@repo/internationalization';
 import { getCurrentUser } from '@repo/data-services/src/services/authService';
-import { getClientsBySeller, getAllClients } from '@repo/data-services';
+import { getClientsBySeller, getAllClients, getAllSellers } from '@repo/data-services';
 import { ClientList } from './components/client-list';
 
 export default async function ClientsPage({
@@ -13,14 +13,26 @@ export default async function ClientsPage({
     const dictionary = await getDictionary(locale);
     const user = await getCurrentUser();
 
-    const clients = user?.role === 'admin' ? await getAllClients() : await getClientsBySeller();
+    if (!user) {
+        return null;
+    }
+
+    const [clients, sellers] = await Promise.all([
+        user.role === 'admin' ? getAllClients() : getClientsBySeller(),
+        user.role === 'admin' ? getAllSellers() : Promise.resolve([]),
+    ]);
 
     return (
-        <div>
-            <h1 className="text-2xl font-bold mb-4">
-                {dictionary.app.admin.navigation.clients}
-            </h1>
-            <ClientList clients={clients} dictionary={dictionary} />
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-2xl font-bold">
+                    Gestión de Clientes
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                    <b>Flujo:</b> Creas un cliente ➔ Le asignas un pedido.
+                </p>
+            </div>
+            <ClientList clients={clients} dictionary={dictionary} user={user} sellers={sellers} />
         </div>
     );
 } 

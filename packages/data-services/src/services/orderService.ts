@@ -34,6 +34,35 @@ export async function getOrdersBySeller() {
 }
 
 /**
+ * Get all orders from all sellers. Only for admins.
+ */
+export async function getAllOrders() {
+    const user = await getCurrentUser();
+    if (user?.role !== 'admin') {
+        return [];
+    }
+
+    try {
+        const orders = await database.order.findMany({
+            include: {
+                client: true,
+                items: {
+                    include: {
+                        product: true,
+                    },
+                },
+                payments: true,
+            },
+            orderBy: { orderDate: 'desc' },
+        });
+        return orders;
+    } catch (error) {
+        console.error("Error fetching all orders:", error);
+        return [];
+    }
+}
+
+/**
  * Get a single order by its ID.
  * Ensures the order belongs to the seller or the user is an admin.
  */

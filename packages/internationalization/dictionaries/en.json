@@ -1,7 +1,7 @@
 {
   "app": {
     "admin": {
-      "title": "LupaPyme - Admin Panel",
+      "title": "Repartito - Admin Panel",
       "navigation": {
         "dashboard": "Dashboard",
         "analytics": "Analytics",
@@ -140,16 +140,16 @@
         }
       },
       "layout": {
-        "title": "LupaPyme Administration Panel",
-        "description": "Access LupaPyme's administrative tools to manage your business efficiently."
+        "title": "Repartito Administration Panel",
+        "description": "Access Repartito's administrative tools to manage your business efficiently."
       },
       "dashboard": {
         "title": "Repartito Administration Panel",
         "description": "Access Repartito's administrative tools to manage your business efficiently."
       },
       "pageTitles": {
-        "title": "LupaPyme - Admin Panel",
-        "description": "Access LupaPyme's administrative tools to manage your business efficiently."
+        "title": "Repartito - Admin Panel",
+        "description": "Access Repartito's administrative tools to manage your business efficiently."
       },
       "permissions": {
         "groups": {
@@ -334,33 +334,25 @@
     },
     "home": {
       "meta": {
-        "title": "LupaPyme - Business Metrics for Client Retention",
-        "description": "The platform to understand your clients and boost your business. In-depth metrics, client retention and total control of your company."
+        "title": "Repartito - Business Metrics for Client Retention",
+        "description": "Repartito gives you the necessary tools to analyze your business metrics, understand your clients' behavior and make strategic decisions to increase retention and sales."
       },
       "hero": {
-        "heading": "Understand your clients, grow your business",
-        "paragraph": "LupaPyme gives you the necessary tools to analyze your business metrics, understand your clients' behavior and make strategic decisions to increase retention and sales.",
-        "primaryCta": "Get started now",
-        "secondaryCta": "Learn more"
+        "title": "The platform that boosts your business",
+        "paragraph": "Repartito gives you the necessary tools to analyze your business metrics, understand your clients' behavior and make strategic decisions to increase retention and sales.",
+        "primaryCta": "Get Started",
+        "secondaryCta": "Contact Sales"
       },
       "features": {
-        "title": "All the tools you need in one place",
-        "paragraph": "From detailed analytics to communication tools, LupaPyme has everything you need to take your business to the next level.",
-        "featureOne": {
-          "title": "Advanced Analytics",
-          "paragraph": "Visualize your sales, clients and products like never before. Identify patterns and opportunities for growth."
-        },
-        "featureTwo": {
-          "title": "Client Segmentation",
-          "paragraph": "Classify your clients automatically based on their purchase behavior. Create personalized strategies for each segment."
-        },
-        "featureThree": {
-          "title": "Direct Communication",
-          "paragraph": "Contact your clients via WhatsApp or Email directly from the platform to build loyalty and boost sales."
-        }
+        "title": "Why Choose Repartito",
+        "paragraph": "From detailed analytics to communication tools, Repartito has everything you need to take your business to the next level."
+      },
+      "metrics": {
+        "title": "Understand your business in depth",
+        "description": "Key metrics to understand your business's health"
       },
       "stats": {
-        "title": "How LupaPyme works",
+        "title": "How Repartito works",
         "description": "Follow these simple steps to start understanding your customers and boosting your business.",
         "process": [
           {
@@ -382,59 +374,52 @@
         ]
       },
       "testimonials": {
-        "title": "What our users say",
-        "description": "Discover how LupaPyme is helping businesses like yours to grow.",
-        "items": [
+        "title": "What our clients say",
+        "description": "Discover how Repartito is helping businesses like yours to grow.",
+        "clients": [
           {
-            "title": "My sales have increased by 20%!",
-            "description": "Since I started using LupaPyme, I understand my customers much better. I have been able to create personalized marketing campaigns that have increased my sales and customer loyalty.",
-            "author": {
-              "name": "Ana Pérez",
-              "location": "Entrepreneur"
-            }
+            "name": "Laura G.",
+            "role": "Owner of a local store",
+            "description": "Since I started using Repartito, I understand my customers much better. I have been able to create personalized marketing campaigns that have increased my sales and customer loyalty."
           },
           {
-            "title": "Now I make data-driven decisions",
-            "description": "LupaPyme has given me the visibility I needed over my business. Now I can make strategic decisions based on real data, not intuition.",
-            "author": {
-              "name": "Juan López",
-              "location": "SME Owner"
-            }
+            "name": "Carlos M.",
+            "role": "E-commerce Manager",
+            "description": "Repartito has given me the visibility I needed over my business. Now I can make strategic decisions based on real data, not intuition."
           },
           {
-            "title": "The best tool to retain customers",
-            "description": "With LupaPyme's customer segmentation, I have been able to identify my most valuable customers and create loyalty programs that work. My retention rate has improved a lot!",
-            "author": {
-              "name": "Sofía Gómez",
-              "location": "Marketing Manager"
-            }
+            "name": "Ana R.",
+            "role": "Marketing Director",
+            "description": "With Repartito's customer segmentation, I have been able to identify my most valuable customers and create loyalty programs that work. My retention rate has improved a lot!"
           },
           {
-            "title": "Easy to use and very powerful",
-            "description": "I was surprised how easy it is to use LupaPyme. In a few minutes I had my dashboards configured and I began to see super valuable information. I recommend it!",
-            "author": {
-              "name": "Carlos Fernández",
-              "location": "Business Consultant"
-            }
+            "name": "Pedro S.",
+            "role": "Entrepreneur",
+            "description": "I was surprised how easy it is to use Repartito. In a few minutes I had my dashboards configured and I began to see super valuable information. I recommend it!"
           }
         ]
       },
       "cta": {
-        "heading": "Ready to boost your business?",
-        "paragraph": "Start using LupaPyme today and discover everything you can achieve.",
-        "primaryCta": "Get started for free"
+        "title": "Ready to get started?",
+        "paragraph": "Start using Repartito today and discover everything you can achieve.",
+        "primaryCta": "Get Started",
+        "secondaryCta": "Contact Sales"
       },
       "faq": {
         "title": "Frequently Asked Questions",
         "description": "Have questions? We have answers. If you can't find what you are looking for, please contact us.",
-        "questions": [
+        "items": [
           {
-            "question": "What is LupaPyme?",
-            "answer": "LupaPyme is a platform that helps small and medium-sized businesses analyze their business data to make better decisions, with a focus on client retention."
+            "question": "What is Repartito?",
+            "answer": "Repartito is a platform that helps small and medium-sized businesses analyze their business data to make better decisions, with a focus on client retention."
           },
           {
             "question": "How does it work?",
-            "answer": "You connect your sales system (or upload your data) and LupaPyme automatically processes it to generate key metrics and reports."
+            "answer": "You connect your sales system (or upload your data) and Repartito automatically processes it to generate key metrics and reports."
+          },
+          {
+            "question": "What kind of businesses can use it?",
+            "answer": "No, Repartito is a 100% online platform. You just need an internet connection to access your dashboards."
           },
           {
             "question": "Is it secure?",
@@ -464,29 +449,20 @@
       },
       "cases": {
         "title": "Success Stories",
-        "description": "Discover how LupaPyme has helped businesses like yours to grow.",
-        "quote": "Data is the new oil. LupaPyme helps you refine it.",
-        "projectsTitle": "Our Clients' Results",
-        "subtitle": "We are proud of the impact we have on our clients' businesses. Here are some of their stories.",
-        "projectStatus": {
-          "finished": "Finished",
-          "inProgress": "In Progress"
-        },
-        "modal": {
-          "description": "Description",
-          "technologies": "Technologies",
-          "features": "Features"
-        }
+        "description": "Discover how Repartito has helped businesses like yours to grow.",
+        "quote": "Data is the new oil. Repartito helps you refine it.",
+        "author": "Data Scientist",
+        "authorRole": "at Repartito"
       }
     },
     "pricing": {
       "meta": {
-        "title": "Pricing - LupaPyme",
+        "title": "Pricing - Repartito",
         "description": "Find the perfect plan for your business. Start for free."
       },
       "title": "Flexible plans for businesses of all sizes",
-      "paragraph": "Choose the plan that best suits your needs and start growing with LupaPyme.",
-      "primaryCta": "Get started now",
+      "paragraph": "Choose the plan that best suits your needs and start growing with Repartito.",
+      "primaryCta": "Get Started",
       "plans": {
         "monthly": "Monthly",
         "annually": "Annually",
@@ -536,10 +512,10 @@
     },
     "contact": {
       "meta": {
-        "title": "Contact - LupaPyme",
+        "title": "Contact - Repartito",
         "description": "Get in touch with us. We are here to help you."
       },
-      "title": "Contact us",
+      "title": "Get in Touch",
       "paragraph": "Have questions or want more information? Send us a message and we will get back to you as soon as possible.",
       "form": {
         "name": "Name",
@@ -574,15 +550,6 @@
             "description": "We'll help you find the right solution for your business."
           }
         ]
-      }
-    },
-    "footer": {
-      "product": {
-        "title": "Product",
-        "features": "Features",
-        "pricing": "Pricing",
-        "about": "About Us",
-        "contact": "Contact"
       },
       "company": {
         "title": "Company",
@@ -596,7 +563,7 @@
         "privacy": "Privacy Policy"
       },
       "copy": "All rights reserved.",
-      "companyDescription": "LupaPyme is the platform that helps you understand your customers and boost your business. In-depth metrics, customer retention, and total control of your company.",
+      "companyDescription": "Repartito is the platform that helps you understand your customers and boost your business. In-depth metrics, customer retention, and total control of your company.",
       "menuCreation": "Digital Menu Creation",
       "mobileFirst": "Mobile-First Design",
       "analytics": "Analytics and Insights",
@@ -604,7 +571,7 @@
       "rights": "All rights reserved"
     },
     "landing": {
-      "title": "LupaPyme"
+      "title": "Repartito"
     }
   },
   "error": {

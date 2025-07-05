@@ -1,13 +1,22 @@
 import { getDictionary } from '@repo/internationalization';
 import { type Locale } from '@repo/internationalization';
 import { getCurrentUser } from '@repo/data-services/src/services/authService';
-import { getProductById } from '@repo/data-services/src/services/productService';
-import { redirect, notFound } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
+import { getProductById } from '@repo/data-services';
+import { getAllSellers } from '@repo/data-services/src/services/userService';
+import { getInventoryForProduct } from '@repo/data-services/src/services/productService';
+import { redirect } from 'next/navigation';
+import { SellerStockForm } from './components/seller-stock-form';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Separator } from '@repo/design-system/components/ui/separator';
 import Link from 'next/link';
-import { ArrowLeftIcon, Package, DollarSign, Warehouse } from 'lucide-react';
+import { ArrowLeftIcon, Package, Warehouse, Users } from 'lucide-react';
 import { Button } from '@repo/design-system/components/ui/button';
 
 export default async function ProductDetailPage({
@@ -24,20 +33,18 @@ export default async function ProductDetailPage({
     }
 
     const product = await getProductById(productId);
+    const sellers = await getAllSellers();
+    const inventoryBySeller = await getInventoryForProduct(productId);
 
     if (!product) {
-        notFound();
+        return <div>Producto no encontrado</div>;
     }
 
-    // Determinar estado del stock
-    const getStockStatus = (stock: number) => {
-        if (stock <= 0) return { label: 'Sin Stock', variant: 'destructive' as const };
-        if (stock <= 10) return { label: 'Stock Bajo', variant: 'destructive' as const };
-        if (stock <= 50) return { label: 'Stock Medio', variant: 'secondary' as const };
-        return { label: 'Stock Bueno', variant: 'default' as const };
-    };
-
-    const stockStatus = getStockStatus(product.quantityInStock);
+    const formatPrice = (price: number) =>
+        new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            currency: 'ARS',
+        }).format(price);
 
     return (
         <div className="container mx-auto py-8">
@@ -51,7 +58,7 @@ export default async function ProductDetailPage({
                         </Link>
                         {product.name}
                     </h1>
-                    <Badge variant={stockStatus.variant}>{stockStatus.label}</Badge>
+                    <Badge variant="outline">{formatPrice(product.price)}</Badge>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -72,10 +79,7 @@ export default async function ProductDetailPage({
                                 <div>
                                     <p className="text-sm font-medium text-muted-foreground">Precio</p>
                                     <p className="text-lg font-semibold">
-                                        {new Intl.NumberFormat('es-AR', {
-                                            style: 'currency',
-                                            currency: 'ARS',
-                                        }).format(product.price)}
+                                        {formatPrice(product.price)}
                                     </p>
                                 </div>
                             </div>
@@ -106,16 +110,9 @@ export default async function ProductDetailPage({
                             <Separator />
                             <div className="space-y-2">
                                 <div className="flex justify-between">
-                                    <span className="text-sm">Estado:</span>
-                                    <Badge variant={stockStatus.variant}>{stockStatus.label}</Badge>
-                                </div>
-                                <div className="flex justify-between">
                                     <span className="text-sm">Valor Total:</span>
                                     <span className="font-semibold">
-                                        {new Intl.NumberFormat('es-AR', {
-                                            style: 'currency',
-                                            currency: 'ARS',
-                                        }).format(product.price * product.quantityInStock)}
+                                        {formatPrice(product.price * product.quantityInStock)}
                                     </span>
                                 </div>
                             </div>
@@ -151,6 +148,27 @@ export default async function ProductDetailPage({
                                 </p>
                             </div>
                         </div>
+                    </CardContent>
+                </Card>
+
+                {/* Seller Stock Management */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Users className="w-5 h-5" />
+                            Asignar Stock a Vendedores
+                        </CardTitle>
+                        <CardDescription>
+                            Define la cantidad de este producto que cada vendedor tendrá en su inventario personal.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <SellerStockForm
+                            productId={productId}
+                            sellers={sellers}
+                            inventoryBySeller={inventoryBySeller}
+                            dictionary={dictionary}
+                        />
                     </CardContent>
                 </Card>
 
