@@ -5,7 +5,6 @@ import { UserData, UserFormData } from '../types/user';
 import { database } from '@repo/database';
 import { UserRole } from '@repo/database';
 import bcrypt from 'bcryptjs';
-import { SELLER_DEFAULT_PERMISSIONS } from '@repo/auth/server-permissions';
 import { getCurrentUser } from './authService';
 
 /**
@@ -32,20 +31,10 @@ export async function createUser(data: UserFormData & { role: UserRole; permissi
         // Asignar permisos basados en el rol
         let finalPermissions: string[] = [];
 
-        if (data.role === 'seller') {
-            // Para vendedores, usar permisos por defecto o combinar con los especificados
-            finalPermissions = [...SELLER_DEFAULT_PERMISSIONS];
-            if (data.permissions && data.permissions.length > 0) {
-                // Si se especifican permisos adicionales, combinarlos
-                const permissionsSet = new Set([...finalPermissions, ...data.permissions]);
-                finalPermissions = Array.from(permissionsSet);
-            }
-        } else {
-            // Para otros roles, usar los permisos especificados o básicos
-            const permissionsWithDefault = new Set(data.permissions || []);
-            permissionsWithDefault.add('account:view_own');
-            finalPermissions = Array.from(permissionsWithDefault);
-        }
+        // Para todos los roles, usar los permisos especificados o básicos
+        const permissionsWithDefault = new Set(data.permissions || []);
+        permissionsWithDefault.add('account:view_own');
+        finalPermissions = Array.from(permissionsWithDefault);
 
         // Crear el usuario con contraseña hasheada y los permisos del formulario
         const user = await database.user.create({
@@ -55,7 +44,7 @@ export async function createUser(data: UserFormData & { role: UserRole; permissi
                 email: data.email,
                 password: hashedPassword,
                 role: data.role,
-                permissions: finalPermissions,
+                permissions: finalPermissions as any,
             },
         });
 
@@ -311,12 +300,7 @@ export async function getAllSellers() {
     try {
         const sellers = await database.user.findMany({
             where: {
-                role: 'seller',
-            },
-            include: {
-                _count: {
-                    select: { inventory: true },
-                },
+                role: 'user',
             },
             orderBy: {
                 name: 'asc',

@@ -8,50 +8,22 @@ import { env } from './env';
 import { internationalizationMiddleware } from '@repo/internationalization/middleware';
 
 // --- 1. Definición de Roles ---
-// Roles claros y específicos para el sistema de pedidos.
 const ROLES = {
   ADMIN: 'admin',
-  SELLER: 'seller',
+  USER: 'user',
 } as const;
 
 type Role = (typeof ROLES)[keyof typeof ROLES];
 
 // --- 2. Permisos y Rutas ---
-// Mapa detallado de rutas y los permisos necesarios para acceder a ellas.
-// Soporta rutas base (ej. '/clients') para cubrir sub-rutas (ej. '/clients/new').
 const ROUTE_PERMISSIONS: Record<string, string[]> = {
-  // Rutas con permisos específicos de visualización
   '/account': ['account:view_own'],
-  '/clients': ['clients:view'],
-  '/products': ['products:view'],
-  '/inventory': ['inventory:view'],
-  '/payments': ['payments:view'],
-  '/analytics': ['analytics:view_global'],
-
-  // La ruta de pedidos permite el acceso si el usuario puede ver sus propios pedidos O todos los pedidos.
-  // La lógica en `hasAccessToRoute` maneja este caso (usando .some()).
-  '/orders': ['orders:view_own', 'orders:view_all'],
-
-  // La gestión de usuarios está dentro de 'account', pero si tuviera su propia página, este sería el permiso.
-  '/users': ['account:manage_users'],
 };
 
 // --- 3. Redirección por Rol ---
-// Lógica mejorada para dirigir a los usuarios a la página más útil después de iniciar sesión.
 const getDefaultRedirect = (userRole: Role, userPermissions: string[]): string => {
   if (userRole === ROLES.ADMIN) {
-    return '/account'; // El Admin siempre va al dashboard principal.
-  }
-
-  // Lógica de redirección para Vendedores (Sellers)
-  if (userPermissions.includes('orders:create')) {
-    return '/orders/new'; // Prioridad 1: Si puede crear pedidos, llevarlo allí.
-  }
-  if (userPermissions.includes('orders:view_own')) {
-    return '/orders'; // Prioridad 2: Ver sus pedidos.
-  }
-  if (userPermissions.includes('clients:view')) {
-    return '/clients'; // Prioridad 3: Ver sus clientes.
+    return '/account';
   }
 
   // Por defecto, cualquier usuario autenticado puede ver su propia cuenta.
@@ -77,7 +49,6 @@ const isPublicRoute = (pathname: string): boolean => {
 };
 
 // --- 4. Lógica de Acceso Mejorada ---
-// Función robusta para verificar permisos que entiende sub-rutas.
 const hasAccessToRoute = (pathname: string, userRole: Role, userPermissions: string[] = []): boolean => {
   // El Admin siempre tiene acceso a todo.
   if (userRole === ROLES.ADMIN) {
@@ -85,7 +56,6 @@ const hasAccessToRoute = (pathname: string, userRole: Role, userPermissions: str
   }
 
   // Encuentra la ruta base más específica que coincida con el pathname actual.
-  // Ej: para '/clients/123/edit', encontrará la regla de '/clients'.
   const matchingRoute = Object.keys(ROUTE_PERMISSIONS)
     .filter(route => pathname.startsWith(route))
     .sort((a, b) => b.length - a.length)[0];
@@ -97,13 +67,11 @@ const hasAccessToRoute = (pathname: string, userRole: Role, userPermissions: str
   }
 
   // Si está en una ruta de primer nivel pero no hay una regla definida, denegar por seguridad.
-  // Esto previene el acceso a rutas como /settings si no se definen explícitamente.
   if (!pathname.includes('/', 1)) {
     return false;
   }
 
   // Por defecto, permitir acceso a sub-rutas si la ruta base está permitida
-  // (ej. /clients/123). La protección debe ser a nivel de página/componente.
   return !!matchingRoute;
 };
 
@@ -112,8 +80,8 @@ const getUserRole = (role?: string): Role => {
   if (roleStr === ROLES.ADMIN) {
     return ROLES.ADMIN;
   }
-  // Cualquier otro rol (o si no se especifica) se considera SELLER.
-  return ROLES.SELLER;
+  // Cualquier otro rol se considera USER.
+  return ROLES.USER;
 };
 
 export function middleware(req: NextRequest) {
@@ -135,7 +103,7 @@ export function middleware(req: NextRequest) {
 
   const tokenCookie = req.cookies.get(AUTH_COOKIE_NAME);
   let userId: string | undefined;
-  let userRole: Role = ROLES.SELLER;
+  let userRole: Role = ROLES.USER;
   let userPermissions: string[] = [];
 
   if (tokenCookie) {

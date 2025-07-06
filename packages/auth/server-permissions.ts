@@ -20,32 +20,7 @@ export type Permission =
     | 'account:manage_users'
     // Admin
     | 'admin:full_access'
-    | 'admin:system_settings'
-    // Analytics
-    | 'analytics:view_global'
-    // Clients
-    | 'clients:view'
-    | 'clients:create'
-    | 'clients:edit'
-    | 'clients:delete'
-    | 'clients:view_account_balance'
-    | 'clients:manage_account_balance'
-    // Orders
-    | 'orders:view_own'
-    | 'orders:view_all'
-    | 'orders:create'
-    | 'orders:edit'
-    | 'orders:cancel'
-    // Products
-    | 'products:view'
-    | 'products:create'
-    | 'products:edit'
-    | 'products:delete'
-    // Sellers
-    | 'sellers:view'
-    // Payments
-    | 'payments:view'
-    | 'payments:manage';
+    | 'admin:system_settings';
 
 // Permisos por defecto para admins (siempre tienen todos)
 export const ADMIN_PERMISSIONS: Permission[] = [
@@ -59,39 +34,13 @@ export const ADMIN_PERMISSIONS: Permission[] = [
     'account:manage_users',
     'admin:full_access',
     'admin:system_settings',
-    'analytics:view_global',
-    'clients:view',
-    'clients:create',
-    'clients:edit',
-    'clients:delete',
-    'clients:view_account_balance',
-    'clients:manage_account_balance',
-    'orders:view_own',
-    'orders:view_all',
-    'orders:create',
-    'orders:edit',
-    'orders:cancel',
-    'products:view',
-    'products:create',
-    'products:edit',
-    'products:delete',
-    'sellers:view',
-    'payments:view',
-    'payments:manage',
 ];
 
-// Permisos por defecto para vendedores
-export const SELLER_DEFAULT_PERMISSIONS: Permission[] = [
+// Permisos por defecto para usuarios
+export const USER_DEFAULT_PERMISSIONS: Permission[] = [
     'account:view_own',
     'account:edit_own',
     'account:change_password',
-    'clients:view',
-    'clients:create',
-    'clients:edit',
-    'clients:view_account_balance',
-    'orders:view_own',
-    'orders:create',
-    'payments:view',
 ];
 
 /**
@@ -104,7 +53,7 @@ export async function getCurrentUserWithPermissions() {
     }
 
     const isAdmin = user.role.toLowerCase() === 'admin';
-    const isSeller = user.role.toLowerCase() === 'seller';
+    const isUser = user.role.toLowerCase() === 'user';
 
     // Si es admin, tiene todos los permisos siempre
     if (isAdmin) {
@@ -112,17 +61,17 @@ export async function getCurrentUserWithPermissions() {
             ...user,
             permissions: ADMIN_PERMISSIONS,
             isAdmin: true,
-            isSeller: false,
+            isUser: false,
         };
     }
 
-    // Si es vendedor, usar sus permisos personalizados
-    if (isSeller) {
+    // Si es user, usar sus permisos personalizados
+    if (isUser) {
         return {
             ...user,
             permissions: user.permissions, // Usar permisos del usuario desde la BD
             isAdmin: false,
-            isSeller: true,
+            isUser: true,
         };
     }
 
@@ -131,7 +80,7 @@ export async function getCurrentUserWithPermissions() {
         ...user,
         permissions: [],
         isAdmin: false,
-        isSeller: false,
+        isUser: false,
     };
 }
 
@@ -212,43 +161,6 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
         href: '/account',
         icon: 'User',
         requiredPermissions: ['account:view_own'],
-    },
-    {
-        label: 'products',
-        mobileLabel: 'productsMobile',
-        href: '/products',
-        icon: 'Package',
-        requiredPermissions: ['products:view'],
-        adminOnly: true,
-    },
-    {
-        label: 'sellers',
-        mobileLabel: 'sellersMobile',
-        href: '/sellers',
-        icon: 'Users',
-        requiredPermissions: ['sellers:view'],
-        adminOnly: true,
-    },
-    {
-        label: 'clients',
-        mobileLabel: 'clientsMobile',
-        href: '/clients',
-        icon: 'Users',
-        requiredPermissions: ['clients:view'],
-    },
-    {
-        label: 'orders',
-        mobileLabel: 'ordersMobile',
-        href: '/orders',
-        icon: 'ShoppingCart',
-        requiredPermissions: ['orders:view_own'],
-    },
-    {
-        label: 'payments',
-        mobileLabel: 'paymentsMobile',
-        href: '/payments',
-        icon: 'CreditCard',
-        requiredPermissions: ['payments:view'],
     },
 ];
 

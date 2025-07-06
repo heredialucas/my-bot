@@ -13,7 +13,7 @@ datasource db {
 
 enum UserRole {
   admin
-  seller
+  user
 }
 
 model User {
@@ -21,165 +21,72 @@ model User {
   email       String   @unique
   name        String
   lastName    String
-  role        UserRole @default(seller)
+  role        UserRole @default(user)
   password    String
   permissions Json     @default("[]")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Relaciones
-  emailTemplates    EmailTemplate[]
-  whatsappTemplates WhatsAppTemplate[]
-  clients           Client[] // Un vendedor puede tener muchos clientes
-  orders            Order[] // Un vendedor puede realizar muchos pedidos
-  inventory         Inventory[] // Un vendedor tiene un inventario de productos
+  websites  Website[]
+  scrapings Scraping[]
+  schedules Schedule[]
+
+  @@map("users")
 }
 
-model EmailTemplate {
-  id          String  @id @default(uuid())
-  name        String // Nombre del template para identificarlo
-  subject     String // Asunto del email
-  content     String // Contenido del email
-  description String? // Descripción opcional del template
-  isDefault   Boolean @default(false) // Si es un template por defecto del sistema
-
-  // Metadatos
-  createdBy String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Website {
+  id          String   @id @default(uuid())
+  name        String // Nombre descriptivo del sitio web
+  url         String // URL del sitio web a scrapear
+  description String? // Descripción opcional
+  isActive    Boolean  @default(true) // Si el sitio está activo para scraping
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relaciones
-  user User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scrapings Scraping[]
+  schedules Schedule[]
 
-  @@map("email_templates")
+  @@map("websites")
 }
 
-model WhatsAppTemplate {
-  id          String  @id @default(uuid())
-  name        String // Nombre del template para identificarlo
-  content     String // Contenido del mensaje de WhatsApp
-  description String? // Descripción opcional del template
-  isDefault   Boolean @default(false) // Si es un template por defecto del sistema
-
-  // Metadatos
-  createdBy String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Scraping {
+  id          String    @id @default(uuid())
+  status      String // 'pending', 'running', 'completed', 'failed'
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  error       String? // Mensaje de error si falló
+  data        Json? // Datos extraídos del scraping
 
   // Relaciones
-  user User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  websiteId String
+  website   Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
 
-  @@map("whatsapp_templates")
+  @@map("scrapings")
 }
 
-model Client {
-  id             String   @id @default(uuid())
-  firstName      String
-  lastName       String
-  email          String?  @unique
-  phone          String?
-  address        String?
-  accountBalance Float    @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+model Schedule {
+  id          String   @id @default(uuid())
+  guideName   String // Nombre del guía turístico
+  date        DateTime // Fecha del horario
+  startTime   String // Hora de inicio (formato HH:MM)
+  endTime     String // Hora de fin (formato HH:MM)
+  tourType    String? // Tipo de tour (opcional)
+  notes       String? // Notas adicionales
+  isAvailable Boolean  @default(true) // Si el horario está disponible
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  sellerId String
-  seller   User   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  // Relaciones
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  websiteId String
+  website   Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
 
-  orders Order[] // Un cliente puede tener muchos pedidos
-
-  @@map("clients")
-}
-
-model Product {
-  id              String      @id @default(uuid())
-  name            String
-  description     String?
-  sku             String      @unique // Stock Keeping Unit
-  price           Float
-  quantityInStock Int         @default(0) // Stock en almacén central
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  orderItems      OrderItem[]
-  inventories     Inventory[]
-
-  @@map("products")
-}
-
-model Inventory {
-  id        String   @id @default(uuid())
-  quantity  Int
-  updatedAt DateTime @updatedAt
-
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  sellerId String
-  seller   User   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-
-  @@unique([productId, sellerId])
-  @@map("inventory")
-}
-
-enum OrderStatus {
-  PENDING
-  DELIVERED
-  CANCELLED
-}
-
-model Order {
-  id          String      @id @default(uuid())
-  orderDate   DateTime    @default(now())
-  status      OrderStatus @default(PENDING)
-  totalAmount Float
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  clientId String
-  client   Client @relation(fields: [clientId], references: [id])
-
-  sellerId String
-  seller   User   @relation(fields: [sellerId], references: [id])
-
-  items    OrderItem[]
-  payments Payment[]
-
-  @@map("orders")
-}
-
-model OrderItem {
-  id       String @id @default(uuid())
-  quantity Int
-  price    Float // Precio en el momento del pedido
-
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
-
-  @@map("order_items")
-}
-
-enum PaymentMethod {
-  CASH
-  CREDIT_CARD
-  BANK_TRANSFER
-  OTHER
-}
-
-model Payment {
-  id            String        @id @default(uuid())
-  paymentDate   DateTime      @default(now())
-  amount        Float
-  paymentMethod PaymentMethod
-  receiptNumber String?       @unique
-  notes         String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id])
-
-  @@map("payments")
+  @@map("schedules")
 }

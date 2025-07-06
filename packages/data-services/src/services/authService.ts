@@ -88,7 +88,7 @@ export async function signUp(data: {
             lastName: data.lastName,
             email: data.email,
             password: data.password,
-            role: 'seller', // Primeros usuarios como seller para setup inicial
+            role: 'admin', // Primeros usuarios como user para setup inicial
         });
 
         // Check if user creation failed
