@@ -76,6 +76,9 @@
         "button": "Anmelden",
         "signing": "Anmeldung läuft...",
         "goToSignUp": "Noch kein Konto? Registrieren",
+        "hidePassword": "Passwort ausblenden",
+        "showPassword": "Passwort anzeigen",
+        "passwordHint": "Geben Sie Ihr Passwort ein, um auf Ihr Konto zuzugreifen",
         "errors": {
           "emptyFields": "Bitte füllen Sie alle Felder aus",
           "invalidCredentials": "Fehler bei der Anmeldung",

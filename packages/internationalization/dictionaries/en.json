@@ -253,6 +253,9 @@
         "button": "Sign in",
         "signing": "Signing in...",
         "goToSignUp": "Don't have an account? Sign up",
+        "hidePassword": "Hide password",
+        "showPassword": "Show password",
+        "passwordHint": "Enter your password to access your account",
         "errors": {
           "emptyFields": "Please complete all fields",
           "invalidCredentials": "Error signing in",

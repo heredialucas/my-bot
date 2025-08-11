@@ -476,6 +476,9 @@
         "button": "Iniciar sesión",
         "signing": "Iniciando sesión...",
         "goToSignUp": "¿No tienes cuenta? Crear cuenta",
+        "hidePassword": "Ocultar contraseña",
+        "showPassword": "Mostrar contraseña",
+        "passwordHint": "Ingresa tu contraseña para acceder a tu cuenta",
         "errors": {
           "emptyFields": "Por favor complete todos los campos",
           "invalidCredentials": "Error al iniciar sesión",
