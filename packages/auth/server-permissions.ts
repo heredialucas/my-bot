@@ -162,6 +162,16 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
         icon: 'User',
         requiredPermissions: ['account:view_own'],
     },
+    {
+        label: 'ai',
+        mobileLabel: 'aiMobile',
+        href: '/ai',
+        icon: 'Bot',
+        requiredPermissions: [
+            'admin:full_access',
+            'admin:system_settings'
+        ],
+    },
 ];
 
 /**

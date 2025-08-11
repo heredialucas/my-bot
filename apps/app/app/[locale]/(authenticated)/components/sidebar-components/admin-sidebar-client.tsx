@@ -3,13 +3,7 @@
 import { cn } from '@repo/design-system/lib/utils';
 import {
     User,
-    Users,
-    BarChart3,
-    Table,
-    ShoppingCart,
-    Archive,
-    Package,
-    CreditCard,
+    Bot
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -26,13 +20,7 @@ import { useSidebar } from '@/store/sidebarStore';
 // Mapeo de iconos
 const ICON_MAP = {
     User,
-    Users,
-    BarChart3,
-    Table,
-    ShoppingCart,
-    Archive,
-    Package,
-    CreditCard,
+    Bot
 } as const;
 
 type AdminSidebarClientProps = {

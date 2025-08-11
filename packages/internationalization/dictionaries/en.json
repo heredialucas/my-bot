@@ -22,7 +22,8 @@
         "logout": "Logout",
         "loggingOut": "Logging out...",
         "table": "Table",
-        "tableMobile": "Table"
+        "tableMobile": "Table",
+        "ai": "AI"
       },
       "menu": {
         "title": "Menu Management",
